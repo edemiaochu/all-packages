@@ -1,0 +1,76 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@use "~@szewtwin/core-react/lib/core-react/z-index" as *;
+
+.uifw-modal-frontstage {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  box-sizing: border-box;
+  transition: all 0.5s ease;
+  pointer-events: none;
+  visibility: hidden;
+  overflow: hidden;
+  background: transparent;
+  transition: background 0.25s ease, visibility 0s ease 0.275s;
+
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+
+  @include uicore-z-index(modal-frontstage);
+
+  .uifw-modal-app-bar {
+    transition: transform 0.125s;
+    padding: 10px;
+    background: var(--iui-color-background-backdrop);
+    height: 60px;
+    transform: translateY(-100%);
+    box-sizing: initial;
+
+    > .uifw-headline {
+      display: inline-block;
+      line-height: 60px;
+      vertical-align: top;
+      padding: 0 15px;
+    }
+
+    .uifw-modal-app-bar-right {
+      color: var(--iui-color-text);
+      line-height: 60px;
+      vertical-align: center;
+      float: right;
+      margin-right: 20px;
+    }
+  }
+
+  .uifw-modal-stage-content {
+    overflow: hidden;
+    height: 100%;
+  }
+
+  &.uifw-modal-open {
+    visibility: visible;
+    pointer-events: unset;
+    transition: background 0.25s ease;
+
+    .uifw-modal-app-bar {
+      transform: translateY(0%);
+      transition: transform 0.125s ease;
+    }
+  }
+}
+
+.uifw-modal-frontstage-overlay {
+  position: absolute;
+  left: 0px;
+  width: 100%;
+  top: 0px;
+  height: 100%;
+  opacity: 0.95;
+  background: var(--iui-color-background-backdrop);
+
+  @include uicore-z-index(modal-frontstage-overlay);
+}

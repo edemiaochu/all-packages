@@ -1,0 +1,158 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+/** @packageDocumentation
+ * @module Frontstage
+ */
+
+import "./ModalSettingsStage.scss";
+import * as React from "react";
+import { ConditionalBooleanValue } from "@szewtwin/appui-abstract";
+import {
+  IVaultApp,
+  NotifyMessageDetails,
+  OutputMessagePriority,
+  OutputMessageType,
+} from "@szewtwin/core-frontend";
+import { Logger } from "@szewtwin/core-szewec";
+import { Centered, SettingsContainer } from "@szewtwin/core-react";
+import { SvgSettings } from "@szewtwin/szewtwinui-icons-react";
+import type { ModalFrontstageInfo } from "../framework/FrameworkFrontstages.js";
+import { UiFramework } from "../UiFramework.js";
+import { SyncUiEventId } from "../syncui/UiSyncEvent.js";
+import { StageUsage } from "./StageUsage.js";
+import { BackstageItemUtilities } from "../backstage/BackstageItemUtilities.js";
+import { useTranslation } from "../hooks/useTranslation.js";
+
+function ModalSettingsStage({
+  initialSettingsTabId,
+}: {
+  initialSettingsTabId?: string;
+}) {
+  const { translate } = useTranslation();
+
+  const id = UiFramework.frontstages.activeFrontstageDef?.id ?? "none";
+  const stageUsage =
+    UiFramework.frontstages.activeFrontstageDef?.usage ?? StageUsage.General;
+  const tabEntries = UiFramework.settingsManager.getSettingEntries(
+    id,
+    stageUsage
+  );
+
+  const currentSettingsTab = React.useCallback(() => {
+    const categoryToFind = initialSettingsTabId
+      ? initialSettingsTabId.toLowerCase()
+      : tabEntries[0].tabId.toLowerCase();
+    let foundTab = tabEntries.find(
+      (entry) => entry.tabId.toLowerCase() === categoryToFind
+    );
+    if (!foundTab)
+      foundTab = tabEntries.find(
+        (entry) => entry.label.toLowerCase() === categoryToFind
+      );
+    return foundTab;
+  }, [initialSettingsTabId, tabEntries]);
+
+  React.useEffect(() => {
+    return UiFramework.frontstages.onCloseModalFrontstageRequestedEvent.addListener(
+      ({ modalFrontstage, stageCloseFunc }) => {
+        if (
+          modalFrontstage instanceof SettingsModalFrontstage &&
+          stageCloseFunc
+        ) {
+          UiFramework.settingsManager.closeSettingsContainer(stageCloseFunc);
+        }
+      }
+    );
+  }, [tabEntries]);
+
+  return (
+    <div className="uifw-settings-container">
+      {tabEntries.length ? (
+        // eslint-disable-next-line @typescript-eslint/no-deprecated
+        <SettingsContainer
+          tabs={tabEntries}
+          currentSettingsTab={currentSettingsTab()}
+          settingsManager={UiFramework.settingsManager}
+        />
+      ) : (
+        // eslint-disable-next-line @typescript-eslint/no-deprecated
+        <Centered>{translate("settings.noSettingsAvailable")}</Centered>
+      )}
+    </div>
+  );
+}
+
+/** Modal frontstage displaying and editing settings from registered settings providers. See [SettingsManager]($core-react)
+ * and [SettingsContainer]($core-react).
+ * @beta
+ */
+export class SettingsModalFrontstage implements ModalFrontstageInfo {
+  public static id = "appui-react.modalSettingsStage";
+  public title = UiFramework.translate("settings.settingsStageLabel");
+  constructor(public initialSettingsTabId?: string) {}
+  public notifyCloseRequest = true;
+  public get content(): React.ReactNode {
+    return (
+      <ModalSettingsStage initialSettingsTabId={this.initialSettingsTabId} />
+    );
+  }
+  private static noSettingsAvailable = () =>
+    new ConditionalBooleanValue(
+      () => 0 === UiFramework.settingsManager.providers.length,
+      [SyncUiEventId.SettingsProvidersChanged]
+    );
+
+  public static getBackstageActionItem(
+    groupPriority: number,
+    itemPriority: number
+  ) {
+    return BackstageItemUtilities.createActionItem({
+      id: SettingsModalFrontstage.id,
+      groupPriority,
+      itemPriority,
+      execute: () =>
+        UiFramework.frontstages.openModalFrontstage(
+          new SettingsModalFrontstage()
+        ),
+      label: UiFramework.translate("settings.settingsStageLabel"),
+      icon: <SvgSettings />,
+      isHidden: SettingsModalFrontstage.noSettingsAvailable(),
+    });
+  }
+
+  public static showSettingsStage(initialSettingsTab?: string) {
+    if (UiFramework.settingsManager.providers.length) {
+      // Check to see if it is already open
+      if (
+        UiFramework.frontstages.activeModalFrontstage &&
+        UiFramework.frontstages.activeModalFrontstage instanceof
+          SettingsModalFrontstage
+      ) {
+        if (initialSettingsTab) {
+          UiFramework.settingsManager.activateSettingsTab(initialSettingsTab);
+          return;
+        }
+      }
+      UiFramework.frontstages.openModalFrontstage(
+        new SettingsModalFrontstage(initialSettingsTab)
+      );
+    } else {
+      const detailedMessage = UiFramework.translate(
+        "settings.noSettingsProvidersRegistered"
+      );
+      const info = new NotifyMessageDetails(
+        OutputMessagePriority.Info,
+        UiFramework.translate("settings.noSettingsAvailable"),
+        detailedMessage,
+        OutputMessageType.Toast
+      );
+      IVaultApp.notifications.outputMessage(info);
+      Logger.logInfo(
+        UiFramework.loggerCategory("SettingsModalFrontstage"),
+        detailedMessage
+      );
+    }
+  }
+}

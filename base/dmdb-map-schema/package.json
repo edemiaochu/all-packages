@@ -1,0 +1,16 @@
+{
+  "name": "@szewec/dmdb-map-schema",
+  "license": "MIT",
+  "version": "2.0.1",
+  "homepage": "https://www.szewtwinjs.org/",
+  "keywords": [
+    "Szewec",
+    "BIS",
+    "iVault"
+  ],
+  "description": "DMDbMap BIS Domains",
+  "author": {
+    "name": "Szewec Systems, Inc.",
+    "url": "http://www.szewec.com"
+  }
+}

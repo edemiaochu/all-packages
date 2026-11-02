@@ -1,0 +1,65 @@
+// Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+// See LICENSE.md in the project root for license terms and full copyright notice.
+@use '../stepper/mixins' as *;
+@use '../text/mixins' as *;
+
+.iui-workflow-diagram {
+  @include iui-stepper-list;
+  align-items: center;
+}
+
+.iui-workflow-diagram-step {
+  --_iui-workflow-diagram-circle-background-color: var(--iui-color-background-positive);
+  --_iui-workflow-diagram-circle-border-color: var(--iui-color-background-positive);
+  --_iui-workflow-diagram-circle-border-radius: var(--iui-border-radius-1);
+  --_iui-workflow-diagram-circle-text-color: var(--iui-color-white);
+  --_iui-workflow-diagram-track-before-color: var(--iui-color-border-positive);
+  --_iui-workflow-diagram-track-after-color: var(--iui-color-border-positive);
+
+  flex: 1;
+  align-items: center;
+  display: flex;
+  @include iui-text(small);
+  color: var(--_iui-workflow-diagram-circle-text-color);
+
+  &:first-of-type,
+  &:last-of-type {
+    --_iui-workflow-diagram-circle-background-color: var(--iui-color-background);
+    --_iui-workflow-diagram-circle-border-color: var(--iui-color-border-positive);
+    --_iui-workflow-diagram-circle-border-radius: #{var(--iui-size-s)};
+    --_iui-workflow-diagram-circle-text-color: var(--iui-color-text-positive);
+  }
+
+  &::before,
+  &::after {
+    content: '';
+    block-size: var(--iui-size-3xs);
+    flex: 1 2 auto;
+  }
+
+  &::before {
+    background-color: var(--_iui-workflow-diagram-track-before-color);
+  }
+
+  &::after {
+    background-color: var(--_iui-workflow-diagram-track-after-color);
+  }
+
+  &:first-of-type {
+    --_iui-workflow-diagram-track-before-color: transparent;
+  }
+
+  &:last-of-type {
+    --_iui-workflow-diagram-track-after-color: transparent;
+  }
+}
+
+.iui-workflow-diagram-content {
+  padding-block: var(--iui-size-3xs);
+  padding-inline: var(--iui-size-m);
+  font-weight: var(--iui-font-weight-normal);
+  text-align: center;
+  background-color: var(--_iui-workflow-diagram-circle-background-color);
+  border: 1px solid var(--_iui-workflow-diagram-circle-border-color);
+  border-radius: var(--_iui-workflow-diagram-circle-border-radius);
+}

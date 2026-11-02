@@ -1,0 +1,244 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@use "../icons/variables" as *;
+@use "../style/baseline" as *;
+@use "../z-index" as *;
+
+$uicore-menu-padding: $uicore-bordered-padding;
+$uicore-menu-top-bottom-padding: calc(#{$uicore-menu-padding} * 0.6667);
+
+.core-context-menu-global {
+  position: fixed;
+  width: 0px;
+  height: 0px;
+
+  @include uicore-z-index(context-menu-z);
+}
+
+.core-context-menu {
+  color: var(--iui-color-text);
+  width: 0px;
+  height: 0px;
+  position: relative;
+
+  @include uicore-z-index(context-menu-z);
+
+  &:hover {
+    color: var(--iui-color-text-hover);
+    cursor: auto;
+  }
+
+  .core-context-menu-container {
+    position: absolute;
+    border-radius: var(--iui-border-radius-1);
+    padding: 4px 0;
+    box-shadow: var(--iui-shadow-1);
+    background-color: var(--iui-color-background);
+    text-overflow: ellipsis;
+    min-width: max-content;
+    max-width: 350px;
+    visibility: hidden;
+    transform: scaleY(0);
+    display: table;
+    border: 1px solid var(--iui-color-border);
+
+    &.core-context-menu-floating {
+      position: fixed;
+    }
+
+    &.core-context-menu-opened {
+      visibility: inherit;
+      transform-origin: top;
+      transform: scaleY(1);
+    }
+
+    &.core-context-menu-center {
+      transform: translate(-50%, -50%);
+    }
+
+    &.core-context-menu-right {
+      transform: translate(var(--_core-context-menu-offset), -50%);
+    }
+
+    &.core-context-menu-left {
+      transform: translate(
+        calc(-100% - var(--_core-context-menu-offset)),
+        -50%
+      );
+    }
+
+    &.core-context-menu-top {
+      transform: translate(
+        -50%,
+        calc(-100% - var(--_core-context-menu-offset))
+      );
+
+      &.core-context-menu-right {
+        transform: translate(
+          var(--_core-context-menu-offset),
+          calc(-100% - var(--_core-context-menu-offset))
+        );
+      }
+
+      &.core-context-menu-left {
+        transform: translate(
+          calc(-100% - var(--_core-context-menu-offset)),
+          calc(-100% - var(--_core-context-menu-offset))
+        );
+      }
+    }
+
+    &.core-context-menu-bottom {
+      transform: translate(-50%, var(--_core-context-menu-offset));
+
+      &.core-context-menu-right {
+        transform: translate(
+          var(--_core-context-menu-offset),
+          var(--_core-context-menu-offset)
+        );
+      }
+
+      &.core-context-menu-left {
+        transform: translate(
+          calc(-100% - var(--_core-context-menu-offset)),
+          var(--_core-context-menu-offset)
+        );
+      }
+    }
+
+    .core-context-menu-item {
+      display: flex;
+      cursor: default;
+      padding: $uicore-menu-top-bottom-padding $uicore-menu-padding;
+      width: calc(100% - 2 * #{$uicore-menu-padding});
+      align-items: center;
+      position: relative;
+      box-sizing: content-box;
+
+      &:hover {
+        background-color: var(--iui-color-background-hover);
+      }
+
+      &.core-context-menu-is-selected {
+        background-color: var(--iui-color-background-accent-muted);
+      }
+
+      &.core-context-menu-disabled {
+        color: var(--iui-color-text-disabled);
+      }
+
+      &.core-context-menu-hidden {
+        display: none;
+      }
+
+      > .core-context-menu-icon {
+        flex-shrink: 0;
+        flex-grow: 0;
+        width: $uicore-icons-small;
+        height: var(--iui-size-l);
+        font-size: var(--iui-font-size-2);
+        line-height: var(--iui-size-l);
+        text-align: center;
+        margin-right: $uicore-unbordered-padding;
+        opacity: var(--iui-opacity-2);
+        display: flex;
+        align-items: center;
+
+        &.core-context-menu-icon-right {
+          margin-left: $uicore-unbordered-padding;
+          margin-right: 0;
+        }
+      }
+
+      > .core-context-menu-content {
+        flex-shrink: 0;
+        flex-grow: 1;
+        font-size: var(--iui-font-size-1);
+        text-align: left;
+      }
+
+      > .core-context-menu-badge {
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+
+      &:focus {
+        outline: none;
+      }
+    }
+
+    &:focus {
+      border: 1px solid var(--iui-color-background-backdrop-hover);
+      box-shadow: var(--iui-shadow-1);
+      outline: 0px;
+
+      > .core-context-menu-item.is-selected,
+      > .context-submenu > .core-context-menu-item.is-selected {
+        // .is-selected being applied on hover, overriding with hover color
+        background-color: var(--iui-color-background-hover);
+      }
+    }
+
+    .core-context-submenu {
+      display: flex;
+
+      &.core-context-menu-top {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      &.core-context-menu-left {
+        flex-direction: row-reverse;
+        align-items: center;
+      }
+
+      &.core-context-menu-right {
+        flex-direction: row;
+        align-items: center;
+      }
+
+      &.core-context-menu-center {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      &.core-context-menu-top.core-context-menu-left {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      &.core-context-menu-top.core-context-menu-right {
+        flex-direction: row;
+        align-items: flex-end;
+      }
+
+      &.core-context-menu-bottom.core-context-menu-left {
+        flex-direction: row-reverse;
+        align-items: flex-start;
+      }
+
+      &.core-context-menu-bottom.core-context-menu-right {
+        flex-direction: row;
+        align-items: flex-start;
+      }
+
+      .core-context-submenu-container .core-context-submenu-arrow {
+        margin-left: var(--iui-size-s);
+        margin-top: var(--iui-size-3xs);
+        margin-bottom: calc(var(--iui-size-3xs) * -1);
+      }
+    }
+  }
+
+  .core-context-menu-divider {
+    border-bottom: 1px solid var(--iui-color-border-foreground);
+    height: 0px;
+  }
+
+  .core-context-submenu-popup {
+    transform: translateY(-5px); // Compensate for the vertical padding
+  }
+}

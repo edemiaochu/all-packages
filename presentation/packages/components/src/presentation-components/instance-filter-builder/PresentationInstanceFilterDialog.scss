@@ -1,0 +1,43 @@
+/*---------------------------------------------------------------------------------------------
+* Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
+
+.presentation-instance-filter-dialog {
+  .presentation-instance-filter-dialog-content-container {
+    height: calc(var(--iui-component-height-large) * 7);
+    width: calc(var(--iui-size-2xl) * 15);
+    min-height: calc(var(--iui-component-height-large) * 7);
+    min-width: calc(var(--iui-size-2xl) * 8);
+
+    .presentation-instance-filter-title {
+      margin-bottom: 0;
+      padding: var(--iui-size-xs);
+    }
+
+    .presentation-instance-filter-content {
+      padding: var(--iui-size-xs);
+      overflow: hidden;
+    }
+
+    .presentation-instance-filter-dialog-bottom-container {
+      display: grid;
+      grid-template-columns: 50% 50%;
+      align-items: center;
+      border-style: solid none none none;
+      padding-top: var(--iui-size-xs);
+      border-color: var(--iui-color-border);
+
+      .presentation-instance-filter-button-bar {
+        margin-top: 0;
+      }
+    }
+
+    .presentation-instance-filter-dialog-progress {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: var(--iui-size-s) 0;
+    }
+  }
+}

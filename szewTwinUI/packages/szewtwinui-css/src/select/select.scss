@@ -1,0 +1,186 @@
+// Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+// See LICENSE.md in the project root for license terms and full copyright notice.
+@use '../mixins';
+@use '../tag/base' as tag;
+
+@mixin iui-select-button {
+  inline-size: 100%;
+  padding-block: var(--_iui-select-padding-block);
+  padding-inline: var(--iui-size-s);
+  user-select: none;
+  line-height: var(--_iui-select-line-height);
+  cursor: pointer;
+  @include iui-select-size;
+
+  &:is(select) {
+    appearance: none;
+
+    option {
+      color: var(--iui-color-text);
+      font-weight: var(--iui-font-weight-normal);
+
+      &[disabled] {
+        color: var(--iui-color-text-disabled);
+      }
+    }
+  }
+
+  &:not(select) {
+    display: flex;
+    align-items: center;
+    gap: var(--iui-size-xs);
+    position: relative;
+    overflow: hidden;
+  }
+
+  &:where([disabled], :disabled, [aria-disabled='true'], [data-iui-disabled='true']) {
+    opacity: 1;
+    cursor: not-allowed;
+  }
+
+  .iui-icon {
+    flex: 0 0 auto;
+
+    svg {
+      @include mixins.iui-icon-style('m');
+      fill: inherit;
+    }
+  }
+
+  .iui-content {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    min-block-size: var(--_iui-select-block-size);
+    color: inherit;
+  }
+
+  &:where([data-iui-multi]) ~ :where(.iui-content) {
+    grid-area: 1 / -1;
+    padding-inline-start: var(--iui-size-s);
+    padding-inline-end: var(--iui-component-height);
+    z-index: 1;
+    pointer-events: none; // to prevent blocking clicks on the select-button
+
+    > * {
+      pointer-events: auto; // this is mainly for custom renderer (as a fallback).
+    }
+  }
+
+  &.iui-placeholder,
+  &:has(option[value='']:checked) {
+    color: var(--iui-color-text-placeholder);
+    font-weight: var(--iui-font-weight-light);
+  }
+}
+
+/// Mixin for applying padding and font size to various select sizes.
+/// @arg size - must be one of: small, medium, large
+@mixin iui-select-size($size: medium) {
+  @if $size == small {
+    --_iui-select-padding-block: 0;
+    --_iui-select-block-size: var(--iui-size-m);
+    --_iui-select-line-height: var(--iui-size-m);
+  }
+
+  @if $size == medium {
+    --_iui-select-padding-block: var(--iui-size-2xs);
+    --_iui-select-block-size: var(--iui-size-l);
+    --_iui-select-line-height: var(--iui-size-l);
+  }
+
+  @if $size == large {
+    --_iui-select-padding-block: var(--iui-size-xs);
+    --_iui-select-block-size: var(--iui-size-l);
+    --_iui-select-line-height: var(--iui-size-l);
+  }
+}
+
+@mixin iui-select-tag-container {
+  position: absolute;
+  inset-block: 0;
+  // align wth Select's padding
+  inset-inline: var(--iui-size-s) calc(var(--iui-size-m) + var(--iui-size-l));
+  block-size: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--iui-size-2xs);
+  overflow: hidden;
+  pointer-events: none; // to prevent blocking clicks on the select-button (nested container)
+
+  > * + * {
+    margin-inline-start: var(--iui-size-2xs);
+    @supports (gap: var(--iui-size-2xs)) {
+      margin-inline-start: 0;
+    }
+  }
+}
+
+@mixin iui-select-tag {
+  // Override hardcoded Tag margin
+  margin-block: 0;
+  display: inline-flex;
+  align-items: center;
+  block-size: 80%;
+  max-inline-size: 100%;
+  max-block-size: calc(var(--iui-size-s) * 3);
+  pointer-events: auto; // parent has pointer-events: none
+}
+
+@mixin iui-select-tag-label {
+  .iui-select-tag-container[data-iui-size='small'] & {
+    font-size: var(--iui-font-size-0);
+  }
+}
+
+@mixin iui-select-tag-button {
+  padding-inline: var(--iui-size-2xs);
+  min-block-size: unset;
+  min-inline-size: unset;
+  block-size: 100%;
+  aspect-ratio: 1 / 1;
+
+  .iui-select-tag-container[data-iui-size='small'] & {
+    font-size: var(--iui-font-size-0);
+
+    svg {
+      @include mixins.iui-icon-style('s');
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: -5px;
+    }
+  }
+}
+
+// ----------------------------------------------------------------------------
+
+.iui-select-button {
+  @include iui-select-button;
+
+  &[data-iui-size='small'] {
+    @include iui-select-size(small);
+  }
+
+  &[data-iui-size='large'] {
+    @include iui-select-size(large);
+  }
+}
+
+.iui-select-tag-container {
+  @include iui-select-tag-container;
+}
+
+.iui-select-tag:is(.iui-tag) {
+  @include iui-select-tag;
+}
+
+.iui-select-tag-label:is(.iui-tag-label) {
+  @include iui-select-tag-label;
+}
+
+.iui-select-tag-button:is(.iui-tag-button) {
+  @include iui-select-tag-button;
+}

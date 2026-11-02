@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch all history for all branches and tags
+
+      - name: Install pnpm@10.12.4
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10.12.4
+          run_install: false
+
+      - name: Use Node.js 20.12.1
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.12.1
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: ESLint
+        run: pnpm run lint --max-warnings 0
+
+      - name: Typecheck
+        run: pnpm run typecheck
+
+      - name: Run Audit
+        run: pnpm audit --audit-level high
+
+      - name: Build components
+        run: pnpm run build
+
+      - name: Check if changeset is present
+        if: github.actor != 'ivaultjs-admin'
+        run: |
+          # There are issues with changesets in github workflows, so we need to force pull the main branch
+          # Fix for issue https://github.com/changesets/changesets/issues/517#issuecomment-884778604
+          git pull -f origin main:main
+          pnpm changeset status --since=main
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps
+
+      - name: Run Test with Coverage
+        run: pnpm run test:coverage
+        env:
+          IVJS_URL_PREFIX: ${{ secrets.IVJS_URL_PREFIX }}
+          IVJS_OIDC_BROWSER_TEST_CLIENT_ID: ${{ secrets.IVJS_OIDC_BROWSER_TEST_CLIENT_ID }}
+          IVJS_OIDC_BROWSER_TEST_REDIRECT_URI: ${{ secrets.IVJS_OIDC_BROWSER_TEST_REDIRECT_URI }}
+          IVJS_OIDC_BROWSER_TEST_SCOPES: ${{ secrets.IVJS_OIDC_BROWSER_TEST_SCOPES }}
+          IVJS_OIDC_AUTHING_BROWSER_TEST_SCOPES: ${{ secrets.IVJS_OIDC_AUTHING_BROWSER_TEST_SCOPES }}
+          IVJS_SZEWTWIN_TEST_USER: ${{ secrets.IVJS_SZEWTWIN_TEST_USER }}
+          IVJS_SZEWTWIN_TEST_USER_PASSWORD: ${{ secrets.IVJS_SZEWTWIN_TEST_USER_PASSWORD }}
+          IVJS_TEST_ASSET_ID: ${{ secrets.IVJS_TEST_ASSET_ID }}
+          IVJS_TEST_PROJECT_ID: ${{ secrets.IVJS_TEST_PROJECT_ID }}
+
+      - name: Run Browser E2E Tests
+        run: pnpm run test:e2e

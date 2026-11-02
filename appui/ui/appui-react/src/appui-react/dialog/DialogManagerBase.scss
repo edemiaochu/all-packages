@@ -1,0 +1,11 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@use "~@szewtwin/core-react/lib/core-react/z-index" as *;
+
+.uifw-dialog-dialogManagerBase_renderer {
+  position: relative;
+
+  @include uicore-z-index(dialog);
+}

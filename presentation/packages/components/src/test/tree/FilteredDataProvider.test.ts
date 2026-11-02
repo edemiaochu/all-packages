@@ -1,0 +1,280 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+/* eslint-disable @typescript-eslint/no-deprecated */
+
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { PageOptions } from "@szewtwin/components-react";
+import { BeEvent } from "@szewtwin/core-szewec";
+import { IVaultConnection } from "@szewtwin/core-frontend";
+import { InstanceFilterDefinition, LabelDefinition, NodePathElement } from "@szewtwin/presentation-common";
+import { Presentation, PresentationManager, RulesetVariablesManager } from "@szewtwin/presentation-frontend";
+import { PresentationTreeDataProvider } from "../../presentation-components/tree/DataProvider.js";
+import { FilteredPresentationTreeDataProvider } from "../../presentation-components/tree/FilteredDataProvider.js";
+import { IPresentationTreeDataProvider } from "../../presentation-components/tree/IPresentationTreeDataProvider.js";
+import { createTreeNodeItem } from "../../presentation-components/tree/Utils.js";
+import { createTestDMInstanceKey } from "../_helpers/Common.js";
+import {
+  createTestDMInstancesNode,
+  createTestDMInstancesNodeKey,
+  createTestNodePathElement,
+} from "../_helpers/Hierarchy.js";
+import { createMocked, createStub } from "../TestUtils.js";
+
+describe("FilteredTreeDataProvider", () => {
+  function createTestNodePathElementWithId(id: string) {
+    return createTestNodePathElement({
+      node: createTestDMInstancesNode({
+        key: createTestDMInstancesNodeKey({ instanceKeys: [createTestDMInstanceKey({ id })], pathFromRoot: [id] }),
+      }),
+    });
+  }
+
+  function createPaths() {
+    /*
+    A-1
+      A-1-1
+    A-2
+      A-2-1
+      A-2-2
+        A-2-2-1
+    */
+    const nodePaths: NodePathElement[] = [];
+
+    nodePaths[0] = createTestNodePathElementWithId("0x1");
+    nodePaths[0].node.label = LabelDefinition.fromLabelString("A-1");
+
+    nodePaths[1] = createTestNodePathElementWithId("0x2");
+    nodePaths[1].node.label = LabelDefinition.fromLabelString("A-2");
+
+    nodePaths[0].children = [];
+    nodePaths[0].children[0] = createTestNodePathElementWithId("0x3");
+    nodePaths[0].children[0].node.label = LabelDefinition.fromLabelString("A-1-1");
+
+    nodePaths[1].children = [];
+    nodePaths[1].children[0] = createTestNodePathElementWithId("0x4");
+    nodePaths[1].children[0].node.label = LabelDefinition.fromLabelString("A-2-1");
+
+    nodePaths[1].children[1] = createTestNodePathElementWithId("0x5");
+    nodePaths[1].children[1].node.label = LabelDefinition.fromLabelString("A-2-2");
+
+    nodePaths[1].children[1].children = [];
+    nodePaths[1].children[1].children[0] = createTestNodePathElementWithId("0x6");
+    nodePaths[1].children[1].children[0].node.label = LabelDefinition.fromLabelString("A-2-2-1");
+    return nodePaths;
+  }
+
+  let provider: FilteredPresentationTreeDataProvider;
+  let filter: string;
+  let paths: NodePathElement[];
+  const rulesetId = "test_ruleset_id";
+  const ivault = {} as IVaultConnection;
+  const parentProvider = {
+    ivault,
+    rulesetId,
+    getFilteredNodePaths: createStub<IPresentationTreeDataProvider["getFilteredNodePaths"]>(),
+    createRequestOptions: createStub<IPresentationTreeDataProvider["createRequestOptions"]>(),
+  };
+  const pageOptions: PageOptions = { size: 0, start: 0 };
+
+  beforeEach(() => {
+    const onVariableChanged = new BeEvent();
+    const presentationManager = createMocked(PresentationManager);
+    presentationManager.vars.mockReturnValue({ onVariableChanged } as RulesetVariablesManager);
+    vi.spyOn(Presentation, "presentation", "get").mockReturnValue(presentationManager);
+
+    filter = "test_filter";
+    paths = createPaths();
+    provider = new FilteredPresentationTreeDataProvider({
+      parentDataProvider: parentProvider as unknown as IPresentationTreeDataProvider,
+      filter,
+      paths,
+    });
+  });
+
+  afterEach(() => {
+    parentProvider.getFilteredNodePaths.mockReset();
+    parentProvider.createRequestOptions.mockReset();
+  });
+
+  describe("filter", () => {
+    it("returns filter with which it was initialized", () => {
+      expect(provider.filter).toEqual(filter);
+    });
+  });
+
+  describe("rulesetId", () => {
+    it("returns rulesetId of the parent data provider", () => {
+      expect(provider.rulesetId).toBe(rulesetId);
+    });
+  });
+
+  describe("ivault", () => {
+    it("returns ivault of the parent data provider", () => {
+      expect(provider.ivault).toBe(ivault);
+    });
+  });
+
+  describe("parentDataProvider", () => {
+    it("returns parent data provider", () => {
+      expect(provider.parentDataProvider).toBe(parentProvider);
+    });
+  });
+
+  describe("getNodes", () => {
+    it("returns root nodes", async () => {
+      const result = await provider.getNodes(undefined, pageOptions);
+      expect(result).toMatchSnapshot();
+    });
+
+    it("returns child nodes", async () => {
+      const parentNode = createTreeNodeItem(paths[1].node);
+
+      const result = await provider.getNodes(parentNode, pageOptions);
+      expect(result).toMatchSnapshot();
+    });
+
+    it("applies same node customizations as parent data provider", async () => {
+      const customizeStub = vi.fn();
+      const newParentProvider = new PresentationTreeDataProvider({
+        ivault,
+        ruleset: "test-rules",
+        customizeTreeNodeItem: customizeStub,
+      });
+      const testPaths = [createTestNodePathElement()];
+      const filteredProvider = new FilteredPresentationTreeDataProvider({
+        parentDataProvider: newParentProvider,
+        filter: "Test",
+        paths: testPaths,
+      });
+      await filteredProvider.getNodes(undefined, pageOptions);
+      expect(customizeStub).toHaveBeenCalledOnce();
+    });
+  });
+
+  describe("getNodesCount", () => {
+    it("returns root nodes count", async () => {
+      const result = await provider.getNodesCount();
+      expect(result).toEqual(paths.length);
+    });
+
+    it("returns child nodes count", async () => {
+      const parentNode = createTreeNodeItem(paths[1].node);
+
+      const result = await provider.getNodesCount(parentNode);
+      expect(result).toEqual(paths[1].children.length);
+    });
+  });
+
+  describe("getFilteredNodePaths", () => {
+    it("calls parent data provider", async () => {
+      parentProvider.getFilteredNodePaths.mockResolvedValue(paths);
+
+      const result = await provider.getFilteredNodePaths(filter);
+      expect(result).toEqual(paths);
+      expect(parentProvider.getFilteredNodePaths).toHaveBeenCalledWith(filter);
+    });
+  });
+
+  describe("createRequestOptions", () => {
+    it("calls parent data provider", () => {
+      const key = createTestDMInstancesNodeKey();
+      const filterDefinition = {} as InstanceFilterDefinition;
+
+      parentProvider.createRequestOptions.mockReturnValue({
+        rulesetOrId: "test_ruleset",
+        ivault: {} as IVaultConnection,
+      });
+      const result = provider.createRequestOptions(key, filterDefinition);
+      expect(result.rulesetOrId).toEqual("test_ruleset");
+      expect(parentProvider.createRequestOptions).toHaveBeenCalledWith(key, filterDefinition);
+    });
+  });
+
+  const constantFilter = "test";
+  const filteredNodePaths: NodePathElement[] = [];
+
+  filteredNodePaths[0] = createTestNodePathElementWithId("0x1");
+  filteredNodePaths[0].node.label = LabelDefinition.fromLabelString("A-1");
+  filteredNodePaths[0].filteringData = { matchesCount: 0, childMatchesCount: 1 };
+
+  filteredNodePaths[0].children = [];
+  filteredNodePaths[0].children[0] = createTestNodePathElementWithId("0x2");
+  filteredNodePaths[0].children[0].node.label = LabelDefinition.fromLabelString("A-1-1 test");
+  filteredNodePaths[0].children[0].filteringData = { matchesCount: 1, childMatchesCount: 0 };
+
+  filteredNodePaths[1] = createTestNodePathElementWithId("0x3");
+  filteredNodePaths[1].node.label = LabelDefinition.fromLabelString("A-2 test");
+  filteredNodePaths[1].filteringData = { matchesCount: 1, childMatchesCount: 0 };
+
+  filteredNodePaths[1].children = [];
+  filteredNodePaths[1].children[0] = createTestNodePathElementWithId("0x4");
+  filteredNodePaths[1].children[0].node.label = LabelDefinition.fromLabelString("A-2-1");
+  filteredNodePaths[1].children[0].filteringData = { matchesCount: 0, childMatchesCount: 0 };
+
+  filteredNodePaths[1].children[1] = createTestNodePathElementWithId("0x5");
+  filteredNodePaths[1].children[1].node.label = LabelDefinition.fromLabelString("A-2-2");
+  filteredNodePaths[1].children[1].filteringData = { matchesCount: 0, childMatchesCount: 0 };
+
+  describe("countFilteringResults", () => {
+    it("all matches get counted", () => {
+      expect(provider.countFilteringResults(filteredNodePaths)).toBe(2);
+    });
+
+    it("doesn't count if node paths don't have filtering data", () => {
+      paths = [];
+      paths[0] = createTestNodePathElement();
+      paths[0].node.label = LabelDefinition.fromLabelString("A-1");
+      paths[0].filteringData = undefined;
+      expect(provider.countFilteringResults(paths)).toBe(0);
+    });
+  });
+
+  describe("getActiveMatch", () => {
+    it("returns correct match", () => {
+      provider = new FilteredPresentationTreeDataProvider({
+        parentDataProvider: parentProvider as unknown as IPresentationTreeDataProvider,
+        filter: constantFilter,
+        paths: filteredNodePaths,
+      });
+      const result = provider.getActiveMatch(2);
+
+      expect(result).toBeDefined();
+      expect(result!.nodeId).toBe(createTreeNodeItem(filteredNodePaths[1].node).id);
+      expect(result!.matchIndex).toBe(0);
+    });
+
+    it("returns undefined when index is 0 or lower", () => {
+      provider = new FilteredPresentationTreeDataProvider({
+        parentDataProvider: parentProvider as unknown as IPresentationTreeDataProvider,
+        filter: constantFilter,
+        paths: filteredNodePaths,
+      });
+      const result = provider.getActiveMatch(0);
+      expect(result).toBeUndefined();
+    });
+  });
+
+  describe("nodeMatchesFilter", () => {
+    it("returns true when node matches filter", () => {
+      provider = new FilteredPresentationTreeDataProvider({
+        parentDataProvider: parentProvider as unknown as IPresentationTreeDataProvider,
+        filter: constantFilter,
+        paths: filteredNodePaths,
+      });
+      const node = createTreeNodeItem(filteredNodePaths[1].node);
+      expect(provider.nodeMatchesFilter(node)).toBe(true);
+    });
+
+    it("returns false when node matches filter", () => {
+      provider = new FilteredPresentationTreeDataProvider({
+        parentDataProvider: parentProvider as unknown as IPresentationTreeDataProvider,
+        filter: constantFilter,
+        paths: filteredNodePaths,
+      });
+      const node = createTreeNodeItem(filteredNodePaths[0].node);
+      expect(provider.nodeMatchesFilter(node)).toBe(false);
+    });
+  });
+});

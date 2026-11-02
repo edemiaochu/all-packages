@@ -1,0 +1,22 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+
+$checkbox-size: calc(var(--iui-font-size-1) * 1.2);
+
+.components-boolean-editor {
+  height: $checkbox-size;
+  width: $checkbox-size;
+  margin-left: 0px;
+
+  &.components-cell-editor {
+    border: none;
+  }
+}
+
+.components-property-list--horizontal {
+  .components-boolean-editor {
+    margin-left: var(--iui-size-xs); // Clear the resizer in the PropertyGrid
+  }
+}

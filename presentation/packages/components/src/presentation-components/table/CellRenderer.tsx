@@ -1,0 +1,106 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+/** @packageDocumentation
+ * @module Table
+ */
+
+import { useState } from "react";
+import { ArrayValue, PropertyRecord, PropertyValueFormat } from "@szewtwin/appui-abstract";
+import { NonPrimitivePropertyRenderer, PropertyValueRendererManager } from "@szewtwin/components-react";
+import { Orientation } from "@szewtwin/core-react";
+import { Anchor, Modal, ModalContent } from "@szewtwin/szewtwinui-react";
+
+/**
+ * Props for [[TableCellRenderer]] component.
+ * @public
+ */
+export interface TableCellRendererProps {
+  /** Record containing cell value and property description. */
+  record: PropertyRecord;
+}
+
+/**
+ * Renderer for single table cell.
+ * @public
+ */
+export function TableCellRenderer(props: TableCellRendererProps) {
+  const { record } = props;
+
+  if (record.value.valueFormat === PropertyValueFormat.Array) {
+    return <ArrayPropertyRenderer record={record} />;
+  }
+  if (record.value.valueFormat === PropertyValueFormat.Struct) {
+    return <StructPropertyRenderer record={record} />;
+  }
+
+  return <>{PropertyValueRendererManager.defaultManager.render(record)}</>;
+}
+
+function ArrayPropertyRenderer(props: TableCellRendererProps) {
+  const { record } = props;
+  const value = record.value as ArrayValue;
+
+  const rendererProps: NonPrimitiveCellRendererProps = {
+    record,
+    buttonLabel: value.items.length !== 0 ? `${value.itemsTypeName}[${value.items.length}]` : "[]",
+    dialogLabel: `Array of type "${value.itemsTypeName}"`,
+    uniqueKey: `table_array_${record.property.name}`,
+  };
+  return <NonPrimitiveCellRenderer {...rendererProps} />;
+}
+
+function StructPropertyRenderer(props: TableCellRendererProps) {
+  const { record } = props;
+
+  const rendererProps: NonPrimitiveCellRendererProps = {
+    record,
+    buttonLabel: `{${record.property.typename}}`,
+    dialogLabel: `Struct of type "${record.property.typename}"`,
+    uniqueKey: `table_struct_${record.property.name}`,
+  };
+  return <NonPrimitiveCellRenderer {...rendererProps} />;
+}
+
+interface NonPrimitiveCellRendererProps {
+  record: PropertyRecord;
+  dialogLabel: string;
+  buttonLabel: string;
+  uniqueKey: string;
+}
+
+function NonPrimitiveCellRenderer(props: NonPrimitiveCellRendererProps) {
+  const { record, dialogLabel, buttonLabel, uniqueKey } = props;
+  const [isOpen, setIsOpen] = useState(false);
+
+  // modal window when opened causes findDOMNode warning https://github.com/szewTwin/szewTwinUI/issues/2199
+  /* v8 ignore next -- @preserve */
+  return (
+    <>
+      <Anchor
+        onClick={() => {
+          setIsOpen(true);
+        }}
+      >
+        {buttonLabel}
+      </Anchor>
+      <Modal
+        isOpen={isOpen}
+        title={dialogLabel}
+        onClose={() => setIsOpen(false)}
+        className="presentation-components-non-primitive-value"
+      >
+        <ModalContent>
+          {/* Can't change our import to `components-react`, because it was added there in a version later than our peer dependency */}
+          <NonPrimitivePropertyRenderer
+            uniqueKey={uniqueKey}
+            propertyRecord={record}
+            /* eslint-disable-next-line @typescript-eslint/no-deprecated */
+            orientation={Orientation.Horizontal}
+          />
+        </ModalContent>
+      </Modal>
+    </>
+  );
+}

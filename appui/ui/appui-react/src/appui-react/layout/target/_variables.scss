@@ -1,0 +1,66 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@use "~@szewtwin/core-react/lib/core-react/z-index";
+@use "../outline/variables";
+
+@forward "~@szewtwin/core-react/lib/core-react/style/themecolors";
+@forward "~@szewtwin/core-react/lib/core-react/z-index";
+@forward "../outline/variables";
+
+$nz-widget-target-border-color: var(--iui-color-background-disabled);
+$nz-widget-target-background: var(--iui-color-background-backdrop-hover);
+$nz-widget-target-border-size: 2px;
+
+@mixin nz-widget-target {
+  $length: 4em;
+
+  height: $length;
+  width: $length;
+  border: $nz-widget-target-border-size solid $nz-widget-target-border-color;
+  border-radius: var(--iui-border-radius-1);
+  box-sizing: border-box;
+  background-color: $nz-widget-target-background;
+  transition: transform var(--iui-duration-1) ease-in;
+  pointer-events: all;
+  display: flex;
+  box-shadow: var(--iui-shadow-3);
+  animation: nz-grow var(--iui-duration-1) ease-in-out,
+    nz-pulse 3s ease-in-out 2s infinite;
+
+  @include z-index.uicore-z-index(drop-target);
+
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes nz-pulse {
+      from {
+        transform: scale3d(1, 1, 1);
+      }
+
+      50% {
+        transform: scale3d(1.1, 1.1, 1.1);
+      }
+
+      to {
+        transform: scale3d(1, 1, 1);
+      }
+    }
+
+    @keyframes nz-grow {
+      from {
+        transform: scale3d(0, 0, 0);
+      }
+
+      to {
+        transform: scale3d(1, 1, 1);
+      }
+    }
+  }
+}
+
+@mixin nz-targeted-widget-target {
+  transform: scale(1.2);
+  background-color: variables.$nz-opaque-outline-color;
+  box-shadow: var(--iui-shadow-4);
+  animation-iteration-count: 0, 0;
+}

@@ -1,0 +1,681 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+
+import * as moq from "typemoq";
+import type { IVaultRpcProps } from "@szewtwin/core-common";
+import type { Id64String } from "@szewtwin/core-szewec";
+import { Logger } from "@szewtwin/core-szewec";
+import type { IVaultConnection, ViewState } from "@szewtwin/core-frontend";
+import { SelectionSet } from "@szewtwin/core-frontend";
+import type {
+  CursorMenuPayload,
+  UserSettingsProvider,
+} from "../appui-react.js";
+import {
+  AccuDrawPopupManager,
+  SettingsModalFrontstage,
+  UiFramework,
+} from "../appui-react.js";
+import type { UiStateStorage } from "@szewtwin/core-react";
+import { LocalStateStorage } from "@szewtwin/core-react";
+import TestUtils, { storageMock } from "./TestUtils.js";
+import { OpenSettingsTool } from "../appui-react/tools/OpenSettingsTool.js";
+import { PopupManager } from "../appui-react.js";
+import { createElement } from "react";
+import type { DialogLayoutDataProvider } from "@szewtwin/appui-abstract";
+import { InternalModalDialogManager } from "../appui-react/dialog/InternalModalDialogManager.js";
+import { InternalModelessDialogManager } from "../appui-react/dialog/InternalModelessDialogManager.js";
+import { ColorTheme } from "../appui-react/theme/ThemeId.js";
+
+describe("UiFramework localStorage Wrapper", () => {
+  const localStorageToRestore = Object.getOwnPropertyDescriptor(
+    window,
+    "localStorage"
+  )!;
+  const localStorageMock = storageMock();
+
+  beforeEach(async () => {
+    Object.defineProperty(window, "localStorage", {
+      get: () => localStorageMock,
+    });
+  });
+
+  afterEach(() => {
+    Object.defineProperty(window, "localStorage", localStorageToRestore);
+  });
+
+  describe("UiFramework", () => {
+    it("store should throw Error without initialize", () => {
+      TestUtils.terminateUiFramework();
+      expect(() => UiFramework.store).to.throw(Error);
+    });
+
+    it("localizationNamespace should return UiFramework", () => {
+      expect(UiFramework.localizationNamespace).toEqual("UiFramework");
+    });
+
+    it("packageName should return appui-react", () => {
+      expect(UiFramework.packageName).toEqual("appui-react");
+    });
+
+    it("translate should return the key (in test environment)", async () => {
+      await TestUtils.initializeUiFramework(true);
+      expect(UiFramework.translate("test1.test2")).toEqual("test1.test2");
+    });
+
+    it("test OpenSettingsTool", async () => {
+      await TestUtils.initializeUiFramework(true);
+
+      const spy = vi.fn();
+      const tabName = "page1";
+      const handleOpenSetting = (settingsCategory: string) => {
+        expect(settingsCategory).to.eql(tabName);
+        spy();
+      };
+
+      const handleOpenSetting2 = (_settingsCategory: string) => {
+        spy();
+      };
+
+      const showSettingsStageToRestore = Object.getOwnPropertyDescriptor(
+        SettingsModalFrontstage,
+        "showSettingsStage"
+      )!;
+      Object.defineProperty(SettingsModalFrontstage, "showSettingsStage", {
+        get: () => handleOpenSetting,
+      });
+      const tool = new OpenSettingsTool();
+      // tabid arg
+      await tool.parseAndRun(tabName);
+      expect(spy).toHaveBeenCalledOnce();
+      spy.mockReset();
+
+      // No tabid arg
+      Object.defineProperty(SettingsModalFrontstage, "showSettingsStage", {
+        get: () => handleOpenSetting2,
+      });
+      await tool.parseAndRun();
+      expect(spy).toHaveBeenCalledOnce();
+      spy.mockReset();
+
+      Object.defineProperty(
+        SettingsModalFrontstage,
+        "showSettingsStage",
+        showSettingsStageToRestore
+      );
+    });
+
+    it("calling initialize twice should log", async () => {
+      TestUtils.terminateUiFramework();
+      const spyLogger = vi.spyOn(Logger, "logInfo");
+      expect(UiFramework.initialized).toEqual(false);
+      await UiFramework.initialize(TestUtils.store);
+      expect(UiFramework.initialized).toEqual(true);
+      await UiFramework.initialize(TestUtils.store);
+      expect(spyLogger).toHaveBeenCalledOnce();
+    });
+
+    it("test default frameworkState key", async () => {
+      expect(UiFramework.frameworkStateKey).to.equal("frameworkState");
+    });
+
+    it("IsUiVisible", async () => {
+      UiFramework.setIsUiVisible(false);
+      expect(UiFramework.getIsUiVisible()).toEqual(false);
+    });
+
+    it("ColorTheme", async () => {
+      await TestUtils.initializeUiFramework();
+      UiFramework.setColorTheme(ColorTheme.Dark);
+      expect(UiFramework.getColorTheme()).toEqual(ColorTheme.Dark);
+    });
+
+    it("test selection scope state data", async () => {
+      expect(UiFramework.getActiveSelectionScope()).to.equal("element");
+      const scopes = UiFramework.getAvailableSelectionScopes();
+      expect(scopes.length).to.be.greaterThan(0);
+
+      // since "file" is not a valid scope the active scope should still be element
+      UiFramework.setActiveSelectionScope("file");
+      expect(UiFramework.getActiveSelectionScope()).to.equal("element");
+    });
+
+    it("WidgetOpacity", async () => {
+      await TestUtils.initializeUiFramework(true);
+      const testValue = 0.5;
+      UiFramework.setWidgetOpacity(testValue);
+      expect(UiFramework.getWidgetOpacity()).toEqual(testValue);
+    });
+
+    it("ActiveIVaultId", async () => {
+      const testValue = "Test";
+      UiFramework.setActiveIVaultId(testValue);
+      expect(UiFramework.getActiveIVaultId()).toEqual(testValue);
+    });
+
+    class testSettingsProvider implements UserSettingsProvider {
+      public readonly providerId = "testSettingsProvider";
+      public settingsLoaded = false;
+      public async loadUserSettings(storage: UiStateStorage) {
+        if (storage) this.settingsLoaded = true;
+      }
+    }
+
+    it("SessionState setters/getters", async () => {
+      const settingsProvider = new testSettingsProvider();
+      UiFramework.registerUserSettingsProvider(settingsProvider);
+
+      UiFramework.setDefaultIVaultViewportControlId(
+        "DefaultIVaultViewportControlId"
+      );
+      expect(UiFramework.getDefaultIVaultViewportControlId()).toEqual(
+        "DefaultIVaultViewportControlId"
+      );
+
+      const testViewId: Id64String = "0x12345678";
+      UiFramework.setDefaultViewId(testViewId);
+      expect(UiFramework.getDefaultViewId()).toEqual(testViewId);
+
+      expect(settingsProvider.settingsLoaded).toEqual(false);
+
+      const uisettings = new LocalStateStorage();
+      await UiFramework.setUiStateStorage(uisettings);
+      expect(UiFramework.getUiStateStorage()).toEqual(uisettings);
+      expect(settingsProvider.settingsLoaded).toEqual(true);
+      settingsProvider.settingsLoaded = false;
+      // if we try to set storage to same object this should be a noop and the settingsLoaded property should remain false;
+      await UiFramework.setUiStateStorage(uisettings);
+      expect(settingsProvider.settingsLoaded).toEqual(false);
+
+      await UiFramework.initializeStateFromUserSettingsProviders();
+
+      const useDragInteraction = true;
+      UiFramework.setUseDragInteraction(useDragInteraction);
+      expect(UiFramework.useDragInteraction).to.eql(useDragInteraction);
+
+      UiFramework.closeCursorMenu();
+      expect(UiFramework.getCursorMenuData()).toEqual(undefined);
+
+      const menuData: CursorMenuPayload = {
+        items: [],
+        position: { x: 100, y: 100 },
+      };
+      UiFramework.openCursorMenu(menuData);
+      expect(UiFramework.getCursorMenuData()).toBeTruthy();
+
+      const viewState = moq.Mock.ofType<ViewState>();
+      UiFramework.setDefaultViewState(viewState.object);
+      expect(UiFramework.getDefaultViewState()).toBeTruthy();
+
+      const displayOverlay = false;
+      UiFramework.setViewOverlayDisplay(displayOverlay);
+      expect(UiFramework.viewOverlayDisplay).to.eql(displayOverlay);
+      // test workflow that doesn't change the item
+      const currentDisplay = UiFramework.viewOverlayDisplay;
+      UiFramework.setViewOverlayDisplay(displayOverlay);
+      expect(UiFramework.viewOverlayDisplay).to.eql(currentDisplay);
+
+      TestUtils.terminateUiFramework();
+
+      // try again when store is not defined
+      expect(UiFramework.useDragInteraction).to.eql(false);
+    });
+
+    it("showCard/hideCard forwards to PopupManager", () => {
+      const stub = vi.spyOn(PopupManager, "displayCard").mockReturnValue(true);
+      expect(
+        UiFramework.showCard(
+          createElement("div", { id: "test" }, ["card content"]),
+          "test",
+          { items: [] },
+          { x: 0, y: 0 },
+          { x: 0, y: 0 },
+          (item: any) => {
+            item;
+          },
+          () => {}
+        )
+      ).toEqual(true);
+      stub.mockReset();
+
+      vi.spyOn(PopupManager, "displayCard").mockReturnValue(false);
+      expect(
+        UiFramework.showCard(
+          createElement("div", { id: "test" }, ["card content"]),
+          "test",
+          { items: [] },
+          { x: 0, y: 0 },
+          { x: 0, y: 0 },
+          (item: any) => {
+            item;
+          },
+          () => {}
+        )
+      ).toEqual(false);
+
+      const hideStub = vi.spyOn(PopupManager, "hideCard").mockReturnValue(true);
+      expect(UiFramework.hideCard()).toEqual(true);
+
+      hideStub.mockReset();
+
+      vi.spyOn(PopupManager, "hideCard").mockReturnValue(false);
+      expect(UiFramework.hideCard()).toEqual(false);
+    });
+
+    it("openToolSettingsPopup/closeToolSettingsPopup forwards to PopupManager", () => {
+      const dataProviderMock = moq.Mock.ofType<DialogLayoutDataProvider>();
+      const stub = vi
+        .spyOn(PopupManager, "openToolSettings")
+        .mockReturnValue(true);
+      expect(
+        UiFramework.openToolSettingsPopup(
+          dataProviderMock.object,
+          { x: 0, y: 0 },
+          { x: 0, y: 0 },
+          () => {}
+        )
+      ).toEqual(true);
+      stub.mockReset();
+
+      vi.spyOn(PopupManager, "openToolSettings").mockReturnValue(false);
+      expect(
+        UiFramework.openToolSettingsPopup(
+          dataProviderMock.object,
+          { x: 0, y: 0 },
+          { x: 0, y: 0 },
+          () => {}
+        )
+      ).toEqual(false);
+
+      const hideStub = vi
+        .spyOn(PopupManager, "closeToolSettings")
+        .mockReturnValue(true);
+      expect(UiFramework.closeToolSettingsPopup()).toEqual(true);
+
+      hideStub.mockReset();
+
+      vi.spyOn(PopupManager, "closeToolSettings").mockReturnValue(false);
+      expect(UiFramework.closeToolSettingsPopup()).toEqual(false);
+    });
+
+    it("showToolbar/hideToolbar forwards to PopupManager", () => {
+      const stub = vi
+        .spyOn(PopupManager, "displayToolbar")
+        .mockReturnValue(true);
+      expect(
+        UiFramework.showToolbar(
+          { items: [] },
+          { x: 0, y: 0 },
+          { x: 0, y: 0 },
+          (item: any) => {
+            item;
+          },
+          () => {}
+        )
+      ).toEqual(true);
+      stub.mockReset();
+
+      const hideStub = vi
+        .spyOn(PopupManager, "hideToolbar")
+        .mockReturnValue(true);
+      expect(UiFramework.hideToolbar()).toEqual(true);
+
+      hideStub.mockReset();
+
+      vi.spyOn(PopupManager, "hideToolbar").mockReturnValue(false);
+      expect(UiFramework.hideToolbar()).toEqual(false);
+    });
+
+    it("showMenuButton/hideMenuButton forwards to AccuDrawPopupManager", () => {
+      const stub = vi
+        .spyOn(AccuDrawPopupManager, "showMenuButton")
+        .mockReturnValue(true);
+      expect(UiFramework.showMenuButton("test", [], { x: 0, y: 0 })).toEqual(
+        true
+      );
+      stub.mockReset();
+
+      vi.spyOn(AccuDrawPopupManager, "showMenuButton").mockReturnValue(false);
+      expect(UiFramework.showMenuButton("test", [], { x: 0, y: 0 })).toEqual(
+        false
+      );
+
+      const hideStub = vi
+        .spyOn(AccuDrawPopupManager, "hideMenuButton")
+        .mockReturnValue(true);
+      expect(UiFramework.hideMenuButton("test")).toEqual(true);
+
+      hideStub.mockReset();
+
+      vi.spyOn(AccuDrawPopupManager, "hideMenuButton").mockReturnValue(false);
+      expect(UiFramework.hideMenuButton("test")).toEqual(false);
+    });
+
+    it("hideMenuButton returns false if menu button with id cannot be found", () => {
+      const htmlElement = document.createElement<any>("div");
+      UiFramework.showMenuButton("test", [], { x: 0, y: 0 }, htmlElement);
+
+      expect(UiFramework.hideMenuButton("test2")).toEqual(false);
+      expect(UiFramework.hideMenuButton("test")).toEqual(true);
+    });
+
+    it("showCalculator/hideCalculator forwards to AccuDrawPopupManager", () => {
+      const stub = vi
+        .spyOn(AccuDrawPopupManager, "showCalculator")
+        .mockReturnValue(true);
+      expect(
+        UiFramework.showCalculator(
+          23,
+          "icon-string",
+          { x: 0, y: 0 },
+          () => {},
+          () => {}
+        )
+      ).toEqual(true);
+
+      stub.mockReset();
+
+      vi.spyOn(AccuDrawPopupManager, "showCalculator").mockReturnValue(false);
+      expect(
+        UiFramework.showCalculator(
+          23,
+          "icon-string",
+          { x: 0, y: 0 },
+          () => {},
+          () => {}
+        )
+      ).toEqual(false);
+
+      const hideStub = vi
+        .spyOn(AccuDrawPopupManager, "hideCalculator")
+        .mockReturnValue(true);
+      expect(UiFramework.hideCalculator()).toEqual(true);
+
+      hideStub.mockReset();
+
+      vi.spyOn(AccuDrawPopupManager, "hideCalculator").mockReturnValue(false);
+      expect(UiFramework.hideCalculator()).toEqual(false);
+    });
+
+    it("showComponent/hideComponent forwards to PopupManager", () => {
+      const stub = vi
+        .spyOn(PopupManager, "showComponent")
+        .mockReturnValue(true);
+      expect(
+        UiFramework.showComponent(
+          createElement("div", { id: "test" }, ["card content"]),
+          {}
+        )
+      ).toEqual(true);
+      stub.mockReset();
+
+      vi.spyOn(PopupManager, "showComponent").mockReturnValue(false);
+      expect(
+        UiFramework.showComponent(
+          createElement("div", { id: "test" }, ["card content"]),
+          {}
+        )
+      ).toEqual(false);
+
+      const hideStub = vi
+        .spyOn(PopupManager, "hideComponent")
+        .mockReturnValue(true);
+      expect(UiFramework.hideComponent()).toEqual(true);
+
+      hideStub.mockReset();
+
+      vi.spyOn(PopupManager, "hideComponent").mockReturnValue(false);
+      expect(UiFramework.hideComponent()).toEqual(false);
+    });
+
+    it("hideComponent returns false if menu button with id cannot be found", () => {
+      UiFramework.showComponent(createElement("div", {}, ["card content"]), {
+        id: "component-1",
+      });
+
+      expect(UiFramework.hideComponent("component-1000")).toEqual(false);
+      expect(UiFramework.hideComponent("component-1")).toEqual(true);
+    });
+
+    it("showAngleEditor forwards to AccuDrawPopupManager", () => {
+      const stub = vi
+        .spyOn(AccuDrawPopupManager, "showAngleEditor")
+        .mockReturnValue(true);
+      expect(
+        UiFramework.showAngleEditor(
+          23,
+          { x: 0, y: 0 },
+          () => {},
+          () => {}
+        )
+      ).toEqual(true);
+
+      stub.mockReset();
+
+      vi.spyOn(AccuDrawPopupManager, "showAngleEditor").mockReturnValue(false);
+      expect(
+        UiFramework.showAngleEditor(
+          23,
+          { x: 0, y: 0 },
+          () => {},
+          () => {}
+        )
+      ).toEqual(false);
+    });
+
+    it("showInputEditor/hideImportEditor forwards to PopupManager", () => {
+      vi.spyOn(PopupManager, "showInputEditor").mockReturnValue(true);
+      expect(
+        UiFramework.showInputEditor({
+          initialValue: 2,
+          location: { x: 0, y: 0 },
+          onCancel: () => {},
+          onCommit: (_: any) => {},
+          propertyDescription: {
+            typename: "",
+            name: "test",
+            displayLabel: "test",
+          },
+        })
+      ).toEqual(true);
+
+      const hideStub = vi
+        .spyOn(PopupManager, "hideInputEditor")
+        .mockReturnValue(true);
+      expect(UiFramework.hideInputEditor()).toEqual(true);
+
+      hideStub.mockReset();
+      vi.spyOn(PopupManager, "hideInputEditor").mockReturnValue(false);
+      expect(UiFramework.hideInputEditor()).toEqual(false);
+    });
+
+    it("showDimensionEditor(height) forwards to AccuDrawPopupManager", () => {
+      const el = document.createElement("div");
+      const lengthStub = vi
+        .spyOn(AccuDrawPopupManager, "showLengthEditor")
+        .mockReturnValue(true);
+      const heightStub = vi
+        .spyOn(AccuDrawPopupManager, "showHeightEditor")
+        .mockReturnValue(true);
+      expect(
+        UiFramework.showDimensionEditor(
+          "length",
+          23,
+          { x: 0, y: 0 },
+          () => {},
+          () => {},
+          el
+        )
+      ).toEqual(true);
+
+      expect(lengthStub).toHaveBeenCalledOnce();
+      expect(heightStub).not.toBeCalled();
+      lengthStub.mockReset();
+
+      expect(
+        UiFramework.showDimensionEditor(
+          "length",
+          23,
+          { x: 0, y: 0 },
+          () => {},
+          () => {},
+          el
+        )
+      );
+
+      expect(lengthStub).toHaveBeenCalledOnce();
+      expect(heightStub).not.toBeCalled();
+    });
+
+    it("showDimensionEditor(length) forwards to AccuDrawPopupManager", () => {
+      const el = document.createElement("div");
+      const lengthStub = vi
+        .spyOn(AccuDrawPopupManager, "showLengthEditor")
+        .mockReturnValue(true);
+      const heightStub = vi
+        .spyOn(AccuDrawPopupManager, "showHeightEditor")
+        .mockReturnValue(true);
+      expect(
+        UiFramework.showDimensionEditor(
+          "height",
+          23,
+          { x: 0, y: 0 },
+          () => {},
+          () => {},
+          el
+        )
+      ).toEqual(true);
+
+      expect(lengthStub).not.toBeCalled();
+      expect(heightStub).toHaveBeenCalledOnce();
+      heightStub.mockReset();
+
+      expect(
+        UiFramework.showDimensionEditor(
+          "height",
+          23,
+          { x: 0, y: 0 },
+          () => {},
+          () => {},
+          el
+        )
+      );
+
+      expect(lengthStub).not.toBeCalled();
+      expect(heightStub).toHaveBeenCalledOnce();
+    });
+
+    it("openDialog calls the appropriate UiFramework.dialogs open method", () => {
+      const UiDataProvidedDialogMock =
+        moq.Mock.ofType<DialogLayoutDataProvider>();
+      let isModal = true;
+      const internalModalStub = vi.spyOn(InternalModalDialogManager, "open");
+      const internalModelessStub = vi.spyOn(
+        InternalModelessDialogManager,
+        "open"
+      );
+      expect(
+        UiFramework.openDialog(
+          UiDataProvidedDialogMock.object,
+          "My Dialog",
+          isModal,
+          "one"
+        )
+      ).toEqual(true);
+      expect(internalModalStub).toHaveBeenCalledOnce();
+      expect(internalModelessStub).not.toBeCalled();
+
+      internalModalStub.mockReset();
+      internalModelessStub.mockReset();
+
+      isModal = false;
+      expect(
+        UiFramework.openDialog(
+          UiDataProvidedDialogMock.object,
+          "My Dialog",
+          isModal,
+          "one"
+        )
+      ).toEqual(true);
+      expect(internalModalStub).not.toBeCalled();
+      expect(internalModelessStub).toHaveBeenCalledOnce();
+    });
+
+    it("closeDialog calls the Modeless close method, and model close method if needed", () => {
+      const UiDataProvidedDialogMock =
+        moq.Mock.ofType<DialogLayoutDataProvider>();
+      const internalModalStub = vi.spyOn(InternalModalDialogManager, "close");
+      const internalModelessStub = vi.spyOn(
+        InternalModelessDialogManager,
+        "close"
+      );
+
+      let isModal = true;
+      expect(
+        UiFramework.openDialog(
+          UiDataProvidedDialogMock.object,
+          "My Dialog",
+          isModal,
+          "one"
+        )
+      ).toEqual(true);
+      expect(UiFramework.closeDialog("one")).toEqual(true);
+      expect(internalModalStub).toHaveBeenCalledOnce();
+      expect(internalModelessStub).not.toBeCalled();
+
+      internalModalStub.mockReset();
+      internalModelessStub.mockReset();
+
+      isModal = false;
+      expect(
+        UiFramework.openDialog(
+          UiDataProvidedDialogMock.object,
+          "My Dialog",
+          isModal,
+          "one"
+        )
+      ).toEqual(true);
+      expect(UiFramework.closeDialog("one")).toEqual(true);
+      expect(internalModalStub).not.toBeCalled();
+      expect(internalModelessStub).toHaveBeenCalledOnce();
+    });
+
+    it("showKeyinPalette/hideKeyinPalette forwards to PopupManager", () => {
+      const stub = vi.spyOn(PopupManager, "showKeyinPalette");
+      expect(UiFramework.showKeyinPalette([])).toEqual(true);
+      expect(stub).toHaveBeenCalledOnce();
+
+      const hideStub = vi.spyOn(PopupManager, "hideKeyinPalette");
+      expect(UiFramework.hideKeyinPalette()).toEqual(true);
+      expect(hideStub).toHaveBeenCalledOnce();
+      expect(UiFramework.hideKeyinPalette()).toEqual(false); // cannot hide if not shown
+    });
+  });
+
+  describe("ConnectionEvents", () => {
+    const ivaultToken: IVaultRpcProps = { key: "" };
+    const ivaultMock = moq.Mock.ofType<IVaultConnection>();
+    let ss: SelectionSet;
+
+    beforeEach(async () => {
+      ivaultMock.reset();
+      ivaultMock.setup((x) => x.getRpcProps()).returns(() => ivaultToken);
+
+      ss = new SelectionSet(ivaultMock.object);
+      ivaultMock.setup((x) => x.selectionSet).returns(() => ss);
+    });
+
+    it("SessionState setIVaultConnection", async () => {
+      const countHolder = { count: 0 };
+      UiFramework.onIVaultConnectionChanged.addListener((_ivault) => {
+        countHolder.count += 1;
+      });
+
+      UiFramework.setIVaultConnection(ivaultMock.object);
+      expect(UiFramework.getIVaultConnection()).toEqual(ivaultMock.object);
+      expect(countHolder.count).toStrictEqual(1);
+    });
+  });
+});

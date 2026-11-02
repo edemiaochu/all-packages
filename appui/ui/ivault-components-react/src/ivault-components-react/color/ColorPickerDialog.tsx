@@ -1,0 +1,107 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+/** @packageDocumentation
+ * @module Color
+ */
+
+import * as React from "react";
+import { DialogButtonType } from "@szewtwin/appui-abstract";
+import { Dialog } from "@szewtwin/core-react";
+import { ColorDef } from "@szewtwin/core-common";
+import {
+  ColorBuilder,
+  ColorInputPanel,
+  ColorPalette,
+  ColorPicker,
+  ColorValue,
+} from "@szewtwin/szewtwinui-react";
+
+/** Properties for the [[ColorPickerDialog]] React component
+ * @beta
+ * @deprecated in 4.11.0. Props of deprecated component {@link ColorPickerDialog}.
+ */
+export interface ColorPickerDialogProps {
+  dialogTitle: string;
+  color: ColorDef;
+  onOkResult: (selectedColor: ColorDef) => void;
+  onCancelResult: () => void;
+  /** displayed in rows of 9 items */
+  colorPresets?: ColorDef[];
+  /** If set show either HSL, RGB, or HEX input values. If undefined no input value is shown */
+  colorInputType?: "hsl" | "rgb" | "hex";
+}
+
+/**
+ * Color Picker Dialog to use as modal dialog.
+ * @beta
+ * @deprecated in 4.11.0. Use {@link https://szewtwinui.szewec.com/docs/colorpicker szewTwinUI color picker} instead.
+ */
+export function ColorPickerDialog({
+  dialogTitle,
+  color,
+  onOkResult,
+  onCancelResult,
+  colorPresets,
+  colorInputType,
+}: // eslint-disable-next-line @typescript-eslint/no-deprecated
+ColorPickerDialogProps) {
+  const [activeColor, setActiveColor] = React.useState(color);
+  const dialogContainer = React.useRef<HTMLDivElement>(null);
+
+  const handleOk = React.useCallback(() => {
+    onOkResult(activeColor);
+  }, [onOkResult, activeColor]);
+  const handleCancel = React.useCallback(() => {
+    if (onCancelResult) onCancelResult();
+  }, [onCancelResult]);
+
+  const handleColorChanged = React.useCallback((newColorValue: ColorValue) => {
+    const newColorDef = ColorDef.fromTbgr(newColorValue.toTbgr());
+    setActiveColor(newColorDef);
+  }, []);
+
+  const buttonCluster = React.useMemo(
+    () => [
+      { type: DialogButtonType.OK, onClick: handleOk },
+      { type: DialogButtonType.Cancel, onClick: handleCancel },
+    ],
+    [handleCancel, handleOk]
+  );
+
+  const colorOptions = React.useMemo(() => {
+    if (colorPresets) {
+      return colorPresets.map((def) => ColorValue.fromTbgr(def.tbgr));
+    }
+    return undefined;
+  }, [colorPresets]);
+
+  return (
+    <div ref={dialogContainer}>
+      {/* eslint-disable-next-line @typescript-eslint/no-deprecated */}
+      <Dialog
+        title={dialogTitle}
+        opened={true}
+        resizable={false}
+        movable={true}
+        modal={true}
+        buttonCluster={buttonCluster}
+        onClose={handleCancel}
+        onEscape={handleCancel}
+        maxWidth={320}
+      >
+        <ColorPicker
+          selectedColor={ColorValue.fromTbgr(activeColor.tbgr)}
+          onChangeComplete={handleColorChanged}
+        >
+          <ColorBuilder />
+          {colorInputType && (
+            <ColorInputPanel defaultColorFormat={colorInputType} />
+          )}
+          {colorOptions && <ColorPalette colors={colorOptions} />}
+        </ColorPicker>
+      </Dialog>
+    </div>
+  );
+}

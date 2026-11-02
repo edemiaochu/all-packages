@@ -1,0 +1,46 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+
+import { HierarchyCacheMode, initializeCore, terminateCore } from "test-utilities";
+import { afterAll, beforeAll } from "vitest";
+import { UiFramework } from "@itwin/appui-react";
+import { EmptyLocalization, IModelReadRpcInterface } from "@itwin/core-common";
+import { ECSchemaRpcInterface } from "@itwin/ecschema-rpcinterface-common";
+import { ECSchemaRpcImpl } from "@itwin/ecschema-rpcinterface-impl";
+import { PresentationRpcInterface } from "@itwin/presentation-common";
+import { setLogger } from "@itwin/presentation-hierarchies";
+import { TreeWidget } from "@itwin/tree-widget-react";
+import { Datasets } from "./util/Datasets.js";
+import { LOGGER } from "./util/Logging.js";
+
+beforeAll(async () => {
+  setLogger(LOGGER);
+
+  await initializeCore({
+    backendHostProps: {
+      profileName: "vcr-performance-tests",
+    },
+    backendProps: {
+      caching: {
+        hierarchies: {
+          // eslint-disable-next-line @typescript-eslint/no-deprecated
+          mode: HierarchyCacheMode.Memory,
+        },
+      },
+    },
+    rpcs: [IModelReadRpcInterface, PresentationRpcInterface, ECSchemaRpcInterface],
+  });
+
+  ECSchemaRpcImpl.register();
+  await Datasets.initialize("./datasets");
+  await UiFramework.initialize();
+  await TreeWidget.initialize(new EmptyLocalization());
+});
+
+afterAll(async () => {
+  await terminateCore();
+  UiFramework.terminate();
+  TreeWidget.terminate();
+});

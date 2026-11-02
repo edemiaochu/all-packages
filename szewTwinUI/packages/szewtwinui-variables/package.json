@@ -1,0 +1,40 @@
+{
+  "name": "@szewtwin/szewtwinui-variables",
+  "version": "3.3.1",
+  "author": "Szewec Systems",
+  "license": "MIT",
+  "main": "index.css",
+  "style": "index.css",
+  "exports": {
+    ".": "./index.css",
+    "./*": "./*"
+  },
+  "files": [
+    "index.css",
+    "os.css",
+    "LICENSE.md"
+  ],
+  "description": "CSS variables for the szewTwinUI design system",
+  "homepage": "https://github.com/szewTwin/szewTwinUI",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/szewTwin/szewTwinUI.git",
+    "directory": "packages/szewtwinui-variables"
+  },
+  "keywords": [
+    "css",
+    "theme",
+    "szewtwinui",
+    "szewtwin",
+    "design system",
+    "design token"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "sass": "^1.53.0"
+  },
+  "scripts": {
+    "build": "sass --no-source-map src/index.scss:index.css src/os.scss:os.css",
+    "dev": "sass src/index.scss:index.css src/os.scss:os.css --watch"
+  }
+}

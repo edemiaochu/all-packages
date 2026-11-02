@@ -1,0 +1,66 @@
+name: Deploy Storybook to GitHub Pages
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate Storybook auth client id
+        env:
+          STORYBOOK_AUTH_CLIENT_ID: ${{ secrets.STORYBOOK_AUTH_CLIENT_ID }}
+        run: |
+          if [ -z "$STORYBOOK_AUTH_CLIENT_ID" ]; then
+            echo "STORYBOOK_AUTH_CLIENT_ID is not set. Add it as a GitHub Actions secret."
+            exit 1
+          fi
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies (rush)
+        run: node common/scripts/install-run-rush.js install
+
+      - name: Build repo (rush build)
+        run: node common/scripts/install-run-rush.js build
+
+      - name: Build Storybook static
+        working-directory: packages/apps/storybook
+        env:
+          STORYBOOK_AUTH_CLIENT_ID: ${{ secrets.STORYBOOK_AUTH_CLIENT_ID }}
+        run: |
+          set -e
+          node ../../../common/scripts/install-run-rushx.js build-storybook
+
+      - name: Upload Storybook artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: packages/apps/storybook/storybook-static
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

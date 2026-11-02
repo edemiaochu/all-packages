@@ -1,0 +1,440 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- =====================================================================================
+|
+|  Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+|
+======================================================================================= -->
+<DMSchema schemaName="QuantityTakeoffsAspects" alias="qto" version="01.00.01" xmlns="http://www.szewec.com/schemas/Szewec.DMXML.3.1">
+    <DMSchemaReference name="BisCore" version="01.00.02" alias="bis" />
+    <DMSchemaReference name="AecUnits" version="01.00.01" alias="AECU" />
+
+    <DMEntityClass typeName="QuantityTakeoffAspect" modifier="Abstract" description="An abstract aspect that contains detailed measurement of materials and labor needed to complete a construction project." >
+        <BaseClass>bis:ElementUniqueAspect</BaseClass>
+    </DMEntityClass>
+
+    <DMRelationshipClass typeName="ElementOwnsQuantityTakeOffAspect" strength="embedding" modifier="None" description="Element may own one or more quantitytakeoffaspects">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:Element"/>
+        </Source>
+        <Target multiplicity="(0..*)" roleLabel="is owned by" polymorphic="true">
+            <Class class="QuantityTakeoffAspect"/>
+        </Target>
+    </DMRelationshipClass>
+
+    <DMEntityClass typeName="DimensionsAspect" description="An aspect that defines basic object measurements: height, length width." >
+        <BaseClass>QuantityTakeoffAspect</BaseClass>
+        <DMCustomAttributes>
+            <ClassHasHandler xmlns="BisCore.01.00.00"/>
+        </DMCustomAttributes>
+        <DMProperty propertyName="Height" typeName="double" kindOfQuantity="AECU:LENGTH" description="Object's height/depth in meters."/>
+        <DMProperty propertyName="Length" typeName="double" kindOfQuantity="AECU:LENGTH" description="Object's length in meters."/>
+        <DMProperty propertyName="Width" typeName="double" kindOfQuantity="AECU:LENGTH" description="Object's width/thickness in meters."/>
+    </DMEntityClass>
+
+    <DMRelationshipClass typeName="ElementOwnsDimensionsAspect" strength="embedding" modifier="None" description="A relationship tieing the specialized quantity takeoff aspect with an element">
+        <BaseClass>ElementOwnsQuantityTakeoffAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:Element"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="DimensionsAspect"/>
+        </Target>
+    </DMRelationshipClass>
+
+    <DMEntityClass typeName="DoorAspect" description="An aspect that describes the door type." >
+        <BaseClass>QuantityTakeoffAspect</BaseClass>
+        <DMCustomAttributes>
+            <ClassHasHandler xmlns="BisCore.01.00.00"/>
+        </DMCustomAttributes>
+        <DMProperty propertyName="Type" typeName="DoorType" description="Type of a door."/>
+    </DMEntityClass>
+
+    <DMRelationshipClass typeName="ElementOwnsDoorAspect" strength="embedding" modifier="None" description="A relationship tieing the specialized quantity takeoff aspect with an element">
+        <BaseClass>ElementOwnsQuantityTakeoffAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:Element"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="DoorAspect"/>
+        </Target>
+    </DMRelationshipClass>
+
+    <DMEnumeration typeName="DoorType" backingTypeName="int" isStrict="true">
+        <DMEnumerator value="0" displayLabel="Flush"/>
+        <DMEnumerator value="1" displayLabel="Full Glass"/>
+        <DMEnumerator value="2" displayLabel="Half Glass"/>
+        <DMEnumerator value="3" displayLabel="2 Lite"/>
+        <DMEnumerator value="4" displayLabel="Narrow View"/>
+        <DMEnumerator value="5" displayLabel="View"/>
+        <DMEnumerator value="6" displayLabel="Louver - Full"/>
+        <DMEnumerator value="7" displayLabel="Louver - Bottom"/>
+        <DMEnumerator value="8" displayLabel="Louver - Top"/>
+        <DMEnumerator value="9" displayLabel="Half Glass w/ Louver"/>
+        <DMEnumerator value="10" displayLabel="Narrow View w/ Louver"/>
+    </DMEnumeration>
+
+    <DMEntityClass typeName="EnergyPerformanceAspect" description="An aspect that defines the overall energy efficiency rating of a building." >
+        <BaseClass>QuantityTakeoffAspect</BaseClass>
+        <DMCustomAttributes>
+            <ClassHasHandler xmlns="BisCore.01.00.00"/>
+        </DMCustomAttributes>
+        <DMProperty propertyName="Rating" typeName="double" description="Energy performance rating defined as a number from 0 to 100."/>
+    </DMEntityClass>
+
+    <DMRelationshipClass typeName="ElementOwnsEnergyPerformanceAspect" strength="embedding" modifier="None" description="A relationship tieing the specialized quantity takeoff aspect with an element">
+        <BaseClass>ElementOwnsQuantityTakeoffAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:Element"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="EnergyPerformanceAspect"/>
+        </Target>
+    </DMRelationshipClass>
+
+    <DMEntityClass typeName="FoundationAspect" description="An aspect that describes the type of structural foundation." >
+        <BaseClass>QuantityTakeoffAspect</BaseClass>
+        <DMCustomAttributes>
+            <ClassHasHandler xmlns="BisCore.01.00.00"/>
+        </DMCustomAttributes>
+        <DMProperty propertyName="Type" typeName="FoundationType" description="Type of a structural foundation."/>
+    </DMEntityClass>
+
+    <DMRelationshipClass typeName="ElementOwnsFoundationAspect" strength="embedding" modifier="None" description="A relationship tieing the specialized quantity takeoff aspect with an element">
+        <BaseClass>ElementOwnsQuantityTakeoffAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:Element"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="FoundationAspect"/>
+        </Target>
+    </DMRelationshipClass>
+
+    <DMEnumeration typeName="FoundationType" backingTypeName="int" isStrict="true">
+        <DMEnumerator value="0" displayLabel="Mat Foundation"/>
+        <DMEnumerator value="1" displayLabel="Pile"/>
+        <DMEnumerator value="2" displayLabel="Pile Cap"/>
+        <DMEnumerator value="3" displayLabel="Spread Footing"/>
+        <DMEnumerator value="4" displayLabel="Strip Footing"/>
+    </DMEnumeration>
+
+    <DMEntityClass typeName="MaterialAspect" description="An aspect that defines the basic properties of a material." >
+        <BaseClass>QuantityTakeoffAspect</BaseClass>
+        <DMCustomAttributes>
+            <ClassHasHandler xmlns="BisCore.01.00.00"/>
+        </DMCustomAttributes>
+        <DMProperty propertyName="Material" typeName="string" description="Material name."/>
+        <DMProperty propertyName="MaterialDensity" displayLabel="Material Density" typeName="double" kindOfQuantity="AECU:DENSITY" description="Material density described as kilogram per meter cubed."/>
+        <DMProperty propertyName="Weight" typeName="double" kindOfQuantity="AECU:WEIGHT" description="Material weight in kilograms." />
+    </DMEntityClass>
+    
+    <DMRelationshipClass typeName="ElementOwnsMaterialAspect" strength="embedding" modifier="None" description="A relationship tieing the specialized quantity takeoff aspect with an element">
+        <BaseClass>ElementOwnsQuantityTakeoffAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:Element"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="MaterialAspect"/>
+        </Target>
+    </DMRelationshipClass>
+
+    <DMEntityClass typeName="PerimeterAspect" description="An aspect that defines the length of the outline of a shape - perimeter." >
+        <BaseClass>QuantityTakeoffAspect</BaseClass>
+        <DMCustomAttributes>
+            <ClassHasHandler xmlns="BisCore.01.00.00"/>
+        </DMCustomAttributes>
+        <DMProperty propertyName="Perimeter" typeName="double" kindOfQuantity="AECU:LENGTH" description="Perimeter of the shape in meters."/>
+    </DMEntityClass>
+    
+    <DMRelationshipClass typeName="ElementOwnsPerimeterAspect" strength="embedding" modifier="None" description="A relationship tieing the specialized quantity takeoff aspect with an element">
+        <BaseClass>ElementOwnsQuantityTakeoffAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:Element"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="PerimeterAspect"/>
+        </Target>
+    </DMRelationshipClass>
+
+    <DMEntityClass typeName="PileAspect" description="An aspect that defines the depth of a vertical structural element of a deep foundation - pile." >
+        <BaseClass>QuantityTakeoffAspect</BaseClass>
+        <DMCustomAttributes>
+            <ClassHasHandler xmlns="BisCore.01.00.00"/>
+        </DMCustomAttributes>
+        <DMProperty propertyName="EmbedmentDepth" displayLabel="Embedment Depth" typeName="double" kindOfQuantity="AECU:LENGTH" description="Describes how deep a pile is embedded in meters."/>
+    </DMEntityClass>
+    
+    <DMRelationshipClass typeName="ElementOwnsPileAspect" strength="embedding" modifier="None" description="A relationship tieing the specialized quantity takeoff aspect with an element">
+        <BaseClass>ElementOwnsQuantityTakeoffAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:Element"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="PileAspect"/>
+        </Target>
+    </DMRelationshipClass>
+
+    <DMEntityClass typeName="PipeAspect" description="An aspect that defines the basic measurements of a pipe." >
+        <BaseClass>QuantityTakeoffAspect</BaseClass>
+        <DMCustomAttributes>
+            <ClassHasHandler xmlns="BisCore.01.00.00"/>
+        </DMCustomAttributes>
+        <DMProperty propertyName="Diameter" typeName="double" kindOfQuantity="AECU:LENGTH_SHORT" description="Diameter of a pipe in meters."/>
+        <DMProperty propertyName="Length" typeName="double" kindOfQuantity="AECU:LENGTH" description="Length of a pipe in meters."/>
+        <DMProperty propertyName="Schedule" typeName="string" description="Schedule of a pipe. The schedule number on a pipe relates to the thickness of the wall on the pipe."/>
+        <DMProperty propertyName="Thickness" typeName="double" kindOfQuantity="AECU:LENGTH_SHORT" description="Thickness of a pipe in meters."/>
+    </DMEntityClass>
+    
+    <DMRelationshipClass typeName="ElementOwnsPipeAspect" strength="embedding" modifier="None" description="A relationship tieing the specialized quantity takeoff aspect with an element">
+        <BaseClass>ElementOwnsQuantityTakeoffAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:Element"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="PipeAspect"/>
+        </Target>
+    </DMRelationshipClass>
+
+    <DMEntityClass typeName="SideAreasAspect" description="An aspect that defines the area measurements for the different sides of a three dimensional object." >
+        <BaseClass>QuantityTakeoffAspect</BaseClass>
+        <DMCustomAttributes>
+            <ClassHasHandler xmlns="BisCore.01.00.00"/>
+        </DMCustomAttributes>
+        <DMProperty propertyName="BottomGrossArea" displayLabel="Bottom Gross Area" typeName="double" kindOfQuantity="AECU:AREA" description="Total surface area of the bottom side."/>
+        <DMProperty propertyName="BottomNetArea" displayLabel="Bottom Net Area" typeName="double" kindOfQuantity="AECU:AREA" description="Usable surface area of the bottom side."/>
+        <DMProperty propertyName="LeftSideGrossArea" displayLabel="Left Side Gross Area" typeName="double" kindOfQuantity="AECU:AREA" description="Total surface area of the left side."/>
+        <DMProperty propertyName="LeftSideNetArea" displayLabel="Left Side Net Area" typeName="double" kindOfQuantity="AECU:AREA" description="Usable surface area of the left side."/>
+        <DMProperty propertyName="RightSideGrossArea" displayLabel="Right Side Gross Area" typeName="double" kindOfQuantity="AECU:AREA" description="Total surface area of the right side."/>
+        <DMProperty propertyName="RightSideNetArea" displayLabel="Right Side Net Area" typeName="double" kindOfQuantity="AECU:AREA" description="Usable surface area of the right side." />
+        <DMProperty propertyName="TopGrossArea" displayLabel="Top Gross Area" typeName="double" kindOfQuantity="AECU:AREA" description="Total surface area of the top side."/>
+        <DMProperty propertyName="TopNetArea" displayLabel="Top Net Area" typeName="double" kindOfQuantity="AECU:AREA" description="Usable surface area of the top side."/>
+    </DMEntityClass>
+    
+    <DMRelationshipClass typeName="ElementOwnsSideAreasAspect" strength="embedding" modifier="None" description="A relationship tieing the specialized quantity takeoff aspect with an element">
+        <BaseClass>ElementOwnsQuantityTakeoffAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:Element"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="SideAreasAspect"/>
+        </Target>
+    </DMRelationshipClass>
+
+    <DMEntityClass typeName="SlabAspect" description="An aspect that describes the properties of a large, flat piece of concrete or stone - slab." >
+        <BaseClass>QuantityTakeoffAspect</BaseClass>
+        <DMCustomAttributes>
+            <ClassHasHandler xmlns="BisCore.01.00.00"/>
+        </DMCustomAttributes>
+        <DMProperty propertyName="SlabDirection" displayLabel="Slab Direction" typeName="SlabDirectionType" description="Describes in which direction is a slab supported."/>
+        <DMProperty propertyName="Type" typeName="SlabType" description="Type of a slab."/>
+    </DMEntityClass>
+    
+    <DMRelationshipClass typeName="ElementOwnsSlabAspect" strength="embedding" modifier="None" description="A relationship tieing the specialized quantity takeoff aspect with an element">
+        <BaseClass>ElementOwnsQuantityTakeoffAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:Element"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="SlabAspect"/>
+        </Target>
+    </DMRelationshipClass>
+
+    <DMEnumeration typeName="SlabDirectionType" backingTypeName="int" isStrict="true">
+        <DMEnumerator value="0" displayLabel="Unknown"/>
+        <DMEnumerator value="1" displayLabel="One Way"/>
+        <DMEnumerator value="2" displayLabel="Two Way"/>
+    </DMEnumeration>
+
+    <DMEnumeration typeName="SlabType" backingTypeName="int" isStrict="true">
+        <DMEnumerator value="0" displayLabel="Floor"/>
+        <DMEnumerator value="1" displayLabel="Roof"/>
+        <DMEnumerator value="2" displayLabel="Landing"/>
+        <DMEnumerator value="3" displayLabel="Base Slab"/>
+        <DMEnumerator value="4" displayLabel="User Defined"/>
+        <DMEnumerator value="5" displayLabel="Not Defined"/>
+    </DMEnumeration>
+
+    <DMEntityClass typeName="SlopeAspect" description="An aspect that defines the angle of a slope." >
+        <BaseClass>QuantityTakeoffAspect</BaseClass>
+        <DMCustomAttributes>
+            <ClassHasHandler xmlns="BisCore.01.00.00"/>
+        </DMCustomAttributes>
+        <DMProperty propertyName="Slope" typeName="double" kindOfQuantity="AECU:ANGLE" description="Angle of a slope in radians."/>
+    </DMEntityClass>
+
+    <DMRelationshipClass typeName="ElementOwnsSlopeAspect" strength="embedding" modifier="None" description="A relationship tieing the specialized quantity takeoff aspect with an element">
+        <BaseClass>ElementOwnsQuantityTakeoffAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:Element"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="SlopeAspect"/>
+        </Target>
+    </DMRelationshipClass>
+
+    <DMEntityClass typeName="StairsAspect" description="An aspect that describes properties of stairs." >
+        <BaseClass>QuantityTakeoffAspect</BaseClass>
+        <DMCustomAttributes>
+            <ClassHasHandler xmlns="BisCore.01.00.00"/>
+        </DMCustomAttributes>
+        <DMProperty propertyName="NumberOfRisers" displayLabel="Number of Risers" typeName="int" description="Number of steps/risers in the stairs."/>
+        <DMProperty propertyName="RiserHeight" displayLabel="Riser Height" typeName="double" kindOfQuantity="AECU:LENGTH_SHORT" description="Height of a riser, distance between steps."/>
+    </DMEntityClass>
+
+    <DMRelationshipClass typeName="ElementOwnsStairsAspect" strength="embedding" modifier="None" description="A relationship tieing the specialized quantity takeoff aspect with an element">
+        <BaseClass>ElementOwnsQuantityTakeoffAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:Element"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="StairsAspect"/>
+        </Target>
+    </DMRelationshipClass>
+
+    <DMEnumeration typeName="StructuralFramingType" backingTypeName="int" isStrict="true">
+        <DMEnumerator value="0" displayLabel="Beam"/>
+        <DMEnumerator value="1" displayLabel="Column"/>
+        <DMEnumerator value="2" displayLabel="Vertical Brace"/>
+        <DMEnumerator value="3" displayLabel="Horizontal Brace"/>
+        <DMEnumerator value="4" displayLabel="Pier"/>
+        <DMEnumerator value="5" displayLabel="Pile"/>
+        <DMEnumerator value="6" displayLabel="Purlin"/>
+        <DMEnumerator value="7" displayLabel="Cladding"/>
+    </DMEnumeration>
+
+    <DMEntityClass typeName="StructuralLinearMemberAspect" description="An aspect that describes a straight structural member." >
+        <BaseClass>QuantityTakeoffAspect</BaseClass>
+        <DMCustomAttributes>
+            <ClassHasHandler xmlns="BisCore.01.00.00"/>
+        </DMCustomAttributes>
+        <DMProperty propertyName="CrossSectionalArea" displayLabel="Cross-Sectional Area" typeName="double" kindOfQuantity="AECU:AREA" description="Cross-Sectional area of a structural member."/>
+        <DMProperty propertyName="SectionName" displayLabel="Section Name" typeName="string" description="Name of a structural member."/>
+        <DMProperty propertyName="Type" typeName="StructuralFramingType" description="Type of a structural member."/>
+    </DMEntityClass>
+    
+    <DMRelationshipClass typeName="ElementOwnsStructuralLinearMemberAspect" strength="embedding" modifier="None" description="A relationship tieing the specialized quantity takeoff aspect with an element">
+        <BaseClass>ElementOwnsQuantityTakeoffAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:Element"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="StructuralLinearMemberAspect"/>
+        </Target>
+    </DMRelationshipClass>
+
+    <DMEntityClass typeName="SurfaceAreaAspect" description="An aspect that defines gross and net surface area measurements." >
+        <BaseClass>QuantityTakeoffAspect</BaseClass>
+        <DMCustomAttributes>
+            <ClassHasHandler xmlns="BisCore.01.00.00"/>
+        </DMCustomAttributes>
+        <DMProperty propertyName="GrossSurfaceArea" displayLabel="Gross Surface Area" typeName="double" kindOfQuantity="AECU:AREA" description="Total surface area."/>
+        <DMProperty propertyName="NetSurfaceArea" displayLabel="Net Surface Area" typeName="double" kindOfQuantity="AECU:AREA" description="Usable surface area."/>
+    </DMEntityClass>
+    
+    <DMRelationshipClass typeName="ElementOwnsSurfaceAreaAspect" strength="embedding" modifier="None" description="A relationship tieing the specialized quantity takeoff aspect with an element">
+        <BaseClass>ElementOwnsQuantityTakeoffAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:Element"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="SurfaceAreaAspect"/>
+        </Target>
+    </DMRelationshipClass>
+
+    <DMEntityClass typeName="ThicknessAspect" description="An aspect that defines object's thickness." >
+        <BaseClass>QuantityTakeoffAspect</BaseClass>
+        <DMCustomAttributes>
+            <ClassHasHandler xmlns="BisCore.01.00.00"/>
+        </DMCustomAttributes>
+        <DMProperty propertyName="Thickness" typeName="double" kindOfQuantity="AECU:LENGTH_SHORT" description="Thickness of an object in meters."/>
+    </DMEntityClass>
+    
+    <DMRelationshipClass typeName="ElementOwnsThicknessAspect" strength="embedding" modifier="None" description="A relationship tieing the specialized quantity takeoff aspect with an element">
+        <BaseClass>ElementOwnsQuantityTakeoffAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:Element"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="ThicknessAspect"/>
+        </Target>
+    </DMRelationshipClass>
+
+    <DMEntityClass typeName="VolumeAspect" description="An aspect that defines gross and net volumes of an object." >
+        <BaseClass>QuantityTakeoffAspect</BaseClass>
+        <DMCustomAttributes>
+            <ClassHasHandler xmlns="BisCore.01.00.00"/>
+        </DMCustomAttributes>
+        <DMProperty propertyName="GrossVolume" displayLabel="Gross Volume" typeName="double" kindOfQuantity="AECU:VOLUME" description="Total volume of an object with packaging."/>
+        <DMProperty propertyName="NetVolume" displayLabel="Net Volume" typeName="double" kindOfQuantity="AECU:VOLUME" description="Volume of an object alone."/>
+    </DMEntityClass>
+    
+    <DMRelationshipClass typeName="ElementOwnsVolumeAspect" strength="embedding" modifier="None" description="A relationship tieing the specialized quantity takeoff aspect with an element">
+        <BaseClass>ElementOwnsQuantityTakeoffAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:Element"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="VolumeAspect"/>
+        </Target>
+    </DMRelationshipClass>
+
+    <DMEntityClass typeName="WallAspect" description="An aspect that describes the wall type." >
+        <BaseClass>QuantityTakeoffAspect</BaseClass>
+        <DMCustomAttributes>
+            <ClassHasHandler xmlns="BisCore.01.00.00"/>
+        </DMCustomAttributes>
+        <DMProperty propertyName="Type" typeName="WallType" description="Type of a wall."/>
+    </DMEntityClass>
+    
+    <DMRelationshipClass typeName="ElementOwnsWallAspect" strength="embedding" modifier="None" description="A relationship tieing the specialized quantity takeoff aspect with an element">
+        <BaseClass>ElementOwnsQuantityTakeoffAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:Element"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="WallAspect"/>
+        </Target>
+    </DMRelationshipClass>
+
+    <DMEnumeration typeName="WallType" backingTypeName="int" isStrict="true">
+        <DMEnumerator value="0" displayLabel="Movable"/>
+        <DMEnumerator value="1" displayLabel="Parapet"/>
+        <DMEnumerator value="2" displayLabel="Partitioning"/>
+        <DMEnumerator value="3" displayLabel="Plumbing Wall"/>
+        <DMEnumerator value="4" displayLabel="Shear"/>
+        <DMEnumerator value="5" displayLabel="Solid Wall"/>
+        <DMEnumerator value="6" displayLabel="Standard"/>
+        <DMEnumerator value="7" displayLabel="Polygonal"/>
+        <DMEnumerator value="8" displayLabel="Elemented Wall"/>
+        <DMEnumerator value="9" displayLabel="User Defined"/>
+        <DMEnumerator value="10" displayLabel="Not Defined"/>
+    </DMEnumeration>
+
+    <DMEntityClass typeName="WindowAspect" description="An aspect that describes the window type." >
+        <BaseClass>QuantityTakeoffAspect</BaseClass>
+        <DMCustomAttributes>
+            <ClassHasHandler xmlns="BisCore.01.00.00"/>
+        </DMCustomAttributes>
+        <DMProperty propertyName="Type" typeName="WindowType" description="Type of a window."/>
+    </DMEntityClass>
+    
+    <DMRelationshipClass typeName="ElementOwnsWindowAspect" strength="embedding" modifier="None" description="A relationship tieing the specialized quantity takeoff aspect with an element">
+        <BaseClass>ElementOwnsQuantityTakeoffAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:Element"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="WindowAspect"/>
+        </Target>
+    </DMRelationshipClass>
+
+    <DMEnumeration typeName="WindowType" backingTypeName="int" isStrict="true">
+        <DMEnumerator value="0" displayLabel="Casement"/>
+        <DMEnumerator value="1" displayLabel="Single Hung"/>
+        <DMEnumerator value="2" displayLabel="Double Hung"/>
+        <DMEnumerator value="3" displayLabel="Awning"/>
+        <DMEnumerator value="4" displayLabel="Hopper"/>
+        <DMEnumerator value="5" displayLabel="Sliding"/>
+    </DMEnumeration>
+
+</DMSchema>

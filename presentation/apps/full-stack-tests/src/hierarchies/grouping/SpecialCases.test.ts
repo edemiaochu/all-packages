@@ -1,0 +1,115 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+
+import { afterAll, beforeAll, describe, it } from "vitest";
+import { createNodesQueryClauseFactory, HierarchyDefinition, HierarchyNode } from "@itwin/presentation-hierarchies";
+import { createBisInstanceLabelSelectClauseFactory } from "@itwin/presentation-shared";
+import { importSchema, withECDb } from "../../IModelUtils.js";
+import { initialize, terminate } from "../../IntegrationTests.js";
+import { NodeValidators, validateHierarchy } from "../HierarchyValidation.js";
+import { createIModelAccess, createProvider } from "../Utils.js";
+
+describe("Hierarchies", () => {
+  describe("Grouping special cases", () => {
+    beforeAll(async () => {
+      await initialize();
+    });
+
+    afterAll(async () => {
+      await terminate();
+    });
+
+    it("groups children of hidden hierarchy levels", async () => {
+      await withECDb(
+        async (db, testName) => {
+          const schema = await importSchema(
+            testName,
+            db,
+            `
+            <ECEntityClass typeName="B" />
+            <ECEntityClass typeName="X">
+              <BaseClass>B</BaseClass>
+            </ECEntityClass>
+            <ECEntityClass typeName="Y">
+              <BaseClass>B</BaseClass>
+            </ECEntityClass>
+          `,
+          );
+          const x1 = db.insertInstance(schema.items.X.fullName);
+          const x2 = db.insertInstance(schema.items.X.fullName);
+          const y1 = db.insertInstance(schema.items.Y.fullName);
+          const y2 = db.insertInstance(schema.items.Y.fullName);
+          return { schema, x1, x2, y1, y2 };
+        },
+        async (db, { schema, y1, y2 }) => {
+          const imodelAccess = createIModelAccess(db);
+          const selectQueryFactory = createNodesQueryClauseFactory({
+            imodelAccess,
+            instanceLabelSelectClauseFactory: createBisInstanceLabelSelectClauseFactory({
+              classHierarchyInspector: imodelAccess,
+            }),
+          });
+          const hierarchy: HierarchyDefinition = {
+            async defineHierarchyLevel({ parentNode }) {
+              if (!parentNode) {
+                return [
+                  {
+                    fullClassName: schema.items.X.fullName,
+                    query: {
+                      ecsql: `
+                        SELECT ${await selectQueryFactory.createSelectClause({
+                          ecClassId: { selector: `this.ECClassId` },
+                          ecInstanceId: { selector: `this.ECInstanceId` },
+                          nodeLabel: "x",
+                          hideNodeInHierarchy: true,
+                        })}
+                        FROM ${schema.items.X.fullName} AS this
+                      `,
+                    },
+                  },
+                ];
+              }
+              if (
+                HierarchyNode.isInstancesNode(parentNode) &&
+                parentNode.key.instanceKeys.some((k) => k.className === schema.items.X.fullName)
+              ) {
+                return [
+                  {
+                    fullClassName: schema.items.Y.fullName,
+                    query: {
+                      ecsql: `
+                        SELECT ${await selectQueryFactory.createSelectClause({
+                          ecClassId: { selector: `this.ECClassId` },
+                          ecInstanceId: { selector: `this.ECInstanceId` },
+                          nodeLabel: { selector: `'y: ' || CAST(this.ECInstanceId AS TEXT)` },
+                          grouping: { byClass: true },
+                        })}
+                        FROM ${schema.items.Y.fullName} AS this
+                      `,
+                    },
+                  },
+                ];
+              }
+              return [];
+            },
+          };
+          await validateHierarchy({
+            provider: createProvider({ imodel: db, hierarchy }),
+            expect: [
+              NodeValidators.createForClassGroupingNode({
+                label: "Y",
+                className: schema.items.Y.fullName,
+                children: [
+                  NodeValidators.createForInstanceNode({ instanceKeys: [y1], children: false }),
+                  NodeValidators.createForInstanceNode({ instanceKeys: [y2], children: false }),
+                ],
+              }),
+            ],
+          });
+        },
+      );
+    });
+  });
+});

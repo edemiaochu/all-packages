@@ -1,0 +1,249 @@
+// Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+// See LICENSE.md in the project root for license terms and full copyright notice.
+@use '../mixins';
+
+$iui-slider-container-gap: var(--iui-size-s);
+$iui-slider-thumb-size: var(--iui-size-m);
+$iui-slider-tick-size: var(--iui-size-s);
+$iui-slider-tick-thickness: 1px;
+
+// #region Slider container
+.iui-slider-container {
+  --_iui-slider-rail-color: var(--iui-color-border);
+  --_iui-slider-track-color: var(--iui-color-border-accent);
+  --_iui-slider-track-thickness: calc(#{$iui-slider-thumb-size} * 0.25);
+  isolation: isolate;
+
+  display: grid;
+
+  &[data-iui-orientation='horizontal'] {
+    $slider-position-horizontal: 0 var(--iui-slider-thumb-position);
+
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas: 'min content max';
+    align-items: center;
+
+    .iui-slider-min,
+    .iui-slider-max {
+      align-items: center;
+    }
+
+    .iui-slider-min {
+      margin-inline-end: $iui-slider-container-gap;
+      justify-content: end;
+    }
+
+    .iui-slider-max {
+      margin-inline-start: $iui-slider-container-gap;
+    }
+
+    .iui-slider-ticks {
+      transform: translateY(50%);
+    }
+
+    .iui-slider-tick {
+      flex-direction: column;
+      inline-size: $iui-slider-tick-thickness;
+
+      &::before {
+        inline-size: $iui-slider-tick-thickness;
+        block-size: $iui-slider-tick-size;
+      }
+    }
+
+    .iui-slider {
+      block-size: calc($iui-slider-thumb-size + 2px);
+      touch-action: pan-x;
+
+      &::before {
+        inline-size: 100%;
+        block-size: var(--_iui-slider-track-thickness);
+      }
+    }
+
+    .iui-slider-track {
+      block-size: var(--_iui-slider-track-thickness);
+      inset-inline: var(--iui-slider-track-position, #{$slider-position-horizontal});
+    }
+
+    .iui-slider-thumb {
+      inset-inline-start: var(--iui-slider-thumb-position);
+      transform: translateX(-50%);
+    }
+  }
+
+  &[data-iui-orientation='vertical'] {
+    $slider-position-vertical: var(--iui-slider-thumb-position) 0;
+
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas:
+      'max'
+      'content'
+      'min';
+    justify-items: center;
+    inline-size: fit-content;
+
+    .iui-slider-min,
+    .iui-slider-max {
+      justify-content: center;
+    }
+
+    .iui-slider-min {
+      margin-block-start: $iui-slider-container-gap;
+    }
+
+    .iui-slider-max {
+      margin-block-end: $iui-slider-container-gap;
+    }
+
+    .iui-slider-ticks {
+      flex-direction: column-reverse;
+      transform: translateX(50%);
+    }
+
+    .iui-slider-tick {
+      block-size: $iui-slider-tick-thickness;
+
+      &::before {
+        inline-size: $iui-slider-tick-size;
+        block-size: $iui-slider-tick-thickness;
+      }
+    }
+
+    .iui-slider {
+      inline-size: calc($iui-slider-thumb-size + 2px);
+      touch-action: pan-y;
+      min-block-size: var(--iui-size-xl); // Added min-block-size to show that slider exists.
+
+      &::before {
+        block-size: 100%;
+        inline-size: var(--_iui-slider-track-thickness);
+      }
+    }
+
+    .iui-slider-track {
+      inline-size: var(--_iui-slider-track-thickness);
+      inset-block: var(--iui-slider-track-position, #{$slider-position-vertical});
+    }
+
+    .iui-slider-thumb {
+      inset-block-end: var(--iui-slider-thumb-position);
+      transform: translateY(50%);
+    }
+  }
+
+  &[data-iui-disabled='true'] {
+    cursor: not-allowed;
+    color: var(--iui-color-text-disabled);
+
+    --_iui-slider-rail-color: var(--iui-color-background-disabled);
+    --_iui-slider-track-color: var(--iui-color-border);
+    @media (forced-colors: active) {
+      --_iui-slider-track-color: GrayText;
+    }
+
+    .iui-slider {
+      pointer-events: none;
+    }
+  }
+}
+
+.iui-slider-min,
+.iui-slider-max {
+  display: flex;
+}
+
+.iui-slider-min {
+  grid-area: min;
+}
+
+.iui-slider-max {
+  grid-area: max;
+}
+
+.iui-slider-ticks {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  grid-area: content;
+  z-index: -1;
+}
+
+.iui-slider-tick {
+  position: relative;
+  display: flex;
+  align-items: center;
+  color: var(--_iui-slider-tick-text-color);
+
+  &::before {
+    content: '';
+    background-color: var(--iui-color-border);
+    @media (forced-colors: active) {
+      background-color: CanvasText;
+    }
+  }
+}
+// #endregion Slider container
+
+// #region Slider
+.iui-slider {
+  position: relative;
+  cursor: pointer;
+  isolation: isolate;
+  grid-area: content;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.iui-grabbing {
+    cursor: grabbing;
+  }
+
+  &::before {
+    content: '';
+    display: flex;
+    background: var(--_iui-slider-rail-color);
+    @media (forced-colors: active) {
+      --_iui-slider-rail-color: CanvasText;
+    }
+  }
+}
+
+.iui-slider-thumb {
+  box-sizing: content-box !important;
+  position: absolute;
+  block-size: $iui-slider-thumb-size;
+  inline-size: $iui-slider-thumb-size;
+  border-radius: 100%;
+  z-index: 1;
+  cursor: grab;
+  @include mixins.iui-focus($thickness: 2px, $offset: 1px);
+  background: var(--iui-color-background);
+  border: 1px solid var(--iui-color-border-foreground);
+
+  &:active {
+    cursor: grabbing;
+  }
+
+  &[aria-disabled='true'] {
+    border-color: var(--iui-color-border);
+    background: var(--iui-color-border);
+    cursor: not-allowed;
+
+    @media (forced-colors: active) {
+      border-color: GrayText;
+      background: GrayText;
+    }
+  }
+}
+
+.iui-slider-track {
+  pointer-events: none;
+  background-color: var(--_iui-slider-track-color);
+  position: absolute;
+
+  @media (forced-colors: active) {
+    --_iui-slider-track-color: Highlight;
+  }
+}
+// #endregion Slider

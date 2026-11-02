@@ -1,0 +1,76 @@
+{
+  "name": "presentation",
+  "private": true,
+  "repository": {
+    "url": "https://github.com/iTwin/presentation.git"
+  },
+  "packageManager": "pnpm@10.32.1",
+  "engines": {
+    "node": "^24.0.0"
+  },
+  "scripts": {
+    "start:web": "run-p --silent start:frontend start:web-backend",
+    "start:electron": "run-p --silent start:frontend start:electron-backend",
+    "start:frontend": "npm run start --prefix ./apps/test-app/frontend",
+    "start:web-backend": "npm run start --prefix ./apps/test-app/backend",
+    "start:electron-backend": "npm run start:electron --prefix ./apps/test-app/backend",
+    "build:all": "lage build",
+    "build:test-app": "lage build --to @test-app/*",
+    "clean:all": "lage clean",
+    "docs:all": "lage docs",
+    "cover:all": "lage cover --continue",
+    "lint:all": "lage lint --continue",
+    "lint:copyright": "node scripts/copyrightLinter.js",
+    "gather-docs": "node ./scripts/gatherDocs.js",
+    "update-extractions": "npm run docs:all && npm run gather-docs && lage update-extractions",
+    "check-extractions": "npm run docs:all && npm run gather-docs && lage check-extractions",
+    "validate-markdowns": "lage validate-markdowns --grouped --continue",
+    "format": "oxfmt --check",
+    "format:fix": "oxfmt",
+    "prepare": "husky",
+    "change": "changeset add",
+    "change:empty": "changeset add --empty",
+    "cspell": "cspell .",
+    "check": "changeset status",
+    "release": "npm run build:all && changeset publish",
+    "benchmark:hierarchies": "pnpm run -C ./apps/performance-tests benchmark:hierarchies",
+    "benchmark:unified-selection": "pnpm run -C ./apps/performance-tests benchmark:unified-selection"
+  },
+  "dependencies": {
+    "@changesets/cli": "^2.30.0",
+    "@stylistic/eslint-plugin": "^5.10.0",
+    "cpx2": "catalog:build-tools",
+    "cspell": "^9.8.0",
+    "eslint": "catalog:build-tools",
+    "eslint-config-prettier": "^9.1.2",
+    "fast-glob": "^3.3.3",
+    "husky": "^9.1.7",
+    "lage": "^2.15.6",
+    "lint-staged": "^15.5.2",
+    "markdown-link-check": "^3.14.2",
+    "npm-run-all": "^4.1.5",
+    "oxfmt": "^0.41.0",
+    "rimraf": "catalog:build-tools",
+    "yaml": "^2.8.3",
+    "yargs": "^17.7.2"
+  },
+  "lint-staged": {
+    "./{apps,packages}/**/*.{tsx,ts,jsx,js,scss,css,html}": [
+      "pnpm lint:copyright --fix"
+    ],
+    "./scripts/*.js": [
+      "pnpm lint:copyright --fix"
+    ]
+  },
+  "pnpm": {
+    "overrides": {
+      "@itwin/build-tools@^5.8.0>@microsoft/api-extractor@<7.58": "^7.58.1",
+      "@opentelemetry/exporter-metrics-otlp-grpc@^0.41.2": "^0.52.0",
+      "@opentelemetry/exporter-metrics-otlp-http@^0.41.2": "^0.52.0",
+      "@opentelemetry/exporter-metrics-otlp-proto@^0.41.2": "^0.52.0",
+      "@opentelemetry/exporter-trace-otlp-grpc@^0.43.0": "^0.52.0",
+      "@opentelemetry/exporter-trace-otlp-http@^0.41.2": "^0.52.0",
+      "@opentelemetry/exporter-trace-otlp-proto@^0.41.2": "^0.52.0"
+    }
+  }
+}

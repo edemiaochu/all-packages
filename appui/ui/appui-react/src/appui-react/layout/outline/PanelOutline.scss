@@ -1,0 +1,63 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@use "variables" as *;
+
+.nz-outline-panelOutline {
+  background-color: $nz-outline-color;
+  position: absolute;
+  transform: scale(1);
+  transition: transform var(--iui-duration-1) ease-in;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+
+  &.nz-hidden {
+    transition: none;
+  }
+
+  &.nz-left,
+  &.nz-right {
+    height: 100%;
+  }
+
+  &.nz-left {
+    transform-origin: left;
+
+    &.nz-hidden {
+      transform: scale(0, 1);
+    }
+  }
+
+  &.nz-right {
+    right: 0;
+    transform-origin: right;
+
+    &.nz-hidden {
+      transform: scale(0, 1);
+    }
+  }
+
+  &.nz-top,
+  &.nz-bottom {
+    width: 100%;
+  }
+
+  &.nz-top {
+    transform-origin: top;
+
+    &.nz-hidden {
+      transform: scale(1, 0);
+    }
+  }
+
+  &.nz-bottom {
+    bottom: 0;
+    transform-origin: bottom;
+
+    &.nz-hidden {
+      transform: scale(1, 0);
+    }
+  }
+}

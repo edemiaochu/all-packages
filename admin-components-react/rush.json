@@ -1,0 +1,48 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/rush/v5/rush.schema.json",
+  "rushVersion": "5.172.0",
+  "pnpmVersion": "7.32.2",
+  "nodeSupportedVersionRange": "^18.12.0 || ^20.9.0 || ^22.11.0",
+  "projectFolderMinDepth": 2,
+  "projectFolderMaxDepth": 3,
+  "repository": {
+    "url": "https://github.com/iTwin/admin-components-react"
+  },
+  "projects": [
+    {
+      "packageName": "@szewtwin/create-ivault-react",
+      "projectFolder": "packages/modules/create-ivault",
+      "versionPolicyName": "independentModule",
+      "shouldPublish": true,
+      "reviewCategory": "common"
+    },
+    {
+      "packageName": "@szewtwin/delete-ivault-react",
+      "projectFolder": "packages/modules/delete-ivault",
+      "versionPolicyName": "independentModule",
+      "shouldPublish": true,
+      "reviewCategory": "common"
+    },
+    {
+      "packageName": "@szewtwin/delete-szewtwin-react",
+      "projectFolder": "packages/modules/delete-szewtwin",
+      "versionPolicyName": "independentModule",
+      "shouldPublish": true,
+      "reviewCategory": "common"
+    },
+    {
+      "packageName": "@szewtwin/ivault-browser-react",
+      "projectFolder": "packages/modules/ivault-browser",
+      "versionPolicyName": "independentModule",
+      "shouldPublish": true,
+      "reviewCategory": "common"
+    },
+    {
+      "packageName": "@szewtwin/manage-versions-react",
+      "projectFolder": "packages/modules/manage-versions",
+      "versionPolicyName": "independentModule",
+      "shouldPublish": true,
+      "reviewCategory": "common"
+    }
+  ]
+}

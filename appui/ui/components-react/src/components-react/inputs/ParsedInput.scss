@@ -1,0 +1,20 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@use "~@szewtwin/core-react/lib/core-react/inputs/variables" as *;
+
+.components-parsed-input {
+  width: auto;
+  padding: $uicore-iui-input-padding;
+
+  &.components-parsed-input-has-error {
+    color: var(--iui-color-text-negative);
+    font-weight: bold;
+  }
+
+  &.components-parsed-input[disabled] {
+    color: var(--iui-color-text);
+    opacity: 0.65;
+  }
+}

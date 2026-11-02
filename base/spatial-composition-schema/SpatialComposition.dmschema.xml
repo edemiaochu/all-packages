@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ================================================================= -->
+<!-- Copyright (c) Szewec Systems, Incorporated. All rights reserved. -->
+<!-- ================================================================= -->
+<DMSchema schemaName="SpatialComposition" alias="spcomp" version="01.00.01" xmlns="http://www.szewec.com/schemas/Szewec.DMXML.3.2" description="Classes for defining the Spatial Structure Hierarchy of a project or asset.">
+
+    <DMSchemaReference name="CoreCustomAttributes" version="01.00.03" alias="CoreCA"/>
+    <DMSchemaReference name="BisCore" version="01.00.12" alias="bis"/>
+    <DMSchemaReference name="AecUnits" version="01.00.01" alias="AECU"/>
+
+    <DMCustomAttributes>
+        <ProductionStatus xmlns="CoreCustomAttributes.01.00.03">
+            <SupportedUse>Production</SupportedUse>
+        </ProductionStatus>
+    </DMCustomAttributes>
+
+    <DMEntityClass typeName="ISpatialOrganizer" modifier="Abstract" displayLabel="Spatial Organizer" description="An bis:SpatialLocation that organizes bis:SpatialElements using 'SpatialOrganizerHoldsSpatialElements' and 'SpatialOrganizerReferencesSpatialElements'">
+        <DMCustomAttributes>
+            <IsMixin xmlns="CoreCustomAttributes.01.00.03">
+                <AppliesToEntityClass>bis:SpatialLocationElement</AppliesToEntityClass>
+            </IsMixin>
+        </DMCustomAttributes>
+    </DMEntityClass>
+
+    <DMRelationshipClass typeName="SpatialOrganizerHoldsSpatialElements" modifier="None" strength="referencing" displayLabel="Spatial Organizer Holds Spatial Elements" description="Organizes bis:SpatialElements such that each bis:SpatialElement is 'held' by zero or one 'organizer'.">
+        <BaseClass>bis:ElementRefersToElements</BaseClass>
+        <Source multiplicity="(0..*)" roleLabel="holds" polymorphic="true">
+            <Class class="ISpatialOrganizer"/>
+        </Source>
+        <Target multiplicity="(0..*)" roleLabel="is held by" polymorphic="true">
+            <Class class="bis:SpatialElement"/>
+        </Target>
+    </DMRelationshipClass>
+
+    <DMRelationshipClass typeName="SpatialOrganizerReferencesSpatialElements" modifier="None" strength="referencing" displayLabel="Spatial Organizer References Spatial Elements" description="Organizes bis:SpatialElements such that each bis:SpatialElement can be 'referenced' by zero or more 'organizers'.">
+        <BaseClass>bis:ElementRefersToElements</BaseClass>
+        <Source multiplicity="(0..*)" roleLabel="references" polymorphic="true">
+            <Class class="ISpatialOrganizer"/>
+        </Source>
+        <Target multiplicity="(0..*)" roleLabel="is referenced by" polymorphic="true">
+            <Class class="bis:SpatialElement"/>
+        </Target>
+    </DMRelationshipClass>
+
+    <DMEntityClass typeName="SpatialStructureElement" modifier="Abstract" displayLabel="Spatial Structure Element" description="An Element used to form a spatial breakdown structure. As an ISpatialOrganizer, it may explicitly 'hold' or 'reference' SpatialElements.">
+        <BaseClass>CompositeElement</BaseClass>
+        <BaseClass>ISpatialOrganizer</BaseClass>
+        <DMProperty propertyName="Description" typeName="string" description="A human-readable description of this Spatial Structure Element"/>
+    </DMEntityClass>
+
+    <DMRelationshipClass typeName="SpatialStructureElementAggregatesElements" modifier="None" strength="embedding" displayLabel="Spatial Structure Element Aggregates Spatial Structure Elements" description="Forms the Spatial Structure. The volumes of the aggregated Elements should not overlap and should generally add up to the volume of the aggregator (the aggregating Element) and lie spatially within the aggregator.">
+        <!-- @see CompositeElement.ComposingElement -->
+        <BaseClass>CompositeComposesSubComposites</BaseClass>
+        <Source multiplicity="(0..1)" roleLabel="aggregates" polymorphic="true">
+            <Class class="SpatialStructureElement"/>
+        </Source>
+        <Target multiplicity="(0..*)" roleLabel="is aggregated by" polymorphic="true">
+            <Class class="SpatialStructureElement"/>
+        </Target>
+    </DMRelationshipClass>
+
+    <DMEntityClass typeName="SpatialStructureElementType" modifier="Abstract" displayLabel="Spatial Structure Element Type" description="Further specializes a particular subclass of a Spatial Structure Element by associating a custom Type that can be defined by users.">
+        <BaseClass>bis:SpatialLocationType</BaseClass>
+        <DMProperty propertyName="Description" typeName="string" description="A human-readable description of this type."/>
+    </DMEntityClass>
+
+    <DMRelationshipClass typeName="SpatialStructureElementIsOfType" modifier="None" strength="referencing" displayLabel="Spatial Structure Element Is Of Spatial Structure Element Type" description="Relates a Spatial Structure Element to its Type definition">
+        <!-- Note: Must be concrete since since bis:SpatialLocationIsOfType is concrete, but should be considered abstract. -->
+        <BaseClass>bis:SpatialLocationIsOfType</BaseClass>
+        <Source multiplicity="(0..*)" roleLabel="is of type" polymorphic="true">
+            <Class class="SpatialStructureElement"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is type of" polymorphic="true">
+            <Class class="SpatialStructureElementType"/>
+        </Target>
+    </DMRelationshipClass>
+
+    <DMEntityClass typeName="Region" modifier="Abstract" description="A geographic region in which a Site or smaller Region is situated. Their geometry is typically given as a 2D boundary, but may be given as a 3D volume.">
+        <BaseClass>SpatialStructureElement</BaseClass>
+    </DMEntityClass>
+
+    <DMEntityClass typeName="RegionType" modifier="Abstract" displayLabel="Region Type" description="Further specializes a particular subclass of a Region by associating a custom Type that can be defined by users.">
+        <BaseClass>SpatialStructureElementType</BaseClass>
+    </DMEntityClass>
+
+    <DMRelationshipClass typeName="RegionIsOfType" modifier="None" strength="referencing" displayLabel="Region Is Of Region Type" description="Relates a Region to its Type definition">
+        <!-- Note: Must be concrete since since bis:SpatialLocationIsOfType is concrete, but should be considered abstract. -->
+        <BaseClass>SpatialStructureElementIsOfType</BaseClass>
+        <Source multiplicity="(0..*)" roleLabel="is of type" polymorphic="true">
+            <Class class="Region"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is type of" polymorphic="true">
+            <Class class="RegionType"/>
+        </Target>
+    </DMRelationshipClass>
+
+    <DMEntityClass typeName="Site" modifier="Abstract" description="The spatial location of a geographic site on which a Facility is situated. Its geometry may be given at least as a point, but more typically by a 2D boundary or a 3D volume.">
+        <BaseClass>SpatialStructureElement</BaseClass>
+    </DMEntityClass>
+
+    <DMEntityClass typeName="SiteType" modifier="Abstract" displayLabel="Site Type" description="Further specializes a particular subclass of a Site by associating a custom Type that can be defined by users.">
+        <BaseClass>SpatialStructureElementType</BaseClass>
+    </DMEntityClass>
+
+    <DMRelationshipClass typeName="SiteIsOfType" modifier="None" strength="referencing" displayLabel="Site Is Of Site Type" description="Relates a Site to its Type definition">
+        <!-- Note: Must be concrete since since bis:SpatialLocationIsOfType is concrete, but should be considered abstract. -->
+        <BaseClass>SpatialStructureElementIsOfType</BaseClass>
+        <Source multiplicity="(0..*)" roleLabel="is of type" polymorphic="true">
+            <Class class="Site"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is type of" polymorphic="true">
+            <Class class="SiteType"/>
+        </Target>
+    </DMRelationshipClass>
+
+    <DMEntityClass typeName="Facility" modifier="Abstract" description="A volume occupied by a built facility, such as a building, bridge, road, factory/plant, railway, tunnel, etc.">
+        <BaseClass>SpatialStructureElement</BaseClass>
+    </DMEntityClass>
+
+    <DMEntityClass typeName="FacilityType" modifier="Abstract" displayLabel="Facility Type" description="Further specializes a particular subclass of a Facility by associating a custom Type that can be defined by users.">
+        <BaseClass>SpatialStructureElementType</BaseClass>
+    </DMEntityClass>
+
+    <DMRelationshipClass typeName="FacilityIsOfType" modifier="None" strength="referencing" displayLabel="Facility Is Of Facility Type" description="Relates a Facility to its Type definition">
+        <!-- Note: Must be concrete since since bis:SpatialLocationIsOfType is concrete, but should be considered abstract. -->
+        <BaseClass>SpatialStructureElementIsOfType</BaseClass>
+        <Source multiplicity="(0..*)" roleLabel="is of type" polymorphic="true">
+            <Class class="Facility"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is type of" polymorphic="true">
+            <Class class="FacilityType"/>
+        </Target>
+    </DMRelationshipClass>
+
+    <DMEntityClass typeName="FacilityPart" modifier="Abstract" displayLabel="Facility Part" description="A volume that breaks a Facility down into major parts that are larger than Spaces.  Its meaning varies widely depending on the kind of Facility, but for Buildings it is a Storey.">
+        <BaseClass>SpatialStructureElement</BaseClass>
+    </DMEntityClass>
+
+    <DMEntityClass typeName="FacilityPartType" modifier="Abstract" displayLabel="Facility Part Type" description="Further specializes a particular subclass of a FacilityPart by associating a custom Type that can be defined by users.">
+        <BaseClass>SpatialStructureElementType</BaseClass>
+    </DMEntityClass>
+
+    <DMRelationshipClass typeName="FacilityPartIsOfType" modifier="None" strength="referencing" displayLabel="FacilityPart Is Of FacilityPart Type" description="Relates a FacilityPart to its Type definition">
+        <!-- Note: Must be concrete since since bis:SpatialLocationIsOfType is concrete, but should be considered abstract. -->
+        <BaseClass>SpatialStructureElementIsOfType</BaseClass>
+        <Source multiplicity="(0..*)" roleLabel="is of type" polymorphic="true">
+            <Class class="FacilityPart"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is type of" polymorphic="true">
+            <Class class="FacilityPartType"/>
+        </Target>
+    </DMRelationshipClass>
+
+    <DMEntityClass typeName="Space" modifier="Abstract" description="A volume bounded either physically or virtually that provides for some function within a FacilityPart, Facility, or Site. Specific meanings vary depending on the kind of Facility, but Spaces tend to represent Rooms or important functional portions of Rooms within a Storey.">
+        <BaseClass>SpatialStructureElement</BaseClass>
+    </DMEntityClass>
+
+    <DMEntityClass typeName="SpaceType" modifier="Abstract" displayLabel="Space Type" description="Further specializes a particular subclass of a Space by associating a custom Type that can be defined by users.">
+        <BaseClass>SpatialStructureElementType</BaseClass>
+    </DMEntityClass>
+
+    <DMRelationshipClass typeName="SpaceIsOfType" modifier="None" strength="referencing" displayLabel="Space Is Of Space Type" description="Relates a Space to its Type definition">
+        <!-- Note: Must be concrete since since bis:SpatialLocationIsOfType is concrete, but should be considered abstract. -->
+        <BaseClass>SpatialStructureElementIsOfType</BaseClass>
+        <Source multiplicity="(0..*)" roleLabel="is of type" polymorphic="true">
+            <Class class="Space"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is type of" polymorphic="true">
+            <Class class="SpaceType"/>
+        </Target>
+    </DMRelationshipClass>
+
+    <DMEntityClass typeName="Zone" modifier="Abstract" description="Defines a region of space associated with a specific purpose. As an ISpatialOrganizer, it may explicitly 'hold' or 'reference' SpatialElements.">
+        <BaseClass>bis:SpatialLocationElement</BaseClass>
+        <BaseClass>ISpatialOrganizer</BaseClass>
+    </DMEntityClass>
+
+    <DMEntityClass typeName="ZoneType" modifier="Abstract" displayLabel="Zone Type" description="Further specializes a particular subclass of a Zone by associating a custom Type that can be defined by users.">
+        <BaseClass>bis:SpatialLocationType</BaseClass>
+        <DMProperty propertyName="Description" typeName="string" description="A human-readable description of this Zone Type."/>
+    </DMEntityClass>
+
+    <DMRelationshipClass typeName="ZoneIsOfType" modifier="None" strength="referencing" displayLabel="Zone Is Of Zone Type" description="Relates a Zone to its Type definition">
+        <!-- Note: Must be concrete since since bis:SpatialLocationIsOfType is concrete, but should be considered abstract. -->
+        <BaseClass>bis:SpatialLocationIsOfType</BaseClass>
+        <Source multiplicity="(0..*)" roleLabel="is of type" polymorphic="true">
+            <Class class="Zone"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is type of" polymorphic="true">
+            <Class class="ZoneType"/>
+        </Target>
+    </DMRelationshipClass>
+
+    <DMRelationshipClass typeName="CompositeComposesSubComposites" modifier="None" strength="embedding" description="DEPRECATED">
+        <!-- @see CompositeElement.ComposingElement -->
+        <DMCustomAttributes>
+            <Deprecated xmlns="CoreCustomAttributes.01.00.03">
+                <Description>Instead, use the SpatialStructureElementAggregatesSpatialStructureElements relationship that is a subclass of this relationship for backwards compatibility.</Description>
+            </Deprecated>
+        </DMCustomAttributes>
+        <Source multiplicity="(0..1)" roleLabel="aggregates" polymorphic="true">
+            <Class class="CompositeElement"/>
+        </Source>
+        <Target multiplicity="(0..*)" roleLabel="is aggregated by" polymorphic="true">
+            <Class class="CompositeElement"/>
+        </Target>
+    </DMRelationshipClass>
+
+    <DMEntityClass typeName="CompositeElement" modifier="Abstract" description="DEPRECATED: A spatial element that may be Composite of other CompositeElements">
+        <DMCustomAttributes>
+            <Deprecated xmlns="CoreCustomAttributes.01.00.03">
+                <Description>Instead, use the SpatialStructureElement class that is a subclass of this class for backwards compatibility.</Description>
+            </Deprecated>
+        </DMCustomAttributes>
+        <BaseClass>bis:SpatialLocationElement</BaseClass>
+        <DMNavigationProperty propertyName="ComposingElement" displayLabel="Aggregator" relationshipName="CompositeComposesSubComposites" direction="Backward" description="The aggregator of this element within the Spatial Structure"/>
+        <DMProperty propertyName="FootprintArea" displayLabel="FootprintArea" typeName="double" readOnly="true" kindOfQuantity="AECU:AREA" description="The area that this Element projects onto its base plane."/>
+    </DMEntityClass>
+
+    <DMEntityClass typeName="ICompositeBoundary" modifier="Abstract" description="DEPRECATED: An optional interface that indicates that the CompositeElement is delimited by a curve">
+        <DMCustomAttributes>
+            <IsMixin xmlns="CoreCustomAttributes.01.00.03">
+                <AppliesToEntityClass>CompositeElement</AppliesToEntityClass>
+            </IsMixin>
+            <Deprecated xmlns="CoreCustomAttributes.01.00.03">
+                <Description>Deprecated along with CompositeElement so its use is no longer recommended.</Description>
+            </Deprecated>
+        </DMCustomAttributes>
+    </DMEntityClass>
+
+    <DMEntityClass typeName="ICompositeVolume" modifier="Abstract" description="DEPRECATED: An optional interface that indicates that the CompositeElement is delimited by a volume">
+        <DMCustomAttributes>
+            <IsMixin xmlns="CoreCustomAttributes.01.00.03">
+                <AppliesToEntityClass>CompositeElement</AppliesToEntityClass>
+            </IsMixin>
+            <Deprecated xmlns="CoreCustomAttributes.01.00.03">
+                <Description>Deprecated along with CompositeElement so its use is no longer recommended.</Description>
+            </Deprecated>
+        </DMCustomAttributes>
+    </DMEntityClass>
+
+    <DMRelationshipClass typeName="CompositeOverlapsSpatialElements" modifier="None" strength="referencing" description="DEPRECATED: A relationship that indicates an element is at least partially contained within the CompositeElement">
+        <BaseClass>bis:ElementRefersToElements</BaseClass>
+        <DMCustomAttributes>
+            <Deprecated xmlns="CoreCustomAttributes.01.00.03">
+                <Description>Use the SpatialOrganizerHoldsSpatialElements or SpatialOrganizerReferencesSpatialElements relationships instead.</Description>
+            </Deprecated>
+        </DMCustomAttributes>
+        <Source multiplicity="(0..*)" roleLabel="overlaps" polymorphic="true">
+            <Class class="CompositeElement"/>
+        </Source>
+        <Target multiplicity="(0..*)" roleLabel="is overlapped by" polymorphic="true">
+            <Class class="bis:SpatialElement"/>
+        </Target>
+    </DMRelationshipClass>
+
+</DMSchema>

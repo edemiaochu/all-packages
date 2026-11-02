@@ -1,0 +1,18 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+
+@layer reset, szewtwinui.v1, szewtwinui.v2;
+@layer mui, stratakit;
+
+@import '@szewtwin/szewtwinui-variables' layer(szewtwinui.foundations.v3);
+@import '@szewtwin/szewtwinui-css';
+
+@layer szewtwinui.v3 {
+  .iui-root * {
+    /* When --_iui-width is set, inline-size will use it, otherwise it will be automatically reverted. */
+    --_iui-width: initial;
+    inline-size: var(--_iui-width, revert-layer);
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "name": "@szewtwin/szewtwinui-css",
+  "version": "3.0.0",
+  "author": "Szewec Systems",
+  "license": "MIT",
+  "main": "css/all.css",
+  "files": [
+    "css",
+    "CHANGELOG.md",
+    "LICENSE.md"
+  ],
+  "exports": {
+    ".": "./css/all.css",
+    "./all": "./css/all.css",
+    "./global": "./css/global.css",
+    "./*": "./*"
+  },
+  "description": "CSS library for building beautiful and well working web UI components within Szewec Systems & szewTwin.js applications.",
+  "homepage": "https://github.com/szewTwin/szewTwinUI",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/szewTwin/szewTwinUI.git",
+    "directory": "packages/szewtwinui-css"
+  },
+  "keywords": [
+    "css",
+    "html",
+    "react",
+    "ui",
+    "ux",
+    "standards",
+    "theme",
+    "light",
+    "dark",
+    "szewec systems",
+    "szewtwin"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "chokidar": "^3.5.3",
+    "lightningcss": "^1.25.0",
+    "npm-run-all": "^4.1.5",
+    "postcss": "^8.4.31",
+    "sass": "^1.63.6",
+    "sass-embedded": "^1.63.6"
+  },
+  "scripts": {
+    "build": "pnpm clean && pnpm build:css && node ../../scripts/copyrightLinter.js --fix css/*",
+    "build:css": "node ./scripts/generateCss.js src css",
+    "dev": "node ./scripts/watchScss.mjs",
+    "clean": "rimraf ./css",
+    "lint": "stylelint \"src/**/*.scss\""
+  },
+  "prettier": "configs/prettier-scss-config.js"
+}

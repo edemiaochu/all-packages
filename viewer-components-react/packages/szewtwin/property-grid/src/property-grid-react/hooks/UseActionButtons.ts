@@ -1,0 +1,45 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+
+import { useMemo } from "react";
+
+import type { ReactNode } from "react";
+import type { ActionButtonRendererProps } from "@szewtwin/components-react";
+import type { IPresentationPropertyDataProvider } from "@szewtwin/presentation-components";
+
+/** @public */
+interface PropertyGridActionButtonRendererProps extends ActionButtonRendererProps {
+  /** Data provider used by the property grid. */
+  dataProvider: IPresentationPropertyDataProvider;
+}
+
+/**
+ * Action button with extended properties
+ * @public
+ */
+export type PropertyGridActionButtonRenderer = (props: PropertyGridActionButtonRendererProps) => ReactNode;
+
+interface UseActionButtonsProps {
+  actionButtonRenderers?: Array<PropertyGridActionButtonRenderer>;
+  dataProvider: IPresentationPropertyDataProvider;
+}
+
+/**
+ * Custom hook for getting action buttons with extended properties.
+ * @internal
+ */
+export function useActionButtons({ dataProvider, actionButtonRenderers }: UseActionButtonsProps) {
+  return useMemo(() => {
+    return actionButtonRenderers?.map(
+      (item) =>
+        ({ property, isPropertyHovered }: ActionButtonRendererProps) =>
+          item({
+            dataProvider,
+            property,
+            isPropertyHovered,
+          }),
+    );
+  }, [dataProvider, actionButtonRenderers]);
+}

@@ -1,0 +1,86 @@
+from enum import Enum
+from typing import Optional
+from pydantic import BaseModel, Field
+from datetime import datetime
+
+from reality_capture.service.utils import Link
+
+
+class DetectorExport(Enum):
+    OBJECTS = "Objects"
+    LINES = "Lines"
+    POLYGONS = "Polygons"
+    LOCATIONS = "Locations"
+
+
+class Capabilities(BaseModel):
+    labels: list[str] = Field(description="Labels of the detector version.")
+    exports: list[DetectorExport] = Field(description="Exports of the detector version.")
+
+
+class DetectorStatus(Enum):
+    AWAITING_DATA = "AwaitingData"
+    READY = "Ready"
+
+
+class DetectorVersionCreationLinks(BaseModel):
+    complete_url: Link = Field(description="URL to mark the completion of the detector version creation process.",
+                               alias="completeUrl")
+    upload_url: Link = Field(description="URL to upload the detector zip file.", alias="uploadUrl")
+
+
+class DetectorVersionCreate(BaseModel):
+    version_number: str = Field(description="Version number.", alias="versionNumber")
+    capabilities: Capabilities = Field(description="Capabilities of the version.")
+
+
+class DetectorVersion(DetectorVersionCreate):
+    creation_date: datetime = Field(description="Creation date of the version.", alias="creationDate")
+    status: DetectorStatus = Field(description="Status of the version.")
+    download_url: Optional[str] = Field(None, description="URL to download the detector version. "
+                                                          "It is present only if the version status is 'Ready'.",
+                                        alias="downloadUrl")
+    creator_id: Optional[str] = Field(None, description="User Id of the version creator.", alias="creatorId")
+
+
+class DetectorVersionWithLinks(BaseModel):
+    version: DetectorVersion = Field(description="Detector version details.")
+    links: DetectorVersionCreationLinks = Field(description="Contains the hyperlinks related to the detector version creation.",
+                                                alias="_links")
+
+
+class DetectorType(Enum):
+    PHOTO_OBJECT_DETECTOR = "PhotoObjectDetector"
+    PHOTO_SEGMENTATION_DETECTOR = "PhotoSegmentationDetector"
+    ORTHOPHOTO_SEGMENTATION_DETECTOR = "OrthophotoSegmentationDetector"
+    POINT_CLOUD_SEGMENTATION_DETECTOR = "PointCloudSegmentationDetector"
+
+
+class DetectorUpdate(BaseModel):
+    display_name: Optional[str] = Field(None, description="Display name of the detector.", alias="displayName")
+    description: Optional[str] = Field(None, description="Description of the detector.")
+    documentation_url: Optional[str] = Field(None, description="Documentation URL for the detector.",
+                                             alias="documentationUrl")
+
+
+class DetectorBase(DetectorUpdate):
+    name: str = Field(description="Name of the detector.")
+    type: DetectorType = Field(description="Type of the detector.")
+
+
+class Detector(DetectorBase):
+    versions: list[DetectorVersion] = Field(description="All existing versions of the detector.")
+
+
+class DetectorResponse(BaseModel):
+    detector: Detector = Field(description="Detector.")
+
+
+class DetectorMinimal(DetectorBase):
+    latest_version: Optional[str] = Field(None, description="The latest version of the detector "
+                                                            "with 'Ready' status, if any.",
+                                          alias="latestVersion")
+
+
+class DetectorsMinimalResponse(BaseModel):
+    detectors: list[DetectorMinimal] = Field(description="List of minimal detectors.")

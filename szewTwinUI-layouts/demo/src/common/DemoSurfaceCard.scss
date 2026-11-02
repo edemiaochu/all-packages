@@ -1,0 +1,25 @@
+// Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+// See LICENSE.md in the project root for license terms and full copyright notice.
+
+.demo-surface-card {
+  height: 100%;
+  width: 100%;
+  word-break: break-word;
+  display: flex;
+  flex-direction: column;
+}
+
+.demo-surface-title-bar {
+  display: flex;
+  align-items: center;
+  min-height: calc(var(--iui-size-s) * 4);
+  border-bottom: 1px solid var(--iui-color-border);
+  padding-inline: var(--iui-size-s);
+}
+
+.demo-surface-content {
+  padding: var(--iui-size-s) var(--iui-size-s);
+  display: flex;
+  flex-direction: column;
+  gap: var(--iui-size-xs);
+}

@@ -1,0 +1,54 @@
+name: $(Date:yyyy.M.d)$(Rev:.r)
+
+parameters:
+  - name: runRushAudit
+    type: boolean
+    default: true
+
+trigger: none
+
+variables:
+  nodeVersion: '22.11.0'
+
+jobs:
+  - job: BuildAndTest
+    strategy:
+      matrix:
+        linux:
+          imageName: 'ubuntu-latest'
+        windows:
+          imageName: 'windows-latest'
+    pool:
+      vmImage: $(imageName)
+    variables:
+      - group: iModels Clients 3.0 - Integration Tests - DEV
+    workspace:
+      clean: all
+
+    steps:
+    - template: templates/build-test.yml
+      parameters:
+        runRushAudit: ${{ parameters.runRushAudit }}
+
+  - job: BuildAndTest_macArm64
+    pool:
+      name: iModelTechMacArm
+      demands:
+        - Agent.OS -equals Darwin
+    variables:
+      - group: iModels Clients 3.0 - Integration Tests - DEV
+    workspace:
+      clean: all
+
+    steps:
+    - template: templates/build-test.yml
+      parameters:
+        runRushAudit: ${{ parameters.runRushAudit }}
+
+  - job: Publish
+    dependsOn: BuildAndTest
+    pool: 
+      vmImage: 'windows-latest'
+
+    steps:
+    - template: templates/publish.yml

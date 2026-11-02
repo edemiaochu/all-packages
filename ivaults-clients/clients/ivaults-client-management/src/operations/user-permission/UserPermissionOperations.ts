@@ -1,0 +1,34 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+import { OperationsBase } from "../../base/internal";
+import { UserPermissions } from "../../base/types";
+import { OperationOptions } from "../OperationOptions";
+
+import { GetUserPermissionsParams } from "./UserPermissionOperationParams";
+
+export class UserPermissionOperations<
+  TOptions extends OperationOptions
+> extends OperationsBase<TOptions> {
+  /**
+   * Retrieves Permissions the current user has for the specified iVault. The current user is determined based on
+   * passed authorization information. Wraps the
+   * {@link https://developer.szewec.com/apis/ivaults-v2/operations/get-ivault-user-permissions/ Get iVault User Permissions}
+   * operation from iVaults API. iVaults Permissions may be configured on a szewTwin level or an iVault level.
+   * This operation will return Permissions configured for this specific iVault or szewTwin Permissions if iVault
+   * Permissions are not configured.
+   * @param {GetUserPermissionsParams} params parameters for this operation. See {@link GetUserPermissionsParams}.
+   * @returns {Promise<UserPermissions>} User Permissions. See {@link UserPermissions}.
+   */
+  public async get(params: GetUserPermissionsParams): Promise<UserPermissions> {
+    const response = await this.sendGetRequest<UserPermissions>({
+      authorization: params.authorization,
+      url: this._options.urlFormatter.getUserPermissionsUrl({
+        iVaultId: params.iVaultId,
+      }),
+      headers: params.headers,
+    });
+    return response.body;
+  }
+}

@@ -1,0 +1,71 @@
+// Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+// See LICENSE.md in the project root for license terms and full copyright notice.
+@use '../mixins';
+@use '../text/muted';
+
+@mixin iui-table-paginator {
+  @include mixins.iui-reset;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-inline: var(--iui-size-m);
+  user-select: none;
+  background-color: var(--iui-color-background);
+  border-end-start-radius: var(--iui-border-radius-1);
+  border-end-end-radius: var(--iui-border-radius-1);
+  border-block-start: 1px solid var(--iui-color-border);
+  isolation: isolate;
+
+  > .iui-left,
+  > .iui-center,
+  > .iui-right {
+    display: flex;
+    align-items: center;
+    position: relative;
+    flex: 1;
+    min-inline-size: 0;
+  }
+
+  > .iui-center {
+    justify-content: center;
+    flex: 2 1;
+    color: var(--iui-color-text);
+    z-index: 1;
+  }
+
+  > .iui-right {
+    justify-content: flex-end;
+  }
+}
+
+@mixin iui-table-paginator-page-size-label {
+  @include muted.iui-text-muted;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@mixin iui-table-paginator-ellipsis {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-inline: var(--iui-size-xs);
+
+  &-small {
+    padding-inline: var(--iui-size-2xs);
+  }
+}
+
+@mixin iui-table-paginator-pages-group {
+  display: inline-flex;
+  align-items: center;
+  margin-inline: var(--iui-size-xs);
+}
+
+@mixin iui-table-paginator-page-button {
+  &[data-iui-active='true'] {
+    // Adds stripe below active button
+    --_iui-button-active-stripe-inset-block: calc(100% - #{var(--iui-size-2xs)}) #{var(--iui-size-3xs)};
+    --_iui-button-active-stripe-inset-inline: #{var(--iui-size-3xs)};
+  }
+}

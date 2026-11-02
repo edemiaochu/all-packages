@@ -1,0 +1,62 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+import { StoragePipelineOptions } from "@azure/storage-blob";
+
+import {
+  assertPrimitiveType,
+  FalsyValueError,
+} from "@szewtwin/cloud-agnostic-core/lib/internal";
+import {
+  ObjectReference,
+  RetryOptions,
+  TransferConfig,
+} from "@szewtwin/object-storage-core/lib/common";
+import {
+  assertTransferConfig,
+  buildObjectKey,
+} from "@szewtwin/object-storage-core/lib/common/internal";
+
+import { AzureTransferConfig, AzureTransferConfigInput } from "../Interfaces";
+
+export function assertAzureTransferConfig(
+  transferConfig: TransferConfig | AzureTransferConfig
+): asserts transferConfig is AzureTransferConfig {
+  assertTransferConfig(transferConfig);
+
+  if (!("authentication" in transferConfig))
+    throw new FalsyValueError("transferConfig.authentication");
+
+  assertPrimitiveType(
+    transferConfig.authentication,
+    "transferConfig.authentication",
+    "string"
+  );
+}
+
+export function buildBlobUrl(input: AzureTransferConfigInput): string {
+  assertAzureTransferConfig(input.transferConfig);
+  const { authentication, baseUrl } = input.transferConfig;
+  return `${baseUrl}/${buildObjectKey(input.reference)}?${authentication}`;
+}
+
+export function buildBlobName(reference: ObjectReference): string {
+  const { relativeDirectory, objectName } = reference;
+  return (relativeDirectory ? `${relativeDirectory}/` : "") + objectName;
+}
+
+export function formatRetryOptions(
+  retryOptions: RetryOptions
+): StoragePipelineOptions {
+  return {
+    retryOptions: {
+      maxTries:
+        retryOptions.maxRetries !== undefined
+          ? retryOptions.maxRetries + 1
+          : undefined,
+      retryDelayInMs: retryOptions.retryDelayMs,
+      maxRetryDelayInMs: retryOptions.maxRetryDelayMs,
+    },
+  };
+}

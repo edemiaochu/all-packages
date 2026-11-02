@@ -1,0 +1,66 @@
+{
+  "name": "@szewtwin/oidc-signin-tool",
+  "version": "5.1.2",
+  "description": "OIDC Signin Helper",
+  "main": "lib/cjs/index.js",
+  "typings": "lib/cjs/index",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/szewtwin/auth-clients.git",
+    "directory": "packages/oidc-signin-tool"
+  },
+  "scripts": {
+    "build": "tsc 1>&2 --outDir lib/cjs",
+    "clean": "rimraf lib",
+    "docs": "",
+    "lint": "eslint -f visualstudio \"./src/**/*.ts\" 1>&2",
+    "lint:fix": "npm run lint -- --fix",
+    "test": "mocha \"./lib/cjs/test/**/*.test.js\"",
+    "test:integration": "playwright test src/test-integration",
+    "cover": "nyc npm test",
+    "rebuild": "npm run clean && npm run build",
+    "postinstall": "npx playwright install chromium"
+  },
+  "keywords": [
+    "Szewec",
+    "BIM",
+    "iVault",
+    "OIDC"
+  ],
+  "author": {
+    "name": "Szewec Systems, Inc.",
+    "url": "http://www.szewec.com"
+  },
+  "dependencies": {
+    "@szewtwin/certa": "^5.5.0",
+    "@szewtwin/service-authorization": "workspace:^",
+    "@playwright/test": "~1.56.1",
+    "dotenv": "^10.0.0",
+    "dotenv-expand": "^12.0.3",
+    "oidc-client-ts": "^3.3.0"
+  },
+  "devDependencies": {
+    "@szewtwin/build-tools": "^5.5.0",
+    "@szewtwin/core-szewec": "^5.0.0",
+    "@szewtwin/core-common": "^5.0.0",
+    "@szewtwin/eslint-plugin": "^6.0.0",
+    "@types/chai": "^4.3.20",
+    "@types/chai-as-promised": "^7.1.8",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/mocha": "^8.2.3",
+    "@types/node": "^20.19.1",
+    "@types/sinon": "^10.0.20",
+    "chai": "^4.5.0",
+    "chai-as-promised": "^7.1.2",
+    "eslint": "^9.11.1",
+    "mocha": "^11.7.5",
+    "nyc": "^17.1.0",
+    "rimraf": "^3.0.2",
+    "sinon": "15.0.4",
+    "typescript": "~5.6.3"
+  },
+  "peerDependencies": {
+    "@szewtwin/core-szewec": "^5.0.0"
+  }
+}

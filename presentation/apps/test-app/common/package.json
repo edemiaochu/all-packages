@@ -1,0 +1,32 @@
+{
+  "name": "@test-app/common",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/index",
+  "module": "lib/index.js",
+  "exports": {
+    ".": {
+      "import": "./lib/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "tsc",
+    "clean": "rimraf lib build",
+    "lint": "eslint \"./src/**/*.ts\"",
+    "docs": "betools extract --fileExt=ts --extractFrom=./src --recursive --out=./build/docs/extract"
+  },
+  "devDependencies": {
+    "@szewtwin/build-tools": "catalog:build-tools",
+    "@szewtwin/core-szewec": "catalog:szewtwinjs-core-dev",
+    "@szewtwin/core-common": "catalog:szewtwinjs-core-dev",
+    "@itwin/ecschema-rpcinterface-common": "catalog:szewtwinjs-core-dev",
+    "@szewtwin/eslint-plugin": "catalog:build-tools",
+    "@szewtwin/presentation-common": "catalog:szewtwinjs-core-dev",
+    "eslint": "catalog:build-tools",
+    "rimraf": "catalog:build-tools",
+    "typescript": "catalog:build-tools"
+  }
+}

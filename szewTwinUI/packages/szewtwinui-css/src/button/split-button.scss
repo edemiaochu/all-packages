@@ -1,0 +1,60 @@
+// Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+// See LICENSE.md in the project root for license terms and full copyright notice.
+
+@mixin iui-button-split {
+  $iui-button-split-divider-color: rgba(255, 255, 255, var(--iui-opacity-4));
+
+  display: inline-flex;
+  align-items: center;
+  isolation: isolate;
+
+  :where(.iui-button:first-child) {
+    border-start-end-radius: 0;
+    border-end-end-radius: 0;
+
+    &[data-iui-variant='high-visibility'],
+    &[data-iui-variant='cta'] {
+      border-inline-end-color: $iui-button-split-divider-color;
+    }
+
+    &:hover {
+      z-index: 1;
+    }
+
+    &:is([disabled], :disabled, [aria-disabled='true'], [data-iui-disabled='true']) {
+      border-inline-end-color: var(--iui-color-border-subtle);
+      z-index: -1;
+    }
+
+    &:focus-visible {
+      z-index: 1;
+    }
+  }
+
+  :where(.iui-button:last-child) {
+    --_iui-button-padding-inline: var(--iui-size-2xs);
+
+    border-start-start-radius: 0;
+    border-end-start-radius: 0;
+    margin-inline-start: -1px;
+    min-inline-size: unset;
+
+    &[data-iui-variant='high-visibility'],
+    &[data-iui-variant='cta'] {
+      border-inline-start-color: $iui-button-split-divider-color;
+    }
+
+    &:where([disabled], :disabled, [aria-disabled='true'], [data-iui-disabled='true']) {
+      border-inline-start-color: var(--iui-color-border-subtle);
+      z-index: -1;
+    }
+
+    &[data-iui-size='small'] {
+      --_iui-button-padding-inline: var(--iui-size-3xs);
+    }
+
+    &[data-iui-size='large'] {
+      --_iui-button-padding-inline: var(--iui-size-xs);
+    }
+  }
+}

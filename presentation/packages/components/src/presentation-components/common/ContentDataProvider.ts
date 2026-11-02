@@ -1,0 +1,810 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+/** @packageDocumentation
+ * @module Core
+ */
+
+import "./DisposePolyfill.js";
+
+import { PropertyDescription, PropertyRecord } from "@szewtwin/appui-abstract";
+import { assert, Logger } from "@szewtwin/core-szewec";
+import { IVaultApp, IVaultConnection } from "@szewtwin/core-frontend";
+import { UnitSystemKey } from "@szewtwin/core-quantity";
+import {
+  ArrayPropertiesField,
+  ClientDiagnosticsOptions,
+  Content,
+  DEFAULT_KEYS_BATCH_SIZE,
+  Descriptor,
+  DescriptorOverrides,
+  DisplayValue,
+  DisplayValuesArray,
+  DisplayValuesMap,
+  Field,
+  Item,
+  KeySet,
+  KindOfQuantityInfo,
+  KoqPropertyValueFormatter,
+  NestedContentValue,
+  PageOptions,
+  PropertiesField,
+  PropertyInfo,
+  RegisteredRuleset,
+  RequestOptionsWithRuleset,
+  Ruleset,
+  RulesetVariable,
+  SelectionInfo,
+  StructPropertiesField,
+  Value,
+  ValuesArray,
+  ValuesDictionary,
+  ValuesMap,
+} from "@szewtwin/presentation-common";
+import { IVaultContentChangeEventArgs, Presentation } from "@szewtwin/presentation-frontend";
+import { PresentationComponentsLoggerCategory } from "../ComponentsLoggerCategory.js";
+import { createDiagnosticsOptions, DiagnosticsProps } from "./Diagnostics.js";
+import { IPresentationDataProvider } from "./IPresentationDataProvider.js";
+import { findField, getRulesetId, memoize, RulesetOrId } from "./Utils.js";
+
+/**
+ * Properties for invalidating content cache.
+ * @public
+ */
+export interface CacheInvalidationProps {
+  /**
+   * Invalidate content descriptor. Should be set when invalidating
+   * after changing anything that affects how the descriptor is built:
+   * `keys`, `selectionInfo`, `ivault`, `rulesetId`.
+   */
+  descriptor?: boolean;
+
+  /**
+   * Invalidate configured content descriptor. Should be set when
+   * invalidating something that affects how descriptor is configured
+   * in the `configureContentDescriptor` callback, e.g. hidden fields,
+   * sorting, filtering, etc.
+   */
+  descriptorConfiguration?: boolean;
+
+  /**
+   * Invalidate cached content size. Should be set after changing anything
+   * that may affect content size. Generally, it should always be set when
+   * the `descriptor` flag is set. Additionally, it should also be set after
+   * setting `filterExpression` or similar descriptor properties.
+   */
+  size?: boolean;
+
+  /**
+   * Invalidate cached content. Should be set after changing anything that may
+   * affect content. Generally, it should always be set when the `descriptor`
+   * flag is set. Additionally, it should also be set after setting `sortingField`,
+   * `sortDirection`, `filterExpression` and similar fields.
+   */
+  content?: boolean;
+
+  /**
+   * Invalidate content formatting. Should be set after changes to active formatting options:
+   * format specs, unit system, etc.
+   */
+  formatting?: boolean;
+}
+/** @public */
+export namespace CacheInvalidationProps {
+  /**
+   * Create CacheInvalidationProps to fully invalidate all caches.
+   */
+  export const full = (): CacheInvalidationProps => ({
+    descriptor: true,
+    descriptorConfiguration: true,
+    size: true,
+    content: true,
+  });
+}
+
+/**
+ * Interface for all presentation-driven content providers.
+ * @public
+ */
+export interface IContentDataProvider extends IPresentationDataProvider {
+  /** Display type used to format content */
+  readonly displayType: string;
+  /** Keys defining what to request content for */
+  keys: KeySet;
+  /** Information about selection event that results in content change */
+  selectionInfo: SelectionInfo | undefined;
+
+  /**
+   * Get the content descriptor.
+   */
+  getContentDescriptor: () => Promise<Descriptor | undefined>;
+
+  /**
+   * Get the number of content records.
+   */
+  getContentSetSize: () => Promise<number>;
+
+  /**
+   * Get the content.
+   * @param pageOptions Paging options.
+   */
+  getContent: (pageOptions?: PageOptions) => Promise<Content | undefined>;
+
+  /**
+   * Get field that was used to create the given property record.
+   * @deprecated in 4.0. Use [[getFieldByPropertyDescription]] instead.
+   */
+  getFieldByPropertyRecord: (propertyRecord: PropertyRecord) => Promise<Field | undefined>;
+
+  /** Get field that was used to create a property record with given property description. */
+  getFieldByPropertyDescription: (description: PropertyDescription) => Promise<Field | undefined>;
+}
+
+/**
+ * Properties for creating a `ContentDataProvider` instance.
+ * @public
+ */
+export interface ContentDataProviderProps extends DiagnosticsProps {
+  /** IVault to pull data from. */
+  ivault: IVaultConnection;
+
+  /** Id of the ruleset to use when requesting content or a ruleset itself. */
+  ruleset: string | Ruleset;
+
+  /** The content display type which this provider is going to load data for. */
+  displayType: string;
+
+  /**
+   * Paging size for obtaining content records.
+   *
+   * Presentation data providers, when used with paging, have ability to save one backend request for size / count. That
+   * can only be achieved when `pagingSize` property is set on the data provider and it's value matches size which is used when
+   * requesting content. To help developers notice this problem, data provider emits a warning similar to this:
+   * ```
+   * ContentDataProvider.pagingSize doesn't match pageOptions in ContentDataProvider.getContent call. Make sure you set provider's pagingSize to avoid excessive backend requests.
+   * ```
+   * To fix the issue, developers should make sure the page size used for requesting data is also set for the data provider:
+   * ```TS
+   * const pagingSize = 10;
+   * const provider = new ContentDataProvider({ ivault, ruleset, displayType, pagingSize});
+   * // only one backend request is made for the two following requests:
+   * provider.getContentSetSize();
+   * provider.getContent({ start: 0, size: pagingSize });
+   * ```
+   */
+  pagingSize?: number;
+}
+
+/**
+ * Base class for all presentation-driven content providers.
+ * @public
+ */
+export class ContentDataProvider implements IContentDataProvider {
+  private _ivault: IVaultConnection;
+  private _ruleset: RulesetOrId;
+  private _displayType: string;
+  private _keys: KeySet;
+  private _previousKeysGuid: string;
+  private _selectionInfo?: SelectionInfo;
+  private _pagingSize?: number;
+  private _diagnosticsOptions?: ClientDiagnosticsOptions;
+  private _listeners: Array<() => void> = [];
+  private _isContentFormatted = false;
+
+  /** Constructor. */
+  constructor(props: ContentDataProviderProps) {
+    this._displayType = props.displayType;
+    this._ivault = props.ivault;
+    this._ruleset = props.ruleset;
+    this._keys = new KeySet();
+    this._previousKeysGuid = this._keys.guid;
+    this._pagingSize = props.pagingSize;
+    this._diagnosticsOptions = createDiagnosticsOptions(props);
+  }
+
+  #dispose() {
+    for (const removeListener of this._listeners) {
+      removeListener();
+    }
+    this._listeners = [];
+  }
+
+  /** Destructor. Must be called to clean up.  */
+  public [Symbol.dispose]() {
+    this.#dispose();
+  }
+
+  /** @deprecated in 5.7. Use `[Symbol.dispose]` instead. */
+  /* v8 ignore next 3 -- @preserve */
+  public dispose() {
+    this.#dispose();
+  }
+
+  /** Display type used to format content */
+  public get displayType(): string {
+    return this._displayType;
+  }
+
+  /**
+   * Paging options for obtaining content.
+   * @see `ContentDataProviderProps.pagingSize`
+   */
+  public get pagingSize(): number | undefined {
+    return this._pagingSize;
+  }
+  public set pagingSize(value: number | undefined) {
+    this._pagingSize = value;
+  }
+
+  /** IVault to pull data from */
+  public get ivault(): IVaultConnection {
+    return this._ivault;
+  }
+  public set ivault(ivault: IVaultConnection) {
+    if (this._ivault === ivault) {
+      return;
+    }
+
+    this._ivault = ivault;
+    this.invalidateCache(CacheInvalidationProps.full());
+  }
+
+  /** Id of the ruleset to use when requesting content */
+  public get rulesetId(): string {
+    return getRulesetId(this._ruleset);
+  }
+  public set rulesetId(value: string) {
+    if (this.rulesetId === value) {
+      return;
+    }
+
+    this._ruleset = value;
+    this.invalidateCache(CacheInvalidationProps.full());
+  }
+
+  /** Keys defining what to request content for */
+  public get keys() {
+    return this._keys;
+  }
+  public set keys(keys: KeySet) {
+    if (keys.guid === this._previousKeysGuid) {
+      return;
+    }
+
+    this._keys = keys;
+    this._previousKeysGuid = this._keys.guid;
+    this.invalidateCache(CacheInvalidationProps.full());
+  }
+
+  /** Information about selection event that results in content change */
+  public get selectionInfo() {
+    return this._selectionInfo;
+  }
+  public set selectionInfo(info: SelectionInfo | undefined) {
+    if (this._selectionInfo === info) {
+      return;
+    }
+
+    this._selectionInfo = info;
+    this.invalidateCache(CacheInvalidationProps.full());
+  }
+
+  /**
+   * Invalidates cached content.
+   */
+  protected invalidateCache(props: CacheInvalidationProps): void {
+    if (props.descriptor && this.getDefaultContentDescriptor) {
+      this.getDefaultContentDescriptor.cache.keys.length = 0;
+      this.getDefaultContentDescriptor.cache.values.length = 0;
+    }
+    if (props.descriptorConfiguration && this.getContentDescriptor) {
+      this.getContentDescriptor.cache.keys.length = 0;
+      this.getContentDescriptor.cache.values.length = 0;
+    }
+    if ((props.content || props.size) && this._getContentAndSize) {
+      this._getContentAndSize.cache.keys.length = 0;
+      this._getContentAndSize.cache.values.length = 0;
+    }
+    if ((props.formatting || props.content || props.size) && this._getFormattedContentAndSize) {
+      this._getFormattedContentAndSize.cache.keys.length = 0;
+      this._getFormattedContentAndSize.cache.values.length = 0;
+      this._isContentFormatted = false;
+    }
+  }
+
+  private createRequestOptions(): RequestOptionsWithRuleset<IVaultConnection, RulesetVariable> {
+    return {
+      ivault: this._ivault,
+      rulesetOrId: this._ruleset,
+      ...(this._diagnosticsOptions ? { diagnostics: this._diagnosticsOptions } : undefined),
+    };
+  }
+
+  private setupListeners() {
+    if (this._listeners.length > 0) {
+      return;
+    }
+
+    this._listeners.push(Presentation.presentation.onIVaultContentChanged.addListener(this.onIVaultContentChanged));
+    this._listeners.push(Presentation.presentation.rulesets().onRulesetModified.addListener(this.onRulesetModified));
+    this._listeners.push(
+      Presentation.presentation
+        .vars(getRulesetId(this._ruleset))
+        .onVariableChanged.addListener(this.onRulesetVariableChanged),
+    );
+    this._listeners.push(
+      IVaultApp.quantityFormatter.onActiveFormattingUnitSystemChanged.addListener(this.onUnitSystemChanged),
+    );
+    IVaultApp.formatsProvider &&
+      this._listeners.push(IVaultApp.formatsProvider.onFormatsChanged.addListener(this.onFormatsChanged));
+  }
+
+  /**
+   * Called to check if content should be requested even when `keys` is empty. If this
+   * method returns `false`, then content is not requested and this saves a trip
+   * to the backend.
+   */
+  protected shouldRequestContentForEmptyKeyset(): boolean {
+    return false;
+  }
+
+  /**
+   * Get the content descriptor overrides.
+   *
+   * The method may be overridden to configure the content based on content descriptor. If necessary,
+   * it may use [[getContentDescriptor]] to get the descriptor first.
+   */
+  protected async getDescriptorOverrides(): Promise<DescriptorOverrides> {
+    return { displayType: this.displayType };
+  }
+
+  private getDefaultContentDescriptor = memoize(async (): Promise<Descriptor | undefined> => {
+    this.setupListeners();
+    /* v8 ignore next 5 -- @preserve */
+    if (this.keys.size > DEFAULT_KEYS_BATCH_SIZE) {
+      const msg = `ContentDataProvider.getContentDescriptor requesting descriptor with ${this.keys.size} keys which
+        exceeds the suggested size of ${DEFAULT_KEYS_BATCH_SIZE}. Possible "HTTP 413 Payload Too Large" error.`;
+      Logger.logWarning(PresentationComponentsLoggerCategory.Content, msg);
+    }
+    return Presentation.presentation.getContentDescriptor({
+      ...this.createRequestOptions(),
+      displayType: this._displayType,
+      keys: this.keys,
+      selection: this.selectionInfo,
+    });
+  });
+
+  /**
+   * Get the content descriptor.
+   *
+   * The method may return `undefined ` descriptor if:
+   * - [[shouldRequestContentForEmptyKeyset]] returns `false` and `this.keys` is empty
+   * - there is no content based on the ruleset and input
+   */
+  public getContentDescriptor = memoize(async (): Promise<Descriptor | undefined> => {
+    if (!this.shouldRequestContentForEmptyKeyset() && this.keys.isEmpty) {
+      return undefined;
+    }
+
+    const descriptor = await this.getDefaultContentDescriptor();
+    if (!descriptor) {
+      return undefined;
+    }
+
+    return new Descriptor({ ...descriptor });
+  });
+
+  /**
+   * Get the number of content records.
+   */
+  public async getContentSetSize(): Promise<number> {
+    const paging = undefined !== this.pagingSize ? { start: 0, size: this.pagingSize } : undefined;
+    const contentAndSize = await this._getContentAndSize(paging);
+    return contentAndSize?.size ?? 0;
+  }
+
+  /**
+   * Get the content.
+   * @param pageOptions Paging options.
+   */
+  public async getContent(pageOptions?: PageOptions): Promise<Content | undefined> {
+    if (undefined !== pageOptions && pageOptions.size !== this.pagingSize) {
+      const msg = `ContentDataProvider.pagingSize doesn't match pageOptions in ContentDataProvider.getContent call.
+        Make sure you set provider's pagingSize to avoid excessive backend requests.`;
+      Logger.logWarning(PresentationComponentsLoggerCategory.Content, msg);
+    }
+    const contentAndSize = await this._getFormattedContentAndSize(pageOptions);
+    return contentAndSize?.content;
+  }
+
+  /**
+   * Get field using PropertyRecord.
+   * @deprecated in 4.0. Use [[getFieldByPropertyDescription]] instead.
+   */
+  public async getFieldByPropertyRecord(propertyRecord: PropertyRecord): Promise<Field | undefined> {
+    return this.getFieldByPropertyDescription(propertyRecord.property);
+  }
+
+  /** Get field that was used to create a property record with given property description. */
+  public async getFieldByPropertyDescription(description: PropertyDescription): Promise<Field | undefined> {
+    const descriptor = await this.getContentDescriptor();
+    return descriptor ? findField(descriptor, description.name) : undefined;
+  }
+
+  private _getContentAndSize = memoize(
+    async (pageOptions?: PageOptions): Promise<{ content: Content; size: number } | undefined> => {
+      if (!this.shouldRequestContentForEmptyKeyset() && this.keys.isEmpty) {
+        return undefined;
+      }
+
+      this.setupListeners();
+      const descriptorOverrides = await this.getDescriptorOverrides();
+
+      /* v8 ignore next 5 -- @preserve */
+      if (this.keys.size > DEFAULT_KEYS_BATCH_SIZE) {
+        const msg = `ContentDataProvider.getContent requesting with ${this.keys.size} keys which
+        exceeds the suggested size of ${DEFAULT_KEYS_BATCH_SIZE}. Possible "HTTP 413 Payload Too Large" error.`;
+        Logger.logWarning(PresentationComponentsLoggerCategory.Content, msg);
+      }
+
+      const options = {
+        ...this.createRequestOptions(),
+        descriptor: descriptorOverrides,
+        keys: this.keys,
+        paging: pageOptions,
+      };
+
+      // we always get formatted content from presentation manager - ensure
+      // we set `_isContentFormatted = true` when we finish getting content, to
+      // avoid formatting it again unnecessarily
+      using _ = {
+        [Symbol.dispose]: () => {
+          this._isContentFormatted = true;
+        },
+      };
+
+      if (Presentation.presentation.getContentIterator) {
+        const result = await Presentation.presentation.getContentIterator(options);
+        return result
+          ? {
+              size: result.total,
+              content: new Content(
+                result.descriptor,
+                await (async () => {
+                  const items = [];
+                  for await (const item of result.items) {
+                    items.push(item);
+                  }
+                  return items;
+                })(),
+              ),
+            }
+          : undefined;
+      }
+
+      const requestSize = undefined !== pageOptions && 0 === pageOptions.start && undefined !== pageOptions.size;
+      if (requestSize) {
+        // eslint-disable-next-line @typescript-eslint/no-deprecated
+        return await Presentation.presentation.getContentAndSize(options);
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-deprecated
+      const content = await Presentation.presentation.getContent(options);
+      return content ? { content, size: content.contentSet.length } : undefined;
+    },
+    { isMatchingKey: areContentRequestsEqual as any },
+  );
+
+  private _getFormattedContentAndSize = memoize(
+    async (pageOptions?: PageOptions): Promise<{ content: Content; size: number } | undefined> => {
+      const result = await this._getContentAndSize(pageOptions);
+      if (result && !this._isContentFormatted) {
+        const formatter = new ContentFormatter(this._ivault);
+        result.content = await formatter.formatContent(result.content);
+        this._isContentFormatted = true;
+      }
+      return result;
+    },
+    { isMatchingKey: areContentRequestsEqual as any },
+  );
+
+  private onContentUpdate() {
+    // note: subclasses are expected to override `invalidateCache` and notify components about
+    // the changed content so components know to reload
+    this.invalidateCache(CacheInvalidationProps.full());
+  }
+
+  private onIVaultContentChanged = (args: IVaultContentChangeEventArgs) => {
+    if (args.rulesetId === this.rulesetId && args.ivaultKey === this.ivault.key) {
+      this.onContentUpdate();
+    }
+  };
+
+  private onRulesetModified = (curr: RegisteredRuleset) => {
+    if (curr.id === this.rulesetId) {
+      this.onContentUpdate();
+    }
+  };
+
+  private onRulesetVariableChanged = () => {
+    this.onContentUpdate();
+  };
+
+  private onUnitSystemChanged = () => {
+    this.invalidateCache({ formatting: true });
+  };
+
+  private onFormatsChanged = () => {
+    this.invalidateCache({ formatting: true });
+  };
+}
+
+function areContentRequestsEqual(lhsArgs: [PageOptions?], rhsArgs: [PageOptions?]): boolean {
+  /* v8 ignore next 3 -- @preserve */
+  if ((lhsArgs[0]?.start ?? 0) !== (rhsArgs[0]?.start ?? 0)) {
+    return false;
+  }
+  /* v8 ignore next 3 -- @preserve */
+  if ((lhsArgs[0]?.size ?? 0) !== (rhsArgs[0]?.size ?? 0)) {
+    return false;
+  }
+  return true;
+}
+
+/* v8 ignore start -- @preserve */
+/**
+ * This is copied from https://github.com/szewTwin/szewtwinjs-core/blob/846393ad2cd49033923f3e7abf100968c2414918/presentation/common/src/presentation-common/content/PropertyValueFormatter.ts#L21
+ * and should be removed once https://github.com/szewTwin/szewtwinjs-core/issues/8441 is done.
+ */
+class ContentFormatter {
+  private _propertyValueFormatter: ContentPropertyValueFormatter;
+  private _unitSystem: UnitSystemKey;
+
+  constructor(ivault: IVaultConnection) {
+    // note: using deprecated version of `KoqPropertyValueFormatter` constructor because we
+    // support 4.x core, where the updated overload doesn't exist
+    this._propertyValueFormatter = new ContentPropertyValueFormatter(
+      // eslint-disable-next-line @typescript-eslint/no-deprecated
+      new KoqPropertyValueFormatter(ivault.schemaContext, undefined, IVaultApp.formatsProvider),
+    );
+    this._unitSystem = IVaultApp.quantityFormatter.activeUnitSystem;
+  }
+
+  public async formatContent(content: Content) {
+    const formattedItems = await this.formatContentItems(content.contentSet, content.descriptor);
+    return new Content(content.descriptor, formattedItems);
+  }
+
+  private async formatContentItems(items: Item[], descriptor: Descriptor) {
+    return Promise.all(
+      items.map(async (item) => {
+        await this.formatValues(item.values, item.displayValues, descriptor.fields);
+        return item;
+      }),
+    );
+  }
+
+  private async formatValues(
+    values: ValuesDictionary<Value>,
+    displayValues: ValuesDictionary<DisplayValue>,
+    fields: Field[],
+  ) {
+    for (const field of fields) {
+      const value = values[field.name];
+
+      // do not add undefined value to display values
+      if (value === undefined) {
+        continue;
+      }
+
+      // format display values of nested content field
+      if (field.isNestedContentField()) {
+        assert(Value.isNestedContent(value));
+        await this.formatNestedContentDisplayValues(value, field.nestedFields);
+        continue;
+      }
+
+      // format property items
+      if (field.isPropertiesField()) {
+        displayValues[field.name] = await this.formatPropertyValue(value, displayValues[field.name], field);
+        continue;
+      }
+
+      displayValues[field.name] = await this._propertyValueFormatter.formatPropertyValue(
+        field,
+        value,
+        this._unitSystem,
+      );
+    }
+  }
+
+  private async formatNestedContentDisplayValues(nestedValues: NestedContentValue[], fields: Field[]) {
+    await Promise.all(
+      nestedValues.map(async (nestedValue) => {
+        await this.formatValues(nestedValue.values, nestedValue.displayValues, fields);
+      }),
+    );
+  }
+
+  private async formatPropertyValue(
+    value: Value,
+    fallbackDisplayValue: DisplayValue,
+    field: PropertiesField,
+  ): Promise<DisplayValue> {
+    if (field.isArrayPropertiesField()) {
+      assert(Value.isArray(value));
+      assert(DisplayValue.isArray(fallbackDisplayValue));
+      return this.formatArrayItems(value, fallbackDisplayValue, field);
+    }
+    if (field.isStructPropertiesField()) {
+      assert(Value.isMap(value));
+      assert(DisplayValue.isMap(fallbackDisplayValue));
+      return this.formatStructMembers(value, fallbackDisplayValue, field);
+    }
+    return this._propertyValueFormatter.formatPropertyValue(field, value, fallbackDisplayValue, this._unitSystem);
+  }
+
+  private async formatArrayItems(
+    itemValues: ValuesArray,
+    itemFallbackDisplayValues: DisplayValuesArray,
+    field: ArrayPropertiesField,
+  ) {
+    return Promise.all(
+      itemValues.map(async (value, index) =>
+        this.formatPropertyValue(value, itemFallbackDisplayValues[index], field.itemsField),
+      ),
+    );
+  }
+
+  private async formatStructMembers(
+    memberValues: ValuesMap,
+    memberFallbackDisplayValues: DisplayValuesMap,
+    field: StructPropertiesField,
+  ) {
+    const displayValues: DisplayValuesMap = {};
+    await Promise.all(
+      field.memberFields.map(async (memberField) => {
+        displayValues[memberField.name] = await this.formatPropertyValue(
+          memberValues[memberField.name],
+          memberFallbackDisplayValues[memberField.name],
+          memberField,
+        );
+      }),
+    );
+    return displayValues;
+  }
+}
+
+class ContentPropertyValueFormatter {
+  constructor(private _koqValueFormatter: KoqPropertyValueFormatter) {}
+
+  public async formatPropertyValue(
+    field: Field,
+    value: Value,
+    fallbackDisplayValue: DisplayValue,
+    unitSystem?: UnitSystemKey,
+  ): Promise<DisplayValue> {
+    const doubleFormatter = isFieldWithKoq(field)
+      ? async (rawValue: number) => {
+          const koq = field.properties[0].property.kindOfQuantity;
+          const formattedValue = await this._koqValueFormatter.format(rawValue, { koqName: koq.name, unitSystem });
+          if (formattedValue !== undefined) {
+            return formattedValue;
+          }
+          return formatDouble(rawValue);
+        }
+      : async (rawValue: number) => formatDouble(rawValue);
+
+    return this.formatValue(field, value, fallbackDisplayValue, { doubleFormatter });
+  }
+
+  private async formatValue(
+    field: Field,
+    value: Value,
+    fallbackDisplayValue: DisplayValue,
+    ctx?: { doubleFormatter: (raw: number) => Promise<string> },
+  ): Promise<DisplayValue> {
+    if (field.isPropertiesField()) {
+      if (field.isArrayPropertiesField()) {
+        return this.formatArrayValue(field, value, fallbackDisplayValue);
+      }
+
+      if (field.isStructPropertiesField()) {
+        return this.formatStructValue(field, value, fallbackDisplayValue);
+      }
+    }
+
+    return this.formatPrimitiveValue(field, value, fallbackDisplayValue, ctx);
+  }
+
+  /**
+   * Note: This function only handles numeric properties, handling of all other kinds was intentionally removed. We only need to re-format content
+   * to react to changes in property formats, and they only affect numeric properties. Skipping the rest allows us to avoid doing localization afterwards.
+   */
+  private async formatPrimitiveValue(
+    field: Field,
+    value: Value,
+    fallbackDisplayValue: DisplayValue,
+    ctx?: { doubleFormatter: (raw: number) => Promise<string> },
+  ) {
+    if (value === undefined) {
+      return "";
+    }
+
+    const formatDoubleValue = async (raw: number) => (ctx ? ctx.doubleFormatter(raw) : formatDouble(raw));
+
+    if (field.type.typeName === "point2d" && isPoint2d(value)) {
+      return `X: ${await formatDoubleValue(value.x)}; Y: ${await formatDoubleValue(value.y)}`;
+    }
+    if (field.type.typeName === "point3d" && isPoint3d(value)) {
+      return `X: ${await formatDoubleValue(value.x)}; Y: ${await formatDoubleValue(value.y)}; Z: ${await formatDoubleValue(value.z)}`;
+    }
+    if (field.type.typeName === "int" || field.type.typeName === "long") {
+      assert(isNumber(value));
+      return value.toFixed(0);
+    }
+    if (field.type.typeName === "double") {
+      assert(isNumber(value));
+      return formatDoubleValue(value);
+    }
+    return fallbackDisplayValue;
+  }
+
+  private async formatStructValue(field: StructPropertiesField, value: Value, fallbackDisplayValue: DisplayValue) {
+    if (!Value.isMap(value) || !DisplayValue.isMap(fallbackDisplayValue)) {
+      return {};
+    }
+
+    const formattedMember: DisplayValuesMap = {};
+    for (const member of field.memberFields) {
+      formattedMember[member.name] = await this.formatValue(
+        member,
+        value[member.name],
+        fallbackDisplayValue[member.name],
+      );
+    }
+    return formattedMember;
+  }
+
+  private async formatArrayValue(field: ArrayPropertiesField, value: Value, fallbackDisplayValue: DisplayValue) {
+    if (!Value.isArray(value) || !DisplayValue.isArray(fallbackDisplayValue)) {
+      return [];
+    }
+
+    return Promise.all(
+      value.map(async (arrayVal, i) => {
+        return this.formatValue(field.itemsField, arrayVal, fallbackDisplayValue[i]);
+      }),
+    );
+  }
+}
+
+function formatDouble(value: number) {
+  return value.toFixed(2);
+}
+
+type FieldWithKoq = PropertiesField & {
+  properties: [{ property: PropertyInfo & { kindOfQuantity: KindOfQuantityInfo } }];
+};
+
+function isFieldWithKoq(field: Field): field is FieldWithKoq {
+  return (
+    field.isPropertiesField() &&
+    field.properties.length > 0 &&
+    field.properties[0].property.kindOfQuantity !== undefined
+  );
+}
+
+function isPoint2d(obj: Value): obj is { x: number; y: number } {
+  return obj !== undefined && isNumber((obj as any).x) && isNumber((obj as any).y);
+}
+
+function isPoint3d(obj: Value): obj is { x: number; y: number; z: number } {
+  return isPoint2d(obj) && isNumber((obj as any).z);
+}
+
+function isNumber(obj: Value): obj is number {
+  return !isNaN(Number(obj));
+}
+/* v8 ignore stop -- @preserve */

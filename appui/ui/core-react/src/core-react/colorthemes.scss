@@ -1,0 +1,11 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+
+/** @note: This file should only be imported by UiCore.ts.
+ *  It should NOT be imported by any *.scss or other ui-core files.
+ */
+
+$background: var(--iui-color-background);
+$accent: var(--iui-color-background-accent);

@@ -1,0 +1,174 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import * as React from "react";
+import { Key } from "ts-key-enum";
+import { PopupButton } from "../../components-react/editors/PopupButton.js";
+import { selectorMatches, TestUtils, userEvent } from "../TestUtils.js";
+
+describe("<PopupButton />", () => {
+  let theUserTo: ReturnType<typeof userEvent.setup>;
+  beforeEach(() => {
+    theUserTo = userEvent.setup();
+  });
+
+  it("renders correctly with showArrow and showShadow", async () => {
+    render(
+      <PopupButton label="Hello" showArrow={true} showShadow={true}>
+        <div>Hello World</div>
+      </PopupButton>
+    );
+
+    await theUserTo.click(screen.getByRole("button"));
+
+    expect(screen.getByRole("dialog")).to.satisfy(
+      selectorMatches(".arrow.core-popup-shadow")
+    );
+  });
+
+  it("renders correctly with moveFocus", async () => {
+    render(
+      <PopupButton label="Hello" moveFocus={false}>
+        <button data-testid={"focused-button"} />
+      </PopupButton>
+    );
+
+    await theUserTo.click(screen.getByRole("button"));
+    expect(screen.getByTestId("focused-button") === document.activeElement);
+  });
+
+  it("renders correctly with placeholder", () => {
+    render(
+      <PopupButton placeholder="Test">
+        <div>Hello World</div>
+      </PopupButton>
+    );
+    expect(
+      screen.getByText("Test", {
+        selector: ".components-popup-button-placeholder",
+      })
+    ).to.exist;
+  });
+
+  it("calls onClick", async () => {
+    const spyOnClick = vi.fn();
+    const component = render(
+      <PopupButton label="Hello" onClick={spyOnClick}>
+        <div data-testid="popup-test-div">Hello World</div>
+      </PopupButton>
+    );
+
+    const button = component.getByTestId("components-popup-button");
+    expect(button).to.exist;
+    fireEvent.click(button);
+    await TestUtils.flushAsyncOperations();
+
+    expect(spyOnClick).toHaveBeenCalledOnce();
+
+    const popupDiv = component.getByTestId("popup-test-div");
+    expect(popupDiv).to.exist;
+  });
+
+  it("shows the popup on down arrow", async () => {
+    const component = render(
+      <PopupButton label="Hello">
+        <div data-testid="popup-test-div">Hello World</div>
+      </PopupButton>
+    );
+
+    const button = component.getByTestId("components-popup-button");
+    expect(button).to.exist;
+
+    button.dispatchEvent(
+      new KeyboardEvent("keydown", {
+        bubbles: true,
+        cancelable: true,
+        key: Key.ArrowDown,
+      })
+    );
+    await TestUtils.flushAsyncOperations();
+
+    const popupDiv = component.getByTestId("popup-test-div");
+    expect(popupDiv).to.exist;
+  });
+
+  it("shows the popup on space bar", async () => {
+    const component = render(
+      <PopupButton label="Hello">
+        <div data-testid="popup-test-div">Hello World</div>
+      </PopupButton>
+    );
+
+    const button = component.getByTestId("components-popup-button");
+    expect(button).to.exist;
+
+    button.dispatchEvent(
+      new KeyboardEvent("keydown", {
+        bubbles: true,
+        cancelable: true,
+        key: " ",
+      })
+    );
+    await TestUtils.flushAsyncOperations();
+
+    const popupDiv = component.getByTestId("popup-test-div");
+    expect(popupDiv).to.exist;
+  });
+
+  it("shows the popup on Enter", async () => {
+    const component = render(
+      <PopupButton label="Hello">
+        <div data-testid="popup-test-div">Hello World</div>
+      </PopupButton>
+    );
+
+    const button = component.getByTestId("components-popup-button");
+    expect(button).to.exist;
+
+    button.dispatchEvent(
+      new KeyboardEvent("keydown", {
+        bubbles: true,
+        cancelable: true,
+        key: Key.Enter,
+      })
+    );
+    await TestUtils.flushAsyncOperations();
+
+    const popupDiv = component.getByTestId("popup-test-div");
+    expect(popupDiv).to.exist;
+  });
+
+  it("calls onClose", async () => {
+    const spyOnClose = vi.fn();
+
+    render(
+      <PopupButton label="Hello" onClose={spyOnClose}>
+        <div>Hello World</div>
+      </PopupButton>
+    );
+
+    await theUserTo.click(screen.getByRole("button"));
+
+    await theUserTo.keyboard("{Escape}");
+
+    expect(spyOnClose).toHaveBeenCalledOnce();
+  });
+
+  it("closePopup() closes popup", async () => {
+    const spyOnClose = vi.fn();
+    const popupButtonRef = React.createRef<PopupButton>();
+
+    render(
+      <PopupButton label="Hello" onClose={spyOnClose} ref={popupButtonRef}>
+        <div>Hello World</div>
+      </PopupButton>
+    );
+
+    popupButtonRef.current?.closePopup();
+
+    await waitFor(() => expect(spyOnClose).toHaveBeenCalledOnce());
+  });
+});

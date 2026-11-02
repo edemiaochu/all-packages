@@ -1,0 +1,34 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+
+/** Build APIM server url out of overrides
+ * @private
+ */
+export const _getAPIServer = (serverEnvironmentPrefix?: "dev" | "qa" | "") =>
+  `https://${
+    serverEnvironmentPrefix ? `${serverEnvironmentPrefix}-` : ""
+  }api.szewec.com`;
+
+/**
+ * Merge 2 objects without overriding keys with undefined or null values.
+ * @param defaults Complete string object
+ * @param overrides Potentially incomplete string object
+ * @returns
+ */
+export const _mergeStrings: <T extends Record<string, unknown>>(
+  defaults: T,
+  overrides: Partial<NoInfer<T>> | undefined
+) => T = (defaults, overrides) =>
+  !overrides
+    ? { ...defaults }
+    : Object.keys(overrides).reduce(
+        (red, val: keyof typeof overrides) => {
+          if ((overrides[val] ?? red[val]) !== red[val]) {
+            red[val] = overrides[val] as (typeof red)[typeof val];
+          }
+          return red;
+        },
+        { ...defaults }
+      );

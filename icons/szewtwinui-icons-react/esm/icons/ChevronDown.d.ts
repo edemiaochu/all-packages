@@ -1,0 +1,5 @@
+import React, { type SVGProps } from 'react';
+declare const SvgChevronDown: (props: SVGProps<SVGSVGElement>) => React.JSX.Element;
+export default SvgChevronDown;
+export { SvgChevronDown };
+//# sourceMappingURL=ChevronDown.d.ts.map

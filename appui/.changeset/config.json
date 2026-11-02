@@ -1,0 +1,26 @@
+{
+  "$schema": "https://unpkg.com/@changesets/config@3.1.1/schema.json",
+  "changelog": "@changesets/cli/changelog",
+  "commit": false,
+  "fixed": [
+    [
+      "@itwin/appui-react",
+      "@itwin/components-react",
+      "@itwin/core-react",
+      "@itwin/imodel-components-react"
+    ]
+  ],
+  "linked": [],
+  "access": "public",
+  "baseBranch": "master",
+  "updateInternalDependencies": "patch",
+  "ignore": [
+    "@itwin/appui-test-providers",
+    "test-app",
+    "e2e-tests",
+    "appui-storybook"
+  ],
+  "___experimentalUnsafeOptions_WILL_CHANGE_IN_PATCH": {
+    "onlyUpdatePeerDependentsWhenOutOfRange": true
+  }
+}

@@ -1,0 +1,36 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+
+import {
+  ExpiryOptions,
+  ObjectDirectory,
+  ObjectReference,
+  PresignedUrlProvider,
+  TransferConfigProvider,
+} from "@szewtwin/object-storage-core";
+
+export const mockPresignedUrlProvider: PresignedUrlProvider = {
+  getDownloadUrl: (_reference: ObjectReference, _options: ExpiryOptions) => {
+    throw new Error("Not implemented.");
+  },
+  getUploadUrl: (_reference: ObjectReference, _options: ExpiryOptions) => {
+    throw new Error("Not implemented.");
+  },
+};
+
+export const mockTransferConfigProvider: TransferConfigProvider = {
+  getDownloadConfig: (_directory: ObjectDirectory, _options: ExpiryOptions) => {
+    throw new Error("Not implemented.");
+  },
+  getUploadConfig: (_directory: ObjectDirectory, _options: ExpiryOptions) => {
+    throw new Error("Not implemented.");
+  },
+  getDirectoryAccessConfig: (
+    _directory: ObjectDirectory,
+    _expiry?: ExpiryOptions
+  ) => {
+    throw new Error("Not implemented.");
+  },
+};

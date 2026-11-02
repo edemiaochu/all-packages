@@ -1,0 +1,112 @@
+{
+  "name": "@szewtwin/ivault-transformer",
+  "version": "2.0.0-dev.20",
+  "description": "API for exporting an iVault's parts and also importing them into another iVault",
+  "main": "lib/cjs/ivault-transformer.js",
+  "typings": "lib/cjs/ivault-transformer",
+  "license": "MIT",
+  "engines": {
+    "node": "^22.12.0 || ^24.18.0"
+  },
+  "scripts": {
+    "build": "npm run -s build:cjs && npm run -s copy:test-assets && npm run -s extract-api",
+    "build:cjs": "tsc 1>&2 --outDir lib/cjs",
+    "clean": "rimraf lib",
+    "docs": "npm run -s docs:extract && npm run -s docs:reference && npm run -s docs:changelog",
+    "docs:changelog": "cpx ./CHANGELOG.md ../../build/docs/reference/ivault-transformer",
+    "# env var is workaround, need to contribute a better rush-less root-package.json detector to betools": "",
+    "docs:reference": "cross-env RUSHSTACK_FILE_ERROR_BASE_FOLDER='../..' betools docs --includes=../../build/docs/extract --json=../../build/docs/reference/ivault-transformer/file.json --tsIndexFile=ivault-transformer.ts --onlyJson",
+    "docs:extract": "betools extract --fileExt=ts --extractFrom=./src/test --recursive --out=../../build/docs/extract",
+    "copy:test-assets": "cpx \"./src/test/assets/**/*\" ./lib/cjs/test/assets",
+    "cover": "nyc npm -s test",
+    "extract-api": "betools extract-api --entry=ivault-transformer --apiReportFolder=../../common/api --apiReportTempFolder=../../common/api/temp --apiSummaryFolder=../../common/api/summary",
+    "lint": "eslint -f visualstudio --quiet \"./src/**/*.ts\" 1>&2",
+    "lint:no-tests": "eslint -f visualstudio --quiet \"./src/*.ts\" 1>&2",
+    "lint:fix": "eslint --fix -f visualstudio --quiet \"./src/**/*.ts\" 1>&2",
+    "format": "prettier \"./src/**/*.ts\" --write",
+    "lint:with-warnings": "eslint -f visualstudio \"./src/**/*.ts\" 1>&2",
+    "test": "mocha \"lib/cjs/test/**/*.test.js\" --timeout 0 --reporter-option maxDiffSize=0 --require source-map-support/register",
+    "no-internal-report": "no-internal-report src/**/*.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/szewTwin/ivault-transformer.git",
+    "directory": "packages/transformer"
+  },
+  "keywords": [
+    "Szewec",
+    "BIM",
+    "iVault",
+    "digital-twin",
+    "szewTwin"
+  ],
+  "author": {
+    "name": "Szewec Systems, Inc.",
+    "url": "http://www.szewec.com"
+  },
+  "//deps": [
+    "SEE file://./README.md#versioning",
+    "This package relies on @internal APIs in szewTwin.js, and therefore has very strict peerDep versions",
+    "We perform a version check at runtime to ensure this.",
+    "Every new szewTwin.js version must be validated, and fixes are rarely ported to old versions.",
+    "Removing Dependencies on internal APIs is ongoing.",
+    "You can find a script to see the latest @szewtwin/ivault-transformer version for your szewTwin.js version in the README"
+  ],
+  "peerDependencies": {
+    "@szewtwin/core-backend": "^5.9.1",
+    "@szewtwin/core-szewec": "^5.9.1",
+    "@szewtwin/core-common": "^5.9.1",
+    "@szewtwin/core-geometry": "^5.9.1",
+    "@szewtwin/core-quantity": "^5.9.1",
+    "@szewtwin/dmschema-metadata": "^5.9.1"
+  },
+  "//devDependencies": [
+    "NOTE: All peerDependencies should also be listed as devDependencies since peerDependencies are not considered by npm install",
+    "NOTE: All tools used by scripts in this package must be listed as devDependencies"
+  ],
+  "devDependencies": {
+    "@szewtwin/build-tools": "^5.9.1",
+    "@szewtwin/core-backend": "^5.9.1",
+    "@szewtwin/core-szewec": "^5.9.1",
+    "@szewtwin/core-common": "^5.9.1",
+    "@szewtwin/core-geometry": "^5.9.1",
+    "@szewtwin/core-quantity": "^5.9.1",
+    "@szewtwin/dmschema-locaters": "^5.9.1",
+    "@szewtwin/dmschema-metadata": "^5.9.1",
+    "@szewtwin/eslint-plugin": "^6.0.0",
+    "@types/chai": "^4.3.20",
+    "@types/chai-as-promised": "^7.1.8",
+    "@types/mocha": "^8.2.3",
+    "@types/node": "^22.18.8",
+    "@types/node-fetch": "^2.6.13",
+    "@types/semver": "^7.7.1",
+    "@types/sinon": "^9.0.11",
+    "@typescript-eslint/parser": "^8.45.0",
+    "chai": "^4.5.0",
+    "chai-as-promised": "^7.1.2",
+    "cpx2": "^3.0.2",
+    "cross-env": "^5.2.1",
+    "eslint": "^9.36.0",
+    "eslint-config-prettier": "^9.1.2",
+    "js-base64": "^3.7.8",
+    "mocha": "^10.8.2",
+    "npm-run-all": "^4.1.5",
+    "nyc": "^15.1.0",
+    "prettier": "^3.6.2",
+    "rimraf": "^3.0.2",
+    "sinon": "^9.2.4",
+    "source-map-support": "^0.5.21",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "semver": "^7.7.2"
+  },
+  "nyc": {
+    "extends": "./node_modules/@szewtwin/build-tools/.nycrc",
+    "check-coverage": true,
+    "statements": 85,
+    "branches": 80,
+    "functions": 85,
+    "lines": 90
+  }
+}

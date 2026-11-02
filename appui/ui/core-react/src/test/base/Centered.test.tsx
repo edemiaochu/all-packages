@@ -1,0 +1,24 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+import { render, screen } from "@testing-library/react";
+import * as React from "react";
+import { Centered } from "../../core-react.js";
+import { classesFromElement } from "../TestUtils.js";
+
+describe("<Centered />", () => {
+  it("content renders correctly", () => {
+    render(<Centered>Test content</Centered>);
+
+    expect(screen.getByText("Test content")).to.exist;
+  });
+
+  it("has correct className", () => {
+    render(<Centered data-testid="tested" />);
+
+    expect(classesFromElement(screen.getByTestId("tested"))).to.include(
+      "uicore-centered"
+    );
+  });
+});

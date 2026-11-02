@@ -1,0 +1,80 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+/** @packageDocumentation
+ * @module Internal
+ */
+
+import { useEffect, useState } from "react";
+import { IVaultConnection } from "@szewtwin/core-frontend";
+import { DefaultContentDisplayTypes, Descriptor, Field, KeySet, Ruleset } from "@szewtwin/presentation-common";
+import { Presentation } from "@szewtwin/presentation-frontend";
+import { useErrorState } from "../common/Utils.js";
+import { TableColumnDefinition } from "./Types.js";
+
+/** @internal */
+export interface UseColumnsProps {
+  ivault: IVaultConnection;
+  ruleset: Ruleset | string;
+  keys: Readonly<KeySet>;
+}
+
+/** @internal */
+export function useColumns(props: UseColumnsProps): TableColumnDefinition[] | undefined {
+  const { ivault, ruleset, keys } = props;
+  const [columns, setColumns] = useState<TableColumnDefinition[]>();
+  const setErrorState = useErrorState();
+
+  useEffect(() => {
+    let disposed = false;
+    if (keys.isEmpty) {
+      setColumns([]);
+      return;
+    }
+
+    void (async () => {
+      try {
+        const columnDefinitions = await loadColumns(ivault, ruleset, keys);
+        if (!disposed) {
+          setColumns(columnDefinitions ?? []);
+        }
+      } catch (err) {
+        setErrorState(err);
+      }
+    })();
+
+    return () => {
+      disposed = true;
+    };
+  }, [ivault, ruleset, keys, setErrorState]);
+
+  return columns;
+}
+
+async function loadColumns(
+  ivault: IVaultConnection,
+  ruleset: Ruleset | string,
+  keys: Readonly<KeySet>,
+): Promise<TableColumnDefinition[] | undefined> {
+  const descriptor = await Presentation.presentation.getContentDescriptor({
+    ivault,
+    rulesetOrId: ruleset,
+    displayType: DefaultContentDisplayTypes.Grid,
+    keys: new KeySet(keys),
+  });
+
+  return descriptor ? createColumns(descriptor) : undefined;
+}
+
+function createColumns(descriptor: Descriptor): TableColumnDefinition[] {
+  return descriptor.fields.flatMap(convertFieldToColumns);
+}
+
+function convertFieldToColumns(field: Field): TableColumnDefinition[] {
+  return field.isPropertiesField() ? [createTableColumnDefinition(field)] : [];
+}
+
+function createTableColumnDefinition(field: Field): TableColumnDefinition {
+  return { name: field.name, label: field.label, field };
+}

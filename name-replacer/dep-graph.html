@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>iTwin2026 包依赖关系图 — 分层布局</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #0d1117; color: #c9d1d9; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; overflow: hidden; user-select: none; }
+#canvas { display: block; position: fixed; top: 48px; left: 0; }
+#header { background: #161b22; color: #e6edf3; padding: 9px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #30363d; position: fixed; top: 0; left: 0; right: 0; z-index: 10; height: 48px; }
+#header h1 { font-size: 16px; font-weight: 600; }
+#header .header-right { display: flex; align-items: center; gap: 12px; }
+#searchWrap { position: relative; display: flex; align-items: center; gap: 4px; }
+#searchInput { background: #21262d; border: 1px solid #30363d; border-radius: 6px; padding: 4px 10px; color: #c9d1d9; font-size: 12px; width: 200px; outline: none; }
+#searchInput:focus { border-color: #58a6ff; }
+#searchInput::placeholder { color: #484f58; }
+#searchNav button { background: #21262d; border: 1px solid #30363d; border-radius: 4px; padding: 2px 7px; color: #8b949e; font-size: 12px; cursor: pointer; }
+#searchNav button:hover { border-color: #58a6ff; }
+#searchNav button:disabled { opacity: 0.3; cursor: default; }
+#searchCount { font-size: 11px; color: #8b949e; min-width: 36px; text-align: center; }
+#stats { font-size: 12px; color: #8b949e; }
+#sidebar { position: fixed; left: 0; top: 48px; width: 260px; height: calc(100vh - 48px); background: rgba(13,17,23,0.95); border-right: 1px solid #30363d; z-index: 5; overflow-y: auto; font-size: 11px; }
+#sidebar::-webkit-scrollbar { width: 3px; }
+#sidebar::-webkit-scrollbar-thumb { background: #30363d; border-radius: 2px; }
+#sidebar .cat-header { padding: 7px 14px 3px; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #6e7681; border-top: 1px solid #21262d; }
+#sidebar .cat-header:first-child { border-top: none; }
+#sidebar .pkg-item { padding: 3px 10px 3px 18px; cursor: pointer; display: flex; align-items: center; gap: 6px; border-left: 2px solid transparent; color: #8b949e; }
+#sidebar .pkg-item:hover { background: rgba(255,255,255,0.04); color: #c9d1d9; }
+#sidebar .pkg-item.active { background: rgba(88,166,255,0.1); border-left-color: #58a6ff; color: #e6edf3; }
+#sidebar .pkg-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+#sidebar .pkg-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.legend { position: fixed; top: 56px; right: 12px; background: rgba(22,27,34,0.92); border-radius: 6px; padding: 10px 14px; border: 1px solid #30363d; z-index: 10; font-size: 11px; line-height: 1.8; max-height: 70vh; overflow-y: auto; }
+.legend .leg-item { display: flex; align-items: center; gap: 8px; }
+.legend .leg-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.legend .leg-line { width: 18px; height: 2px; flex-shrink: 0; }
+.legend .leg-dashed { border-top: 1.5px dashed #8b949e; width: 18px; }
+.legend .leg-dotted { border-top: 1.5px dotted #8b949e; width: 18px; }
+.legend .leg-section { font-size: 10px; color: #6e7681; padding-top: 6px; margin-top: 2px; border-top: 1px solid #21262d; }
+#tooltip { position: fixed; background: rgba(22,27,34,0.97); border-radius: 8px; padding: 14px; color: #c9d1d9; border: 1px solid #30363d; max-width: 420px; max-height: 80vh; overflow-y: auto; z-index: 20; display: none; line-height: 1.5; font-size: 12px; pointer-events: auto; }
+#tooltip h3 { font-size: 13px; color: #f0f6fc; word-break: break-all; margin-bottom: 6px; }
+#tooltip .tt-section { font-size: 10px; color: #6e7681; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 8px; margin-bottom: 2px; }
+#tooltip .tt-item { padding: 1px 0; color: #8b949e; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#tooltip .tt-item .arrow { color: #58a6ff; margin: 0 4px; }
+#ctxMenu { position: fixed; background: #1c2128; border-radius: 10px; padding: 6px 0; border: 1px solid #373e47; z-index: 30; display: none; min-width: 200px; box-shadow: 0 12px 36px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.04) inset; backdrop-filter: blur(12px); animation: ctxIn 0.12s ease-out; }
+@keyframes ctxIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+#ctxMenu .mi { padding: 7px 16px; cursor: pointer; display: flex; align-items: center; gap: 10px; user-select: none; transition: all 0.1s; font-size: 12px; }
+#ctxMenu .mi:hover { background: #2d333b; color: #f0f6fc; }
+#ctxMenu .mi:active { background: #1f6feb; color: #fff; }
+#ctxMenu .mi-header { padding: 5px 16px 4px; font-size: 10px; color: #6e7681; text-transform: uppercase; letter-spacing: 0.5px; pointer-events: none; }
+#ctxMenu .mi .mi-count { margin-left: auto; font-size: 10px; background: #2d333b; border-radius: 10px; padding: 1px 7px; }
+#directionHint { position: fixed; bottom: 20px; left: 280px; z-index: 10; display: flex; align-items: center; gap: 8px; background: rgba(22,27,34,0.92); border: 1px solid #30363d; border-radius: 6px; padding: 8px 14px; font-size: 12px; color: #8b949e; }
+#directionHint .dir-arrow { color: #58a6ff; font-size: 16px; }
+#toast { position: fixed; bottom: 60px; left: 50%; transform: translateX(-50%); background: #1f6feb; color: #fff; padding: 8px 20px; border-radius: 8px; font-size: 13px; z-index: 50; opacity: 0; transition: opacity 0.2s; pointer-events: none; white-space: nowrap; }
+#toast.show { opacity: 1; }
+</style>
+</head>
+<body oncontextmenu="return false">
+
+<div id="header">
+  <h1>iTwin2026 包依赖关系图 — 分层布局</h1>
+  <div class="header-right">
+    <div id="searchWrap">
+      <input id="searchInput" placeholder="搜索包名..." oninput="doSearch()" onkeydown="onSearchKey(event)">
+      <div id="searchNav">
+        <button id="btnPrev" onclick="searchPrev()" disabled>▲</button>
+        <button id="btnNext" onclick="searchNext()" disabled>▼</button>
+      </div>
+      <span id="searchCount"></span>
+    </div>
+    <span id="stats">151内部包 + 8外部包 · 943条依赖</span>
+  </div>
+</div>
+
+<div id="sidebar"></div>
+<canvas id="canvas"></canvas>
+
+<div class="legend" id="legend"></div>
+<div id="tooltip"></div>
+<div id="ctxMenu"></div>
+<div id="directionHint">
+  <span>Layer 0 基础层</span>
+  <span class="dir-arrow">▼</span>
+  <span>依赖方向 ▼</span>
+  <span class="dir-arrow">▼</span>
+  <span>Layer 11 应用层</span>
+</div>
+<div id="toast"></div>
+
+<script>
+const EMBED = {"nodeDefs":[[0,"@bentley/aec-units-schema","other","@bentley/aec-units-schema\nv1.0.3\nbase\nbase/aec-units-schema",15,"other","#90a4ae",0,false,false],[1,"@bentley/architectural-physical-schema","other","@bentley/architectural-physical-schema\nv1.0.3\nbase\nbase/architectural-physical-schema",15,"other","#90a4ae",0,false,false],[2,"@bentley/bentleyjs-core","external","@bentley/bentleyjs-core\n外部 npm 包 · 边缘依赖\n(不在当前仓库中)",4.5,"external","#484f58",0,true,true],[3,"@bentley/bis-core-schema","other","@bentley/bis-core-schema\nv1.0.15\nbase\nbase/bis-core-schema",15,"other","#90a4ae",0,false,false],[4,"@bentley/bis-custom-attributes-schema","other","@bentley/bis-custom-attributes-schema\nv1.0.0\nbase\nbase/bis-custom-attributes-schema",15,"other","#90a4ae",0,false,false],[5,"@bentley/cif-bridge-schema","other","@bentley/cif-bridge-schema\nv1.0.5\nbase\nbase/cif-bridge-schema",15,"other","#90a4ae",0,false,false],[6,"@bentley/cif-common-schema","other","@bentley/cif-common-schema\nv1.0.3\nbase\nbase/cif-common-schema",15,"other","#90a4ae",0,false,false],[7,"@bentley/cif-geometric-rules-schema","other","@bentley/cif-geometric-rules-schema\nv1.0.1\nbase\nbase/cif-geometric-rules-schema",15,"other","#90a4ae",0,false,false],[8,"@bentley/cif-hydraulic-analysis-schema","other","@bentley/cif-hydraulic-analysis-schema\nv1.0.3\nbase\nbase/cif-hydraulic-analysis-schema",15,"other","#90a4ae",0,false,false],[9,"@bentley/cif-hydraulic-results-schema","other","@bentley/cif-hydraulic-results-schema\nv1.0.3\nbase\nbase/cif-hydraulic-results-schema",15,"other","#90a4ae",0,false,false],[10,"@bentley/cif-quantity-takeoffs-schema","other","@bentley/cif-quantity-takeoffs-schema\nv1.0.1\nbase\nbase/cif-quantity-takeoffs-schema",15,"other","#90a4ae",0,false,false],[11,"@bentley/cif-rail-schema","other","@bentley/cif-rail-schema\nv1.0.2\nbase\nbase/cif-rail-schema",15,"other","#90a4ae",0,false,false],[12,"@bentley/cif-roads-schema","other","@bentley/cif-roads-schema\nv1.0.1\nbase\nbase/cif-roads-schema",15,"other","#90a4ae",0,false,false],[13,"@bentley/cif-subsurface-conflict-analysis-schema","other","@bentley/cif-subsurface-conflict-analysis-schema\nv1.0.3\nbase\nbase/cif-subsurface-conflict-analysis-schema",15,"other","#90a4ae",0,false,false],[14,"@bentley/cif-subsurface-schema","other","@bentley/cif-subsurface-schema\nv1.0.3\nbase\nbase/cif-subsurface-schema",15,"other","#90a4ae",0,false,false],[15,"@bentley/cif-units-schema","other","@bentley/cif-units-schema\nv1.0.7\nbase\nbase/cif-units-schema",15,"other","#90a4ae",0,false,false],[16,"@bentley/construction-schema","other","@bentley/construction-schema\nv1.0.4\nbase\nbase/construction-schema",15,"other","#90a4ae",0,false,false],[17,"@bentley/core-custom-attributes-schema","other","@bentley/core-custom-attributes-schema\nv1.0.4\nbase\nbase/core-custom-attributes-schema",15,"other","#90a4ae",0,false,false],[18,"@bentley/ecdb-map-schema","other","@bentley/ecdb-map-schema\nv2.0.1\nbase\nbase/ecdb-map-schema",15,"other","#90a4ae",0,false,false],[19,"@bentley/ecdb-schema-policies-schema","other","@bentley/ecdb-schema-policies-schema\nv1.0.1\nbase\nbase/ecdb-schema-policies-schema",15,"other","#90a4ae",0,false,false],[20,"@bentley/formats-schema","other","@bentley/formats-schema\nv1.0.0\nbase\nbase/formats-schema",15,"other","#90a4ae",0,false,false],[21,"@bentley/frontend-authorization-client","external","@bentley/frontend-authorization-client\n外部 npm 包 · 边缘依赖\n(不在当前仓库中)",4.5,"external","#484f58",0,true,true],[22,"@bentley/icons-generic","other","@bentley/icons-generic\nv1.0.34\nbase\nbase/icons-generic",15,"other","#90a4ae",0,false,false],[23,"@bentley/icons-generic-webfont","other","@bentley/icons-generic-webfont\nv1.0.34\nbase\nbase/icons-generic-webfont",15,"other","#90a4ae",0,false,false],[24,"@bentley/imodeljs-native","external","@bentley/imodeljs-native\n外部 npm 包 · 边缘依赖\n(不在当前仓库中)",4.5,"external","#484f58",0,true,true],[25,"@bentley/itwin-client","external","@bentley/itwin-client\n外部 npm 包 · 边缘依赖\n(不在当前仓库中)",4.5,"external","#484f58",0,true,true],[26,"@bentley/linear-referencing-schema","other","@bentley/linear-referencing-schema\nv2.0.3\nbase\nbase/linear-referencing-schema",15,"other","#90a4ae",0,false,false],[27,"@bentley/physical-material-schema","other","@bentley/physical-material-schema\nv1.0.2\nbase\nbase/physical-material-schema",15,"other","#90a4ae",0,false,false],[28,"@bentley/plant-custom-attributes-schema","other","@bentley/plant-custom-attributes-schema\nv1.0.1\nbase\nbase/plant-custom-attributes-schema",15,"other","#90a4ae",0,false,false],[29,"@bentley/process-functional-schema","other","@bentley/process-functional-schema\nv1.0.1\nbase\nbase/process-functional-schema",15,"other","#90a4ae",0,false,false],[30,"@bentley/process-physical-schema","other","@bentley/process-physical-schema\nv1.0.2\nbase\nbase/process-physical-schema",15,"other","#90a4ae",0,false,false],[31,"@bentley/quantity-takeoffs-aspects-schema","other","@bentley/quantity-takeoffs-aspects-schema\nv1.0.1\nbase\nbase/quantity-takeoffs-aspects-schema",15,"other","#90a4ae",0,false,false],[32,"@bentley/road-rail-units-schema","other","@bentley/road-rail-units-schema\nv1.0.3\nbase\nbase/road-rail-units-schema",15,"other","#90a4ae",0,false,false],[33,"@bentley/spatial-composition-schema","other","@bentley/spatial-composition-schema\nv1.0.1\nbase\nbase/spatial-composition-schema",15,"other","#90a4ae",0,false,false],[34,"@bentley/structural-physical-schema","other","@bentley/structural-physical-schema\nv1.0.1\nbase\nbase/structural-physical-schema",15,"other","#90a4ae",0,false,false],[35,"@bentley/units-schema","other","@bentley/units-schema\nv1.0.10\nbase\nbase/units-schema",15,"other","#90a4ae",0,false,false],[36,"@itwin/analytical-backend","itwinjs-core","@itwin/analytical-backend\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/domains/analytical/backend",12,"itwinjs-core","#4dd0e1",7,false,false],[37,"@itwin/appui-abstract","itwinjs-core","@itwin/appui-abstract\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/ui/appui-abstract",12,"itwinjs-core","#4dd0e1",3,false,false],[38,"@itwin/appui-layout-react","external","@itwin/appui-layout-react\n外部 npm 包 · 边缘依赖\n(不在当前仓库中)",4.5,"external","#484f58",0,true,true],[39,"@itwin/appui-react","appui","@itwin/appui-react\nv5.32.0\nappui\nappui/ui/appui-react",12,"appui","#64b5f6",9,false,false],[40,"@itwin/appui-test-providers","appui","@itwin/appui-test-providers\nv0.0.0\nappui\nappui/apps/test-providers",12,"appui","#64b5f6",10,false,false],[41,"@itwin/browser-authorization","auth-clients","@itwin/browser-authorization\nv2.0.2\nauth-clients\nauth-clients/packages/browser",12,"auth-clients","#a5d6a7",5,false,false],[42,"@itwin/build-tools","itwinjs-core","@itwin/build-tools\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/tools/build",12,"itwinjs-core","#4dd0e1",1,false,false],[43,"@itwin/certa","itwinjs-core","@itwin/certa\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/tools/certa",12,"itwinjs-core","#4dd0e1",2,false,false],[44,"@itwin/cesium-renderer","itwinjs-core","@itwin/cesium-renderer\nv5.2.0-dev.26\nitwinjs-core\nitwinjs-core/extensions/cesium-renderer",12,"itwinjs-core","#4dd0e1",7,false,false],[45,"@itwin/cloud-agnostic-core","object-storage","@itwin/cloud-agnostic-core\nv3.1.1\nobject-storage\nobject-storage/cloud-agnostic/core",12,"object-storage","#4db6ac",1,false,false],[46,"@itwin/components-react","appui","@itwin/components-react\nv5.32.0\nappui\nappui/ui/components-react",12,"appui","#64b5f6",7,false,false],[47,"@itwin/core-backend","itwinjs-core","@itwin/core-backend\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/core/backend",12,"itwinjs-core","#4dd0e1",6,false,false],[48,"@itwin/core-bentley","itwinjs-core","@itwin/core-bentley\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/core/bentley",12,"itwinjs-core","#4dd0e1",2,false,false],[49,"@itwin/core-common","itwinjs-core","@itwin/core-common\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/core/common",12,"itwinjs-core","#4dd0e1",4,false,false],[50,"@itwin/core-electron","itwinjs-core","@itwin/core-electron\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/core/electron",12,"itwinjs-core","#4dd0e1",7,false,false],[51,"@itwin/core-extension","itwinjs-core","@itwin/core-extension\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/core/extension",12,"itwinjs-core","#4dd0e1",7,false,false],[52,"@itwin/core-frontend","itwinjs-core","@itwin/core-frontend\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/core/frontend",12,"itwinjs-core","#4dd0e1",6,false,false],[53,"@itwin/core-geometry","itwinjs-core","@itwin/core-geometry\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/core/geometry",12,"itwinjs-core","#4dd0e1",3,false,false],[54,"@itwin/core-i18n","itwinjs-core","@itwin/core-i18n\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/core/i18n",12,"itwinjs-core","#4dd0e1",5,false,false],[55,"@itwin/core-markup","itwinjs-core","@itwin/core-markup\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/core/markup",12,"itwinjs-core","#4dd0e1",7,false,false],[56,"@itwin/core-mobile","itwinjs-core","@itwin/core-mobile\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/core/mobile",12,"itwinjs-core","#4dd0e1",7,false,false],[57,"@itwin/core-orbitgt","itwinjs-core","@itwin/core-orbitgt\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/core/orbitgt",12,"itwinjs-core","#4dd0e1",3,false,false],[58,"@itwin/core-quantity","itwinjs-core","@itwin/core-quantity\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/core/quantity",12,"itwinjs-core","#4dd0e1",3,false,false],[59,"@itwin/core-react","appui","@itwin/core-react\nv5.32.0\nappui\nappui/ui/core-react",12,"appui","#64b5f6",6,false,false],[60,"@itwin/core-telemetry","external","@itwin/core-telemetry\n外部 npm 包 · 边缘依赖\n(不在当前仓库中)",4.5,"external","#484f58",0,true,true],[61,"@itwin/create-imodel-react","admin-components-react","@itwin/create-imodel-react\nv2.2.1\nadmin-components-react\nadmin-components-react/packages/modules/create-imodel",12,"admin-components-react","#f06292",2,false,false],[62,"@itwin/delete-imodel-react","admin-components-react","@itwin/delete-imodel-react\nv2.1.0\nadmin-components-react\nadmin-components-react/packages/modules/delete-imodel",12,"admin-components-react","#f06292",2,false,false],[63,"@itwin/delete-itwin-react","admin-components-react","@itwin/delete-itwin-react\nv2.0.0\nadmin-components-react\nadmin-components-react/packages/modules/delete-itwin",12,"admin-components-react","#f06292",2,false,false],[64,"@itwin/desktop-viewer-react","viewer","@itwin/desktop-viewer-react\nv5.1.0\nviewer\nviewer/packages/modules/desktop-viewer-react",12,"viewer","#ff8a65",11,false,false],[65,"@itwin/ec3-widget-react","viewer-components-react","@itwin/ec3-widget-react\nv0.10.2\nviewer-components-react\nviewer-components-react/packages/itwin/ec3-widget",12,"viewer-components-react","#ffb74d",10,false,false],[66,"@itwin/ecschema-editing","itwinjs-core","@itwin/ecschema-editing\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/core/ecschema-editing",12,"itwinjs-core","#4dd0e1",5,false,false],[67,"@itwin/ecschema-locaters","itwinjs-core","@itwin/ecschema-locaters\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/core/ecschema-locaters",12,"itwinjs-core","#4dd0e1",5,false,false],[68,"@itwin/ecschema-metadata","itwinjs-core","@itwin/ecschema-metadata\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/core/ecschema-metadata",12,"itwinjs-core","#4dd0e1",4,false,false],[69,"@itwin/ecschema-rpcinterface-common","itwinjs-core","@itwin/ecschema-rpcinterface-common\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/core/ecschema-rpc/common",12,"itwinjs-core","#4dd0e1",5,false,false],[70,"@itwin/ecschema-rpcinterface-impl","itwinjs-core","@itwin/ecschema-rpcinterface-impl\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/core/ecschema-rpc/impl",12,"itwinjs-core","#4dd0e1",7,false,false],[71,"@itwin/ecschema-rpcinterface-tests","itwinjs-core","@itwin/ecschema-rpcinterface-tests\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/full-stack-tests/ecschema-rpc-interface",12,"itwinjs-core","#4dd0e1",8,false,false],[72,"@itwin/ecschema2ts","itwinjs-core","@itwin/ecschema2ts\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/tools/ecschema2ts",12,"itwinjs-core","#4dd0e1",7,false,false],[73,"@itwin/ecsql-common","itwinjs-core","@itwin/ecsql-common\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/core/ecsql/common",12,"itwinjs-core","#4dd0e1",3,false,false],[74,"@itwin/editor-backend","itwinjs-core","@itwin/editor-backend\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/editor/backend",12,"itwinjs-core","#4dd0e1",7,false,false],[75,"@itwin/editor-common","itwinjs-core","@itwin/editor-common\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/editor/common",12,"itwinjs-core","#4dd0e1",5,false,false],[76,"@itwin/editor-frontend","itwinjs-core","@itwin/editor-frontend\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/editor/frontend",12,"itwinjs-core","#4dd0e1",7,false,false],[77,"@itwin/electron-authorization","auth-clients","@itwin/electron-authorization\nv0.22.3\nauth-clients\nauth-clients/packages/electron",12,"auth-clients","#a5d6a7",5,false,false],[78,"@itwin/eslint-plugin","other","@itwin/eslint-plugin\nv6.1.0\neslint-plugin\neslint-plugin",15,"other","#90a4ae",0,false,false],[79,"@itwin/express-server","itwinjs-core","@itwin/express-server\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/core/express-server",12,"itwinjs-core","#4dd0e1",7,false,false],[80,"@itwin/frontend-devtools","itwinjs-core","@itwin/frontend-devtools\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/core/frontend-devtools",12,"itwinjs-core","#4dd0e1",7,false,false],[81,"@itwin/frontend-tiles","itwinjs-core","@itwin/frontend-tiles\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/extensions/frontend-tiles",12,"itwinjs-core","#4dd0e1",7,false,false],[82,"@itwin/geo-tools-react","viewer-components-react","@itwin/geo-tools-react\nv6.0.1\nviewer-components-react\nviewer-components-react/packages/itwin/geo-tools",12,"viewer-components-react","#ffb74d",10,false,false],[83,"@itwin/grouping-mapping-widget","viewer-components-react","@itwin/grouping-mapping-widget\nv0.37.0\nviewer-components-react\nviewer-components-react/packages/itwin/grouping-mapping-widget",12,"viewer-components-react","#ffb74d",10,false,false],[84,"@itwin/hypermodeling-frontend","itwinjs-core","@itwin/hypermodeling-frontend\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/core/hypermodeling",12,"itwinjs-core","#4dd0e1",7,false,false],[85,"@itwin/imodel-browser-react","admin-components-react","@itwin/imodel-browser-react\nv4.2.0\nadmin-components-react\nadmin-components-react/packages/modules/imodel-browser",12,"admin-components-react","#f06292",2,false,false],[86,"@itwin/imodel-components-react","appui","@itwin/imodel-components-react\nv5.32.0\nappui\nappui/ui/imodel-components-react",12,"appui","#64b5f6",8,false,false],[87,"@itwin/imodel-transformer","other","@itwin/imodel-transformer\nv1.2.1-dev.1\nimodel-transformer\nimodel-transformer/packages/transformer",12,"other","#90a4ae",7,false,false],[88,"@itwin/imodels-access-backend","imodels-clients","@itwin/imodels-access-backend\nv6.1.1\nimodels-clients\nimodels-clients/itwin-platform-access/imodels-access-backend",12,"imodels-clients","#81c784",7,false,false],[89,"@itwin/imodels-access-backend-tests","imodels-clients","@itwin/imodels-access-backend-tests\nv0.0.0\nimodels-clients\nimodels-clients/tests/imodels-access-backend-tests",12,"imodels-clients","#81c784",8,false,false],[90,"@itwin/imodels-access-common","imodels-clients","@itwin/imodels-access-common\nv6.1.1\nimodels-clients\nimodels-clients/itwin-platform-access/imodels-access-common",12,"imodels-clients","#81c784",4,false,false],[91,"@itwin/imodels-access-common-tests","imodels-clients","@itwin/imodels-access-common-tests\nv0.0.0\nimodels-clients\nimodels-clients/tests/imodels-access-common-tests",12,"imodels-clients","#81c784",5,false,false],[92,"@itwin/imodels-access-frontend","imodels-clients","@itwin/imodels-access-frontend\nv6.1.1\nimodels-clients\nimodels-clients/itwin-platform-access/imodels-access-frontend",12,"imodels-clients","#81c784",7,false,false],[93,"@itwin/imodels-access-frontend-tests","imodels-clients","@itwin/imodels-access-frontend-tests\nv0.0.0\nimodels-clients\nimodels-clients/tests/imodels-access-frontend-tests",12,"imodels-clients","#81c784",8,false,false],[94,"@itwin/imodels-client-authoring","imodels-clients","@itwin/imodels-client-authoring\nv6.2.0\nimodels-clients\nimodels-clients/clients/imodels-client-authoring",12,"imodels-clients","#81c784",3,false,false],[95,"@itwin/imodels-client-common-config","imodels-clients","@itwin/imodels-client-common-config\nv0.0.0\nimodels-clients\nimodels-clients/utils/imodels-client-common-config",12,"imodels-clients","#81c784",1,false,false],[96,"@itwin/imodels-client-management","imodels-clients","@itwin/imodels-client-management\nv6.2.0\nimodels-clients\nimodels-clients/clients/imodels-client-management",12,"imodels-clients","#81c784",2,false,false],[97,"@itwin/imodels-client-test-utils","imodels-clients","@itwin/imodels-client-test-utils\nv0.0.0\nimodels-clients\nimodels-clients/utils/imodels-client-test-utils",12,"imodels-clients","#81c784",5,false,false],[98,"@itwin/imodels-clients-tests","imodels-clients","@itwin/imodels-clients-tests\nv0.0.0\nimodels-clients\nimodels-clients/tests/imodels-clients-tests",12,"imodels-clients","#81c784",6,false,false],[99,"@itwin/imodels-clients-tests-browser","imodels-clients","@itwin/imodels-clients-tests-browser\nv0.0.0\nimodels-clients\nimodels-clients/tests/imodels-clients-tests-browser",12,"imodels-clients","#81c784",6,false,false],[100,"@itwin/insights-client","external","@itwin/insights-client\n外部 npm 包 · 核心依赖\n(不在当前仓库中)",6,"external","#484f58",0,true,false],[101,"@itwin/itwins-client","other","@itwin/itwins-client\nv3.1.0\nitwins-client\nitwins-client",12,"other","#90a4ae",7,false,false],[102,"@itwin/itwinui-css","iTwinUI","@itwin/itwinui-css\nv3.0.0-dev.1\niTwinUI\niTwinUI/packages/itwinui-css",15,"iTwinUI","#ba68c8",0,false,false],[103,"@itwin/itwinui-icons-color-react","external","@itwin/itwinui-icons-color-react\n外部 npm 包 · 核心依赖\n(不在当前仓库中)",6,"external","#484f58",0,true,false],[104,"@itwin/itwinui-icons-react","other","@itwin/itwinui-icons-react\nv2.11.1\nicons\nicons/itwinui-icons-react",15,"other","#90a4ae",0,false,false],[105,"@itwin/itwinui-illustrations-react","other","@itwin/itwinui-illustrations-react\nv2.1.4\nicons\nicons/itwinui-illustrations-react",15,"other","#90a4ae",0,false,false],[106,"@itwin/itwinui-layouts-css","iTwinUI-layouts","@itwin/itwinui-layouts-css\nv0.4.0\niTwinUI-layouts\niTwinUI-layouts/packages/layouts-css",15,"iTwinUI-layouts","#ce93d8",0,false,false],[107,"@itwin/itwinui-layouts-react","iTwinUI-layouts","@itwin/itwinui-layouts-react\nv0.4.1\niTwinUI-layouts\niTwinUI-layouts/packages/layouts-react",12,"iTwinUI-layouts","#ce93d8",1,false,false],[108,"@itwin/itwinui-react","iTwinUI","@itwin/itwinui-react\nv3.21.2\niTwinUI\niTwinUI/packages/itwinui-react",12,"iTwinUI","#ba68c8",1,false,false],[109,"@itwin/itwinui-variables","iTwinUI","@itwin/itwinui-variables\nv3.3.1\niTwinUI\niTwinUI/packages/itwinui-variables",15,"iTwinUI","#ba68c8",0,false,false],[110,"@itwin/linear-referencing-backend","itwinjs-core","@itwin/linear-referencing-backend\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/domains/linear-referencing/backend",12,"itwinjs-core","#4dd0e1",7,false,false],[111,"@itwin/linear-referencing-common","itwinjs-core","@itwin/linear-referencing-common\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/domains/linear-referencing/common",12,"itwinjs-core","#4dd0e1",5,false,false],[112,"@itwin/manage-versions-react","admin-components-react","@itwin/manage-versions-react\nv2.2.4\nadmin-components-react\nadmin-components-react/packages/modules/manage-versions",12,"admin-components-react","#f06292",2,false,false],[113,"@itwin/map-layers","viewer-components-react","@itwin/map-layers\nv7.0.1\nviewer-components-react\nviewer-components-react/packages/itwin/map-layers",12,"viewer-components-react","#ffb74d",10,false,false],[114,"@itwin/map-layers-auth","itwinjs-core","@itwin/map-layers-auth\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/extensions/map-layers-auth",12,"itwinjs-core","#4dd0e1",7,false,false],[115,"@itwin/map-layers-formats","itwinjs-core","@itwin/map-layers-formats\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/extensions/map-layers-formats",12,"itwinjs-core","#4dd0e1",7,false,false],[116,"@itwin/measure-tools-react","viewer-components-react","@itwin/measure-tools-react\nv0.33.0\nviewer-components-react\nviewer-components-react/packages/itwin/measure-tools",12,"viewer-components-react","#ffb74d",10,false,false],[117,"@itwin/node-cli-authorization","auth-clients","@itwin/node-cli-authorization\nv3.0.3\nauth-clients\nauth-clients/packages/node-cli",12,"auth-clients","#a5d6a7",5,false,false],[118,"@itwin/object-storage-azure","object-storage","@itwin/object-storage-azure\nv3.1.1\nobject-storage\nobject-storage/storage/azure",12,"object-storage","#4db6ac",4,false,false],[119,"@itwin/object-storage-common-config","object-storage","@itwin/object-storage-common-config\nv0.0.0\nobject-storage\nobject-storage/utils/common-config",15,"object-storage","#4db6ac",0,false,false],[120,"@itwin/object-storage-core","object-storage","@itwin/object-storage-core\nv3.1.1\nobject-storage\nobject-storage/storage/core",12,"object-storage","#4db6ac",2,false,false],[121,"@itwin/object-storage-google","object-storage","@itwin/object-storage-google\nv3.1.1\nobject-storage\nobject-storage/storage/google",12,"object-storage","#4db6ac",4,false,false],[122,"@itwin/object-storage-minio","object-storage","@itwin/object-storage-minio\nv3.1.1\nobject-storage\nobject-storage/storage/minio",12,"object-storage","#4db6ac",5,false,false],[123,"@itwin/object-storage-oss","object-storage","@itwin/object-storage-oss\nv3.1.1\nobject-storage\nobject-storage/storage/oss",12,"object-storage","#4db6ac",5,false,false],[124,"@itwin/object-storage-s3","object-storage","@itwin/object-storage-s3\nv3.1.1\nobject-storage\nobject-storage/storage/s3",12,"object-storage","#4db6ac",4,false,false],[125,"@itwin/object-storage-samples","object-storage","@itwin/object-storage-samples\nv0.0.0\nobject-storage\nobject-storage/samples",12,"object-storage","#4db6ac",5,false,false],[126,"@itwin/object-storage-tests-backend","object-storage","@itwin/object-storage-tests-backend\nv0.0.0\nobject-storage\nobject-storage/tests/backend-storage",12,"object-storage","#4db6ac",3,false,false],[127,"@itwin/object-storage-tests-backend-unit","object-storage","@itwin/object-storage-tests-backend-unit\nv0.0.0\nobject-storage\nobject-storage/tests/backend-storage-unit",12,"object-storage","#4db6ac",3,false,false],[128,"@itwin/object-storage-tests-frontend","object-storage","@itwin/object-storage-tests-frontend\nv0.0.0\nobject-storage\nobject-storage/tests/frontend-storage",12,"object-storage","#4db6ac",3,false,false],[129,"@itwin/oidc-signin-tool","auth-clients","@itwin/oidc-signin-tool\nv5.1.3\nauth-clients\nauth-clients/packages/oidc-signin-tool",12,"auth-clients","#a5d6a7",6,false,false],[130,"@itwin/one-click-lca-react","viewer-components-react","@itwin/one-click-lca-react\nv0.8.0\nviewer-components-react\nviewer-components-react/packages/itwin/one-click-lca-widget",12,"viewer-components-react","#ffb74d",10,false,false],[131,"@itwin/perf-tools","itwinjs-core","@itwin/perf-tools\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/tools/perf-tools",12,"itwinjs-core","#4dd0e1",2,false,false],[132,"@itwin/physical-material-backend","itwinjs-core","@itwin/physical-material-backend\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/domains/physical-material/backend",12,"itwinjs-core","#4dd0e1",7,false,false],[133,"@itwin/presentation-backend","itwinjs-core","@itwin/presentation-backend\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/presentation/backend",12,"itwinjs-core","#4dd0e1",7,false,false],[134,"@itwin/presentation-common","itwinjs-core","@itwin/presentation-common\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/presentation/common",12,"itwinjs-core","#4dd0e1",5,false,false],[135,"@itwin/presentation-components","presentation","@itwin/presentation-components\nv5.16.0\npresentation\npresentation/packages/components",12,"presentation","#ffd54f",9,false,false],[136,"@itwin/presentation-core-interop","presentation","@itwin/presentation-core-interop\nv1.3.13\npresentation\npresentation/packages/core-interop",12,"presentation","#ffd54f",5,false,false],[137,"@itwin/presentation-frontend","itwinjs-core","@itwin/presentation-frontend\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/presentation/frontend",12,"itwinjs-core","#4dd0e1",7,false,false],[138,"@itwin/presentation-hierarchies","presentation","@itwin/presentation-hierarchies\nv1.7.15\npresentation\npresentation/packages/hierarchies",12,"presentation","#ffd54f",5,false,false],[139,"@itwin/presentation-hierarchies-react","presentation","@itwin/presentation-hierarchies-react\nv1.11.0\npresentation\npresentation/packages/hierarchies-react",12,"presentation","#ffd54f",6,false,false],[140,"@itwin/presentation-models-tree","presentation","@itwin/presentation-models-tree\nv0.0.0\npresentation\npresentation/packages/models-tree",12,"presentation","#ffd54f",6,false,false],[141,"@itwin/presentation-opentelemetry","presentation","@itwin/presentation-opentelemetry\nv4.2.5\npresentation\npresentation/packages/opentelemetry",12,"presentation","#ffd54f",6,false,false],[142,"@itwin/presentation-shared","presentation","@itwin/presentation-shared\nv1.2.15\npresentation\npresentation/packages/shared",12,"presentation","#ffd54f",3,false,false],[143,"@itwin/property-grid-react","viewer-components-react","@itwin/property-grid-react\nv1.19.9\nviewer-components-react\nviewer-components-react/packages/itwin/property-grid",12,"viewer-components-react","#ffb74d",10,false,false],[144,"@itwin/quantity-formatting-react","viewer-components-react","@itwin/quantity-formatting-react\nv0.1.5\nviewer-components-react\nviewer-components-react/packages/itwin/quantity-formatting",12,"viewer-components-react","#ffb74d",7,false,false],[145,"@itwin/reality-capture","reality-capture","@itwin/reality-capture\nv1.5.0\nreality-capture\nreality-capture/typescript/packages/reality-capture",12,"reality-capture","#26c6da",8,false,false],[146,"@itwin/reality-data-client","reality-capture","@itwin/reality-data-client\nv1.4.0\nreality-capture\nreality-capture/typescript/packages/reality-data-client",12,"reality-capture","#26c6da",7,false,false],[147,"@itwin/reports-config-widget-react","viewer-components-react","@itwin/reports-config-widget-react\nv0.9.0\nviewer-components-react\nviewer-components-react/packages/itwin/reports-config-widget",12,"viewer-components-react","#ffb74d",10,false,false],[148,"@itwin/rpcinterface-full-stack-tests","itwinjs-core","@itwin/rpcinterface-full-stack-tests\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/full-stack-tests/rpc-interface",12,"itwinjs-core","#4dd0e1",8,false,false],[149,"@itwin/service-authorization","auth-clients","@itwin/service-authorization\nv2.1.1\nauth-clients\nauth-clients/packages/service",12,"auth-clients","#a5d6a7",5,false,false],[150,"@itwin/storybook-auth-addon","admin-components-react","@itwin/storybook-auth-addon\nv0.1.0\nadmin-components-react\nadmin-components-react/packages/modules/storybook-auth-addon",12,"admin-components-react","#f06292",1,false,false],[151,"@itwin/tree-widget-react","viewer-components-react","@itwin/tree-widget-react\nv3.17.10\nviewer-components-react\nviewer-components-react/packages/itwin/tree-widget",12,"viewer-components-react","#ffb74d",10,false,false],[152,"@itwin/unified-selection","presentation","@itwin/unified-selection\nv1.7.5\npresentation\npresentation/packages/unified-selection",12,"presentation","#ffd54f",4,false,false],[153,"@itwin/unified-selection-react","presentation","@itwin/unified-selection-react\nv1.1.0\npresentation\npresentation/packages/unified-selection-react",12,"presentation","#ffd54f",5,false,false],[154,"@itwin/viewer-react","viewer","@itwin/viewer-react\nv5.0.1\nviewer\nviewer/packages/modules/viewer-react",12,"viewer","#ff8a65",10,false,false],[155,"@itwin/web-viewer-react","viewer","@itwin/web-viewer-react\nv5.0.1\nviewer\nviewer/packages/modules/web-viewer-react",12,"viewer","#ff8a65",11,false,false],[156,"@itwin/webgl-compatibility","itwinjs-core","@itwin/webgl-compatibility\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/core/webgl-compatibility",12,"itwinjs-core","#4dd0e1",3,false,false],[157,"@itwin/workspace-editor","itwinjs-core","@itwin/workspace-editor\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/utils/workspace-editor",12,"itwinjs-core","#4dd0e1",7,false,false],[158,"internal-tools","itwinjs-core","internal-tools\nv3.0.0-dev.69\nitwinjs-core\nitwinjs-core/tools/internal",12,"itwinjs-core","#4dd0e1",2,false,false]],"edgeDefs":[[36,42,"dotted"],[36,47,"dashed"],[36,48,"dashed"],[36,49,"dashed"],[36,78,"dotted"],[37,42,"dotted"],[37,43,"dotted"],[37,48,"dashed"],[37,78,"dotted"],[39,37,"dashed"],[39,42,"dotted"],[39,46,"dashed"],[39,48,"dashed"],[39,49,"dashed"],[39,52,"dashed"],[39,53,"dashed"],[39,57,"dotted"],[39,58,"dashed"],[39,59,"dashed"],[39,68,"dotted"],[39,78,"dotted"],[39,86,"dashed"],[39,104,"solid"],[39,105,"solid"],[39,108,"dashed"],[39,156,"dotted"],[40,22,"solid"],[40,37,"solid"],[40,39,"solid"],[40,42,"dotted"],[40,46,"solid"],[40,48,"solid"],[40,49,"solid"],[40,52,"solid"],[40,53,"solid"],[40,57,"solid"],[40,58,"solid"],[40,59,"solid"],[40,78,"dotted"],[40,86,"solid"],[40,104,"solid"],[40,108,"solid"],[40,156,"solid"],[41,42,"dotted"],[41,48,"dashed"],[41,49,"solid"],[41,78,"dotted"],[42,78,"dotted"],[43,42,"dotted"],[43,78,"dotted"],[44,42,"dotted"],[44,48,"dashed"],[44,49,"dashed"],[44,52,"dashed"],[44,53,"dashed"],[44,78,"dotted"],[45,119,"dotted"],[46,37,"dashed"],[46,42,"dotted"],[46,48,"dashed"],[46,49,"dotted"],[46,54,"dotted"],[46,59,"dashed"],[46,78,"dotted"],[46,104,"solid"],[46,108,"dashed"],[47,24,"solid"],[47,42,"dotted"],[47,48,"dashed"],[47,49,"dashed"],[47,53,"dashed"],[47,67,"dotted"],[47,68,"dashed"],[47,73,"dotted"],[47,78,"dotted"],[47,118,"solid"],[47,120,"dotted"],[48,42,"dotted"],[48,78,"dotted"],[49,42,"dotted"],[49,48,"dashed"],[49,53,"dashed"],[49,78,"dotted"],[49,120,"dotted"],[50,42,"dotted"],[50,43,"dotted"],[50,47,"dashed"],[50,48,"dashed"],[50,49,"dashed"],[50,52,"dashed"],[50,78,"dotted"],[51,42,"dotted"],[51,49,"solid"],[51,52,"solid"],[51,78,"dotted"],[52,0,"dotted"],[52,20,"dotted"],[52,35,"dotted"],[52,37,"dashed"],[52,42,"dotted"],[52,48,"dashed"],[52,49,"dashed"],[52,53,"dashed"],[52,54,"solid"],[52,57,"dashed"],[52,58,"dashed"],[52,68,"dashed"],[52,69,"dashed"],[52,78,"dotted"],[52,120,"dotted"],[52,156,"solid"],[53,42,"dotted"],[53,48,"solid"],[53,78,"dotted"],[54,42,"dotted"],[54,43,"dotted"],[54,48,"dashed"],[54,49,"dotted"],[54,78,"dotted"],[55,42,"dotted"],[55,43,"dotted"],[55,48,"dashed"],[55,49,"dashed"],[55,52,"dashed"],[55,53,"dashed"],[55,78,"dotted"],[56,42,"dotted"],[56,47,"dashed"],[56,48,"dashed"],[56,49,"dashed"],[56,52,"dashed"],[56,78,"dotted"],[57,42,"dotted"],[57,48,"dotted"],[57,78,"dotted"],[58,35,"dotted"],[58,42,"dotted"],[58,48,"dashed"],[58,78,"dotted"],[59,37,"dashed"],[59,42,"dotted"],[59,48,"dashed"],[59,49,"dotted"],[59,53,"dotted"],[59,54,"dotted"],[59,78,"dotted"],[59,104,"solid"],[59,108,"dashed"],[61,108,"solid"],[62,104,"solid"],[62,108,"solid"],[63,104,"solid"],[63,108,"solid"],[64,37,"dotted"],[64,39,"dotted"],[64,42,"dotted"],[64,46,"dotted"],[64,47,"dotted"],[64,48,"dashed"],[64,49,"dashed"],[64,50,"dashed"],[64,52,"dashed"],[64,53,"dotted"],[64,55,"dotted"],[64,57,"dotted"],[64,58,"dotted"],[64,59,"dotted"],[64,68,"dashed"],[64,69,"dotted"],[64,77,"dashed"],[64,86,"dotted"],[64,108,"dotted"],[64,134,"dotted"],[64,135,"dotted"],[64,137,"dashed"],[64,153,"dotted"],[64,154,"solid"],[64,156,"dotted"],[65,37,"dashed"],[65,38,"dotted"],[65,39,"dashed"],[65,42,"dotted"],[65,46,"dotted"],[65,48,"dashed"],[65,49,"dotted"],[65,52,"dashed"],[65,53,"dotted"],[65,55,"dotted"],[65,57,"dotted"],[65,58,"dotted"],[65,59,"dotted"],[65,60,"dotted"],[65,68,"dotted"],[65,78,"dotted"],[65,86,"dotted"],[65,100,"solid"],[65,104,"solid"],[65,108,"solid"],[65,134,"dotted"],[65,137,"dotted"],[65,156,"dotted"],[66,35,"dotted"],[66,42,"dotted"],[66,48,"dashed"],[66,49,"dotted"],[66,58,"dashed"],[66,68,"dashed"],[66,78,"dotted"],[67,0,"dotted"],[67,1,"dotted"],[67,3,"dotted"],[67,4,"dotted"],[67,16,"dotted"],[67,17,"dotted"],[67,18,"dotted"],[67,19,"dotted"],[67,20,"dotted"],[67,26,"dotted"],[67,27,"dotted"],[67,28,"dotted"],[67,31,"dotted"],[67,33,"dotted"],[67,34,"dotted"],[67,35,"dotted"],[67,42,"dotted"],[67,68,"dashed"],[67,78,"dotted"],[68,0,"dotted"],[68,4,"dotted"],[68,15,"dotted"],[68,17,"dotted"],[68,20,"dotted"],[68,32,"dotted"],[68,35,"dotted"],[68,42,"dotted"],[68,48,"dashed"],[68,58,"dashed"],[68,78,"dotted"],[69,42,"dotted"],[69,48,"dashed"],[69,49,"dashed"],[69,53,"dashed"],[69,68,"dashed"],[69,78,"dotted"],[70,42,"dotted"],[70,47,"dashed"],[70,48,"dashed"],[70,49,"dashed"],[70,53,"dashed"],[70,68,"dashed"],[70,69,"dashed"],[70,78,"dotted"],[71,42,"solid"],[71,43,"solid"],[71,47,"dotted"],[71,48,"solid"],[71,49,"solid"],[71,52,"solid"],[71,53,"solid"],[71,58,"solid"],[71,68,"solid"],[71,69,"solid"],[71,70,"solid"],[71,78,"dotted"],[71,79,"dotted"],[71,88,"solid"],[71,92,"solid"],[71,94,"solid"],[71,96,"solid"],[71,101,"dotted"],[71,118,"solid"],[71,129,"solid"],[71,134,"solid"],[71,137,"solid"],[72,42,"dotted"],[72,47,"solid"],[72,48,"solid"],[72,49,"solid"],[72,53,"solid"],[72,67,"solid"],[72,68,"solid"],[72,78,"dotted"],[73,42,"dotted"],[73,48,"solid"],[73,78,"dotted"],[74,42,"dotted"],[74,47,"dashed"],[74,48,"dashed"],[74,49,"dashed"],[74,53,"dashed"],[74,75,"solid"],[74,78,"dotted"],[75,42,"dotted"],[75,48,"dashed"],[75,49,"dashed"],[75,53,"dashed"],[75,78,"dotted"],[76,37,"dashed"],[76,42,"dotted"],[76,43,"dotted"],[76,48,"dashed"],[76,49,"dashed"],[76,52,"dashed"],[76,53,"dashed"],[76,75,"solid"],[76,78,"dotted"],[77,42,"dotted"],[77,48,"dashed"],[77,49,"solid"],[77,78,"dotted"],[79,42,"dotted"],[79,47,"dashed"],[79,49,"dashed"],[79,78,"dotted"],[80,42,"dotted"],[80,48,"solid"],[80,49,"solid"],[80,52,"solid"],[80,53,"solid"],[80,78,"dotted"],[81,42,"dotted"],[81,43,"dotted"],[81,48,"dashed"],[81,49,"dashed"],[81,52,"dashed"],[81,53,"dashed"],[81,78,"dotted"],[82,37,"dashed"],[82,39,"dashed"],[82,42,"dotted"],[82,46,"dashed"],[82,48,"dashed"],[82,49,"dashed"],[82,52,"dashed"],[82,53,"dashed"],[82,54,"dotted"],[82,55,"dotted"],[82,57,"dotted"],[82,58,"dotted"],[82,59,"dashed"],[82,78,"dotted"],[82,86,"dotted"],[82,104,"dotted"],[82,108,"dashed"],[82,156,"dotted"],[83,37,"dashed"],[83,39,"dashed"],[83,42,"dotted"],[83,46,"dashed"],[83,48,"dotted"],[83,49,"dotted"],[83,52,"dashed"],[83,53,"dotted"],[83,54,"dotted"],[83,55,"dotted"],[83,57,"dotted"],[83,58,"dotted"],[83,59,"dashed"],[83,68,"dotted"],[83,78,"dotted"],[83,86,"dotted"],[83,90,"solid"],[83,92,"solid"],[83,96,"solid"],[83,100,"solid"],[83,101,"solid"],[83,103,"solid"],[83,104,"solid"],[83,108,"solid"],[83,134,"dotted"],[83,135,"dashed"],[83,137,"dashed"],[83,156,"dotted"],[84,37,"solid"],[84,42,"dotted"],[84,43,"dotted"],[84,48,"dashed"],[84,49,"dashed"],[84,52,"dashed"],[84,53,"dashed"],[84,78,"dotted"],[85,104,"solid"],[85,108,"dashed"],[86,37,"dashed"],[86,42,"dotted"],[86,46,"dashed"],[86,48,"dashed"],[86,49,"dashed"],[86,52,"dashed"],[86,53,"dashed"],[86,57,"dotted"],[86,58,"dashed"],[86,59,"dashed"],[86,68,"dotted"],[86,78,"dotted"],[86,104,"solid"],[86,108,"dashed"],[86,156,"dotted"],[87,42,"dotted"],[87,47,"dashed"],[87,48,"dashed"],[87,49,"dashed"],[87,53,"dashed"],[87,58,"dashed"],[87,67,"dotted"],[87,68,"dashed"],[87,78,"dotted"],[88,47,"dashed"],[88,48,"dashed"],[88,49,"dashed"],[88,53,"dotted"],[88,68,"dotted"],[88,78,"dotted"],[88,90,"solid"],[88,94,"solid"],[88,95,"dotted"],[88,96,"solid"],[88,118,"solid"],[88,120,"solid"],[88,121,"solid"],[89,47,"solid"],[89,48,"solid"],[89,49,"solid"],[89,53,"solid"],[89,58,"solid"],[89,68,"solid"],[89,78,"dotted"],[89,88,"solid"],[89,94,"solid"],[89,95,"dotted"],[89,96,"solid"],[89,97,"solid"],[90,48,"dashed"],[90,78,"dotted"],[90,94,"dotted"],[90,95,"dotted"],[90,96,"dashed"],[91,48,"solid"],[91,49,"solid"],[91,53,"solid"],[91,78,"dotted"],[91,90,"solid"],[91,94,"solid"],[91,95,"dotted"],[91,96,"solid"],[92,37,"dotted"],[92,48,"dashed"],[92,49,"dotted"],[92,52,"dashed"],[92,53,"dotted"],[92,57,"dotted"],[92,58,"dotted"],[92,68,"dotted"],[92,69,"dotted"],[92,78,"dotted"],[92,90,"solid"],[92,95,"dotted"],[92,96,"solid"],[92,156,"dotted"],[93,37,"solid"],[93,48,"solid"],[93,49,"solid"],[93,52,"solid"],[93,53,"solid"],[93,57,"solid"],[93,58,"solid"],[93,78,"dotted"],[93,92,"solid"],[93,95,"dotted"],[93,96,"solid"],[93,97,"solid"],[93,156,"solid"],[94,78,"dotted"],[94,95,"dotted"],[94,96,"solid"],[94,120,"solid"],[95,78,"dotted"],[96,78,"dotted"],[96,95,"dotted"],[97,94,"solid"],[97,95,"dotted"],[97,96,"solid"],[97,118,"solid"],[97,120,"solid"],[97,121,"solid"],[98,78,"dotted"],[98,94,"solid"],[98,95,"dotted"],[98,96,"solid"],[98,97,"solid"],[98,118,"solid"],[98,120,"solid"],[98,121,"solid"],[99,78,"dotted"],[99,95,"dotted"],[99,96,"solid"],[99,97,"solid"],[101,42,"dotted"],[101,48,"dotted"],[101,78,"dotted"],[101,129,"dotted"],[107,106,"solid"],[108,105,"solid"],[110,42,"dotted"],[110,47,"dashed"],[110,48,"dashed"],[110,49,"dashed"],[110,78,"dotted"],[110,111,"dashed"],[111,42,"dotted"],[111,48,"dashed"],[111,49,"dashed"],[111,78,"dotted"],[112,104,"solid"],[112,108,"solid"],[113,37,"dashed"],[113,39,"dashed"],[113,42,"dotted"],[113,46,"dashed"],[113,48,"dashed"],[113,49,"dashed"],[113,52,"dashed"],[113,53,"dotted"],[113,57,"dotted"],[113,58,"dotted"],[113,59,"dashed"],[113,68,"dotted"],[113,69,"dotted"],[113,78,"dotted"],[113,86,"dashed"],[113,103,"solid"],[113,104,"solid"],[113,108,"dashed"],[113,115,"dashed"],[113,156,"dotted"],[114,42,"dotted"],[114,48,"dashed"],[114,49,"dotted"],[114,52,"dotted"],[114,78,"dotted"],[115,37,"dashed"],[115,42,"dotted"],[115,48,"dashed"],[115,49,"dashed"],[115,52,"dashed"],[115,53,"dashed"],[115,78,"dotted"],[116,23,"solid"],[116,37,"dashed"],[116,39,"dashed"],[116,42,"dotted"],[116,46,"dashed"],[116,48,"dashed"],[116,49,"dashed"],[116,52,"dashed"],[116,53,"dashed"],[116,54,"dotted"],[116,55,"dotted"],[116,57,"dotted"],[116,58,"dashed"],[116,59,"dashed"],[116,68,"dashed"],[116,78,"dotted"],[116,86,"dotted"],[116,104,"solid"],[116,108,"dashed"],[116,134,"dotted"],[116,135,"dotted"],[116,137,"dotted"],[116,156,"dotted"],[117,42,"dotted"],[117,48,"dashed"],[117,49,"solid"],[117,78,"dotted"],[118,45,"solid"],[118,119,"dotted"],[118,120,"solid"],[118,126,"dotted"],[118,127,"dotted"],[118,128,"dotted"],[120,45,"solid"],[120,119,"dotted"],[121,45,"solid"],[121,119,"dotted"],[121,120,"solid"],[121,126,"dotted"],[121,127,"dotted"],[121,128,"dotted"],[122,45,"dotted"],[122,119,"dotted"],[122,120,"solid"],[122,124,"solid"],[122,126,"dotted"],[122,127,"dotted"],[122,128,"dotted"],[123,45,"dotted"],[123,119,"dotted"],[123,120,"solid"],[123,124,"solid"],[123,126,"dotted"],[123,127,"dotted"],[123,128,"dotted"],[124,45,"solid"],[124,119,"dotted"],[124,120,"solid"],[124,127,"dotted"],[125,45,"solid"],[125,118,"solid"],[125,119,"dotted"],[125,120,"solid"],[126,45,"solid"],[126,119,"dotted"],[126,120,"solid"],[127,45,"solid"],[127,119,"dotted"],[127,120,"solid"],[128,45,"solid"],[128,119,"dotted"],[128,120,"solid"],[129,42,"dotted"],[129,43,"solid"],[129,48,"dashed"],[129,49,"dotted"],[129,78,"dotted"],[129,149,"solid"],[130,37,"dashed"],[130,39,"dashed"],[130,42,"dotted"],[130,43,"dotted"],[130,46,"dotted"],[130,48,"dotted"],[130,49,"dotted"],[130,52,"dashed"],[130,53,"dotted"],[130,55,"dotted"],[130,57,"dotted"],[130,58,"dotted"],[130,59,"dashed"],[130,68,"dotted"],[130,78,"dotted"],[130,86,"dotted"],[130,100,"solid"],[130,104,"solid"],[130,108,"solid"],[130,134,"dotted"],[130,137,"dotted"],[130,156,"dotted"],[131,42,"dotted"],[131,78,"dotted"],[132,42,"dotted"],[132,47,"dashed"],[132,48,"dashed"],[132,49,"dashed"],[132,78,"dotted"],[133,42,"dotted"],[133,47,"dashed"],[133,48,"dashed"],[133,49,"dashed"],[133,58,"dashed"],[133,68,"dashed"],[133,78,"dotted"],[133,134,"dashed"],[133,142,"solid"],[134,42,"dotted"],[134,48,"dashed"],[134,49,"dashed"],[134,58,"dashed"],[134,68,"dashed"],[134,78,"dotted"],[134,142,"solid"],[135,37,"dashed"],[135,42,"dotted"],[135,46,"dashed"],[135,48,"dashed"],[135,49,"dashed"],[135,52,"dashed"],[135,57,"dotted"],[135,58,"dashed"],[135,59,"dashed"],[135,68,"dashed"],[135,78,"dotted"],[135,86,"dashed"],[135,104,"solid"],[135,105,"solid"],[135,108,"dashed"],[135,134,"dashed"],[135,136,"solid"],[135,137,"dashed"],[135,142,"solid"],[135,152,"solid"],[135,153,"dashed"],[136,42,"dotted"],[136,48,"dashed"],[136,49,"dashed"],[136,53,"dashed"],[136,58,"dashed"],[136,68,"dashed"],[136,78,"dotted"],[136,142,"solid"],[137,42,"dotted"],[137,48,"dashed"],[137,49,"dashed"],[137,52,"dashed"],[137,54,"dotted"],[137,58,"dashed"],[137,68,"dashed"],[137,78,"dotted"],[137,134,"dashed"],[137,152,"solid"],[138,42,"dotted"],[138,48,"solid"],[138,49,"solid"],[138,53,"solid"],[138,78,"dotted"],[138,142,"solid"],[139,42,"dotted"],[139,48,"solid"],[139,78,"dotted"],[139,104,"solid"],[139,105,"solid"],[139,108,"dashed"],[139,138,"solid"],[139,142,"solid"],[139,152,"solid"],[140,42,"dotted"],[140,48,"solid"],[140,78,"dotted"],[140,138,"dashed"],[140,142,"solid"],[141,42,"dotted"],[141,78,"dotted"],[141,134,"dashed"],[142,42,"dotted"],[142,48,"solid"],[142,78,"dotted"],[143,37,"dashed"],[143,39,"dashed"],[143,42,"dotted"],[143,46,"dashed"],[143,48,"dashed"],[143,49,"dashed"],[143,52,"dashed"],[143,53,"dotted"],[143,54,"dotted"],[143,55,"dotted"],[143,57,"dotted"],[143,58,"dotted"],[143,59,"dotted"],[143,68,"dotted"],[143,69,"dotted"],[143,78,"dotted"],[143,86,"dotted"],[143,104,"solid"],[143,105,"solid"],[143,108,"solid"],[143,129,"dotted"],[143,134,"dashed"],[143,135,"dashed"],[143,136,"solid"],[143,137,"dashed"],[143,142,"solid"],[143,152,"solid"],[143,156,"dotted"],[144,37,"dotted"],[144,42,"dotted"],[144,48,"dashed"],[144,49,"dotted"],[144,52,"dashed"],[144,53,"dotted"],[144,57,"dotted"],[144,58,"dashed"],[144,68,"dotted"],[144,69,"dotted"],[144,78,"dotted"],[144,104,"solid"],[144,108,"dashed"],[145,42,"dotted"],[145,48,"dashed"],[145,49,"dotted"],[145,146,"solid"],[146,42,"dotted"],[146,43,"dotted"],[146,48,"dashed"],[146,49,"dotted"],[146,53,"dotted"],[146,78,"dotted"],[146,129,"dotted"],[147,37,"dashed"],[147,39,"dashed"],[147,42,"dotted"],[147,46,"dotted"],[147,48,"dashed"],[147,49,"dotted"],[147,52,"dashed"],[147,53,"dotted"],[147,55,"dotted"],[147,57,"dotted"],[147,58,"dotted"],[147,59,"dotted"],[147,68,"dotted"],[147,78,"dotted"],[147,86,"dotted"],[147,90,"solid"],[147,92,"solid"],[147,96,"solid"],[147,100,"solid"],[147,103,"solid"],[147,104,"solid"],[147,108,"solid"],[147,134,"dotted"],[147,137,"dotted"],[147,156,"dotted"],[148,42,"solid"],[148,43,"solid"],[148,47,"dotted"],[148,48,"solid"],[148,49,"solid"],[148,52,"solid"],[148,53,"solid"],[148,58,"solid"],[148,68,"dotted"],[148,78,"solid"],[148,79,"dotted"],[148,88,"solid"],[148,92,"solid"],[148,94,"solid"],[148,96,"solid"],[148,101,"dotted"],[148,118,"solid"],[148,129,"solid"],[148,133,"dotted"],[148,134,"solid"],[148,137,"solid"],[148,149,"solid"],[149,42,"dotted"],[149,48,"dashed"],[149,49,"dotted"],[149,78,"dotted"],[150,2,"dashed"],[150,21,"dashed"],[150,25,"dotted"],[151,37,"dashed"],[151,39,"dashed"],[151,42,"dotted"],[151,46,"dashed"],[151,47,"dotted"],[151,48,"dashed"],[151,49,"dashed"],[151,52,"dashed"],[151,53,"dotted"],[151,54,"dotted"],[151,55,"dotted"],[151,57,"dotted"],[151,58,"dotted"],[151,59,"dotted"],[151,68,"dashed"],[151,69,"dotted"],[151,70,"dotted"],[151,78,"dotted"],[151,86,"dotted"],[151,104,"solid"],[151,105,"solid"],[151,108,"dashed"],[151,129,"dotted"],[151,133,"dotted"],[151,134,"dashed"],[151,135,"dashed"],[151,136,"solid"],[151,137,"dashed"],[151,138,"solid"],[151,139,"solid"],[151,142,"solid"],[151,152,"solid"],[151,156,"dotted"],[152,42,"dotted"],[152,48,"solid"],[152,78,"dotted"],[152,142,"solid"],[153,42,"dotted"],[153,78,"dotted"],[153,152,"dashed"],[154,23,"solid"],[154,37,"dashed"],[154,39,"dashed"],[154,42,"dotted"],[154,46,"dashed"],[154,48,"dashed"],[154,49,"dashed"],[154,52,"dashed"],[154,53,"dashed"],[154,54,"dashed"],[154,55,"dotted"],[154,57,"dotted"],[154,58,"dotted"],[154,59,"dashed"],[154,68,"dotted"],[154,69,"dotted"],[154,86,"dashed"],[154,92,"dashed"],[154,105,"solid"],[154,108,"solid"],[154,134,"dashed"],[154,135,"dashed"],[154,136,"solid"],[154,137,"dashed"],[154,142,"solid"],[154,146,"solid"],[154,152,"solid"],[154,153,"dotted"],[154,156,"dotted"],[155,37,"dotted"],[155,39,"dotted"],[155,42,"dotted"],[155,46,"dotted"],[155,48,"dashed"],[155,49,"dashed"],[155,52,"dashed"],[155,53,"dotted"],[155,55,"dotted"],[155,57,"dotted"],[155,58,"dotted"],[155,59,"dashed"],[155,68,"dotted"],[155,69,"dashed"],[155,86,"dotted"],[155,108,"dotted"],[155,134,"dashed"],[155,135,"dotted"],[155,137,"dashed"],[155,152,"dotted"],[155,153,"dotted"],[155,154,"solid"],[155,156,"dotted"],[156,42,"dotted"],[156,43,"dotted"],[156,48,"solid"],[156,78,"dotted"],[157,42,"dotted"],[157,47,"solid"],[157,48,"solid"],[157,49,"solid"],[157,78,"dotted"],[158,42,"dotted"]],"sidebarGroups":{"other":[[0,"@bentley/aec-units-schema","other","@bentley/aec-units-schema\nv1.0.3\nbase\nbase/aec-units-schema",15,"other","#90a4ae",0,false,false],[1,"@bentley/architectural-physical-schema","other","@bentley/architectural-physical-schema\nv1.0.3\nbase\nbase/architectural-physical-schema",15,"other","#90a4ae",0,false,false],[3,"@bentley/bis-core-schema","other","@bentley/bis-core-schema\nv1.0.15\nbase\nbase/bis-core-schema",15,"other","#90a4ae",0,false,false],[4,"@bentley/bis-custom-attributes-schema","other","@bentley/bis-custom-attributes-schema\nv1.0.0\nbase\nbase/bis-custom-attributes-schema",15,"other","#90a4ae",0,false,false],[5,"@bentley/cif-bridge-schema","other","@bentley/cif-bridge-schema\nv1.0.5\nbase\nbase/cif-bridge-schema",15,"other","#90a4ae",0,false,false],[6,"@bentley/cif-common-schema","other","@bentley/cif-common-schema\nv1.0.3\nbase\nbase/cif-common-schema",15,"other","#90a4ae",0,false,false],[7,"@bentley/cif-geometric-rules-schema","other","@bentley/cif-geometric-rules-schema\nv1.0.1\nbase\nbase/cif-geometric-rules-schema",15,"other","#90a4ae",0,false,false],[8,"@bentley/cif-hydraulic-analysis-schema","other","@bentley/cif-hydraulic-analysis-schema\nv1.0.3\nbase\nbase/cif-hydraulic-analysis-schema",15,"other","#90a4ae",0,false,false],[9,"@bentley/cif-hydraulic-results-schema","other","@bentley/cif-hydraulic-results-schema\nv1.0.3\nbase\nbase/cif-hydraulic-results-schema",15,"other","#90a4ae",0,false,false],[10,"@bentley/cif-quantity-takeoffs-schema","other","@bentley/cif-quantity-takeoffs-schema\nv1.0.1\nbase\nbase/cif-quantity-takeoffs-schema",15,"other","#90a4ae",0,false,false],[11,"@bentley/cif-rail-schema","other","@bentley/cif-rail-schema\nv1.0.2\nbase\nbase/cif-rail-schema",15,"other","#90a4ae",0,false,false],[12,"@bentley/cif-roads-schema","other","@bentley/cif-roads-schema\nv1.0.1\nbase\nbase/cif-roads-schema",15,"other","#90a4ae",0,false,false],[13,"@bentley/cif-subsurface-conflict-analysis-schema","other","@bentley/cif-subsurface-conflict-analysis-schema\nv1.0.3\nbase\nbase/cif-subsurface-conflict-analysis-schema",15,"other","#90a4ae",0,false,false],[14,"@bentley/cif-subsurface-schema","other","@bentley/cif-subsurface-schema\nv1.0.3\nbase\nbase/cif-subsurface-schema",15,"other","#90a4ae",0,false,false],[15,"@bentley/cif-units-schema","other","@bentley/cif-units-schema\nv1.0.7\nbase\nbase/cif-units-schema",15,"other","#90a4ae",0,false,false],[16,"@bentley/construction-schema","other","@bentley/construction-schema\nv1.0.4\nbase\nbase/construction-schema",15,"other","#90a4ae",0,false,false],[17,"@bentley/core-custom-attributes-schema","other","@bentley/core-custom-attributes-schema\nv1.0.4\nbase\nbase/core-custom-attributes-schema",15,"other","#90a4ae",0,false,false],[18,"@bentley/ecdb-map-schema","other","@bentley/ecdb-map-schema\nv2.0.1\nbase\nbase/ecdb-map-schema",15,"other","#90a4ae",0,false,false],[19,"@bentley/ecdb-schema-policies-schema","other","@bentley/ecdb-schema-policies-schema\nv1.0.1\nbase\nbase/ecdb-schema-policies-schema",15,"other","#90a4ae",0,false,false],[20,"@bentley/formats-schema","other","@bentley/formats-schema\nv1.0.0\nbase\nbase/formats-schema",15,"other","#90a4ae",0,false,false],[22,"@bentley/icons-generic","other","@bentley/icons-generic\nv1.0.34\nbase\nbase/icons-generic",15,"other","#90a4ae",0,false,false],[23,"@bentley/icons-generic-webfont","other","@bentley/icons-generic-webfont\nv1.0.34\nbase\nbase/icons-generic-webfont",15,"other","#90a4ae",0,false,false],[26,"@bentley/linear-referencing-schema","other","@bentley/linear-referencing-schema\nv2.0.3\nbase\nbase/linear-referencing-schema",15,"other","#90a4ae",0,false,false],[27,"@bentley/physical-material-schema","other","@bentley/physical-material-schema\nv1.0.2\nbase\nbase/physical-material-schema",15,"other","#90a4ae",0,false,false],[28,"@bentley/plant-custom-attributes-schema","other","@bentley/plant-custom-attributes-schema\nv1.0.1\nbase\nbase/plant-custom-attributes-schema",15,"other","#90a4ae",0,false,false],[29,"@bentley/process-functional-schema","other","@bentley/process-functional-schema\nv1.0.1\nbase\nbase/process-functional-schema",15,"other","#90a4ae",0,false,false],[30,"@bentley/process-physical-schema","other","@bentley/process-physical-schema\nv1.0.2\nbase\nbase/process-physical-schema",15,"other","#90a4ae",0,false,false],[31,"@bentley/quantity-takeoffs-aspects-schema","other","@bentley/quantity-takeoffs-aspects-schema\nv1.0.1\nbase\nbase/quantity-takeoffs-aspects-schema",15,"other","#90a4ae",0,false,false],[32,"@bentley/road-rail-units-schema","other","@bentley/road-rail-units-schema\nv1.0.3\nbase\nbase/road-rail-units-schema",15,"other","#90a4ae",0,false,false],[33,"@bentley/spatial-composition-schema","other","@bentley/spatial-composition-schema\nv1.0.1\nbase\nbase/spatial-composition-schema",15,"other","#90a4ae",0,false,false],[34,"@bentley/structural-physical-schema","other","@bentley/structural-physical-schema\nv1.0.1\nbase\nbase/structural-physical-schema",15,"other","#90a4ae",0,false,false],[35,"@bentley/units-schema","other","@bentley/units-schema\nv1.0.10\nbase\nbase/units-schema",15,"other","#90a4ae",0,false,false],[78,"@itwin/eslint-plugin","other","@itwin/eslint-plugin\nv6.1.0\neslint-plugin\neslint-plugin",15,"other","#90a4ae",0,false,false],[87,"@itwin/imodel-transformer","other","@itwin/imodel-transformer\nv1.2.1-dev.1\nimodel-transformer\nimodel-transformer/packages/transformer",12,"other","#90a4ae",7,false,false],[101,"@itwin/itwins-client","other","@itwin/itwins-client\nv3.1.0\nitwins-client\nitwins-client",12,"other","#90a4ae",7,false,false],[104,"@itwin/itwinui-icons-react","other","@itwin/itwinui-icons-react\nv2.11.1\nicons\nicons/itwinui-icons-react",15,"other","#90a4ae",0,false,false],[105,"@itwin/itwinui-illustrations-react","other","@itwin/itwinui-illustrations-react\nv2.1.4\nicons\nicons/itwinui-illustrations-react",15,"other","#90a4ae",0,false,false]],"external":[[2,"@bentley/bentleyjs-core","external","@bentley/bentleyjs-core\n外部 npm 包 · 边缘依赖\n(不在当前仓库中)",4.5,"external","#484f58",0,true,true],[21,"@bentley/frontend-authorization-client","external","@bentley/frontend-authorization-client\n外部 npm 包 · 边缘依赖\n(不在当前仓库中)",4.5,"external","#484f58",0,true,true],[24,"@bentley/imodeljs-native","external","@bentley/imodeljs-native\n外部 npm 包 · 边缘依赖\n(不在当前仓库中)",4.5,"external","#484f58",0,true,true],[25,"@bentley/itwin-client","external","@bentley/itwin-client\n外部 npm 包 · 边缘依赖\n(不在当前仓库中)",4.5,"external","#484f58",0,true,true],[38,"@itwin/appui-layout-react","external","@itwin/appui-layout-react\n外部 npm 包 · 边缘依赖\n(不在当前仓库中)",4.5,"external","#484f58",0,true,true],[60,"@itwin/core-telemetry","external","@itwin/core-telemetry\n外部 npm 包 · 边缘依赖\n(不在当前仓库中)",4.5,"external","#484f58",0,true,true],[100,"@itwin/insights-client","external","@itwin/insights-client\n外部 npm 包 · 核心依赖\n(不在当前仓库中)",6,"external","#484f58",0,true,false],[103,"@itwin/itwinui-icons-color-react","external","@itwin/itwinui-icons-color-react\n外部 npm 包 · 核心依赖\n(不在当前仓库中)",6,"external","#484f58",0,true,false]],"itwinjs-core":[[36,"@itwin/analytical-backend","itwinjs-core","@itwin/analytical-backend\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/domains/analytical/backend",12,"itwinjs-core","#4dd0e1",7,false,false],[37,"@itwin/appui-abstract","itwinjs-core","@itwin/appui-abstract\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/ui/appui-abstract",12,"itwinjs-core","#4dd0e1",3,false,false],[42,"@itwin/build-tools","itwinjs-core","@itwin/build-tools\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/tools/build",12,"itwinjs-core","#4dd0e1",1,false,false],[43,"@itwin/certa","itwinjs-core","@itwin/certa\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/tools/certa",12,"itwinjs-core","#4dd0e1",2,false,false],[44,"@itwin/cesium-renderer","itwinjs-core","@itwin/cesium-renderer\nv5.2.0-dev.26\nitwinjs-core\nitwinjs-core/extensions/cesium-renderer",12,"itwinjs-core","#4dd0e1",7,false,false],[47,"@itwin/core-backend","itwinjs-core","@itwin/core-backend\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/core/backend",12,"itwinjs-core","#4dd0e1",6,false,false],[48,"@itwin/core-bentley","itwinjs-core","@itwin/core-bentley\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/core/bentley",12,"itwinjs-core","#4dd0e1",2,false,false],[49,"@itwin/core-common","itwinjs-core","@itwin/core-common\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/core/common",12,"itwinjs-core","#4dd0e1",4,false,false],[50,"@itwin/core-electron","itwinjs-core","@itwin/core-electron\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/core/electron",12,"itwinjs-core","#4dd0e1",7,false,false],[51,"@itwin/core-extension","itwinjs-core","@itwin/core-extension\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/core/extension",12,"itwinjs-core","#4dd0e1",7,false,false],[52,"@itwin/core-frontend","itwinjs-core","@itwin/core-frontend\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/core/frontend",12,"itwinjs-core","#4dd0e1",6,false,false],[53,"@itwin/core-geometry","itwinjs-core","@itwin/core-geometry\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/core/geometry",12,"itwinjs-core","#4dd0e1",3,false,false],[54,"@itwin/core-i18n","itwinjs-core","@itwin/core-i18n\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/core/i18n",12,"itwinjs-core","#4dd0e1",5,false,false],[55,"@itwin/core-markup","itwinjs-core","@itwin/core-markup\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/core/markup",12,"itwinjs-core","#4dd0e1",7,false,false],[56,"@itwin/core-mobile","itwinjs-core","@itwin/core-mobile\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/core/mobile",12,"itwinjs-core","#4dd0e1",7,false,false],[57,"@itwin/core-orbitgt","itwinjs-core","@itwin/core-orbitgt\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/core/orbitgt",12,"itwinjs-core","#4dd0e1",3,false,false],[58,"@itwin/core-quantity","itwinjs-core","@itwin/core-quantity\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/core/quantity",12,"itwinjs-core","#4dd0e1",3,false,false],[66,"@itwin/ecschema-editing","itwinjs-core","@itwin/ecschema-editing\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/core/ecschema-editing",12,"itwinjs-core","#4dd0e1",5,false,false],[67,"@itwin/ecschema-locaters","itwinjs-core","@itwin/ecschema-locaters\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/core/ecschema-locaters",12,"itwinjs-core","#4dd0e1",5,false,false],[68,"@itwin/ecschema-metadata","itwinjs-core","@itwin/ecschema-metadata\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/core/ecschema-metadata",12,"itwinjs-core","#4dd0e1",4,false,false],[69,"@itwin/ecschema-rpcinterface-common","itwinjs-core","@itwin/ecschema-rpcinterface-common\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/core/ecschema-rpc/common",12,"itwinjs-core","#4dd0e1",5,false,false],[70,"@itwin/ecschema-rpcinterface-impl","itwinjs-core","@itwin/ecschema-rpcinterface-impl\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/core/ecschema-rpc/impl",12,"itwinjs-core","#4dd0e1",7,false,false],[71,"@itwin/ecschema-rpcinterface-tests","itwinjs-core","@itwin/ecschema-rpcinterface-tests\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/full-stack-tests/ecschema-rpc-interface",12,"itwinjs-core","#4dd0e1",8,false,false],[72,"@itwin/ecschema2ts","itwinjs-core","@itwin/ecschema2ts\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/tools/ecschema2ts",12,"itwinjs-core","#4dd0e1",7,false,false],[73,"@itwin/ecsql-common","itwinjs-core","@itwin/ecsql-common\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/core/ecsql/common",12,"itwinjs-core","#4dd0e1",3,false,false],[74,"@itwin/editor-backend","itwinjs-core","@itwin/editor-backend\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/editor/backend",12,"itwinjs-core","#4dd0e1",7,false,false],[75,"@itwin/editor-common","itwinjs-core","@itwin/editor-common\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/editor/common",12,"itwinjs-core","#4dd0e1",5,false,false],[76,"@itwin/editor-frontend","itwinjs-core","@itwin/editor-frontend\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/editor/frontend",12,"itwinjs-core","#4dd0e1",7,false,false],[79,"@itwin/express-server","itwinjs-core","@itwin/express-server\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/core/express-server",12,"itwinjs-core","#4dd0e1",7,false,false],[80,"@itwin/frontend-devtools","itwinjs-core","@itwin/frontend-devtools\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/core/frontend-devtools",12,"itwinjs-core","#4dd0e1",7,false,false],[81,"@itwin/frontend-tiles","itwinjs-core","@itwin/frontend-tiles\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/extensions/frontend-tiles",12,"itwinjs-core","#4dd0e1",7,false,false],[84,"@itwin/hypermodeling-frontend","itwinjs-core","@itwin/hypermodeling-frontend\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/core/hypermodeling",12,"itwinjs-core","#4dd0e1",7,false,false],[110,"@itwin/linear-referencing-backend","itwinjs-core","@itwin/linear-referencing-backend\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/domains/linear-referencing/backend",12,"itwinjs-core","#4dd0e1",7,false,false],[111,"@itwin/linear-referencing-common","itwinjs-core","@itwin/linear-referencing-common\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/domains/linear-referencing/common",12,"itwinjs-core","#4dd0e1",5,false,false],[114,"@itwin/map-layers-auth","itwinjs-core","@itwin/map-layers-auth\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/extensions/map-layers-auth",12,"itwinjs-core","#4dd0e1",7,false,false],[115,"@itwin/map-layers-formats","itwinjs-core","@itwin/map-layers-formats\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/extensions/map-layers-formats",12,"itwinjs-core","#4dd0e1",7,false,false],[131,"@itwin/perf-tools","itwinjs-core","@itwin/perf-tools\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/tools/perf-tools",12,"itwinjs-core","#4dd0e1",2,false,false],[132,"@itwin/physical-material-backend","itwinjs-core","@itwin/physical-material-backend\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/domains/physical-material/backend",12,"itwinjs-core","#4dd0e1",7,false,false],[133,"@itwin/presentation-backend","itwinjs-core","@itwin/presentation-backend\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/presentation/backend",12,"itwinjs-core","#4dd0e1",7,false,false],[134,"@itwin/presentation-common","itwinjs-core","@itwin/presentation-common\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/presentation/common",12,"itwinjs-core","#4dd0e1",5,false,false],[137,"@itwin/presentation-frontend","itwinjs-core","@itwin/presentation-frontend\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/presentation/frontend",12,"itwinjs-core","#4dd0e1",7,false,false],[148,"@itwin/rpcinterface-full-stack-tests","itwinjs-core","@itwin/rpcinterface-full-stack-tests\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/full-stack-tests/rpc-interface",12,"itwinjs-core","#4dd0e1",8,false,false],[156,"@itwin/webgl-compatibility","itwinjs-core","@itwin/webgl-compatibility\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/core/webgl-compatibility",12,"itwinjs-core","#4dd0e1",3,false,false],[157,"@itwin/workspace-editor","itwinjs-core","@itwin/workspace-editor\nv5.11.0-dev.7\nitwinjs-core\nitwinjs-core/utils/workspace-editor",12,"itwinjs-core","#4dd0e1",7,false,false],[158,"internal-tools","itwinjs-core","internal-tools\nv3.0.0-dev.69\nitwinjs-core\nitwinjs-core/tools/internal",12,"itwinjs-core","#4dd0e1",2,false,false]],"appui":[[39,"@itwin/appui-react","appui","@itwin/appui-react\nv5.32.0\nappui\nappui/ui/appui-react",12,"appui","#64b5f6",9,false,false],[40,"@itwin/appui-test-providers","appui","@itwin/appui-test-providers\nv0.0.0\nappui\nappui/apps/test-providers",12,"appui","#64b5f6",10,false,false],[46,"@itwin/components-react","appui","@itwin/components-react\nv5.32.0\nappui\nappui/ui/components-react",12,"appui","#64b5f6",7,false,false],[59,"@itwin/core-react","appui","@itwin/core-react\nv5.32.0\nappui\nappui/ui/core-react",12,"appui","#64b5f6",6,false,false],[86,"@itwin/imodel-components-react","appui","@itwin/imodel-components-react\nv5.32.0\nappui\nappui/ui/imodel-components-react",12,"appui","#64b5f6",8,false,false]],"auth-clients":[[41,"@itwin/browser-authorization","auth-clients","@itwin/browser-authorization\nv2.0.2\nauth-clients\nauth-clients/packages/browser",12,"auth-clients","#a5d6a7",5,false,false],[77,"@itwin/electron-authorization","auth-clients","@itwin/electron-authorization\nv0.22.3\nauth-clients\nauth-clients/packages/electron",12,"auth-clients","#a5d6a7",5,false,false],[117,"@itwin/node-cli-authorization","auth-clients","@itwin/node-cli-authorization\nv3.0.3\nauth-clients\nauth-clients/packages/node-cli",12,"auth-clients","#a5d6a7",5,false,false],[129,"@itwin/oidc-signin-tool","auth-clients","@itwin/oidc-signin-tool\nv5.1.3\nauth-clients\nauth-clients/packages/oidc-signin-tool",12,"auth-clients","#a5d6a7",6,false,false],[149,"@itwin/service-authorization","auth-clients","@itwin/service-authorization\nv2.1.1\nauth-clients\nauth-clients/packages/service",12,"auth-clients","#a5d6a7",5,false,false]],"object-storage":[[45,"@itwin/cloud-agnostic-core","object-storage","@itwin/cloud-agnostic-core\nv3.1.1\nobject-storage\nobject-storage/cloud-agnostic/core",12,"object-storage","#4db6ac",1,false,false],[118,"@itwin/object-storage-azure","object-storage","@itwin/object-storage-azure\nv3.1.1\nobject-storage\nobject-storage/storage/azure",12,"object-storage","#4db6ac",4,false,false],[119,"@itwin/object-storage-common-config","object-storage","@itwin/object-storage-common-config\nv0.0.0\nobject-storage\nobject-storage/utils/common-config",15,"object-storage","#4db6ac",0,false,false],[120,"@itwin/object-storage-core","object-storage","@itwin/object-storage-core\nv3.1.1\nobject-storage\nobject-storage/storage/core",12,"object-storage","#4db6ac",2,false,false],[121,"@itwin/object-storage-google","object-storage","@itwin/object-storage-google\nv3.1.1\nobject-storage\nobject-storage/storage/google",12,"object-storage","#4db6ac",4,false,false],[122,"@itwin/object-storage-minio","object-storage","@itwin/object-storage-minio\nv3.1.1\nobject-storage\nobject-storage/storage/minio",12,"object-storage","#4db6ac",5,false,false],[123,"@itwin/object-storage-oss","object-storage","@itwin/object-storage-oss\nv3.1.1\nobject-storage\nobject-storage/storage/oss",12,"object-storage","#4db6ac",5,false,false],[124,"@itwin/object-storage-s3","object-storage","@itwin/object-storage-s3\nv3.1.1\nobject-storage\nobject-storage/storage/s3",12,"object-storage","#4db6ac",4,false,false],[125,"@itwin/object-storage-samples","object-storage","@itwin/object-storage-samples\nv0.0.0\nobject-storage\nobject-storage/samples",12,"object-storage","#4db6ac",5,false,false],[126,"@itwin/object-storage-tests-backend","object-storage","@itwin/object-storage-tests-backend\nv0.0.0\nobject-storage\nobject-storage/tests/backend-storage",12,"object-storage","#4db6ac",3,false,false],[127,"@itwin/object-storage-tests-backend-unit","object-storage","@itwin/object-storage-tests-backend-unit\nv0.0.0\nobject-storage\nobject-storage/tests/backend-storage-unit",12,"object-storage","#4db6ac",3,false,false],[128,"@itwin/object-storage-tests-frontend","object-storage","@itwin/object-storage-tests-frontend\nv0.0.0\nobject-storage\nobject-storage/tests/frontend-storage",12,"object-storage","#4db6ac",3,false,false]],"admin-components-react":[[61,"@itwin/create-imodel-react","admin-components-react","@itwin/create-imodel-react\nv2.2.1\nadmin-components-react\nadmin-components-react/packages/modules/create-imodel",12,"admin-components-react","#f06292",2,false,false],[62,"@itwin/delete-imodel-react","admin-components-react","@itwin/delete-imodel-react\nv2.1.0\nadmin-components-react\nadmin-components-react/packages/modules/delete-imodel",12,"admin-components-react","#f06292",2,false,false],[63,"@itwin/delete-itwin-react","admin-components-react","@itwin/delete-itwin-react\nv2.0.0\nadmin-components-react\nadmin-components-react/packages/modules/delete-itwin",12,"admin-components-react","#f06292",2,false,false],[85,"@itwin/imodel-browser-react","admin-components-react","@itwin/imodel-browser-react\nv4.2.0\nadmin-components-react\nadmin-components-react/packages/modules/imodel-browser",12,"admin-components-react","#f06292",2,false,false],[112,"@itwin/manage-versions-react","admin-components-react","@itwin/manage-versions-react\nv2.2.4\nadmin-components-react\nadmin-components-react/packages/modules/manage-versions",12,"admin-components-react","#f06292",2,false,false],[150,"@itwin/storybook-auth-addon","admin-components-react","@itwin/storybook-auth-addon\nv0.1.0\nadmin-components-react\nadmin-components-react/packages/modules/storybook-auth-addon",12,"admin-components-react","#f06292",1,false,false]],"viewer":[[64,"@itwin/desktop-viewer-react","viewer","@itwin/desktop-viewer-react\nv5.1.0\nviewer\nviewer/packages/modules/desktop-viewer-react",12,"viewer","#ff8a65",11,false,false],[154,"@itwin/viewer-react","viewer","@itwin/viewer-react\nv5.0.1\nviewer\nviewer/packages/modules/viewer-react",12,"viewer","#ff8a65",10,false,false],[155,"@itwin/web-viewer-react","viewer","@itwin/web-viewer-react\nv5.0.1\nviewer\nviewer/packages/modules/web-viewer-react",12,"viewer","#ff8a65",11,false,false]],"viewer-components-react":[[65,"@itwin/ec3-widget-react","viewer-components-react","@itwin/ec3-widget-react\nv0.10.2\nviewer-components-react\nviewer-components-react/packages/itwin/ec3-widget",12,"viewer-components-react","#ffb74d",10,false,false],[82,"@itwin/geo-tools-react","viewer-components-react","@itwin/geo-tools-react\nv6.0.1\nviewer-components-react\nviewer-components-react/packages/itwin/geo-tools",12,"viewer-components-react","#ffb74d",10,false,false],[83,"@itwin/grouping-mapping-widget","viewer-components-react","@itwin/grouping-mapping-widget\nv0.37.0\nviewer-components-react\nviewer-components-react/packages/itwin/grouping-mapping-widget",12,"viewer-components-react","#ffb74d",10,false,false],[113,"@itwin/map-layers","viewer-components-react","@itwin/map-layers\nv7.0.1\nviewer-components-react\nviewer-components-react/packages/itwin/map-layers",12,"viewer-components-react","#ffb74d",10,false,false],[116,"@itwin/measure-tools-react","viewer-components-react","@itwin/measure-tools-react\nv0.33.0\nviewer-components-react\nviewer-components-react/packages/itwin/measure-tools",12,"viewer-components-react","#ffb74d",10,false,false],[130,"@itwin/one-click-lca-react","viewer-components-react","@itwin/one-click-lca-react\nv0.8.0\nviewer-components-react\nviewer-components-react/packages/itwin/one-click-lca-widget",12,"viewer-components-react","#ffb74d",10,false,false],[143,"@itwin/property-grid-react","viewer-components-react","@itwin/property-grid-react\nv1.19.9\nviewer-components-react\nviewer-components-react/packages/itwin/property-grid",12,"viewer-components-react","#ffb74d",10,false,false],[144,"@itwin/quantity-formatting-react","viewer-components-react","@itwin/quantity-formatting-react\nv0.1.5\nviewer-components-react\nviewer-components-react/packages/itwin/quantity-formatting",12,"viewer-components-react","#ffb74d",7,false,false],[147,"@itwin/reports-config-widget-react","viewer-components-react","@itwin/reports-config-widget-react\nv0.9.0\nviewer-components-react\nviewer-components-react/packages/itwin/reports-config-widget",12,"viewer-components-react","#ffb74d",10,false,false],[151,"@itwin/tree-widget-react","viewer-components-react","@itwin/tree-widget-react\nv3.17.10\nviewer-components-react\nviewer-components-react/packages/itwin/tree-widget",12,"viewer-components-react","#ffb74d",10,false,false]],"imodels-clients":[[88,"@itwin/imodels-access-backend","imodels-clients","@itwin/imodels-access-backend\nv6.1.1\nimodels-clients\nimodels-clients/itwin-platform-access/imodels-access-backend",12,"imodels-clients","#81c784",7,false,false],[89,"@itwin/imodels-access-backend-tests","imodels-clients","@itwin/imodels-access-backend-tests\nv0.0.0\nimodels-clients\nimodels-clients/tests/imodels-access-backend-tests",12,"imodels-clients","#81c784",8,false,false],[90,"@itwin/imodels-access-common","imodels-clients","@itwin/imodels-access-common\nv6.1.1\nimodels-clients\nimodels-clients/itwin-platform-access/imodels-access-common",12,"imodels-clients","#81c784",4,false,false],[91,"@itwin/imodels-access-common-tests","imodels-clients","@itwin/imodels-access-common-tests\nv0.0.0\nimodels-clients\nimodels-clients/tests/imodels-access-common-tests",12,"imodels-clients","#81c784",5,false,false],[92,"@itwin/imodels-access-frontend","imodels-clients","@itwin/imodels-access-frontend\nv6.1.1\nimodels-clients\nimodels-clients/itwin-platform-access/imodels-access-frontend",12,"imodels-clients","#81c784",7,false,false],[93,"@itwin/imodels-access-frontend-tests","imodels-clients","@itwin/imodels-access-frontend-tests\nv0.0.0\nimodels-clients\nimodels-clients/tests/imodels-access-frontend-tests",12,"imodels-clients","#81c784",8,false,false],[94,"@itwin/imodels-client-authoring","imodels-clients","@itwin/imodels-client-authoring\nv6.2.0\nimodels-clients\nimodels-clients/clients/imodels-client-authoring",12,"imodels-clients","#81c784",3,false,false],[95,"@itwin/imodels-client-common-config","imodels-clients","@itwin/imodels-client-common-config\nv0.0.0\nimodels-clients\nimodels-clients/utils/imodels-client-common-config",12,"imodels-clients","#81c784",1,false,false],[96,"@itwin/imodels-client-management","imodels-clients","@itwin/imodels-client-management\nv6.2.0\nimodels-clients\nimodels-clients/clients/imodels-client-management",12,"imodels-clients","#81c784",2,false,false],[97,"@itwin/imodels-client-test-utils","imodels-clients","@itwin/imodels-client-test-utils\nv0.0.0\nimodels-clients\nimodels-clients/utils/imodels-client-test-utils",12,"imodels-clients","#81c784",5,false,false],[98,"@itwin/imodels-clients-tests","imodels-clients","@itwin/imodels-clients-tests\nv0.0.0\nimodels-clients\nimodels-clients/tests/imodels-clients-tests",12,"imodels-clients","#81c784",6,false,false],[99,"@itwin/imodels-clients-tests-browser","imodels-clients","@itwin/imodels-clients-tests-browser\nv0.0.0\nimodels-clients\nimodels-clients/tests/imodels-clients-tests-browser",12,"imodels-clients","#81c784",6,false,false]],"iTwinUI":[[102,"@itwin/itwinui-css","iTwinUI","@itwin/itwinui-css\nv3.0.0-dev.1\niTwinUI\niTwinUI/packages/itwinui-css",15,"iTwinUI","#ba68c8",0,false,false],[108,"@itwin/itwinui-react","iTwinUI","@itwin/itwinui-react\nv3.21.2\niTwinUI\niTwinUI/packages/itwinui-react",12,"iTwinUI","#ba68c8",1,false,false],[109,"@itwin/itwinui-variables","iTwinUI","@itwin/itwinui-variables\nv3.3.1\niTwinUI\niTwinUI/packages/itwinui-variables",15,"iTwinUI","#ba68c8",0,false,false]],"iTwinUI-layouts":[[106,"@itwin/itwinui-layouts-css","iTwinUI-layouts","@itwin/itwinui-layouts-css\nv0.4.0\niTwinUI-layouts\niTwinUI-layouts/packages/layouts-css",15,"iTwinUI-layouts","#ce93d8",0,false,false],[107,"@itwin/itwinui-layouts-react","iTwinUI-layouts","@itwin/itwinui-layouts-react\nv0.4.1\niTwinUI-layouts\niTwinUI-layouts/packages/layouts-react",12,"iTwinUI-layouts","#ce93d8",1,false,false]],"presentation":[[135,"@itwin/presentation-components","presentation","@itwin/presentation-components\nv5.16.0\npresentation\npresentation/packages/components",12,"presentation","#ffd54f",9,false,false],[136,"@itwin/presentation-core-interop","presentation","@itwin/presentation-core-interop\nv1.3.13\npresentation\npresentation/packages/core-interop",12,"presentation","#ffd54f",5,false,false],[138,"@itwin/presentation-hierarchies","presentation","@itwin/presentation-hierarchies\nv1.7.15\npresentation\npresentation/packages/hierarchies",12,"presentation","#ffd54f",5,false,false],[139,"@itwin/presentation-hierarchies-react","presentation","@itwin/presentation-hierarchies-react\nv1.11.0\npresentation\npresentation/packages/hierarchies-react",12,"presentation","#ffd54f",6,false,false],[140,"@itwin/presentation-models-tree","presentation","@itwin/presentation-models-tree\nv0.0.0\npresentation\npresentation/packages/models-tree",12,"presentation","#ffd54f",6,false,false],[141,"@itwin/presentation-opentelemetry","presentation","@itwin/presentation-opentelemetry\nv4.2.5\npresentation\npresentation/packages/opentelemetry",12,"presentation","#ffd54f",6,false,false],[142,"@itwin/presentation-shared","presentation","@itwin/presentation-shared\nv1.2.15\npresentation\npresentation/packages/shared",12,"presentation","#ffd54f",3,false,false],[152,"@itwin/unified-selection","presentation","@itwin/unified-selection\nv1.7.5\npresentation\npresentation/packages/unified-selection",12,"presentation","#ffd54f",4,false,false],[153,"@itwin/unified-selection-react","presentation","@itwin/unified-selection-react\nv1.1.0\npresentation\npresentation/packages/unified-selection-react",12,"presentation","#ffd54f",5,false,false]],"reality-capture":[[145,"@itwin/reality-capture","reality-capture","@itwin/reality-capture\nv1.5.0\nreality-capture\nreality-capture/typescript/packages/reality-capture",12,"reality-capture","#26c6da",8,false,false],[146,"@itwin/reality-data-client","reality-capture","@itwin/reality-data-client\nv1.4.0\nreality-capture\nreality-capture/typescript/packages/reality-data-client",12,"reality-capture","#26c6da",7,false,false]]},"spOrder":["other","external","object-storage","iTwinUI","iTwinUI-layouts","itwinjs-core","admin-components-react","imodels-clients","presentation","auth-clients","appui","viewer-components-react","reality-capture","viewer"],"subColors":{"itwinjs-core":{"color":"#4dd0e1","label":"itwinjs-core (核心SDK)"},"appui":{"color":"#64b5f6","label":"appui (应用框架)"},"presentation":{"color":"#ffd54f","label":"presentation (展示层)"},"viewer":{"color":"#ff8a65","label":"viewer (查看器)"},"viewer-components-react":{"color":"#ffb74d","label":"viewer-components-react (组件)"},"iTwinUI":{"color":"#ba68c8","label":"iTwinUI (UI组件库)"},"iTwinUI-layouts":{"color":"#ce93d8","label":"iTwinUI-layouts (布局)"},"imodels-clients":{"color":"#81c784","label":"imodels-clients (客户端)"},"auth-clients":{"color":"#a5d6a7","label":"auth-clients (认证)"},"object-storage":{"color":"#4db6ac","label":"object-storage (对象存储)"},"admin-components-react":{"color":"#f06292","label":"admin-components-react (管理)"},"bis-schemas":{"color":"#00bcd4","label":"bis-schemas (BIS)"},"reality-capture":{"color":"#26c6da","label":"reality-capture (实景)"},"external":{"color":"#484f58","label":"外部包 (不在当前仓库)"}},"maxLayer":11,"layerGroups":{"0":["@bentley/aec-units-schema","@bentley/architectural-physical-schema","@bentley/bentleyjs-core","@bentley/bis-core-schema","@bentley/bis-custom-attributes-schema","@bentley/cif-bridge-schema","@bentley/cif-common-schema","@bentley/cif-geometric-rules-schema","@bentley/cif-hydraulic-analysis-schema","@bentley/cif-hydraulic-results-schema","@bentley/cif-quantity-takeoffs-schema","@bentley/cif-rail-schema","@bentley/cif-roads-schema","@bentley/cif-subsurface-conflict-analysis-schema","@bentley/cif-subsurface-schema","@bentley/cif-units-schema","@bentley/construction-schema","@bentley/core-custom-attributes-schema","@bentley/ecdb-map-schema","@bentley/ecdb-schema-policies-schema","@bentley/formats-schema","@bentley/frontend-authorization-client","@bentley/icons-generic","@bentley/icons-generic-webfont","@bentley/imodeljs-native","@bentley/itwin-client","@bentley/linear-referencing-schema","@bentley/physical-material-schema","@bentley/plant-custom-attributes-schema","@bentley/process-functional-schema","@bentley/process-physical-schema","@bentley/quantity-takeoffs-aspects-schema","@bentley/road-rail-units-schema","@bentley/spatial-composition-schema","@bentley/structural-physical-schema","@bentley/units-schema","@itwin/eslint-plugin","@itwin/object-storage-common-config","@itwin/appui-layout-react","@itwin/itwinui-icons-react","@itwin/itwinui-illustrations-react","@itwin/core-telemetry","@itwin/insights-client","@itwin/itwinui-icons-color-react","@itwin/itwinui-css","@itwin/itwinui-layouts-css","@itwin/itwinui-variables"],"1":["@itwin/build-tools","@itwin/cloud-agnostic-core","@itwin/itwinui-react","@itwin/imodels-client-common-config","@itwin/itwinui-layouts-react","@itwin/storybook-auth-addon"],"2":["@itwin/core-bentley","@itwin/object-storage-core","@itwin/certa","@itwin/create-imodel-react","@itwin/delete-imodel-react","@itwin/delete-itwin-react","@itwin/imodels-client-management","@itwin/imodel-browser-react","@itwin/manage-versions-react","@itwin/perf-tools","internal-tools"],"3":["@itwin/core-geometry","@itwin/core-quantity","@itwin/ecsql-common","@itwin/object-storage-tests-backend","@itwin/object-storage-tests-backend-unit","@itwin/object-storage-tests-frontend","@itwin/appui-abstract","@itwin/core-orbitgt","@itwin/webgl-compatibility","@itwin/presentation-shared","@itwin/imodels-client-authoring"],"4":["@itwin/core-common","@itwin/ecschema-metadata","@itwin/object-storage-azure","@itwin/unified-selection","@itwin/imodels-access-common","@itwin/object-storage-google","@itwin/object-storage-s3"],"5":["@itwin/ecschema-locaters","@itwin/core-i18n","@itwin/ecschema-rpcinterface-common","@itwin/browser-authorization","@itwin/electron-authorization","@itwin/presentation-common","@itwin/presentation-core-interop","@itwin/unified-selection-react","@itwin/service-authorization","@itwin/ecschema-editing","@itwin/editor-common","@itwin/imodels-client-test-utils","@itwin/imodels-access-common-tests","@itwin/linear-referencing-common","@itwin/node-cli-authorization","@itwin/object-storage-minio","@itwin/object-storage-oss","@itwin/object-storage-samples","@itwin/presentation-hierarchies"],"6":["@itwin/core-backend","@itwin/core-react","@itwin/core-frontend","@itwin/oidc-signin-tool","@itwin/imodels-clients-tests","@itwin/imodels-clients-tests-browser","@itwin/presentation-hierarchies-react","@itwin/presentation-models-tree","@itwin/presentation-opentelemetry"],"7":["@itwin/analytical-backend","@itwin/components-react","@itwin/cesium-renderer","@itwin/core-electron","@itwin/core-extension","@itwin/core-markup","@itwin/core-mobile","@itwin/presentation-frontend","@itwin/imodels-access-frontend","@itwin/reality-data-client","@itwin/ecschema-rpcinterface-impl","@itwin/express-server","@itwin/imodels-access-backend","@itwin/itwins-client","@itwin/ecschema2ts","@itwin/editor-backend","@itwin/editor-frontend","@itwin/frontend-devtools","@itwin/frontend-tiles","@itwin/hypermodeling-frontend","@itwin/imodel-transformer","@itwin/linear-referencing-backend","@itwin/map-layers-formats","@itwin/map-layers-auth","@itwin/physical-material-backend","@itwin/presentation-backend","@itwin/quantity-formatting-react","@itwin/workspace-editor"],"8":["@itwin/imodel-components-react","@itwin/ecschema-rpcinterface-tests","@itwin/imodels-access-backend-tests","@itwin/imodels-access-frontend-tests","@itwin/reality-capture","@itwin/rpcinterface-full-stack-tests"],"9":["@itwin/appui-react","@itwin/presentation-components"],"10":["@itwin/appui-test-providers","@itwin/viewer-react","@itwin/ec3-widget-react","@itwin/geo-tools-react","@itwin/grouping-mapping-widget","@itwin/map-layers","@itwin/measure-tools-react","@itwin/one-click-lca-react","@itwin/property-grid-react","@itwin/reports-config-widget-react","@itwin/tree-widget-react"],"11":["@itwin/desktop-viewer-react","@itwin/web-viewer-react"]},"stats":{"totalPackages":151,"totalEdges":943,"topologicalLayers":11,"externalCount":8,"edgeExternalCount":6},"edgeExternal":["@bentley/bentleyjs-core","@bentley/frontend-authorization-client","@bentley/imodeljs-native","@bentley/itwin-client","@itwin/appui-layout-react","@itwin/core-telemetry"]};
+const nodeDefs = EMBED.nodeDefs;
+const edgeDefs = EMBED.edgeDefs;
+const sidebarGroups = EMBED.sidebarGroups;
+const spOrder = EMBED.spOrder;
+const SUB_COLORS = EMBED.subColors;
+const maxLayer = EMBED.maxLayer;
+
+// ── Layout params ─────────────────────────────────────────────────────
+const LAYER_GAP = 180;   // vertical space between layers
+const LAYER_WIDTH = 2200; // horizontal spread within each layer
+
+// ── Initialize nodes with layer-based positions ───────────────────────
+const nodes = nodeDefs.map((n, i) => {
+  const layer = n[7]; // depth layer
+  const countInLayer = EMBED.layerGroups[layer] ? EMBED.layerGroups[layer].length : 1;
+  const idxInLayer = EMBED.layerGroups[layer] ? EMBED.layerGroups[layer].indexOf(n[1]) : 0;
+  return {
+    id: i,
+    label: n[1],
+    group: n[2],
+    title: n[3],
+    baseR: n[4],
+    subproject: n[5],
+    color: n[6],
+    layer: layer,
+    isExternal: n[8] || false,
+    // Y = layer * gap (layer 0 at top, higher layers below)
+    // X = spread evenly within this layer
+    targetY: -(maxLayer / 2) * LAYER_GAP + layer * LAYER_GAP,
+    targetX: (idxInLayer / Math.max(1, countInLayer - 1) - 0.5) * LAYER_WIDTH,
+    x: (Math.random() - 0.5) * 600,
+    y: -(maxLayer / 2) * LAYER_GAP + layer * LAYER_GAP + (Math.random() - 0.5) * 60,
+    vx: 0, vy: 0,
+    anchorX: (idxInLayer / Math.max(1, countInLayer - 1) - 0.5) * LAYER_WIDTH,
+  };
+});
+
+const nodeById = {};
+nodes.forEach(n => { nodeById[n.id] = n; });
+
+const edges = edgeDefs.map(e => ({ from: e[0], to: e[1], style: e[2] }));
+
+const outEdges = {}, inEdges = {};
+nodes.forEach(n => { outEdges[n.id] = []; inEdges[n.id] = []; });
+edges.forEach(e => {
+  if (outEdges[e.from]) outEdges[e.from].push(e);
+  if (inEdges[e.to]) inEdges[e.to].push(e);
+});
+
+// ── Canvas ────────────────────────────────────────────────────────────
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight - 48; }
+resize();
+window.addEventListener('resize', resize);
+
+// ── Camera ────────────────────────────────────────────────────────────
+let camX = 0, camY = 0, zoom = 0.45, targetCamX = 0, targetCamY = 0;
+let userPanned = false;
+
+function worldToScreen(wx, wy) {
+  return [(wx + camX) * zoom + canvas.width / 2, (wy + camY) * zoom + canvas.height / 2];
+}
+function screenToWorld(sx, sy) {
+  return [(sx - canvas.width / 2) / zoom - camX, (sy - canvas.height / 2) / zoom - camY];
+}
+
+// ── Input ─────────────────────────────────────────────────────────────
+let selectedNode = null, hoveredNode = null;
+let dragging = false, panning = false, dragNode = null;
+let lastMouseX = 0, lastMouseY = 0;
+let tooltipVisible = false;
+let searchMatched = [], searchIdx = -1, searchNodeId = null;
+let toastMsg = '', toastTimer = 0;
+
+canvas.addEventListener('mousedown', e => {
+  const [wx, wy] = screenToWorld(e.offsetX, e.offsetY);
+  const hit = hitTest(wx, wy);
+  if (e.button === 0) {
+    if (hit !== null) { dragging = true; dragNode = hit; selectNode(hit); }
+    else { panning = true; selectNode(null); }
+    lastMouseX = e.offsetX; lastMouseY = e.offsetY;
+  }
+});
+canvas.addEventListener('mousemove', e => {
+  const [wx, wy] = screenToWorld(e.offsetX, e.offsetY);
+  if (dragging && dragNode !== null) {
+    const n = nodeById[dragNode];
+    n.x = wx; n.y = wy; n.vx = 0; n.vy = 0;
+    userPanned = true;
+  } else if (panning) {
+    camX -= (e.offsetX - lastMouseX) / zoom;
+    camY -= (e.offsetY - lastMouseY) / zoom;
+    lastMouseX = e.offsetX; lastMouseY = e.offsetY;
+    userPanned = true;
+  } else {
+    const hit = hitTest(wx, wy);
+    hoveredNode = hit;
+    canvas.style.cursor = hit !== null ? 'pointer' : 'grab';
+    if (hit !== null && !dragging) showTooltip(e.clientX, e.clientY, hit);
+    else if (!tooltipVisible) hideTooltip();
+  }
+});
+canvas.addEventListener('mouseup', () => {
+  if (dragNode !== null) { nodeById[dragNode].anchorX = nodeById[dragNode].x; }
+  dragging = false; panning = false; dragNode = null;
+});
+canvas.addEventListener('mouseleave', () => { dragging = false; panning = false; dragNode = null; hideTooltip(); });
+canvas.addEventListener('wheel', e => { e.preventDefault(); zoom = Math.max(0.04, Math.min(6, zoom * (e.deltaY < 0 ? 1.08 : 0.92))); });
+canvas.addEventListener('dblclick', () => { targetCamX = 0; targetCamY = 0; zoom = 0.45; userPanned = false; });
+canvas.addEventListener('contextmenu', e => {
+  e.preventDefault();
+  const [wx, wy] = screenToWorld(e.offsetX, e.offsetY);
+  const hit = hitTest(wx, wy);
+  if (hit !== null) showContextMenu(e.clientX, e.clientY, hit);
+  else hideContextMenu();
+});
+document.addEventListener('click', e => { if (!e.target.closest('#ctxMenu') && !e.target.closest('#tooltip')) hideContextMenu(); });
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { selectNode(null); hideContextMenu(); hideTooltip(); document.getElementById('searchInput').value = ''; doSearch(); }
+});
+
+function hitTest(wx, wy) {
+  let best = null, bestDist = Infinity;
+  for (const n of nodes) {
+    const dist = Math.hypot(wx - n.x, wy - n.y);
+    const rScreen = Math.max(6, n.baseR * zoom);
+    if (dist * zoom < rScreen * 2.2 + 18 / zoom && dist < bestDist) { bestDist = dist; best = n.id; }
+  }
+  return best;
+}
+
+function copyLayerPackages(layer) {
+  const pkgs = EMBED.layerGroups[layer] || [];
+  const text = pkgs.join('\n');
+  navigator.clipboard.writeText(text).then(() => {
+    hideContextMenu();
+    showToast('已复制 Layer ' + layer + ' 的 ' + pkgs.length + ' 个包名');
+  }).catch(() => {});
+}
+function showToast(msg) {
+  toastMsg = msg;
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { el.classList.remove('show'); toastMsg = ''; }, 2000);
+}
+function selectNode(id) { selectedNode = id; updateSidebarActive(); hideTooltip(); }
+function updateSidebarActive() {
+  document.querySelectorAll('#sidebar .pkg-item').forEach(el => el.classList.toggle('active', el.dataset.id == selectedNode));
+}
+
+// ── Tooltip ───────────────────────────────────────────────────────────
+function showTooltip(cx, cy, nodeId) {
+  const n = nodeById[nodeId];
+  const out = outEdges[nodeId] || [], inn = inEdges[nodeId] || [];
+  const outList = out.slice(0, 30).map(e => nodeById[e.to].label).sort();
+  const inList = inn.slice(0, 30).map(e => nodeById[e.from].label).sort();
+
+  const tt = document.getElementById('tooltip');
+  let html = '<h3>' + n.label + '</h3>';
+  html += '<div style="font-size:11px;color:#8b949e">' + n.title.replace(/\n/g, '<br>') + '</div>';
+  html += '<div style="font-size:11px;color:#58a6ff;margin-top:4px">第 ' + n.layer + ' 层 (依赖深度)</div>';
+  if (outList.length > 0) {
+    html += '<div class="tt-section">依赖以下包 (' + out.length + ')</div>';
+    html += outList.map(l => '<div class="tt-item"><span class="arrow">→</span>' + l + '</div>').join('');
+    if (out.length > 30) html += '<div class="tt-item" style="color:#6e7681">...还有 ' + (out.length - 30) + ' 个</div>';
+  }
+  if (inList.length > 0) {
+    html += '<div class="tt-section">被以下包依赖 (' + inn.length + ')</div>';
+    html += inList.map(l => '<div class="tt-item"><span class="arrow">←</span>' + l + '</div>').join('');
+    if (inn.length > 30) html += '<div class="tt-item" style="color:#6e7681">...还有 ' + (inn.length - 30) + ' 个</div>';
+  }
+  tt.innerHTML = html;
+  tt.style.display = 'block';
+  tt.style.left = Math.min(cx + 15, window.innerWidth - 440) + 'px';
+  tt.style.top = Math.min(cy + 10, window.innerHeight - 400) + 'px';
+  tooltipVisible = true;
+}
+function hideTooltip() { document.getElementById('tooltip').style.display = 'none'; tooltipVisible = false; }
+
+// ── Context Menu ──────────────────────────────────────────────────────
+function showContextMenu(cx, cy, nodeId) {
+  const n = nodeById[nodeId];
+  const out = outEdges[nodeId] || [], inn = inEdges[nodeId] || [];
+  const layerCount = (EMBED.layerGroups[n.layer] || []).length;
+  const menu = document.getElementById('ctxMenu');
+  menu.innerHTML =
+    '<div class="mi-header">' + n.label + ' (层' + n.layer + ')</div>' +
+    '<div class="mi" onclick="copyPkgName(' + nodeId + ')">📋 复制包名</div>' +
+    '<div class="mi" onclick="copyLayerPackages(' + n.layer + ')"><span>📦 复制 Layer ' + n.layer + ' 全部包名</span><span class="mi-count">' + layerCount + '</span></div>' +
+    '<div class="mi" onclick="flyTo(' + nodeId + ')">🔍 聚焦此节点</div>' +
+    '<div class="mi" onclick="showAllDeps(' + nodeId + ')"><span>→ 展开依赖</span><span class="mi-count">' + out.length + '</span></div>' +
+    '<div class="mi" onclick="showAllRevDeps(' + nodeId + ')"><span>← 展开反向依赖</span><span class="mi-count">' + inn.length + '</span></div>';
+  menu.style.display = 'block';
+  menu.style.left = Math.min(cx, window.innerWidth - 240) + 'px';
+  menu.style.top = Math.min(cy, window.innerHeight - 200) + 'px';
+  menu.style.minWidth = '240px';
+}
+function hideContextMenu() { document.getElementById('ctxMenu').style.display = 'none'; }
+function copyPkgName(nodeId) { const n = nodeById[nodeId]; navigator.clipboard.writeText(n.label).then(() => { hideContextMenu(); }).catch(() => {}); }
+function flyTo(nodeId) { const n = nodeById[nodeId]; targetCamX = -n.x; targetCamY = -n.y; userPanned = false; selectNode(nodeId); hideContextMenu(); }
+function showAllDeps(nodeId) { const n = nodeById[nodeId]; const [sx, sy] = worldToScreen(n.x, n.y); showTooltip(sx + 20, sy + 20, nodeId); hideContextMenu(); }
+function showAllRevDeps(nodeId) { const n = nodeById[nodeId]; const [sx, sy] = worldToScreen(n.x, n.y); showTooltip(sx + 20, sy + 20, nodeId); hideContextMenu(); }
+
+// ── Sidebar ───────────────────────────────────────────────────────────
+function buildSidebar(filterText) {
+  const sb = document.getElementById('sidebar');
+  let html = '';
+  for (const sp of spOrder) {
+    const pkgs = sidebarGroups[sp] || [];
+    const subInfo = SUB_COLORS[sp] || { color: '#90a4ae', label: sp };
+    const visiblePkgs = filterText ? pkgs.filter(n => n[1].toLowerCase().includes(filterText)) : pkgs;
+    if (visiblePkgs.length === 0) continue;
+    html += '<div class="cat-header">' + subInfo.label + ' (' + visiblePkgs.length + '/' + pkgs.length + ')</div>';
+    for (const n of visiblePkgs) {
+      const cls = (selectedNode === n[0]) ? ' active' : '';
+      html += '<div class="pkg-item' + cls + '" data-id="' + n[0] + '" onclick="sidebarClick(' + n[0] + ', event)" oncontextmenu="sidebarRightClick(' + n[0] + ', event)">';
+      html += '<span class="pkg-dot" style="background:' + n[6] + '"></span>';
+      html += '<span class="pkg-name" title="' + n[1] + ' (层' + n[7] + ')">' + n[1] + '</span>';
+      html += '</div>';
+    }
+  }
+  sb.innerHTML = html || '<div style="padding:14px;color:#6e7681;font-size:11px">无匹配结果</div>';
+}
+function sidebarClick(nodeId, event) { flyTo(nodeId); }
+function sidebarRightClick(nodeId, event) { event.preventDefault(); showContextMenu(event.clientX, event.clientY, nodeId); }
+
+// ── Search ────────────────────────────────────────────────────────────
+function doSearch() {
+  const q = document.getElementById('searchInput').value.toLowerCase().trim();
+  if (!q) { searchMatched = []; searchIdx = -1; searchNodeId = null; document.getElementById('searchCount').textContent = ''; document.getElementById('btnPrev').disabled = true; document.getElementById('btnNext').disabled = true; buildSidebar(''); return; }
+  searchMatched = nodes.filter(n => n.label.toLowerCase().includes(q)).map(n => n.id);
+  searchIdx = searchMatched.length > 0 ? 0 : -1;
+  updateSearch();
+}
+function updateSearch() {
+  const count = searchMatched.length;
+  document.getElementById('searchCount').textContent = count > 0 ? (searchIdx + 1) + '/' + count : '0/0';
+  document.getElementById('btnPrev').disabled = count <= 1; document.getElementById('btnNext').disabled = count <= 1;
+  if (count > 0 && searchIdx >= 0) { searchNodeId = searchMatched[searchIdx]; flyTo(searchNodeId); selectNode(searchNodeId); }
+  else { searchNodeId = null; }
+  buildSidebar(document.getElementById('searchInput').value.toLowerCase().trim());
+}
+function searchNext() { if (searchMatched.length < 2) return; searchIdx = (searchIdx + 1) % searchMatched.length; updateSearch(); }
+function searchPrev() { if (searchMatched.length < 2) return; searchIdx = (searchIdx - 1 + searchMatched.length) % searchMatched.length; updateSearch(); }
+function onSearchKey(e) { if (e.key === 'Enter') { if (searchMatched.length > 0 && searchIdx < 0) { searchIdx = 0; updateSearch(); } else searchNext(); } if (e.key === 'Escape') { document.getElementById('searchInput').value = ''; doSearch(); } }
+
+// ── Legend ────────────────────────────────────────────────────────────
+function buildLegend() {
+  const leg = document.getElementById('legend');
+  let html = '<div style="font-weight:600;margin-bottom:4px">Layer ▼ 子项目</div>';
+  for (const [sp, info] of Object.entries(SUB_COLORS)) {
+    html += '<div class="leg-item"><span class="leg-dot" style="background:' + info.color + '"></span>' + info.label + '</div>';
+  }
+  html += '<div class="leg-section">外部包类型</div>';
+  html += '<div class="leg-item"><span class="leg-dot" style="background:#484f58;border:1px solid #6e7681"></span> 核心外部包</div>';
+  html += '<div class="leg-item"><span class="leg-dot" style="background:#484f58;border:1px dashed #6e7681;opacity:0.6;width:7px;height:7px"></span> 边缘外部包 (≤2依赖)</div>';
+  html += '<div class="leg-section">依赖类型</div>';
+  html += '<div class="leg-item"><span class="leg-line" style="background:#8b949e"></span> dependencies</div>';
+  html += '<div class="leg-item"><span class="leg-dashed"></span> peerDependencies</div>';
+  html += '<div class="leg-item"><span class="leg-dotted"></span> devDependencies</div>';
+  leg.innerHTML = html;
+}
+buildLegend();
+buildSidebar('');
+
+// ── Physics (layer-constrained) ───────────────────────────────────────
+const REP = 8000, SLEN = 200, SK = 0.02, MV = 10;
+const LAYER_ANCHOR = 0.5; // strong vertical pull toward layer targetY
+const DAMP = 0.75;
+let physAlpha = 1.0;
+
+function stepPhysics() {
+  for (const n of nodes) {
+    if (dragging && dragNode === n.id) continue;
+    let fx = 0, fy = 0;
+
+    // Repulsion (vertical only to prevent overlap, horizontal is free)
+    for (const m of nodes) {
+      if (m.id === n.id) continue;
+      const dx = n.x - m.x, dy = n.y - m.y;
+      const d = Math.max(1, Math.hypot(dx, dy));
+      const force = REP / (d * d);
+      fy += (dy / d) * force * 0.3;
+    }
+
+    // Edge spring (vertical only)
+    const allEdges = [...(outEdges[n.id] || []), ...(inEdges[n.id] || [])];
+    for (const e of allEdges) {
+      const other = nodeById[e.from === n.id ? e.to : e.from];
+      const dx = other.x - n.x, dy = other.y - n.y;
+      const d = Math.max(1, Math.hypot(dx, dy));
+      const force = (d - SLEN) * SK;
+      fy += (dy / d) * force * 0.6;
+    }
+
+    // X: completely free, lock vx
+    n.vx = 0;
+
+    n.vx = Math.max(-MV, Math.min(MV, (n.vx + fx * physAlpha) * DAMP));
+    n.vy = Math.max(-MV, Math.min(MV, (n.vy + fy * physAlpha) * DAMP));
+    n.x += n.vx;
+    n.y += n.vy;
+  }
+  if (physAlpha > 0.001) physAlpha *= 0.992;
+
+  // Direct snap-back to layer + lock horizontal when physics settled
+  const settled = physAlpha < 0.01;
+  for (const n of nodes) {
+    if (dragging && dragNode === n.id) continue;
+    // Vertical: always snap back to layer
+    if (Math.abs(n.y - n.targetY) > 0.5) {
+      n.y += (n.targetY - n.y) * 0.25;
+      n.vy *= 0.3;
+    }
+    // Horizontal: lock in place once physics settles
+    if (settled) {
+      n.vx = 0;
+    }
+  }
+}
+
+// ── Render ────────────────────────────────────────────────────────────
+function render() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  if (!userPanned && !dragging) {
+    camX += (targetCamX - camX) * 0.05;
+    camY += (targetCamY - camY) * 0.05;
+  }
+
+  const searchMode = searchMatched.length > 0;
+  const searchSet = searchMode ? new Set(searchMatched) : null;
+
+  // ── Draw layer bands ────────────────────────────────────────────
+  for (let layer = 0; layer <= maxLayer; layer++) {
+    const layerY = -(maxLayer / 2) * LAYER_GAP + layer * LAYER_GAP;
+    const [sx1, sy1] = worldToScreen(-LAYER_WIDTH, layerY - LAYER_GAP * 0.45);
+    const [, sy2] = worldToScreen(LAYER_WIDTH, layerY + LAYER_GAP * 0.45);
+
+    ctx.fillStyle = 'rgba(48,54,61,' + (layer % 2 === 0 ? 0.08 : 0.15) + ')';
+    ctx.fillRect(0, sy1, canvas.width, sy2 - sy1);
+
+    // Layer label (right side)
+    const [lx,] = worldToScreen(LAYER_WIDTH * 0.55, layerY);
+    ctx.fillStyle = '#484f58';
+    ctx.font = Math.max(9, 12 * zoom) + 'px -apple-system, sans-serif';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    const label = 'Layer ' + layer + '  (' + (EMBED.layerGroups[layer]?.length || 0) + ' 包)';
+    const desc = layer === 0 ? ' — 无内部依赖（基础层）'
+               : layer === maxLayer ? ' — 依赖最深（应用层）'
+               : ' — 依赖深度 ' + layer;
+    ctx.fillText(label + desc, Math.min(canvas.width - 10, lx), sy1 + 14 * zoom);
+  }
+
+  // ── Draw edges ──────────────────────────────────────────────────
+  for (const e of edges) {
+    const fromNode = nodeById[e.from], toNode = nodeById[e.to];
+    if (!fromNode || !toNode) continue;
+    let alpha = 0.35;
+    if (searchMode) alpha = (searchSet.has(e.from) || searchSet.has(e.to)) ? 0.5 : 0.04;
+    if (selectedNode !== null) {
+      if (e.from !== selectedNode && e.to !== selectedNode) alpha = Math.min(alpha, 0.04);
+      else alpha = 0.65;
+    }
+
+    const [x1, y1] = worldToScreen(fromNode.x, fromNode.y);
+    const [x2, y2] = worldToScreen(toNode.x, toNode.y);
+
+    ctx.beginPath();
+    if (e.style === 'dashed') ctx.setLineDash([6, 4]);
+    else if (e.style === 'dotted') ctx.setLineDash([2, 4]);
+    else ctx.setLineDash([]);
+    ctx.strokeStyle = 'rgba(139,148,158,' + alpha + ')';
+    ctx.lineWidth = 0.8;
+    ctx.moveTo(x1, y1); ctx.lineTo(x2, y2);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Arrowhead (pointing to dependent = downward)
+    const angle = Math.atan2(y2 - y1, x2 - x1);
+    const toR = Math.max(6, toNode.baseR * zoom);
+    const ax = x2 - Math.cos(angle) * toR;
+    const ay = y2 - Math.sin(angle) * toR;
+    const aSize = 5 * zoom;
+    ctx.beginPath();
+    ctx.fillStyle = 'rgba(139,148,158,' + alpha + ')';
+    ctx.moveTo(ax, ay);
+    ctx.lineTo(ax - Math.cos(angle - 0.5) * aSize, ay - Math.sin(angle - 0.5) * aSize);
+    ctx.lineTo(ax - Math.cos(angle + 0.5) * aSize, ay - Math.sin(angle + 0.5) * aSize);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  // ── Draw nodes ───────────────────────────────────────────────────
+  for (const n of nodes) {
+    const [sx, sy] = worldToScreen(n.x, n.y);
+    const r = Math.max(6, n.baseR * zoom);
+    let alpha = 1;
+    if (searchMode && !searchSet.has(n.id)) alpha = 0.12;
+    if (selectedNode !== null && n.id !== selectedNode) {
+      const connected = outEdges[selectedNode]?.some(e => e.to === n.id) ||
+                        inEdges[selectedNode]?.some(e => e.from === n.id);
+      if (!connected) alpha = Math.min(alpha, 0.12);
+    }
+    if (alpha < 0.12) continue;
+
+    // Glow
+    if (n.id === selectedNode || n.id === searchNodeId) {
+      ctx.beginPath(); ctx.arc(sx, sy, r + 8 * zoom, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(88,166,255,0.2)'; ctx.fill();
+      ctx.beginPath(); ctx.strokeStyle = '#58a6ff'; ctx.lineWidth = 2;
+      ctx.arc(sx, sy, r + 4 * zoom, 0, Math.PI * 2); ctx.stroke();
+    }
+
+    // Node circle
+    ctx.beginPath(); ctx.arc(sx, sy, r, 0, Math.PI * 2);
+    const hex = n.color;
+    const isEdge = n[9];  // isEdgeExternal
+    const extAlpha = n.isExternal ? (isEdge ? 0.28 : 0.45) : 1;
+    ctx.fillStyle = 'rgba(' + parseInt(hex.slice(1,3),16) + ',' + parseInt(hex.slice(3,5),16) + ',' + parseInt(hex.slice(5,7),16) + ',' + (alpha * extAlpha) + ')';
+    ctx.fill();
+    if (isEdge) {
+      ctx.setLineDash([2, 4]);
+      ctx.strokeStyle = 'rgba(72,79,88,' + (alpha * 0.35) + ')';
+    } else if (n.isExternal) {
+      ctx.setLineDash([3, 3]);
+      ctx.strokeStyle = 'rgba(72,79,88,' + (alpha * 0.6) + ')';
+    } else {
+      ctx.setLineDash([]);
+      ctx.strokeStyle = selectedNode === n.id ? '#fff' : 'rgba(255,255,255,' + (alpha * 0.3) + ')';
+    }
+    ctx.lineWidth = selectedNode === n.id ? 2 : 0.5;
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Label
+    ctx.fillStyle = 'rgba(201,209,217,' + (alpha * (isEdge ? 0.35 : n.isExternal ? 0.5 : 1)) + ')';
+    ctx.font = Math.max(7, 7.5 * zoom) + 'px -apple-system, sans-serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillText(n.label, sx, sy + r + 2 * zoom);
+  }
+}
+
+// ── Main loop ─────────────────────────────────────────────────────────
+function loop() { stepPhysics(); render(); requestAnimationFrame(loop); }
+loop();
+</script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+import { Readable } from "stream";
+
+import { ClientStorage, TransferConfig } from "@szewtwin/object-storage-core";
+
+import { config } from "./Config";
+import { Constants } from "./Constants";
+import { testRelativeDirectoryValidation } from "./test-templates/CommonTests";
+
+const { clientStorage, storageType } = config;
+
+describe(`${ClientStorage.name}: ${clientStorage.constructor.name}`, () => {
+  const testTransferConfig: TransferConfig = {
+    storageType: storageType,
+    expiration: new Date(),
+    baseUrl: "testBaseUrl",
+  };
+  const commonParams = {
+    reference: Constants.invalidObjectReference,
+    transferConfig: testTransferConfig,
+  };
+
+  describe(`${clientStorage.download.name}()`, () => {
+    it("should throw if relativeDirectory is invalid (buffer)", async () => {
+      await testRelativeDirectoryValidation(async () =>
+        clientStorage.download({
+          transferType: "buffer",
+          ...commonParams,
+        })
+      );
+    });
+
+    it("should throw if relativeDirectory is invalid (stream)", async () => {
+      await testRelativeDirectoryValidation(async () =>
+        clientStorage.download({
+          transferType: "stream",
+          ...commonParams,
+        })
+      );
+    });
+
+    it("should throw if relativeDirectory is invalid (path)", async () => {
+      await testRelativeDirectoryValidation(async () =>
+        clientStorage.download({
+          transferType: "local",
+          localPath: "testLocalPath",
+          ...commonParams,
+        })
+      );
+    });
+  });
+
+  describe(`${clientStorage.upload.name}()`, () => {
+    it("should throw if relativeDirectory is invalid (buffer)", async () => {
+      await testRelativeDirectoryValidation(async () =>
+        clientStorage.upload({
+          data: Buffer.from("testPayload"),
+          ...commonParams,
+        })
+      );
+    });
+
+    it("should throw if relativeDirectory is invalid (stream)", async () => {
+      await testRelativeDirectoryValidation(async () =>
+        clientStorage.upload({
+          data: Readable.from("testPayload"),
+          ...commonParams,
+        })
+      );
+    });
+
+    it("should throw if relativeDirectory is invalid (path)", async () => {
+      await testRelativeDirectoryValidation(async () =>
+        clientStorage.upload({
+          data: "testPath",
+          ...commonParams,
+        })
+      );
+    });
+  });
+
+  describe(`${clientStorage.uploadInMultipleParts.name}()`, () => {
+    it("should throw if relativeDirectory is invalid (stream)", async () => {
+      await testRelativeDirectoryValidation(async () =>
+        clientStorage.uploadInMultipleParts({
+          data: Readable.from("testPayload"),
+          ...commonParams,
+        })
+      );
+    });
+
+    it("should throw if relativeDirectory is invalid (path)", async () => {
+      await testRelativeDirectoryValidation(async () =>
+        clientStorage.uploadInMultipleParts({
+          data: "testPath",
+          ...commonParams,
+        })
+      );
+    });
+  });
+});

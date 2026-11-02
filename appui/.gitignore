@@ -1,0 +1,51 @@
+# dependencies
+node_modules
+package-lock.json
+
+# build output
+lib
+build
+dist
+/**/test/output
+/generated-docs
+/out
+coverage
+full_stack_test_results
+integration_test_results
+/common/temp
+!tools/build
+
+# pnpm
+.pnpm-debug.log
+
+# docs
+/public
+
+# trash
+*.bak
+*.orig
+.node-xmlhttprequest-sync*
+
+# xcode
+/**/xcuserdata
+
+# Output of 'npm pack'
+*.tgz
+
+# Mac specfic
+.DS_Store
+
+# storybook specific
+storybook-static
+
+# playwright specific
+test-results
+
+.env
+.env.local
+.env.*.local
+
+common/api/summary/summary.exports.csv
+
+# Codemod specific
+junit.xml

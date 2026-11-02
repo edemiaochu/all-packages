@@ -1,0 +1,19 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@use "~@szewtwin/core-react/lib/core-react/z-index" as *;
+
+@layer appui.component {
+  .nz-target-titleBarTarget {
+    flex: 1 1 0;
+    position: relative;
+    overflow: hidden;
+
+    @include uicore-z-index(drop-target);
+
+    &.nz-hidden {
+      display: none;
+    }
+  }
+}

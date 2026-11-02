@@ -1,0 +1,51 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+/** @packageDocumentation
+ * @module Frontstage
+ */
+
+import * as React from "react";
+import { SvgProgressBackwardCircular } from "@szewtwin/szewtwinui-icons-react";
+import { useTranslation } from "../hooks/useTranslation.js";
+import { UiFramework } from "../UiFramework.js";
+import { BackstageAppButton } from "../widgets/BackstageAppButton.js";
+
+/** Properties of {@link NestedFrontstageAppButton} component. */
+interface NestedFrontstageAppButtonProps {
+  /** If specified overrides the default icon. */
+  icon?: React.ReactNode;
+  /** If specified overrides the default label. */
+  label?: string;
+  /** If specified overrides the default action that closes the nested frontstage. */
+  onClick?: () => void;
+}
+
+/** App button used in a nested frontstage. By default closes the top-most nested frontstage.
+ * @public
+ */
+export function NestedFrontstageAppButton({
+  icon,
+  label,
+  onClick,
+}: NestedFrontstageAppButtonProps) {
+  const { translate } = useTranslation();
+  label = label ?? translate("commands.backToPreviousFrontstage");
+  icon = icon ?? <SvgProgressBackwardCircular />;
+
+  return (
+    <BackstageAppButton
+      label={label}
+      iconNode={icon}
+      execute={() => {
+        if (onClick) {
+          onClick();
+          return;
+        }
+
+        void UiFramework.frontstages.closeNestedFrontstage();
+      }}
+    />
+  );
+}

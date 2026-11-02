@@ -1,0 +1,111 @@
+{
+  "name": "@szewtwin/delete-ivault-react",
+  "entries": [
+    {
+      "version": "2.1.0",
+      "tag": "@szewtwin/delete-ivault-react_v2.1.0",
+      "date": "Fri, 25 Apr 2025 06:33:37 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Updated ivault-delete to szewtwin-react V3"
+          }
+        ]
+      }
+    },
+    {
+      "version": "2.0.0",
+      "tag": "@szewtwin/delete-ivault-react_v2.0.0",
+      "date": "Wed, 11 Sep 2024 12:52:00 GMT",
+      "comments": {
+        "major": [
+          {
+            "comment": "Added support for react 18 and removed support for react 16"
+          }
+        ]
+      }
+    },
+    {
+      "version": "1.1.1",
+      "tag": "@szewtwin/delete-ivault-react_v1.1.1",
+      "date": "Thu, 14 Dec 2023 17:57:25 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Revert szewTwinUI v3"
+          }
+        ]
+      }
+    },
+    {
+      "version": "1.1.0",
+      "tag": "@szewtwin/delete-ivault-react_v1.1.0",
+      "date": "Wed, 06 Dec 2023 19:34:14 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Updated szewtwinui-react to 3.x"
+          }
+        ],
+        "none": [
+          {
+            "comment": "Update postcss dev dependency"
+          }
+        ]
+      }
+    },
+    {
+      "version": "1.0.0",
+      "tag": "@szewtwin/delete-ivault-react_v1.0.0",
+      "date": "Wed, 21 Jun 2023 16:43:17 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "Upgraded iVaultsApi to v2"
+          }
+        ],
+        "major": [
+          {
+            "comment": "szewTwinui-react update to 2.x"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.2.2",
+      "tag": "@szewtwin/delete-ivault-react_v0.2.2",
+      "date": "Tue, 21 Feb 2023 20:11:46 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Update @szewtwin/szewtwinui-react version and wrap body message text in ModalContent"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.2.1",
+      "tag": "@szewtwin/delete-ivault-react_v0.2.1",
+      "date": "Fri, 28 Jan 2022 10:41:27 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Upgrade to React 17"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.2.0",
+      "tag": "@szewtwin/delete-ivault-react_v0.2.0",
+      "date": "Mon, 03 May 2021 09:28:44 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Added delete iVault component"
+          }
+        ]
+      }
+    }
+  ]
+}

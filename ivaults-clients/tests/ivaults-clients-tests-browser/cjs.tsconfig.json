@@ -1,0 +1,9 @@
+{
+  "extends": "./node_modules/@szewtwin/ivaults-client-common-config/tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./lib"
+  },
+  "include": [
+    "./src/setup/**/*.ts"
+  ]
+}

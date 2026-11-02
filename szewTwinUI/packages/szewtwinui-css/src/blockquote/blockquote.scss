@@ -1,0 +1,25 @@
+// Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+// See LICENSE.md in the project root for license terms and full copyright notice.
+@use '../mixins';
+@use '../surface/base' as surface;
+
+.iui-blockquote {
+  @include mixins.iui-reset;
+  @include surface.iui-surface;
+  display: block;
+  position: relative;
+  padding-block: var(--iui-size-s);
+  padding-inline: var(--iui-size-m);
+  margin-block: var(--iui-size-s);
+  text-align: justify;
+  border-inline-start: var(--iui-size-xs) solid var(--iui-color-border);
+
+  > footer {
+    text-align: end;
+    color: var(--iui-color-text-muted);
+
+    > cite {
+      font-style: normal;
+    }
+  }
+}

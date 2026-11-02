@@ -1,0 +1,36 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@use "~@szewtwin/core-react/lib/core-react/z-index" as *;
+@use "../../variables" as *;
+
+.uifw-cursorpopup {
+  border: {
+    color: $uifw-popup-border-color;
+    radius: $uifw-popup-border-radius;
+    style: solid;
+    width: $uifw-popup-border-width;
+  }
+
+  background-color: hsl(var(--iui-color-background-hsl) / $uifw-popup-opacity);
+  position: fixed;
+  height: fit-content;
+  width: fit-content;
+  transition: opacity 500ms;
+
+  @include uicore-z-index(tooltip);
+
+  > .uifw-cursorpopup-title {
+    min-height: $uifw-popup-title-bar-min-height;
+    opacity: $uifw-popup-opacity;
+  }
+
+  > .uifw-cursorpopup-content {
+    padding: $uifw-popup-content-padding;
+  }
+
+  &.uifw-cursorpopup-fadeOut {
+    opacity: 0;
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "@szewec/linear-referencing-schema",
+  "license": "MIT",
+  "version": "2.0.3",
+  "homepage": "https://www.ivaultjs.org/",
+  "keywords": [
+    "Szewec",
+    "BIS",
+    "iVault"
+  ],
+  "description": "LinearReferencing BIS Domains",
+  "author": {
+    "name": "Szewec Systems, Inc.",
+    "url": "http://www.szewec.com"
+  }
+}

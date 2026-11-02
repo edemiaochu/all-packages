@@ -1,0 +1,91 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/rush/v5/command-line.schema.json",
+  "commands": [
+    {
+      "name": "clean",
+      "commandKind": "bulk",
+      "summary": "Cleans build output within each package",
+      "description": "Iterates through each package in the monorepo and runs the 'clean' script",
+      "enableParallelism": true,
+      "ignoreMissingScript": false
+    },
+    {
+      "name": "lint",
+      "commandKind": "bulk",
+      "summary": "Run lint rules on each package",
+      "description": "Iterates through each package in the monorepo and runs the 'lint' script",
+      "enableParallelism": true,
+      "ignoreMissingScript": false,
+      "allowWarningsInSuccessfulBuild": true
+    },
+    {
+      "name": "lint-fix",
+      "commandKind": "bulk",
+      "summary": "Automatically fixes some tslint issues on each package",
+      "description": "Iterates through each package in the monorepo and runs the 'lint-fix' script",
+      "enableParallelism": true,
+      "ignoreMissingScript": false
+    },
+    {
+      "name": "spell-check",
+      "commandKind": "bulk",
+      "summary": "Run spell checker on each package",
+      "description": "Iterates through each package in the monorepo and runs the 'spell-check' script",
+      "enableParallelism": true,
+      "ignoreMissingScript": false,
+      "allowWarningsInSuccessfulBuild": true
+    },
+    {
+      "name": "test:unit",
+      "commandKind": "bulk",
+      "summary": "Run test:unit script for each package",
+      "description": "Iterates through each package in the monorepo and runs the 'test:unit' script",
+      "enableParallelism": true,
+      "ignoreMissingScript": false,
+      "allowWarningsInSuccessfulBuild": true
+    },
+    {
+      "name": "test:unit:backend",
+      "commandKind": "bulk",
+      "summary": "Run test:unit:backend script for each package",
+      "description": "Iterates through each package in the monorepo and runs the 'test:unit:backend' script",
+      "enableParallelism": true,
+      "ignoreMissingScript": false,
+      "allowWarningsInSuccessfulBuild": true
+    },
+    {
+      "name": "test:unit:frontend",
+      "commandKind": "bulk",
+      "summary": "Run test:unit:frontend script for each package",
+      "description": "Iterates through each package in the monorepo and runs the 'test:unit:frontend' script",
+      "enableParallelism": true,
+      "ignoreMissingScript": false,
+      "allowWarningsInSuccessfulBuild": true
+    },
+    {
+      "name": "test:integration:backend",
+      "commandKind": "bulk",
+      "summary": "Run test:integration:backend script for each package",
+      "description": "Iterates through each package in the monorepo and runs the 'test:integration:backend' script",
+      "enableParallelism": true,
+      "ignoreMissingScript": false,
+      "allowWarningsInSuccessfulBuild": true
+    },
+    {
+      "name": "test:integration:frontend",
+      "commandKind": "bulk",
+      "summary": "Run test:integration:frontend script for each package",
+      "description": "Iterates through each package in the monorepo and runs the 'test:integration:frontend' script",
+      "enableParallelism": true,
+      "ignoreMissingScript": false,
+      "allowWarningsInSuccessfulBuild": true
+    },
+    {
+      "name": "audit",
+      "commandKind": "global",
+      "summary": "Run npm audit for the entire monorepo",
+      "description": "Scans the entire monorepo for security vulnerabilities via pnpm audit",
+      "shellCommand": "node common/scripts/run-pnpm-audit.js"
+    }
+  ]
+}

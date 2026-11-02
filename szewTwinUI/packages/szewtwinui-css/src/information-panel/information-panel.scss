@@ -1,0 +1,224 @@
+// Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+// See LICENSE.md in the project root for license terms and full copyright notice.
+@use '../mixins';
+
+@mixin iui-information-panel-vertical {
+  inset-block-start: 0;
+  inset-inline-end: 0;
+  inline-size: calc(var(--iui-size-3xl) * 4);
+  min-inline-size: calc(var(--iui-size-3xl) * 2);
+  block-size: 100%;
+
+  > .iui-resizer {
+    block-size: 100%;
+    inline-size: var(--iui-size-m);
+    inset-block-start: 0;
+    cursor: ew-resize;
+    justify-content: center;
+
+    > .iui-resizer-bar {
+      block-size: 100%;
+      inline-size: 1px;
+      @media (prefers-reduced-motion: no-preference) {
+        transition:
+          background-color var(--iui-duration-1) ease-out,
+          width var(--iui-duration-1) ease-out;
+      }
+    }
+
+    &:hover > .iui-resizer-bar {
+      inline-size: var(--iui-size-2xs);
+    }
+  }
+}
+
+@mixin iui-information-panel-horizontal {
+  inset-inline-start: 0;
+  inset-block-end: 0;
+  block-size: calc(var(--iui-size-3xl) * 4);
+  min-block-size: calc(var(--iui-size-3xl) * 2);
+  inline-size: 100%;
+
+  > .iui-resizer {
+    inline-size: 100%;
+    block-size: var(--iui-size-m);
+    inset-inline-start: 0;
+    cursor: ns-resize;
+    align-items: center;
+
+    > .iui-resizer-bar {
+      inline-size: 100%;
+      block-size: 1px;
+      @media (prefers-reduced-motion: no-preference) {
+        transition:
+          background-color var(--iui-duration-1) ease-out,
+          height var(--iui-duration-1) ease-out;
+      }
+    }
+
+    &:hover > .iui-resizer-bar {
+      block-size: var(--iui-size-2xs);
+    }
+  }
+}
+
+// ----------------------------------------------------------------------------
+
+.iui-information-panel-wrapper {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--iui-border-radius-1);
+}
+
+.iui-information-panel {
+  position: absolute;
+  opacity: 0;
+  visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  max-inline-size: 100%;
+  max-block-size: 100%;
+  background-color: var(--iui-color-background);
+  @media (prefers-reduced-motion: no-preference) {
+    transition:
+      visibility var(--iui-duration-0) var(--iui-duration-1) ease-in,
+      transform var(--iui-duration-1) ease-out,
+      opacity var(--iui-duration-1) ease;
+  }
+
+  > .iui-resizer {
+    display: none;
+    position: absolute;
+    touch-action: none;
+
+    > .iui-resizer-bar {
+      background-color: var(--iui-color-border);
+    }
+
+    &:hover > .iui-resizer-bar {
+      background-color: var(--iui-color-border-accent);
+    }
+  }
+
+  .iui-information-header,
+  .iui-information-body {
+    padding-inline: var(--iui-size-s);
+  }
+
+  .iui-information-header {
+    block-size: calc(var(--iui-size-s) * 5);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--iui-color-background);
+    border-block-end: 1px solid var(--iui-color-border);
+
+    .iui-information-header-label {
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+
+      > * {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      svg {
+        @include mixins.iui-icon-style('l');
+        @include mixins.iui-icon-color;
+        margin-inline-end: var(--iui-size-xs);
+      }
+    }
+
+    .iui-information-header-actions {
+      flex-shrink: 0;
+      margin-inline-start: var(--iui-size-xs);
+    }
+  }
+
+  .iui-information-body {
+    padding-block: var(--iui-size-s);
+    block-size: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    > hr {
+      border-color: var(--iui-color-border);
+    }
+  }
+
+  &.iui-right {
+    @include iui-information-panel-vertical;
+    box-shadow: -1px 0 10px var(--iui-shadow-color);
+    clip-path: inset(0 0 0 -15px); // show box-shadow only on the left
+
+    &:where(:not(.iui-visible)) {
+      transform: translateX(100%); // hide off screen
+    }
+
+    > .iui-resizer {
+      inset-inline-start: calc(var(--iui-size-m) * -0.5);
+    }
+  }
+
+  &.iui-bottom {
+    @include iui-information-panel-horizontal;
+    box-shadow: 0 -1px 10px var(--iui-shadow-color);
+    clip-path: inset(-15px 0 0 0); // show box-shadow only on top
+
+    &:where(:not(.iui-visible)) {
+      transform: translateY(100%); // hide off screen
+    }
+
+    > .iui-resizer {
+      inset-block-start: calc(var(--iui-size-m) * -0.5);
+    }
+  }
+
+  &.iui-visible {
+    opacity: 1;
+    visibility: visible;
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition:
+        transform var(--iui-duration-1) ease-out,
+        opacity var(--iui-duration-1) ease;
+    }
+
+    > .iui-resizer {
+      display: flex;
+    }
+  }
+}
+
+/// Labels and inputs aligned using css grid
+.iui-information-body-content {
+  display: grid;
+
+  .iui-input-label {
+    font-weight: var(--iui-font-weight-normal);
+    color: var(--iui-color-text-muted);
+  }
+
+  &:not(.iui-inline) {
+    // add bottom margin between pairs of label+input
+    > *:nth-child(even):not(:last-child) {
+      margin-block-end: var(--iui-size-s);
+    }
+  }
+
+  &.iui-inline {
+    row-gap: var(--iui-size-s);
+    grid-template-columns: auto 1fr;
+    align-items: center;
+
+    .iui-input-label {
+      margin-inline-end: var(--iui-size-m);
+      // right align labels
+      justify-self: end;
+      text-align: end;
+    }
+  }
+}

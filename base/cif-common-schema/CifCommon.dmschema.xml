@@ -1,0 +1,1591 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ==================================================================================
+|  * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+|  * See LICENSE.md in the project root for license terms and full copyright notice.
+======================================================================================= -->
+<DMSchema schemaName="CifCommon" alias="cifcmn" version="01.00.03" description="iVault Connector schema containing aspect classes with common properties from Civil Infrastructure Framework (CIF) applications." xmlns="http://www.szewec.com/schemas/Szewec.DMXML.3.2">
+    <DMSchemaReference name="BisCore" version="01.00.14" alias="bis"/>
+    <DMSchemaReference name="CifUnits" version="01.00.01" alias="cifu"/>
+    <DMSchemaReference name="CoreCustomAttributes" version="01.00.03" alias="CoreCA"/>
+    <DMCustomAttributes>
+        <ProductionStatus xmlns="CoreCustomAttributes.01.00.03">
+            <SupportedUse>Production</SupportedUse>
+        </ProductionStatus>
+    </DMCustomAttributes>
+    <DMEnumeration typeName="ApplyTemplateCorridorAspect_Mirror_BoolEnum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="True" value="1" displayLabel="True"/>
+        <DMEnumerator name="False" value="0" displayLabel="False"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="ApplyTemplateCorridorAspect_Reflect_BoolEnum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="True" value="1" displayLabel="True"/>
+        <DMEnumerator name="False" value="0" displayLabel="False"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="CircularArcAspect_LinearElement_CircularArc_DegreeOfCurveDefinition_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Arc" value="0" displayLabel="Arc"/>
+        <DMEnumerator name="Chord" value="1" displayLabel="Chord"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="CivilCellAspect_IsValid_BoolEnum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="True" value="1" displayLabel="Yes"/>
+        <DMEnumerator name="False" value="0" displayLabel="No"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="ClosedLinearComplexAspect_ClosedLinearComplex_IsClockWise_BoolEnum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="True" value="1" displayLabel="Yes"/>
+        <DMEnumerator name="False" value="0" displayLabel="No"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="ClosedLineStringAspect_LinearElement_ClosedLineString_IsClockWise_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Yes" value="1" displayLabel="Yes"/>
+        <DMEnumerator name="No" value="0" displayLabel="No"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="CurveWideningAspect_CurveWidening_Enabled_BoolEnum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="True" value="1" displayLabel="True"/>
+        <DMEnumerator name="False" value="0" displayLabel="False"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="CurveWideningAspect_CurveWidening_Overlap_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Shorten_Transition_Lengths" value="0" displayLabel="Shorten Transition Lengths"/>
+        <DMEnumerator name="Shift_Maximum_Widening_Points_onto_Curves" value="1" displayLabel="Shift Maximum Widening Points onto Curves"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="CurveWideningAspect_CurveWidening_UseSpiralLengthForTransition_BoolEnum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="True" value="1" displayLabel="True"/>
+        <DMEnumerator name="False" value="0" displayLabel="False"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="DistanceAlongSlopeEntityAspect_SlopeStyle_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Constant" value="1" displayLabel="Constant"/>
+        <DMEnumerator name="Linear" value="3" displayLabel="Linear"/>
+        <DMEnumerator name="Reverse_Biquadratic" value="7" displayLabel="Reverse Biquadratic"/>
+        <DMEnumerator name="Reverse_Cubic" value="8" displayLabel="Reverse Cubic"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="DTMEntityBySelectedElementsSourceProviderAspect_FeatureType_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Break_Line" value="1" displayLabel="Break Line"/>
+        <DMEnumerator name="Contour" value="4" displayLabel="Contour"/>
+        <DMEnumerator name="Drape_Void" value="8" displayLabel="Drape Void"/>
+        <DMEnumerator name="Hole" value="6" displayLabel="Hole"/>
+        <DMEnumerator name="Boundary" value="0" displayLabel="Boundary"/>
+        <DMEnumerator name="DrapeBoundary" value="28" displayLabel="&lt;- DrapeBoundary -&gt;"/>
+        <DMEnumerator name="Island" value="7" displayLabel="Island"/>
+        <DMEnumerator name="Spot" value="9" displayLabel="Spot"/>
+        <DMEnumerator name="Soft_Break_Line" value="2" displayLabel="Soft Break Line"/>
+        <DMEnumerator name="Void" value="5" displayLabel="Void"/>
+        <DMEnumerator name="BreakVoid" value="25" displayLabel="&lt;- BreakVoid -&gt;"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="DTMEntityImportSourcePropertyProviderAspect_DTM_IncludeSpotFeatures_BoolEnum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="True" value="1" displayLabel="Yes"/>
+        <DMEnumerator name="False" value="0" displayLabel="No"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="DTMEntityImportSourcePropertyProviderAspect_DTM_NameFeatures_BoolEnum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="True" value="1" displayLabel="Yes"/>
+        <DMEnumerator name="False" value="0" displayLabel="No"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="EndConditionExceptionsAspect_ECEType_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Left_Override" value="0" displayLabel="Left Override"/>
+        <DMEnumerator name="Right_Override" value="1" displayLabel="Right Override"/>
+        <DMEnumerator name="Left_Transition" value="2" displayLabel="Left Transition"/>
+        <DMEnumerator name="Right_Transition" value="3" displayLabel="Right Transition"/>
+        <DMEnumerator name="Backbone_Only_Left" value="4" displayLabel="Backbone Only (Left)"/>
+        <DMEnumerator name="Backbone_Only_Right" value="5" displayLabel="Backbone Only (Right)"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="EndConditionExceptionsAspect_Enabled_BoolEnum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="True" value="1" displayLabel="True"/>
+        <DMEnumerator name="False" value="0" displayLabel="False"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="FlowLineEntityAspect_FlowLineEntity_Formula_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Gallaway" value="0" displayLabel="Gallaway"/>
+        <DMEnumerator name="Road_Research_Laboratory" value="1" displayLabel="Road Research Laboratory"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="MeshSurfaceEntityAspect_VolumeOption_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Design" value="2" displayLabel="Design"/>
+        <DMEnumerator name="Existing" value="1" displayLabel="Existing"/>
+        <DMEnumerator name="None" value="0" displayLabel="None"/>
+        <DMEnumerator name="Subgrade" value="4" displayLabel="Subgrade"/>
+        <DMEnumerator name="Substrata" value="3" displayLabel="Substrata"/>
+        <DMEnumerator name="Cut" value="5" displayLabel="Cut"/>
+        <DMEnumerator name="Fill" value="6" displayLabel="Fill"/>
+        <DMEnumerator name="Unsuitable" value="7" displayLabel="Unsuitable"/>
+        <DMEnumerator name="Custom" value="8" displayLabel="Custom"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="ParametricConstraintAspect_Enabled_BoolEnum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="True" value="1" displayLabel="True"/>
+        <DMEnumerator name="False" value="0" displayLabel="False"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="PointControlAspect_Enabled_BoolEnum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="True" value="1" displayLabel="True"/>
+        <DMEnumerator name="False" value="0" displayLabel="False"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="PointControlAspect_Mode_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Horizontal" value="0" displayLabel="Horizontal"/>
+        <DMEnumerator name="Vertical" value="1" displayLabel="Vertical"/>
+        <DMEnumerator name="Both" value="2" displayLabel="Both"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="PointControlAspect_UseAsSecondaryAlignment_BoolEnum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="True" value="1" displayLabel="True"/>
+        <DMEnumerator name="False" value="0" displayLabel="False"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="ReadOnlyCircularArcAspect_LinearElement_CircularArc_DegreeOfCurveDefinition_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Arc" value="0" displayLabel="Arc"/>
+        <DMEnumerator name="Chord" value="1" displayLabel="Chord"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="ReadOnlyClosedLinearComplexAspect_ClosedLinearComplex_IsClockWise_BoolEnum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="True" value="1" displayLabel="Yes"/>
+        <DMEnumerator name="False" value="0" displayLabel="No"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="ReadOnlyClosedLineStringAspect_LinearElement_ClosedLineString_IsClockWise_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Yes" value="1" displayLabel="Yes"/>
+        <DMEnumerator name="No" value="0" displayLabel="No"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="StrokingPropertiesClassAspect_StrokingStepMethod_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Increment" value="0" displayLabel="Increment"/>
+        <DMEnumerator name="Equal_Distance" value="1" displayLabel="Equal Distance"/>
+    </DMEnumeration>
+    <DMEntityClass typeName="CivilPresentation" modifier="Abstract">
+        <BaseClass>bis:ElementUniqueAspect</BaseClass>
+    </DMEntityClass>
+    <DMEntityClass typeName="ApplyTemplateCorridorAspect">
+        <BaseClass>CivilPresentation</BaseClass>
+        <DMProperty propertyName="Name" typeName="string" displayLabel="Name" category="Corridor_Corridor" priority="299999"/>
+        <DMProperty propertyName="HorizontalName" typeName="string" displayLabel="Horizontal Name" category="Corridor_Corridor" priority="299998"/>
+        <DMProperty propertyName="VerticalName" typeName="string" displayLabel="Profile Name" category="Corridor_Corridor" priority="-3"/>
+        <DMProperty propertyName="ExteriorArc" typeName="double" displayLabel="Exterior Corner Sweep Angle" category="Corridor_Corridor" priority="-4" kindOfQuantity="cifu:ANGLE"/>
+        <DMProperty propertyName="Mirror" typeName="ApplyTemplateCorridorAspect_Mirror_BoolEnum" displayLabel="Mirror" category="Corridor_Corridor" priority="-5"/>
+        <DMProperty propertyName="Reflect" typeName="ApplyTemplateCorridorAspect_Reflect_BoolEnum" displayLabel="Reflect" category="Corridor_Corridor" priority="-6"/>
+    </DMEntityClass>
+    <DMEntityClass typeName="LinearElementAspect">
+        <BaseClass>CivilPresentation</BaseClass>
+        <DMProperty propertyName="LinearElement_Length" typeName="double" displayLabel="Length" category="GeometryAttributes_Geometry" priority="299970" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_StartPoint" typeName="point3d" displayLabel="Start Point" category="GeometryAttributes_Geometry" priority="299990"/>
+        <DMProperty propertyName="LinearElement_EndPoint" typeName="point3d" displayLabel="End Point" category="GeometryAttributes_Geometry" priority="299980"/>
+        <DMProperty propertyName="LinearElement_Length3d" typeName="double" displayLabel="&lt;- LENGTH 3d -&gt;" category="GeometryAttributes_Geometry" priority="299970" kindOfQuantity="cifu:LENGTH">
+            <DMCustomAttributes>
+                <HiddenProperty xmlns="CoreCustomAttributes.01.00.03"/>
+            </DMCustomAttributes>
+        </DMProperty>
+    </DMEntityClass>
+    <DMEntityClass typeName="BSplineAspect">
+        <BaseClass>LinearElementAspect</BaseClass>
+        <DMProperty propertyName="BSpline_IsRational" typeName="int" displayLabel="BSpline_IsRational" category="Miscellaneous_BSpline" priority="0"/>
+        <DMProperty propertyName="BSpline_KnotsCount" typeName="int" displayLabel="BSpline_KnotsCount" category="Miscellaneous_BSpline" priority="0"/>
+    </DMEntityClass>
+    <DMEntityClass typeName="ReadOnlyLinearElementAspect">
+        <BaseClass>CivilPresentation</BaseClass>
+        <DMProperty propertyName="LinearElement_Length" typeName="double" displayLabel="Length" category="GeometryAttributes_Geometry" priority="299970" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_StartPoint" typeName="point3d" displayLabel="Start Point" category="GeometryAttributes_Geometry" priority="299990"/>
+        <DMProperty propertyName="LinearElement_EndPoint" typeName="point3d" displayLabel="End Point" category="GeometryAttributes_Geometry" priority="299980"/>
+        <DMProperty propertyName="LinearElement_Length3d" typeName="double" displayLabel="&lt;- LENGTH 3d -&gt;" category="GeometryAttributes_Geometry" priority="299970" kindOfQuantity="cifu:LENGTH">
+            <DMCustomAttributes>
+                <HiddenProperty xmlns="CoreCustomAttributes.01.00.03"/>
+            </DMCustomAttributes>
+        </DMProperty>
+    </DMEntityClass>
+    <DMEntityClass typeName="CircularArcAspect">
+        <BaseClass>ReadOnlyLinearElementAspect</BaseClass>
+        <DMProperty propertyName="LinearElement_CircularArc_Radius" typeName="double" displayLabel="Radius" category="GeometryAttributes_Geometry" priority="299975" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_CircularArc_SweepAngle" typeName="double" displayLabel="Sweep Angle" category="GeometryAttributes_Geometry" priority="299974" kindOfQuantity="cifu:ANGLE"/>
+        <DMProperty propertyName="LinearElement_CircularArc_Tangent" typeName="double" displayLabel="Tangent" category="GeometryAttributes_Geometry" priority="299960" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_CircularArc_Chord" typeName="double" displayLabel="Chord" category="GeometryAttributes_Geometry" priority="299950" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_CircularArc_StartDirection" typeName="double" displayLabel="Start Direction" category="GeometryAttributes_Geometry" priority="299900" kindOfQuantity="cifu:BEARING"/>
+        <DMProperty propertyName="LinearElement_CircularArc_EndDirection" typeName="double" displayLabel="End Direction" category="GeometryAttributes_Geometry" priority="299890" kindOfQuantity="cifu:BEARING"/>
+        <DMProperty propertyName="LinearElement_CircularArc_DegreeOfCurve" typeName="double" displayLabel="Degree of Curvature" category="GeometryAttributes_Geometry" priority="299870" kindOfQuantity="cifu:ANGLE"/>
+        <DMProperty propertyName="LinearElement_CircularArc_DegreeOfCurveDefinition" typeName="CircularArcAspect_LinearElement_CircularArc_DegreeOfCurveDefinition_Enum" displayLabel="Degree of Curvature Definition" category="GeometryAttributes_Geometry" priority="299880"/>
+        <DMProperty propertyName="LinearElement_CircularArc_CenterPoint" typeName="point3d" displayLabel="Center Point" category="GeometryAttributes_Geometry" priority="299860"/>
+    </DMEntityClass>
+    <DMEntityClass typeName="CivilCellAspect">
+        <BaseClass>CivilPresentation</BaseClass>
+        <DMProperty propertyName="Name" typeName="string" displayLabel="Name" category="Name_General_Category" priority="299999"/>
+        <DMProperty propertyName="IsValid" typeName="CivilCellAspect_IsValid_BoolEnum" displayLabel="Valid for Placement" category="Name_General_Category" priority="299998"/>
+    </DMEntityClass>
+    <DMEntityClass typeName="CivilCellReferenceAspect">
+        <BaseClass>CivilPresentation</BaseClass>
+        <DMProperty propertyName="Name" typeName="string" displayLabel="Name" category="Name_General_Category" priority="0"/>
+    </DMEntityClass>
+    <DMEntityClass typeName="CivilObjectAspect">
+        <BaseClass>CivilPresentation</BaseClass>
+        <DMProperty propertyName="Name" typeName="string" displayLabel="Name" category="Name_General_Category" priority="0"/>
+    </DMEntityClass>
+    <DMEntityClass typeName="ReadOnlyLinearComplexAspect">
+        <BaseClass>LinearElementAspect</BaseClass>
+    </DMEntityClass>
+    <DMEntityClass typeName="ClosedLinearComplexAspect">
+        <BaseClass>ReadOnlyLinearComplexAspect</BaseClass>
+        <DMProperty propertyName="ClosedLinearComplex_IsClockWise" typeName="ClosedLinearComplexAspect_ClosedLinearComplex_IsClockWise_BoolEnum" displayLabel="Clockwise" category="GeometryAttributes_Geometry" priority="299960"/>
+        <DMProperty propertyName="ClosedLinearComplex_Area" typeName="double" displayLabel="Area" category="GeometryAttributes_Geometry" priority="299970" kindOfQuantity="cifu:AREA"/>
+    </DMEntityClass>
+    <DMEntityClass typeName="LineStringAspect">
+        <BaseClass>LinearElementAspect</BaseClass>
+        <DMProperty propertyName="LinearElement_LineString_VerticesCount" typeName="int" displayLabel="Count" category="GeometryAttributes_Geometry" priority="299900"/>
+    </DMEntityClass>
+    <DMEntityClass typeName="ClosedLineStringAspect">
+        <BaseClass>LineStringAspect</BaseClass>
+        <DMProperty propertyName="LinearElement_LineString_VerticesCount" typeName="int" displayLabel="Count" category="GeometryAttributes_Geometry" priority="299900"/>
+        <DMProperty propertyName="LinearElement_ClosedLineString_IsClockWise" typeName="ClosedLineStringAspect_LinearElement_ClosedLineString_IsClockWise_Enum" displayLabel="Clockwise" category="GeometryAttributes_Geometry" priority="299000"/>
+    </DMEntityClass>
+    <DMEntityClass typeName="ProfiledElementAspect">
+        <BaseClass>LinearElementAspect</BaseClass>
+    </DMEntityClass>
+    <DMEntityClass typeName="SpiralAspect">
+        <BaseClass>ProfiledElementAspect</BaseClass>
+        <DMProperty propertyName="LinearElement_Spiral_StartRadius" typeName="double" displayLabel="Start Radius" category="GeometryAttributes_Geometry" priority="299975" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_Spiral_EndRadius" typeName="double" displayLabel="End Radius" category="GeometryAttributes_Geometry" priority="299974" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_Spiral_SweepAngle" typeName="double" displayLabel="Sweep Angle" category="GeometryAttributes_Geometry" priority="299870" kindOfQuantity="cifu:ANGLE"/>
+        <DMProperty propertyName="LinearElement_Spiral_Constant" typeName="double" displayLabel="Constant" category="GeometryAttributes_Geometry" priority="299860" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_Spiral_LongTangent" typeName="double" displayLabel="Long Tangent" category="GeometryAttributes_Geometry" priority="299850" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_Spiral_ShortTangent" typeName="double" displayLabel="Short Tangent" category="GeometryAttributes_Geometry" priority="299840" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_Spiral_LongChord" typeName="double" displayLabel="Long Chord" category="GeometryAttributes_Geometry" priority="299830" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_Spiral_Xs" typeName="double" displayLabel="Xs" category="GeometryAttributes_Geometry" priority="299820" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_Spiral_Ys" typeName="double" displayLabel="Ys" category="GeometryAttributes_Geometry" priority="299810" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_Spiral_PValue" typeName="double" displayLabel="P" category="GeometryAttributes_Geometry" priority="299800" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_Spiral_KValue" typeName="double" displayLabel="K" category="GeometryAttributes_Geometry" priority="299790" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_Spiral_StartDirection" typeName="double" displayLabel="Start Direction" category="GeometryAttributes_Geometry" priority="299780" kindOfQuantity="cifu:BEARING"/>
+        <DMProperty propertyName="LinearElement_Spiral_EndDirection" typeName="double" displayLabel="End Direction" category="GeometryAttributes_Geometry" priority="299770" kindOfQuantity="cifu:BEARING"/>
+        <DMProperty propertyName="LinearElement_Spiral_IntrinsicPoint" typeName="point3d" displayLabel="Intrinsic Point" category="GeometryAttributes_Geometry" priority="299700"/>
+        <DMProperty propertyName="LinearElement_Spiral_StartArcCenterPoint" typeName="point3d" displayLabel="Start Arc Center Point" category="GeometryAttributes_Geometry" priority="299690"/>
+        <DMProperty propertyName="LinearElement_Spiral_EndArcCenterPoint" typeName="point3d" displayLabel="End Arc Center Point" category="GeometryAttributes_Geometry" priority="299680"/>
+    </DMEntityClass>
+    <DMEntityClass typeName="ClothoidAspect">
+        <BaseClass>SpiralAspect</BaseClass>
+        <DMProperty propertyName="LinearElement_Spiral_StartRadius" typeName="double" displayLabel="Start Radius" category="GeometryAttributes_Geometry" priority="299975" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_Spiral_EndRadius" typeName="double" displayLabel="End Radius" category="GeometryAttributes_Geometry" priority="299974" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_Spiral_SweepAngle" typeName="double" displayLabel="Sweep Angle" category="GeometryAttributes_Geometry" priority="299870" kindOfQuantity="cifu:ANGLE"/>
+        <DMProperty propertyName="LinearElement_Spiral_Constant" typeName="double" displayLabel="Constant" category="GeometryAttributes_Geometry" priority="299860" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_Spiral_LongTangent" typeName="double" displayLabel="Long Tangent" category="GeometryAttributes_Geometry" priority="299850" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_Spiral_ShortTangent" typeName="double" displayLabel="Short Tangent" category="GeometryAttributes_Geometry" priority="299840" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_Spiral_LongChord" typeName="double" displayLabel="Long Chord" category="GeometryAttributes_Geometry" priority="299830" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_Spiral_Xs" typeName="double" displayLabel="Xs" category="GeometryAttributes_Geometry" priority="299820" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_Spiral_Ys" typeName="double" displayLabel="Ys" category="GeometryAttributes_Geometry" priority="299810" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_Spiral_PValue" typeName="double" displayLabel="P" category="GeometryAttributes_Geometry" priority="299800" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_Spiral_KValue" typeName="double" displayLabel="K" category="GeometryAttributes_Geometry" priority="299790" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_Spiral_StartDirection" typeName="double" displayLabel="Start Direction" category="GeometryAttributes_Geometry" priority="299780" kindOfQuantity="cifu:BEARING"/>
+        <DMProperty propertyName="LinearElement_Spiral_EndDirection" typeName="double" displayLabel="End Direction" category="GeometryAttributes_Geometry" priority="299770" kindOfQuantity="cifu:BEARING"/>
+        <DMProperty propertyName="LinearElement_Spiral_IntrinsicPoint" typeName="point3d" displayLabel="Intrinsic Point" category="GeometryAttributes_Geometry" priority="299700"/>
+        <DMProperty propertyName="LinearElement_Spiral_StartArcCenterPoint" typeName="point3d" displayLabel="Start Arc Center Point" category="GeometryAttributes_Geometry" priority="299690"/>
+        <DMProperty propertyName="LinearElement_Spiral_EndArcCenterPoint" typeName="point3d" displayLabel="End Arc Center Point" category="GeometryAttributes_Geometry" priority="299680"/>
+    </DMEntityClass>
+    <DMEntityClass typeName="CompoundElementAspect">
+        <BaseClass>ProfiledElementAspect</BaseClass>
+    </DMEntityClass>
+    <DMEntityClass typeName="CorridorAspect">
+        <BaseClass>CivilPresentation</BaseClass>
+        <DMProperty propertyName="Name" typeName="string" displayLabel="Name" category="Corridor_Corridor" priority="299999"/>
+        <DMProperty propertyName="HorizontalName" typeName="string" displayLabel="Horizontal Name" category="Corridor_Corridor" priority="299998"/>
+        <DMProperty propertyName="UseActiveDesignProfile" typeName="boolean" displayLabel="Use Active Profile" category="Corridor_Corridor" priority="299997"/>
+        <DMProperty propertyName="ProfileEntity" typeName="string" displayLabel="Profile Name" category="Corridor_Corridor" priority="299996"/>
+        <DMProperty propertyName="ActiveStation0" typeName="double" displayLabel="ActiveStation0" category="Miscellaneous_Corridor" priority="0">
+            <DMCustomAttributes>
+                <HiddenProperty xmlns="CoreCustomAttributes.01.00.03"/>
+            </DMCustomAttributes>
+        </DMProperty>
+        <DMProperty propertyName="ActiveStation1" typeName="double" displayLabel="ActiveStation1" category="Miscellaneous_Corridor" priority="0">
+            <DMCustomAttributes>
+                <HiddenProperty xmlns="CoreCustomAttributes.01.00.03"/>
+            </DMCustomAttributes>
+        </DMProperty>
+        <DMProperty propertyName="ActiveStation2" typeName="double" displayLabel="ActiveStation2" category="Miscellaneous_Corridor" priority="0">
+            <DMCustomAttributes>
+                <HiddenProperty xmlns="CoreCustomAttributes.01.00.03"/>
+            </DMCustomAttributes>
+        </DMProperty>
+        <DMProperty propertyName="ActiveStation3" typeName="double" displayLabel="ActiveStation3" category="Miscellaneous_Corridor" priority="0">
+            <DMCustomAttributes>
+                <HiddenProperty xmlns="CoreCustomAttributes.01.00.03"/>
+            </DMCustomAttributes>
+        </DMProperty>
+        <DMProperty propertyName="ActiveStation4" typeName="double" displayLabel="ActiveStation4" category="Miscellaneous_Corridor" priority="0">
+            <DMCustomAttributes>
+                <HiddenProperty xmlns="CoreCustomAttributes.01.00.03"/>
+            </DMCustomAttributes>
+        </DMProperty>
+        <DMProperty propertyName="ActiveStation5" typeName="double" displayLabel="ActiveStation5" category="Miscellaneous_Corridor" priority="0">
+            <DMCustomAttributes>
+                <HiddenProperty xmlns="CoreCustomAttributes.01.00.03"/>
+            </DMCustomAttributes>
+        </DMProperty>
+        <DMProperty propertyName="ActiveStation6" typeName="double" displayLabel="ActiveStation6" category="Miscellaneous_Corridor" priority="0">
+            <DMCustomAttributes>
+                <HiddenProperty xmlns="CoreCustomAttributes.01.00.03"/>
+            </DMCustomAttributes>
+        </DMProperty>
+        <DMProperty propertyName="ActiveStation7" typeName="double" displayLabel="ActiveStation7" category="Miscellaneous_Corridor" priority="0">
+            <DMCustomAttributes>
+                <HiddenProperty xmlns="CoreCustomAttributes.01.00.03"/>
+            </DMCustomAttributes>
+        </DMProperty>
+    </DMEntityClass>
+    <DMEntityClass typeName="CurveWideningAspect">
+        <BaseClass>CivilPresentation</BaseClass>
+        <DMProperty propertyName="CurveWidening_Enabled" typeName="CurveWideningAspect_CurveWidening_Enabled_BoolEnum" displayLabel="Enabled" category="CurveWidening_Curve_Widening" priority="299999"/>
+        <DMProperty propertyName="CurveWidening_Description" typeName="string" displayLabel="Description" category="CurveWidening_Curve_Widening" priority="299998"/>
+        <DMProperty propertyName="CurveWidening_Point" typeName="string" displayLabel="Point" category="CurveWidening_Curve_Widening" priority="299997"/>
+        <DMProperty propertyName="CurveWidening_TransitionOnTangent" typeName="double" displayLabel="Percent Transition on Tangent" category="CurveWidening_Curve_Widening" priority="299996"/>
+        <DMProperty propertyName="CurveWidening_UseSpiralLengthForTransition" typeName="CurveWideningAspect_CurveWidening_UseSpiralLengthForTransition_BoolEnum" displayLabel="Use Spiral Length for Transition" category="CurveWidening_Curve_Widening" priority="299995"/>
+        <DMProperty propertyName="CurveWidening_Overlap" typeName="CurveWideningAspect_CurveWidening_Overlap_Enum" displayLabel="Overlap" category="CurveWidening_Curve_Widening" priority="299994"/>
+        <DMProperty propertyName="CurveWidening_Priority" typeName="int" displayLabel="Priority" category="CurveWidening_Curve_Widening" priority="299993"/>
+        <DMProperty propertyName="CurveWidening_WideningTableFileName" typeName="string" displayLabel="Widening Table" category="CurveWidening_Curve_Widening" priority="299992"/>
+    </DMEntityClass>
+    <DMEntityClass typeName="DistanceAlongSlopeEntityAspect">
+        <BaseClass>CivilPresentation</BaseClass>
+        <DMProperty propertyName="ReferenceDistanceAlongEntry" typeName="double" displayLabel="Reference Distance" category="DistanceAlongSlopeEntityProperties_Distance_Along_Slope_Entity" priority="299996" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="ReferenceDistanceAlongEntry_DistanceAlong" typeName="double" kindOfQuantity="cifu:STATION">
+            <DMCustomAttributes>
+                <HiddenProperty xmlns="CoreCustomAttributes.01.00.03"/>
+                <Deprecated xmlns="CoreCustomAttributes.01.00.03">
+                    <Description>Unnecessary duplicate-property. Use 'ReferenceDistanceAlongEntry' directly</Description>
+                </Deprecated>
+            </DMCustomAttributes>
+        </DMProperty>
+        <DMProperty propertyName="ReferenceStartDistanceAlongEntry" typeName="double" displayLabel="Start Reference Distance" category="DistanceAlongSlopeEntityProperties_Distance_Along_Slope_Entity" priority="299993" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="ReferenceStartDistanceAlongEntry_DistanceAlong" typeName="double" kindOfQuantity="cifu:STATION">
+            <DMCustomAttributes>
+                <HiddenProperty xmlns="CoreCustomAttributes.01.00.03"/>
+                <Deprecated xmlns="CoreCustomAttributes.01.00.03">
+                    <Description>Unnecessary duplicate-property. Use 'ReferenceStartDistanceAlongEntry' directly</Description>
+                </Deprecated>
+            </DMCustomAttributes>
+        </DMProperty>
+        <DMProperty propertyName="ReferenceEndDistanceAlongEntry" typeName="double" displayLabel="End Reference Distance" category="DistanceAlongSlopeEntityProperties_Distance_Along_Slope_Entity" priority="299990" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="ReferenceEndDistanceAlongEntry_DistanceAlong" typeName="double" kindOfQuantity="cifu:STATION">
+            <DMCustomAttributes>
+                <HiddenProperty xmlns="CoreCustomAttributes.01.00.03"/>
+                <Deprecated xmlns="CoreCustomAttributes.01.00.03">
+                    <Description>Unnecessary duplicate-property. Use 'ReferenceEndDistanceAlongEntry' directly</Description>
+                </Deprecated>
+            </DMCustomAttributes>
+        </DMProperty>
+        <DMProperty propertyName="ReferenceSlopeEntry" typeName="double" displayLabel="Slope" category="DistanceAlongSlopeEntityProperties_Distance_Along_Slope_Entity" priority="299995" kindOfQuantity="cifu:SLOPE"/>
+        <DMProperty propertyName="ReferenceStartSlopeEntry" typeName="double" displayLabel="Start Slope" category="DistanceAlongSlopeEntityProperties_Distance_Along_Slope_Entity" priority="299992" kindOfQuantity="cifu:SLOPE"/>
+        <DMProperty propertyName="ReferenceEndSlopeEntry" typeName="double" displayLabel="End Slope" category="DistanceAlongSlopeEntityProperties_Distance_Along_Slope_Entity" priority="299989" kindOfQuantity="cifu:SLOPE"/>
+        <DMProperty propertyName="ReferenceOffsetEntry" typeName="double" displayLabel="Vertical Offset" category="DistanceAlongSlopeEntityProperties_Distance_Along_Slope_Entity" priority="299994" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="ReferenceStartOffsetEntry" typeName="double" displayLabel="Start Vertical Offset" category="DistanceAlongSlopeEntityProperties_Distance_Along_Slope_Entity" priority="299991" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="ReferenceEndOffsetEntry" typeName="double" displayLabel="End Vertical Offset" category="DistanceAlongSlopeEntityProperties_Distance_Along_Slope_Entity" priority="299988" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="ReferenceDesignSpeedEntry" typeName="double" displayLabel="Design Speed" category="DistanceAlongSlopeEntityProperties_Distance_Along_Slope_Entity" priority="299987" kindOfQuantity="cifu:VELOCITY"/>
+        <DMProperty propertyName="ReferenceArcLength1Entry" typeName="double" displayLabel="Arc Length 1" category="DistanceAlongSlopeEntityProperties_Distance_Along_Slope_Entity" priority="299986" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="ReferenceArcLength2Entry" typeName="double" displayLabel="Arc Length 2" category="DistanceAlongSlopeEntityProperties_Distance_Along_Slope_Entity" priority="299985" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="SlopeStyle" typeName="DistanceAlongSlopeEntityAspect_SlopeStyle_Enum" displayLabel="Slope Style" category="DistanceAlongSlopeEntityProperties_Distance_Along_Slope_Entity" priority="299997"/>
+    </DMEntityClass>
+    <DMEntityClass typeName="DTMEntityBySelectedElementsSourceProviderAspect">
+        <BaseClass>CivilPresentation</BaseClass>
+        <DMProperty propertyName="FeatureType" typeName="DTMEntityBySelectedElementsSourceProviderAspect_FeatureType_Enum" displayLabel="FeatureType" category="TerrainModelBySelectedElementAttributes_Create_from_Elements_UnLinked" priority="300000"/>
+    </DMEntityClass>
+    <DMEntityClass typeName="DTMEntityImportSourcePropertyProviderAspect">
+        <BaseClass>CivilPresentation</BaseClass>
+        <DMProperty propertyName="DTM_ObjectSetting" typeName="string" displayLabel="Feature Definition" category="FeatureDefinition_Feature_Definition" priority="299980"/>
+        <DMProperty propertyName="DTM_NamePrefix" typeName="string" displayLabel="Name" category="FeatureDefinition_Feature_Definition" priority="299975"/>
+        <DMProperty propertyName="DTM_IncludeSpotFeatures" typeName="DTMEntityImportSourcePropertyProviderAspect_DTM_IncludeSpotFeatures_BoolEnum" displayLabel="Include Spot Features" category="TriangulationOptions_Triangulation_Options" priority="299965"/>
+        <DMProperty propertyName="DTM_NameFeatures" typeName="DTMEntityImportSourcePropertyProviderAspect_DTM_NameFeatures_BoolEnum" displayLabel="Name all Features" category="TriangulationOptions_Triangulation_Options" priority="299940"/>
+        <DMProperty propertyName="DTM_MaxSideLength" typeName="double" displayLabel="Maximum Side Length" category="TriangulationOptions_Triangulation_Options" priority="299980"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsApplyTemplateCorridorAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="ApplyTemplateCorridorAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="ElementOwnsBSplineAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="BSplineAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="ElementOwnsCircularArcAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="CircularArcAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="ElementOwnsCivilCellAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="CivilCellAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="ElementOwnsCivilCellReferenceAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="CivilCellReferenceAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="ElementOwnsCivilObjectAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="CivilObjectAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="ElementOwnsClosedLinearComplexAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="ClosedLinearComplexAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="ElementOwnsClosedLineStringAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="ClosedLineStringAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="ElementOwnsClothoidAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="ClothoidAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="ElementOwnsCompoundElementAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="CompoundElementAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="ElementOwnsCorridorAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="CorridorAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="ElementOwnsCurveWideningAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="CurveWideningAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="ElementOwnsDistanceAlongSlopeEntityAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="DistanceAlongSlopeEntityAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="ElementOwnsDTMEntityBySelectedElementsSourceProviderAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="DTMEntityBySelectedElementsSourceProviderAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="ElementOwnsDTMEntityImportSourcePropertyProviderAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="DTMEntityImportSourcePropertyProviderAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="EndConditionExceptionsAspect">
+        <BaseClass>CivilPresentation</BaseClass>
+        <DMProperty propertyName="Description" typeName="string" displayLabel="Description" category="EndConditionException_End_Condition_Exception" priority="299998"/>
+        <DMProperty propertyName="Enabled" typeName="EndConditionExceptionsAspect_Enabled_BoolEnum" displayLabel="Enabled" category="EndConditionException_End_Condition_Exception" priority="299999"/>
+        <DMProperty propertyName="ECEType" typeName="EndConditionExceptionsAspect_ECEType_Enum" displayLabel="DMException Type" category="EndConditionException_End_Condition_Exception" priority="299997"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsEndConditionExceptionsAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="EndConditionExceptionsAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="FeatureBaseAspect">
+        <BaseClass>CivilPresentation</BaseClass>
+        <DMProperty propertyName="DefinitionName" typeName="string" displayLabel="Feature Definition" category="FeatureProperties_Feature" priority="299999"/>
+    </DMEntityClass>
+    <DMEntityClass typeName="FeatureAspect">
+        <BaseClass>FeatureBaseAspect</BaseClass>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsFeatureAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="FeatureAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="ElementOwnsFeatureBaseAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="FeatureBaseAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="FeatureWithNameAspect">
+        <BaseClass>FeatureBaseAspect</BaseClass>
+        <DMProperty propertyName="FeatureName" typeName="string" displayLabel="Feature Name" category="FeatureProperties_Feature" priority="299999"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsFeatureWithNameAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="FeatureWithNameAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="FlowLineEntityAspect">
+        <BaseClass>CivilPresentation</BaseClass>
+        <DMProperty propertyName="FlowLineEntity_Formula" typeName="FlowLineEntityAspect_FlowLineEntity_Formula_Enum" displayLabel="Formula" category="FlowLineEntity_Aquaplaning" priority="299980"/>
+        <DMProperty propertyName="FlowLineEntity_RainfallIntensity" typeName="double" displayLabel="Rainfall Intensity" category="FlowLineEntity_Aquaplaning" priority="299970" kindOfQuantity="cifu:LENGTH"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsFlowLineEntityAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="FlowLineEntityAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="GeographicCoordinateSystemAspect">
+        <BaseClass>CivilPresentation</BaseClass>
+        <DMProperty propertyName="GeographicCoordinateSystem_ImageCoordinateMethodName" typeName="string" displayLabel="Source" category="ProjectionProperties_Geographical_Coordinate_Systems" priority="299990"/>
+        <DMProperty propertyName="GeographicCoordinateSystem_ImageCoordinateDescription" typeName="string" displayLabel="Source Description" category="ProjectionProperties_Geographical_Coordinate_Systems" priority="299980"/>
+        <DMProperty propertyName="GeographicCoordinateSystem_ImageCoordinateUnits" typeName="string" displayLabel="Source Units" category="ProjectionProperties_Geographical_Coordinate_Systems" priority="299970"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsGeographicCoordinateSystemAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="GeographicCoordinateSystemAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="InternalStationEquationAspect">
+        <BaseClass>CivilPresentation</BaseClass>
+        <DMProperty propertyName="BackLocation" typeName="double" displayLabel="BackLocation" category="Miscellaneous_Internal_Station_Equation" priority="0" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="BackLocation_DistanceAlong" typeName="double" kindOfQuantity="cifu:STATION">
+            <DMCustomAttributes>
+                <HiddenProperty xmlns="CoreCustomAttributes.01.00.03"/>
+                <Deprecated xmlns="CoreCustomAttributes.01.00.03">
+                    <Description>Unnecessary duplicate-property. Use 'BackLocation' directly</Description>
+                </Deprecated>
+            </DMCustomAttributes>
+        </DMProperty>
+        <DMProperty propertyName="BackStation" typeName="string" displayLabel="Back Station" category="StationingProperties_Stationing" priority="299995"/>
+        <DMProperty propertyName="AheadStation" typeName="string" displayLabel="Ahead Station" category="StationingProperties_Stationing" priority="299994"/>
+        <DMProperty propertyName="LengthDifference" typeName="string" displayLabel="Length Difference" category="StationingProperties_Stationing" priority="299993"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsInternalStationEquationAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="InternalStationEquationAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="IntersectionPointStruct">
+        <BaseClass>bis:ElementUniqueAspect</BaseClass>
+        <DMProperty propertyName="IntersectionPointStation" typeName="double" displayLabel="Station" category="Miscellaneous_Intersection_Point" priority="0" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="IntersectionPointSkewAngle" typeName="double" displayLabel="SkewAngle" category="Miscellaneous_Intersection_Point" priority="0" kindOfQuantity="cifu:ANGLE"/>
+        <DMProperty propertyName="IntersectionPointElevation" typeName="double" displayLabel="Elevation" category="Miscellaneous_Intersection_Point" priority="0" kindOfQuantity="cifu:LENGTH"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsIntersectionPointStruct" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="IntersectionPointStruct"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="KeyStationAspect">
+        <BaseClass>CivilPresentation</BaseClass>
+        <DMProperty propertyName="Station" typeName="double" displayLabel="Station" category="KeyStation_Key_Station" priority="299999" kindOfQuantity="cifu:STATION"/>
+        <DMProperty propertyName="Station_DistanceAlong" typeName="double" kindOfQuantity="cifu:STATION">
+            <DMCustomAttributes>
+                <HiddenProperty xmlns="CoreCustomAttributes.01.00.03"/>
+                <Deprecated xmlns="CoreCustomAttributes.01.00.03">
+                    <Description>Unnecessary duplicate-property. Use 'Station' directly</Description>
+                </Deprecated>
+            </DMCustomAttributes>
+        </DMProperty>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsKeyStationAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="KeyStationAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="Line3dAspect">
+        <BaseClass>ProfiledElementAspect</BaseClass>
+        <DMProperty propertyName="LinearElement_Length" typeName="double" displayLabel="Length" category="GeometryAttributes_Geometry" priority="299970" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_StartPoint" typeName="point3d" displayLabel="Start Point" category="GeometryAttributes_Geometry" priority="299990"/>
+        <DMProperty propertyName="LinearElement_EndPoint" typeName="point3d" displayLabel="End Point" category="GeometryAttributes_Geometry" priority="299980"/>
+        <DMProperty propertyName="LinearElement_Line3d_Direction" typeName="double" displayLabel="Direction" category="GeometryAttributes_Geometry" priority="299900" kindOfQuantity="cifu:LENGTH"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsLine3dAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="Line3dAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="LinearComplexAspect">
+        <BaseClass>ReadOnlyLinearElementAspect</BaseClass>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsLinearComplexAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="LinearComplexAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="ElementOwnsLinearElementAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="LinearElementAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="LineAspect">
+        <BaseClass>LinearElementAspect</BaseClass>
+        <DMProperty propertyName="LinearElement_Line_Direction" typeName="double" displayLabel="Direction" category="GeometryAttributes_Geometry" priority="299900" kindOfQuantity="cifu:BEARING"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsLineAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="LineAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="LineString3dAspect">
+        <BaseClass>ProfiledElementAspect</BaseClass>
+        <DMProperty propertyName="LinearElement_LineString3d_VerticesCount" typeName="int" displayLabel="Count" category="GeometryAttributes_Geometry" priority="299900"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsLineString3dAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="LineString3dAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="ElementOwnsLineStringAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="LineStringAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="MeshSurfaceEntityAspect">
+        <BaseClass>CivilPresentation</BaseClass>
+        <DMProperty propertyName="MeshSurfaceEntity_Volume" typeName="double" displayLabel="Volume" category="MeshSurfaceEntity_Component_Layer" priority="300000" kindOfQuantity="cifu:VOLUME">
+            <DMCustomAttributes>
+                <HiddenProperty xmlns="CoreCustomAttributes.01.00.03"/>
+                <Deprecated xmlns="CoreCustomAttributes.01.00.03">
+                    <Description>Unnecessary duplicate-property. Use 'MeshSurfaceEntity_CivilVolume' instead</Description>
+                </Deprecated>
+            </DMCustomAttributes>
+        </DMProperty>
+        <DMProperty propertyName="MeshSurfaceEntity_Depth" typeName="double" displayLabel="Depth" category="MeshSurfaceEntity_Component_Layer" priority="299990" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="MeshSurfaceEntity_Description" typeName="string" displayLabel="Description" category="MeshSurfaceEntity_Component_Layer" priority="299980"/>
+        <DMProperty propertyName="MeshSurfaceEntity_StartStation" typeName="string" displayLabel="Start Station" category="MeshSurfaceEntity_Component_Layer" priority="299950"/>
+        <DMProperty propertyName="MeshSurfaceEntity_EndStation" typeName="string" displayLabel="End Station" category="MeshSurfaceEntity_Component_Layer" priority="299940"/>
+        <DMProperty propertyName="MeshSurfaceEntity_MaterialSubtype" typeName="string" displayLabel="Material Subtype" category="MeshSurfaceEntity_Component_Layer" priority="299930"/>
+        <DMProperty propertyName="MeshSurfaceEntity_SlopedArea" typeName="double" displayLabel="Top Sloped Area" category="MeshQuantities_Civil_Quantities" priority="299920" kindOfQuantity="cifu:AREA"/>
+        <DMProperty propertyName="MeshSurfaceEntity_PlanarArea" typeName="double" displayLabel="Planar Area" category="MeshQuantities_Civil_Quantities" priority="299910" kindOfQuantity="cifu:AREA"/>
+        <DMProperty propertyName="MeshSurfaceEntity_CivilVolume" typeName="double" displayLabel="Volume" category="MeshQuantities_Civil_Quantities" priority="299900" kindOfQuantity="cifu:VOLUME"/>
+        <DMProperty propertyName="VolumeOption" typeName="MeshSurfaceEntityAspect_VolumeOption_Enum" displayLabel="Volume Option" category="MeshSurfaceEntity_Component_Layer" priority="299925"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsMeshSurfaceEntityAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="MeshSurfaceEntityAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="ObjectStatusAspect">
+        <BaseClass>CivilPresentation</BaseClass>
+        <DMProperty propertyName="ObjectStatusHandler_ObjectStatus_ObjectName" typeName="string" displayLabel="Name" category="CivilObjectStatusAttributes_Object_Status" priority="299900"/>
+        <DMProperty propertyName="ObjectStatusHandler_ObjectStatus_ShortDescription" typeName="string" displayLabel="Type" category="CivilObjectStatusAttributes_Object_Status" priority="299800"/>
+        <DMProperty propertyName="ObjectStatusHandler_ObjectStatus_Description" typeName="string" displayLabel="Description" category="CivilObjectStatusAttributes_Object_Status" priority="299700"/>
+        <DMProperty propertyName="ObjectStatusHandler_ObjectStatus_ApplicationID" typeName="string" displayLabel="Application" category="CivilObjectStatusAttributes_Object_Status" priority="299600"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsObjectStatusAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="ObjectStatusAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="ParametricConstraintBaseAspect" modifier="Abstract">
+        <BaseClass>bis:ElementUniqueAspect</BaseClass>
+        <DMProperty propertyName="Label" typeName="string" displayLabel="Constraint Label" category="ParametricConstraint_Parametric_Constraint" priority="299998"/>
+        <DMProperty propertyName="Enabled" typeName="ParametricConstraintAspect_Enabled_BoolEnum" displayLabel="Enabled" category="ParametricConstraint_Parametric_Constraint" priority="299999"/>
+        <DMProperty propertyName="Surface" typeName="string" displayLabel="Surface" category="ParametricConstraint_Parametric_Constraint" priority="-9"/>
+    </DMEntityClass>
+    <DMEntityClass typeName="ParametricConstraintAngleAspect">
+        <BaseClass>ParametricConstraintBaseAspect</BaseClass>
+        <DMProperty propertyName="StartAngle" typeName="double" displayLabel="Start Angle" category="ParametricConstraint_Parametric_Constraint" priority="299993" kindOfQuantity="cifu:ANGLE"/>
+        <DMProperty propertyName="StopAngle" typeName="double" displayLabel="Stop Angle" category="ParametricConstraint_Parametric_Constraint" priority="299992" kindOfQuantity="cifu:ANGLE"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsParametricConstraintAngleAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="ParametricConstraintAngleAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="ParametricConstraintSlopeAspect">
+        <BaseClass>ParametricConstraintBaseAspect</BaseClass>
+        <DMProperty propertyName="StartSlope" typeName="double" displayLabel="Start Slope" category="ParametricConstraint_Parametric_Constraint" priority="299995" kindOfQuantity="cifu:SLOPE"/>
+        <DMProperty propertyName="StopSlope" typeName="double" displayLabel="Stop Slope" category="ParametricConstraint_Parametric_Constraint" priority="299994" kindOfQuantity="cifu:SLOPE"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsParametricConstraintSlopeAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="ParametricConstraintSlopeAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="ParametricConstraintValueAspect">
+        <BaseClass>ParametricConstraintBaseAspect</BaseClass>
+        <DMProperty propertyName="StartValue" typeName="double" displayLabel="Start Value" category="ParametricConstraint_Parametric_Constraint" priority="299997"/>
+        <DMProperty propertyName="StopValue" typeName="double" displayLabel="Stop Value" category="ParametricConstraint_Parametric_Constraint" priority="299996"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsParametricConstraintValueAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="ParametricConstraintValueAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="PointControlAspect">
+        <BaseClass>CivilPresentation</BaseClass>
+        <DMProperty propertyName="Enabled" typeName="PointControlAspect_Enabled_BoolEnum" displayLabel="Enabled" category="PointControl_PointControl" priority="299999"/>
+        <DMProperty propertyName="ControlDescription" typeName="string" displayLabel="Control Description" category="PointControl_PointControl" priority="299998"/>
+        <DMProperty propertyName="Point" typeName="string" displayLabel="Point" category="PointControl_PointControl" priority="299995"/>
+        <DMProperty propertyName="Mode" typeName="PointControlAspect_Mode_Enum" displayLabel="Mode" category="PointControl_PointControl" priority="299997"/>
+        <DMProperty propertyName="ControlType" typeName="string" displayLabel="Control Type" category="PointControl_PointControl" priority="299996"/>
+        <DMProperty propertyName="PlanElement" typeName="string" displayLabel="Plan Element" category="PointControl_PointControl" priority="299994"/>
+        <DMProperty propertyName="ProfileElement" typeName="string" displayLabel="Profile Element" category="PointControl_PointControl" priority="299993"/>
+        <DMProperty propertyName="Range" typeName="double" displayLabel="Range" category="PointControl_PointControl" priority="299991"/>
+        <DMProperty propertyName="Corridor" typeName="string" displayLabel="Corridor" category="PointControl_PointControl" priority="299990"/>
+        <DMProperty propertyName="ReferenceFeature" typeName="string" displayLabel="Reference Feature" category="PointControl_PointControl" priority="299989"/>
+        <DMProperty propertyName="Superelevation" typeName="string" displayLabel="Superelevation" category="PointControl_PointControl" priority="299988"/>
+        <DMProperty propertyName="Cant" typeName="string" displayLabel="Cant" category="PointControl_PointControl" priority="299995"/>
+        <DMProperty propertyName="ReferencePoint" typeName="string" displayLabel="Reference Point" category="PointControl_PointControl" priority="299987"/>
+        <DMProperty propertyName="Elevation" typeName="double" displayLabel="Elevation" category="PointControl_PointControl" priority="299986"/>
+        <DMProperty propertyName="Grade" typeName="double" displayLabel="Grade" category="PointControl_PointControl" priority="299985" kindOfQuantity="cifu:SLOPE"/>
+        <DMProperty propertyName="UseAsSecondaryAlignment" typeName="PointControlAspect_UseAsSecondaryAlignment_BoolEnum" displayLabel="Use as Secondary Alignment" category="PointControl_PointControl" priority="299984"/>
+        <DMProperty propertyName="Priority" typeName="int" displayLabel="Priority" category="PointControl_PointControl" priority="299983"/>
+        <DMProperty propertyName="HorizontalStartOffset" typeName="double" displayLabel="Horizontal Start Offset" category="PointControl_PointControl" priority="299982"/>
+        <DMProperty propertyName="HorizontalStopOffset" typeName="double" displayLabel="Horizontal Stop Offset" category="PointControl_PointControl" priority="299981"/>
+        <DMProperty propertyName="VerticalStartOffset" typeName="double" displayLabel="Vertical Start Offset" category="PointControl_PointControl" priority="299980"/>
+        <DMProperty propertyName="VerticalStopOffset" typeName="double" displayLabel="Vertical Stop Offset" category="PointControl_PointControl" priority="299979"/>
+        <DMProperty propertyName="ParentCurveWidening" typeName="string" displayLabel="Parent Curve Widening" category="PointControl_PointControl" priority="-22"/>
+        <DMProperty propertyName="CenterCantPoint" typeName="string" displayLabel="Center Cant Point" category="PointControl_PointControl" priority="299994"/>
+        <DMProperty propertyName="LeftCantPoint" typeName="string" displayLabel="Left Cant Point" category="PointControl_PointControl" priority="299993"/>
+        <DMProperty propertyName="RightCantPoint" typeName="string" displayLabel="Right Cant Point" category="PointControl_PointControl" priority="299992"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsPointControlAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="PointControlAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="PointEntity2dAspect">
+        <BaseClass>CivilPresentation</BaseClass>
+        <DMProperty propertyName="PointEntity2dPoint" typeName="point3d" displayLabel="Point" category="GeometryPointsCategoryAttributes_Geometry_Points" priority="299999"/>
+        <DMProperty propertyName="PointEntity2d_X" typeName="double" displayLabel="X" category="GeometryPointsCategoryAttributes_Geometry_Points" priority="299990" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="PointEntity2d_Y" typeName="double" displayLabel="Y" category="GeometryPointsCategoryAttributes_Geometry_Points" priority="299980" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="PointEntity2d_Elevation" typeName="double" displayLabel="Elevation" category="GeometryPointsCategoryAttributes_Geometry_Points" priority="299970" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="PointEntity2d_Rotation" typeName="double" displayLabel="Rotation" category="GeometryPointsCategoryAttributes_Geometry_Points" priority="299960" kindOfQuantity="cifu:BEARING"/>
+        <DMProperty propertyName="PointEntity2d_RotationOffset" typeName="double" displayLabel="Rotation Offset" category="GeometryPointsCategoryAttributes_Geometry_Points" priority="299955" kindOfQuantity="cifu:BEARING"/>
+        <DMProperty propertyName="PointEntity2d_RotationReference" typeName="string" displayLabel="Rotation Reference" category="GeometryPointsCategoryAttributes_Geometry_Points" priority="299953"/>
+        <DMProperty propertyName="PointEntity2d_AbsoluteAngle" typeName="boolean" displayLabel="Absolute Angle" category="GeometryPointsCategoryAttributes_Geometry_Points" priority="299950"/>
+        <DMProperty propertyName="PointEntity2d_Description" typeName="string" displayLabel="Description" category="FeatureProperties_Feature" priority="299910"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsPointEntity2dAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="PointEntity2dAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="PointGroupAspect">
+        <BaseClass>CivilPresentation</BaseClass>
+        <DMProperty propertyName="PointGroup_NumberOfPoints" typeName="int" displayLabel="Number Of Points" category="PointGroupCategoryAttributes_Point_Group" priority="299999"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsPointGroupAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="PointGroupAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="PointOrderedListAspect">
+        <BaseClass>CivilPresentation</BaseClass>
+        <DMProperty propertyName="PointOrderedList_Elevation" typeName="double" displayLabel="Elevation" category="PointOrderedListAttributes_Point_Ordered_List" priority="299989" kindOfQuantity="cifu:LENGTH"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsPointOrderedListAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="PointOrderedListAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="PortalEntityAspect">
+        <BaseClass>CivilPresentation</BaseClass>
+        <DMProperty propertyName="Name" typeName="string" displayLabel="Name" category="Portal_Portal" priority="299999"/>
+        <DMProperty propertyName="ParametricCell" typeName="string" displayLabel="&lt;- ParametricCell -&gt;" category="Portal_Portal" priority="299990"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsPortalEntityAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="PortalEntityAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="ProfileElementAspect">
+        <BaseClass>ReadOnlyLinearElementAspect</BaseClass>
+        <DMProperty propertyName="LinearElement_ProfileElement_DeltaX" typeName="double" displayLabel="DeltaX" category="GeometryAttributes_Geometry" priority="299900" kindOfQuantity="cifu:LENGTH"/>
+    </DMEntityClass>
+    <DMEntityClass typeName="ProfileCircularArcAspect">
+        <BaseClass>ProfileElementAspect</BaseClass>
+        <DMProperty propertyName="ProfileCircularArc_EndSlope" typeName="double" displayLabel="Slope End" category="GeometryAttributes_Geometry" priority="298950"/>
+        <DMProperty propertyName="ProfileCircularArc_StartSlope" typeName="double" displayLabel="Slope Start" category="GeometryAttributes_Geometry" priority="298960"/>
+        <DMProperty propertyName="ProfileCircularArc_RightTangent" typeName="point3d" displayLabel="Right Tangent" category="GeometryAttributes_Geometry" priority="298940"/>
+        <DMProperty propertyName="ProfileCircularArc_LeftTangent" typeName="point3d" displayLabel="Left Tangent" category="GeometryAttributes_Geometry" priority="298930"/>
+        <DMProperty propertyName="ProfileCircularArc_EndLocalAbscissa" typeName="double" displayLabel="Local Abscissa End" category="GeometryAttributes_Geometry" priority="298920"/>
+        <DMProperty propertyName="ProfileCircularArc_StartLocalAbscissa" typeName="double" displayLabel="Local Abscissa Start" category="GeometryAttributes_Geometry" priority="298910"/>
+        <DMProperty propertyName="ProfileCircularArc_VPIPoint" typeName="point3d" displayLabel="VPI Point" category="GeometryAttributes_Geometry" priority="298900"/>
+        <DMProperty propertyName="ProfileCircularArc_ProjectedLength" typeName="double" displayLabel="Projected Length" category="GeometryAttributes_Geometry" priority="298890" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="ProfileCircularArc_RightLength" typeName="double" displayLabel="Right Extent" category="GeometryAttributes_Geometry" priority="298880" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="ProfileCircularArc_LeftLength" typeName="double" displayLabel="Left Extent" category="GeometryAttributes_Geometry" priority="298870" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="ProfileCircularArc_SweepAngle" typeName="double" displayLabel="Sweep Angle" category="GeometryAttributes_Geometry" priority="298990" kindOfQuantity="cifu:ANGLE"/>
+        <DMProperty propertyName="ProfileCircularArc_StartDirection" typeName="double" displayLabel="Start Direction" category="GeometryAttributes_Geometry" priority="299000" kindOfQuantity="cifu:BEARING"/>
+        <DMProperty propertyName="ProfileCircularArc_Radius" typeName="double" displayLabel="Radius" category="GeometryAttributes_Geometry" priority="298980" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="ProfileCircularArc_CenterPoint" typeName="point3d" displayLabel="Center Point" category="GeometryAttributes_Geometry" priority="298970"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsProfileCircularArcAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="ProfileCircularArcAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="ProfileComplexAspect">
+        <BaseClass>ProfileElementAspect</BaseClass>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsProfileComplexAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="ProfileComplexAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="ElementOwnsProfiledElementAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="ProfiledElementAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="ElementOwnsProfileElementAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="ProfileElementAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="ProfileLineAspect">
+        <BaseClass>ProfileElementAspect</BaseClass>
+        <DMProperty propertyName="LinearElement_ProfileLine_Slope" typeName="double" displayLabel="Slope" category="GeometryAttributes_Geometry" priority="299900"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsProfileLineAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="ProfileLineAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="ProfileLineStringAspect">
+        <BaseClass>ProfileElementAspect</BaseClass>
+        <DMProperty propertyName="LinearElement_ProfileLineString_VerticesCount" typeName="int" displayLabel="Count" category="GeometryAttributes_Geometry" priority="299000"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsProfileLineStringAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="ProfileLineStringAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="ProfileParabolaAspect">
+        <BaseClass>ProfileElementAspect</BaseClass>
+        <DMProperty propertyName="ProfileParabola_VPIPoint" typeName="point3d" displayLabel="VPI Point" category="GeometryAttributes_Geometry" priority="298950"/>
+        <DMProperty propertyName="ProfileParabola_SummitPoint" typeName="point3d" displayLabel="Summit Point" category="GeometryAttributes_Geometry" priority="298940"/>
+        <DMProperty propertyName="ProfileParabola_StartSlope" typeName="double" displayLabel="Slope Start" category="GeometryAttributes_Geometry" priority="298930"/>
+        <DMProperty propertyName="ProfileParabola_EndSlope" typeName="double" displayLabel="Slope End" category="GeometryAttributes_Geometry" priority="298920"/>
+        <DMProperty propertyName="ProfileParabola_KValue" typeName="double" displayLabel="K" category="GeometryAttributes_Geometry" priority="298910" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="ProfileParabola_LeftLength" typeName="double" displayLabel="Left Extent" category="GeometryAttributes_Geometry" priority="298890" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="ProfileParabola_RightLength" typeName="double" displayLabel="Right Extent" category="GeometryAttributes_Geometry" priority="298880" kindOfQuantity="cifu:LENGTH"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsProfileParabolaAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="ProfileParabolaAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="ProfilePointbyIntersectionRuleAspect" displayLabel="Profile Intersection Point">
+        <BaseClass>CivilPresentation</BaseClass>
+        <DMProperty propertyName="Station" typeName="double" displayLabel="Station" category="ProfilePointbyIntersectionRuleAttributes_Profile_Intersection_Point" priority="299800" kindOfQuantity="cifu:STATION"/>
+        <DMProperty propertyName="Elevation" typeName="double" displayLabel="Elevation" category="ProfilePointbyIntersectionRuleAttributes_Profile_Intersection_Point" priority="299700" kindOfQuantity="cifu:LENGTH"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsProfilePointbyIntersectionRuleAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="ProfilePointbyIntersectionRuleAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="RadiusTransitionAspect">
+        <BaseClass>CivilPresentation</BaseClass>
+        <DMProperty propertyName="ParameterName" typeName="string" displayLabel="Name" category="Radius_Transition_Setting_Attributes_Radius_Transition_Settings" priority="300000"/>
+        <DMProperty propertyName="ParameterDefaultTransitionLength" typeName="double" displayLabel="Default Transition Length" category="Radius_Transition_Setting_Attributes_Radius_Transition_Settings" priority="300000" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="ParameterMinTransitionLength" typeName="double" displayLabel="Minimum Transition Length" category="Radius_Transition_Setting_Attributes_Radius_Transition_Settings" priority="300000" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="ParameterRadius" typeName="double" displayLabel="Radius" category="Radius_Transition_Setting_Attributes_Radius_Transition_Settings" priority="300000"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsRadiusTransitionAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="RadiusTransitionAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="ReadOnlyBSplineAspect">
+        <BaseClass>ReadOnlyLinearElementAspect</BaseClass>
+        <DMProperty propertyName="BSpline_IsRational" typeName="int" displayLabel="BSpline_IsRational" category="Miscellaneous_Read_Only_BSpline" priority="0"/>
+        <DMProperty propertyName="BSpline_KnotsCount" typeName="int" displayLabel="BSpline_KnotsCount" category="Miscellaneous_Read_Only_BSpline" priority="0"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsReadOnlyBSplineAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="ReadOnlyBSplineAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="ReadOnlyCircularArcAspect">
+        <BaseClass>LinearElementAspect</BaseClass>
+        <DMProperty propertyName="LinearElement_CircularArc_Radius" typeName="double" displayLabel="Radius" category="GeometryAttributes_Geometry" priority="299975" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_CircularArc_SweepAngle" typeName="double" displayLabel="Sweep Angle" category="GeometryAttributes_Geometry" priority="299974" kindOfQuantity="cifu:ANGLE"/>
+        <DMProperty propertyName="LinearElement_CircularArc_Tangent" typeName="double" displayLabel="Tangent" category="GeometryAttributes_Geometry" priority="299960" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_CircularArc_Chord" typeName="double" displayLabel="Chord" category="GeometryAttributes_Geometry" priority="299950" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_CircularArc_StartDirection" typeName="double" displayLabel="Start Direction" category="GeometryAttributes_Geometry" priority="299900" kindOfQuantity="cifu:BEARING"/>
+        <DMProperty propertyName="LinearElement_CircularArc_EndDirection" typeName="double" displayLabel="End Direction" category="GeometryAttributes_Geometry" priority="299890" kindOfQuantity="cifu:BEARING"/>
+        <DMProperty propertyName="LinearElement_CircularArc_DegreeOfCurve" typeName="double" displayLabel="Degree of Curvature" category="GeometryAttributes_Geometry" priority="299870" kindOfQuantity="cifu:ANGLE"/>
+        <DMProperty propertyName="LinearElement_CircularArc_DegreeOfCurveDefinition" typeName="ReadOnlyCircularArcAspect_LinearElement_CircularArc_DegreeOfCurveDefinition_Enum" displayLabel="Degree of Curvature Definition" category="GeometryAttributes_Geometry" priority="299880"/>
+        <DMProperty propertyName="LinearElement_CircularArc_CenterPoint" typeName="point3d" displayLabel="Center Point" category="GeometryAttributes_Geometry" priority="299860"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsReadOnlyCircularArcAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="ReadOnlyCircularArcAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="ReadOnlyClosedLinearComplexAspect">
+        <BaseClass>LinearComplexAspect</BaseClass>
+        <DMProperty propertyName="ClosedLinearComplex_IsClockWise" typeName="ReadOnlyClosedLinearComplexAspect_ClosedLinearComplex_IsClockWise_BoolEnum" displayLabel="Clockwise" category="GeometryAttributes_Geometry" priority="299960"/>
+        <DMProperty propertyName="ClosedLinearComplex_Area" typeName="double" displayLabel="Area" category="GeometryAttributes_Geometry" priority="299970" kindOfQuantity="cifu:AREA"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsReadOnlyClosedLinearComplexAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="ReadOnlyClosedLinearComplexAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="ReadOnlyLineStringAspect">
+        <BaseClass>ReadOnlyLinearElementAspect</BaseClass>
+        <DMProperty propertyName="LinearElement_LineString_VerticesCount" typeName="int" displayLabel="Count" category="GeometryAttributes_Geometry" priority="299900"/>
+    </DMEntityClass>
+    <DMEntityClass typeName="ReadOnlyClosedLineStringAspect">
+        <BaseClass>ReadOnlyLineStringAspect</BaseClass>
+        <DMProperty propertyName="LinearElement_LineString_VerticesCount" typeName="int" displayLabel="Count" category="GeometryAttributes_Geometry" priority="299900"/>
+        <DMProperty propertyName="LinearElement_ClosedLineString_IsClockWise" typeName="ReadOnlyClosedLineStringAspect_LinearElement_ClosedLineString_IsClockWise_Enum" displayLabel="Clockwise" category="GeometryAttributes_Geometry" priority="299000"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsReadOnlyClosedLineStringAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="ReadOnlyClosedLineStringAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="ReadOnlyProfiledElementAspect">
+        <BaseClass>ReadOnlyLinearElementAspect</BaseClass>
+    </DMEntityClass>
+    <DMEntityClass typeName="ReadOnlySpiralAspect">
+        <BaseClass>ReadOnlyProfiledElementAspect</BaseClass>
+        <DMProperty propertyName="LinearElement_Spiral_StartRadius" typeName="double" displayLabel="Start Radius" category="GeometryAttributes_Geometry" priority="299975" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_Spiral_EndRadius" typeName="double" displayLabel="End Radius" category="GeometryAttributes_Geometry" priority="299974" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_Spiral_SweepAngle" typeName="double" displayLabel="Sweep Angle" category="GeometryAttributes_Geometry" priority="299870" kindOfQuantity="cifu:ANGLE"/>
+        <DMProperty propertyName="LinearElement_Spiral_Constant" typeName="double" displayLabel="Constant" category="GeometryAttributes_Geometry" priority="299860" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_Spiral_LongTangent" typeName="double" displayLabel="Long Tangent" category="GeometryAttributes_Geometry" priority="299850" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_Spiral_ShortTangent" typeName="double" displayLabel="Short Tangent" category="GeometryAttributes_Geometry" priority="299840" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_Spiral_LongChord" typeName="double" displayLabel="Long Chord" category="GeometryAttributes_Geometry" priority="299830" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_Spiral_Xs" typeName="double" displayLabel="Xs" category="GeometryAttributes_Geometry" priority="299820" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_Spiral_Ys" typeName="double" displayLabel="Ys" category="GeometryAttributes_Geometry" priority="299810" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_Spiral_PValue" typeName="double" displayLabel="P" category="GeometryAttributes_Geometry" priority="299800" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_Spiral_KValue" typeName="double" displayLabel="K" category="GeometryAttributes_Geometry" priority="299790" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_Spiral_StartDirection" typeName="double" displayLabel="Start Direction" category="GeometryAttributes_Geometry" priority="299780" kindOfQuantity="cifu:BEARING"/>
+        <DMProperty propertyName="LinearElement_Spiral_EndDirection" typeName="double" displayLabel="End Direction" category="GeometryAttributes_Geometry" priority="299770" kindOfQuantity="cifu:BEARING"/>
+        <DMProperty propertyName="LinearElement_Spiral_IntrinsicPoint" typeName="point3d" displayLabel="Intrinsic Point" category="GeometryAttributes_Geometry" priority="299700"/>
+        <DMProperty propertyName="LinearElement_Spiral_StartArcCenterPoint" typeName="point3d" displayLabel="Start Arc Center Point" category="GeometryAttributes_Geometry" priority="299690"/>
+        <DMProperty propertyName="LinearElement_Spiral_EndArcCenterPoint" typeName="point3d" displayLabel="End Arc Center Point" category="GeometryAttributes_Geometry" priority="299680"/>
+    </DMEntityClass>
+    <DMEntityClass typeName="ReadOnlyClothoidAspect">
+        <BaseClass>ReadOnlySpiralAspect</BaseClass>
+        <DMProperty propertyName="LinearElement_Spiral_StartRadius" typeName="double" displayLabel="Start Radius" category="GeometryAttributes_Geometry" priority="299975" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_Spiral_EndRadius" typeName="double" displayLabel="End Radius" category="GeometryAttributes_Geometry" priority="299974" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_Spiral_SweepAngle" typeName="double" displayLabel="Sweep Angle" category="GeometryAttributes_Geometry" priority="299870" kindOfQuantity="cifu:ANGLE"/>
+        <DMProperty propertyName="LinearElement_Spiral_Constant" typeName="double" displayLabel="Constant" category="GeometryAttributes_Geometry" priority="299860" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_Spiral_LongTangent" typeName="double" displayLabel="Long Tangent" category="GeometryAttributes_Geometry" priority="299850" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_Spiral_ShortTangent" typeName="double" displayLabel="Short Tangent" category="GeometryAttributes_Geometry" priority="299840" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_Spiral_LongChord" typeName="double" displayLabel="Long Chord" category="GeometryAttributes_Geometry" priority="299830" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_Spiral_Xs" typeName="double" displayLabel="Xs" category="GeometryAttributes_Geometry" priority="299820" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_Spiral_Ys" typeName="double" displayLabel="Ys" category="GeometryAttributes_Geometry" priority="299810" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_Spiral_PValue" typeName="double" displayLabel="P" category="GeometryAttributes_Geometry" priority="299800" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_Spiral_KValue" typeName="double" displayLabel="K" category="GeometryAttributes_Geometry" priority="299790" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_Spiral_StartDirection" typeName="double" displayLabel="Start Direction" category="GeometryAttributes_Geometry" priority="299780" kindOfQuantity="cifu:BEARING"/>
+        <DMProperty propertyName="LinearElement_Spiral_EndDirection" typeName="double" displayLabel="End Direction" category="GeometryAttributes_Geometry" priority="299770" kindOfQuantity="cifu:BEARING"/>
+        <DMProperty propertyName="LinearElement_Spiral_IntrinsicPoint" typeName="point3d" displayLabel="Intrinsic Point" category="GeometryAttributes_Geometry" priority="299700"/>
+        <DMProperty propertyName="LinearElement_Spiral_StartArcCenterPoint" typeName="point3d" displayLabel="Start Arc Center Point" category="GeometryAttributes_Geometry" priority="299690"/>
+        <DMProperty propertyName="LinearElement_Spiral_EndArcCenterPoint" typeName="point3d" displayLabel="End Arc Center Point" category="GeometryAttributes_Geometry" priority="299680"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsReadOnlyClothoidAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="ReadOnlyClothoidAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="ReadOnlyCompoundElementAspect">
+        <BaseClass>ReadOnlyProfiledElementAspect</BaseClass>
+        <DMProperty propertyName="LinearElement_Length" typeName="double" displayLabel="Length" category="GeometryAttributes_Geometry" priority="299970" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinearElement_StartPoint" typeName="point3d" displayLabel="Start Point" category="GeometryAttributes_Geometry" priority="299990"/>
+        <DMProperty propertyName="LinearElement_EndPoint" typeName="point3d" displayLabel="End Point" category="GeometryAttributes_Geometry" priority="299980"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsReadOnlyCompoundElementAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="ReadOnlyCompoundElementAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="ReadOnlyLine3dAspect">
+        <BaseClass>ReadOnlyProfiledElementAspect</BaseClass>
+        <DMProperty propertyName="LinearElement_Line3d_Direction" typeName="double" displayLabel="Direction" category="GeometryAttributes_Geometry" priority="299900" kindOfQuantity="cifu:LENGTH"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsReadOnlyLine3dAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="ReadOnlyLine3dAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="ElementOwnsReadOnlyLinearComplexAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="ReadOnlyLinearComplexAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="ElementOwnsReadOnlyLinearElementAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="ReadOnlyLinearElementAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="ReadOnlyLineAspect">
+        <BaseClass>ReadOnlyLinearElementAspect</BaseClass>
+        <DMProperty propertyName="LinearElement_Line_Direction" typeName="double" displayLabel="Direction" category="GeometryAttributes_Geometry" priority="299900" kindOfQuantity="cifu:BEARING"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsReadOnlyLineAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="ReadOnlyLineAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="ReadOnlyLineString3dAspect">
+        <BaseClass>ReadOnlyProfiledElementAspect</BaseClass>
+        <DMProperty propertyName="LinearElement_LineString3d_VerticesCount" typeName="int" displayLabel="Count" category="GeometryAttributes_Geometry" priority="299900"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsReadOnlyLineString3dAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="ReadOnlyLineString3dAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="ElementOwnsReadOnlyLineStringAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="ReadOnlyLineStringAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="ReadOnlyProfileCircularArcAspect">
+        <BaseClass>ProfileElementAspect</BaseClass>
+        <DMProperty propertyName="ProfileCircularArc_EndSlope" typeName="double" displayLabel="Slope End" category="GeometryAttributes_Geometry" priority="298950"/>
+        <DMProperty propertyName="ProfileCircularArc_StartSlope" typeName="double" displayLabel="Slope Start" category="GeometryAttributes_Geometry" priority="298960"/>
+        <DMProperty propertyName="ProfileCircularArc_RightTangent" typeName="point3d" displayLabel="Right Tangent" category="GeometryAttributes_Geometry" priority="298940"/>
+        <DMProperty propertyName="ProfileCircularArc_LeftTangent" typeName="point3d" displayLabel="Left Tangent" category="GeometryAttributes_Geometry" priority="298930"/>
+        <DMProperty propertyName="ProfileCircularArc_EndLocalAbscissa" typeName="double" displayLabel="Local Abscissa End" category="GeometryAttributes_Geometry" priority="298920"/>
+        <DMProperty propertyName="ProfileCircularArc_StartLocalAbscissa" typeName="double" displayLabel="Local Abscissa Start" category="GeometryAttributes_Geometry" priority="298910"/>
+        <DMProperty propertyName="ProfileCircularArc_VPIPoint" typeName="point3d" displayLabel="VPI Point" category="GeometryAttributes_Geometry" priority="298900"/>
+        <DMProperty propertyName="ProfileCircularArc_ProjectedLength" typeName="double" displayLabel="Projected Length" category="GeometryAttributes_Geometry" priority="298890" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="ProfileCircularArc_RightLength" typeName="double" displayLabel="Right Extent" category="GeometryAttributes_Geometry" priority="298880" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="ProfileCircularArc_LeftLength" typeName="double" displayLabel="Left Extent" category="GeometryAttributes_Geometry" priority="298870" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="ProfileCircularArc_SweepAngle" typeName="double" displayLabel="Sweep Angle" category="GeometryAttributes_Geometry" priority="298990" kindOfQuantity="cifu:ANGLE"/>
+        <DMProperty propertyName="ProfileCircularArc_StartDirection" typeName="double" displayLabel="Start Direction" category="GeometryAttributes_Geometry" priority="299000" kindOfQuantity="cifu:BEARING"/>
+        <DMProperty propertyName="ProfileCircularArc_Radius" typeName="double" displayLabel="Radius" category="GeometryAttributes_Geometry" priority="298980" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="ProfileCircularArc_CenterPoint" typeName="point3d" displayLabel="Center Point" category="GeometryAttributes_Geometry" priority="298970"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsReadOnlyProfileCircularArcAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="ReadOnlyProfileCircularArcAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="ReadOnlyProfileComplexAspect">
+        <BaseClass>ProfileElementAspect</BaseClass>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsReadOnlyProfileComplexAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="ReadOnlyProfileComplexAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="ElementOwnsReadOnlyProfiledElementAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="ReadOnlyProfiledElementAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="ReadOnlyProfileLineAspect">
+        <BaseClass>ProfileElementAspect</BaseClass>
+        <DMProperty propertyName="LinearElement_ProfileLine_Slope" typeName="double" displayLabel="Slope" category="GeometryAttributes_Geometry" priority="299900"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsReadOnlyProfileLineAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="ReadOnlyProfileLineAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="ReadOnlyProfileLineStringAspect">
+        <BaseClass>ProfileElementAspect</BaseClass>
+        <DMProperty propertyName="LinearElement_ProfileLineString_VerticesCount" typeName="int" displayLabel="Count" category="GeometryAttributes_Geometry" priority="299000"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsReadOnlyProfileLineStringAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="ReadOnlyProfileLineStringAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="ReadOnlyProfileParabolaAspect">
+        <BaseClass>ProfileElementAspect</BaseClass>
+        <DMProperty propertyName="ProfileParabola_VPIPoint" typeName="point3d" displayLabel="VPI Point" category="GeometryAttributes_Geometry" priority="298950"/>
+        <DMProperty propertyName="ProfileParabola_SummitPoint" typeName="point3d" displayLabel="Summit Point" category="GeometryAttributes_Geometry" priority="298940"/>
+        <DMProperty propertyName="ProfileParabola_StartSlope" typeName="double" displayLabel="Slope Start" category="GeometryAttributes_Geometry" priority="298930"/>
+        <DMProperty propertyName="ProfileParabola_EndSlope" typeName="double" displayLabel="Slope End" category="GeometryAttributes_Geometry" priority="298920"/>
+        <DMProperty propertyName="ProfileParabola_KValue" typeName="double" displayLabel="K" category="GeometryAttributes_Geometry" priority="298910" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="ProfileParabola_LeftLength" typeName="double" displayLabel="Left Extent" category="GeometryAttributes_Geometry" priority="298890" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="ProfileParabola_RightLength" typeName="double" displayLabel="Right Extent" category="GeometryAttributes_Geometry" priority="298880" kindOfQuantity="cifu:LENGTH"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsReadOnlyProfileParabolaAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="ReadOnlyProfileParabolaAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="ElementOwnsReadOnlySpiralAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="ReadOnlySpiralAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="SecondaryAlignmentAspect">
+        <BaseClass>CivilPresentation</BaseClass>
+        <DMProperty propertyName="SecondaryAlignmentName" typeName="string" displayLabel="Name" category="SecondaryAlignment_Secondary_Alignment" priority="299999"/>
+        <DMProperty propertyName="StartOffset" typeName="double" displayLabel="Start Offset" category="SecondaryAlignment_Secondary_Alignment" priority="299998"/>
+        <DMProperty propertyName="StopOffset" typeName="double" displayLabel="Stop Offset" category="SecondaryAlignment_Secondary_Alignment" priority="-3"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsSecondaryAlignmentAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="SecondaryAlignmentAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="ElementOwnsSpiralAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="SpiralAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="StationEquationAspect">
+        <BaseClass>CivilPresentation</BaseClass>
+        <DMProperty propertyName="BackLocation" typeName="double" displayLabel="BackLocation" category="Miscellaneous_Station_Equation" priority="0" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="BackLocation_DistanceAlong" typeName="double" kindOfQuantity="cifu:STATION">
+            <DMCustomAttributes>
+                <HiddenProperty xmlns="CoreCustomAttributes.01.00.03"/>
+                <Deprecated xmlns="CoreCustomAttributes.01.00.03">
+                    <Description>Unnecessary duplicate-property. Use 'BackLocation' directly</Description>
+                </Deprecated>
+            </DMCustomAttributes>
+        </DMProperty>
+        <DMProperty propertyName="BackStation" typeName="string" displayLabel="Back Station" category="StationingProperties_Stationing" priority="299995"/>
+        <DMProperty propertyName="AheadStation" typeName="string" displayLabel="Ahead Station" category="StationingProperties_Stationing" priority="299994"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsStationEquationAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="StationEquationAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="StationingEntityAspect">
+        <BaseClass>CivilPresentation</BaseClass>
+        <DMProperty propertyName="AssignedStation" typeName="string" displayLabel="Assigned Station" category="StationingProperties_Stationing" priority="299999"/>
+        <DMProperty propertyName="AssignedLocation" typeName="double" displayLabel="Assigned Location" category="StationingProperties_Stationing" priority="299999" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="AssignedLocation_DistanceAlong" typeName="double" kindOfQuantity="cifu:STATION">
+            <DMCustomAttributes>
+                <HiddenProperty xmlns="CoreCustomAttributes.01.00.03"/>
+                <Deprecated xmlns="CoreCustomAttributes.01.00.03">
+                    <Description>Unnecessary duplicate-property. Use 'AssignedLocation' directly</Description>
+                </Deprecated>
+            </DMCustomAttributes>
+        </DMProperty>
+        <DMProperty propertyName="BeginStation" typeName="string" displayLabel="Begin Station" category="StationingProperties_Stationing" priority="299998"/>
+        <DMProperty propertyName="EndStation" typeName="string" displayLabel="End Station" category="StationingProperties_Stationing" priority="299997"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsStationingEntityAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="StationingEntityAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="StrokingPropertiesClassAspect">
+        <BaseClass>CivilPresentation</BaseClass>
+        <DMProperty propertyName="StrokingStepMethod" typeName="StrokingPropertiesClassAspect_StrokingStepMethod_Enum" displayLabel="Stroking Step Method" category="StrokingDefinition_Stroking_Definition" priority="0"/>
+        <DMProperty propertyName="LinearStroking" typeName="double" displayLabel="Linear Stroking" category="StrokingDefinition_Stroking_Definition" priority="0" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="CurveStroking" typeName="double" displayLabel="Curve Stroking" category="StrokingDefinition_Stroking_Definition" priority="0" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="ProfileStroking" typeName="double" displayLabel="Profile Stroking" category="StrokingDefinition_Stroking_Definition" priority="0" kindOfQuantity="cifu:LENGTH"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsStrokingPropertiesClassAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="StrokingPropertiesClassAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="TargetAliasAspect">
+        <BaseClass>CivilPresentation</BaseClass>
+        <DMProperty propertyName="Name" typeName="string" displayLabel="Name" category="TargetAlias_Target_Alias" priority="299999"/>
+        <DMProperty propertyName="Type" typeName="string" displayLabel="Type" category="TargetAlias_Target_Alias" priority="299998"/>
+        <DMProperty propertyName="UseClosest" typeName="boolean" displayLabel="Use Closest" category="TargetAlias_Target_Alias" priority="299997"/>
+        <DMProperty propertyName="Aliases" typeName="string" displayLabel="Aliases" category="TargetAlias_Target_Alias" priority="299996"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsTargetAliasAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="TargetAliasAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="TemplateDropAspect">
+        <BaseClass>CivilPresentation</BaseClass>
+        <DMProperty propertyName="HorizontalName" typeName="string" displayLabel="Horizontal Name" category="TemplateDrop_Template_Drop" priority="-3"/>
+        <DMProperty propertyName="TemplateName" typeName="string" displayLabel="Template Name" category="TemplateDrop_Template_Drop" priority="0"/>
+        <DMProperty propertyName="Interval" typeName="double" displayLabel="Interval" category="TemplateDrop_Template_Drop" priority="299998" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="Description" typeName="string" displayLabel="Description" category="TemplateDrop_Template_Drop" priority="-4"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsTemplateDropAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="TemplateDropAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="TemplateTransitionAspect">
+        <BaseClass>CivilPresentation</BaseClass>
+        <DMProperty propertyName="StartTemplateName" typeName="string" displayLabel="Start Template Name" category="TemplateTransitionRuleAttributes_Template_Transition" priority="299999"/>
+        <DMProperty propertyName="EndTemplateName" typeName="string" displayLabel="End Template Name" category="TemplateTransitionRuleAttributes_Template_Transition" priority="299998"/>
+        <DMProperty propertyName="Interval" typeName="double" displayLabel="Interval" category="TemplateTransitionRuleAttributes_Template_Transition" priority="299997" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="Description" typeName="string" displayLabel="Description" category="TemplateTransitionRuleAttributes_Template_Transition" priority="299996"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsTemplateTransitionAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="TemplateTransitionAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="ThreeDCutViewAspect">
+        <BaseClass>CivilPresentation</BaseClass>
+        <DMProperty propertyName="StartStation" typeName="double" displayLabel="Start Station" category="ClipVolume_Clip_Volume" priority="299998"/>
+        <DMProperty propertyName="EndStation" typeName="double" displayLabel="End Station" category="ClipVolume_Clip_Volume" priority="299994"/>
+        <DMProperty propertyName="CutOffset" typeName="double" displayLabel="Cut Offset" category="ClipVolume_Clip_Volume" priority="299991" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="BottomElevation" typeName="double" displayLabel="Bottom Elevation" category="ClipVolume_Clip_Volume" priority="299992" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="TopElevation" typeName="double" displayLabel="Top Elevation" category="ClipVolume_Clip_Volume" priority="299996" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="ClipStartStation" typeName="boolean" displayLabel="Clip Start Station" category="ClipVolume_Clip_Volume" priority="299999"/>
+        <DMProperty propertyName="ClipEndStation" typeName="boolean" displayLabel="Clip End Station" category="ClipVolume_Clip_Volume" priority="299995"/>
+        <DMProperty propertyName="ClipBottomElevation" typeName="boolean" displayLabel="Clip Bottom Elevation" category="ClipVolume_Clip_Volume" priority="299993"/>
+        <DMProperty propertyName="ClipTopElevation" typeName="boolean" displayLabel="Clip Top Elevation" category="ClipVolume_Clip_Volume" priority="299997"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsThreeDCutViewAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="ThreeDCutViewAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="VerticalCurveAspect">
+        <BaseClass>CivilPresentation</BaseClass>
+        <DMProperty propertyName="Name" typeName="string" displayLabel="Name" category="Vertical_Curve_Setting_Attributes_VerticalCurveSettings" priority="300000"/>
+        <DMProperty propertyName="SagMinimum" typeName="double" displayLabel="Sag Minimum" category="Vertical_Curve_Setting_Attributes_VerticalCurveSettings" priority="300000"/>
+        <DMProperty propertyName="SagDefault" typeName="double" displayLabel="Sag Default" category="Vertical_Curve_Setting_Attributes_VerticalCurveSettings" priority="300000"/>
+        <DMProperty propertyName="CrestMinimum" typeName="double" displayLabel="Crest Minimum" category="Vertical_Curve_Setting_Attributes_VerticalCurveSettings" priority="300000"/>
+        <DMProperty propertyName="CrestDefault" typeName="double" displayLabel="Crest Default" category="Vertical_Curve_Setting_Attributes_VerticalCurveSettings" priority="300000"/>
+        <DMProperty propertyName="Speed" typeName="double" displayLabel="Speed" category="Vertical_Curve_Setting_Attributes_VerticalCurveSettings" priority="300000"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsVerticalCurveAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="VerticalCurveAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="VerticalDesignStandardAspect">
+        <BaseClass>CivilPresentation</BaseClass>
+        <DMProperty propertyName="MinimumSlope" typeName="double" displayLabel="Minimum Slope" category="Design_Standard_Attributes_Vertical_Design_Standard" priority="299998" kindOfQuantity="cifu:SLOPE"/>
+        <DMProperty propertyName="MaximumSlope" typeName="double" displayLabel="Maximum Slope" category="Design_Standard_Attributes_Vertical_Design_Standard" priority="299997" kindOfQuantity="cifu:SLOPE"/>
+        <DMProperty propertyName="MaxDifferenceInGrade" typeName="double" displayLabel="Maximum Difference in Grade" category="Design_Standard_Attributes_Vertical_Design_Standard" priority="299993" kindOfQuantity="cifu:SLOPE"/>
+        <DMProperty propertyName="Table" typeName="string" displayLabel="Table" category="Design_Standard_Attributes_Vertical_Design_Standard" priority="299991"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsVerticalDesignStandardAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="VerticalDesignStandardAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="GeometricElementBoundsContentForSheet" modifier="None" strength="referencing">
+        <BaseClass>bis:ElementRefersToElements</BaseClass>
+        <Source multiplicity="(0..*)" roleLabel="bounds content for" polymorphic="true">
+            <Class class="bis:GeometricElement"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="has content bounded by" polymorphic="false">
+            <Class class="bis:Sheet"/>
+        </Target>
+    </DMRelationshipClass>
+    <PropertyCategory typeName="CivilObjectStatusAttributes_Object_Status" description="CivilObjectStatusAttributes" displayLabel="Object Status" priority="299990"/>
+    <PropertyCategory typeName="ClipVolume_Clip_Volume" description="ClipVolume" displayLabel="Clip Volume" priority="199800"/>
+    <PropertyCategory typeName="Corridor_Corridor" description="Corridor" displayLabel="Corridor" priority="199800"/>
+    <PropertyCategory typeName="CurveWidening_Curve_Widening" description="CurveWidening" displayLabel="Curve Widening" priority="199800"/>
+    <PropertyCategory typeName="Design_Standard_Attributes_Vertical_Design_Standard" description="Design Standard Attributes" displayLabel="Vertical Design Standard" priority="299999"/>
+    <PropertyCategory typeName="DistanceAlongSlopeEntityProperties_Distance_Along_Slope_Entity" description="DistanceAlongSlopeEntityProperties" displayLabel="Distance Along Slope Entity" priority="0"/>
+    <PropertyCategory typeName="EndConditionException_End_Condition_Exception" description="EndConditionException" displayLabel="End Condition Exception" priority="199800"/>
+    <PropertyCategory typeName="FeatureDefinition_Feature_Definition" description="FeatureDefinition" displayLabel="Feature Definition" priority="299990"/>
+    <PropertyCategory typeName="FeatureProperties_Feature" description="FeatureProperties" displayLabel="Feature" priority="299999"/>
+    <PropertyCategory typeName="FlowLineEntity_Aquaplaning" description="FlowLineEntity" displayLabel="Aquaplaning" priority="100000"/>
+    <PropertyCategory typeName="GeometryAttributes_Geometry" description="GeometryAttributes" displayLabel="Geometry" priority="300000"/>
+    <PropertyCategory typeName="GeometryPointsCategoryAttributes_Geometry_Points" description="GeometryPointsCategoryAttributes" displayLabel="Geometry Points" priority="4294967096"/>
+    <PropertyCategory typeName="KeyStation_Key_Station" description="KeyStation" displayLabel="Key Station" priority="199800"/>
+    <PropertyCategory typeName="MeshQuantities_Civil_Quantities" description="MeshQuantities" displayLabel="Civil Quantities" priority="100000"/>
+    <PropertyCategory typeName="MeshSurfaceEntity_Component_Layer" description="MeshSurfaceEntity" displayLabel="Component Layer" priority="100000"/>
+    <PropertyCategory typeName="Miscellaneous_BSpline" description="Miscellaneous" displayLabel="BSpline" priority="0"/>
+    <PropertyCategory typeName="Miscellaneous_BSpline_Presentation" description="Miscellaneous" displayLabel="BSpline_Presentation" priority="0"/>
+    <PropertyCategory typeName="Miscellaneous_Corridor" description="Miscellaneous" displayLabel="Corridor" priority="0"/>
+    <PropertyCategory typeName="Miscellaneous_Corridor_Presentation" description="Miscellaneous" displayLabel="Corridor_Presentation" priority="0"/>
+    <PropertyCategory typeName="Miscellaneous_Internal_Station_Equation" description="Miscellaneous" displayLabel="Internal Station Equation" priority="0"/>
+    <PropertyCategory typeName="Miscellaneous_InternalStationEquation_Presentation" description="Miscellaneous" displayLabel="InternalStationEquation_Presentation" priority="0"/>
+    <PropertyCategory typeName="Miscellaneous_Intersection_Point" description="Miscellaneous" displayLabel="Intersection Point" priority="401000"/>
+    <PropertyCategory typeName="Miscellaneous_IntersectionPointStruct" description="Miscellaneous" displayLabel="IntersectionPointStruct" priority="401000"/>
+    <PropertyCategory typeName="Miscellaneous_Read_Only_BSpline" description="Miscellaneous" displayLabel="Read Only BSpline" priority="0"/>
+    <PropertyCategory typeName="Miscellaneous_ReadOnlyBSpline_Presentation" description="Miscellaneous" displayLabel="ReadOnlyBSpline_Presentation" priority="0"/>
+    <PropertyCategory typeName="Miscellaneous_Station_Equation" description="Miscellaneous" displayLabel="Station Equation" priority="0"/>
+    <PropertyCategory typeName="Miscellaneous_StationEquation_Presentation" description="Miscellaneous" displayLabel="StationEquation_Presentation" priority="0"/>
+    <PropertyCategory typeName="Name_General_Category" description="Name" displayLabel="General Category" priority="300000"/>
+    <PropertyCategory typeName="ParametricConstraint_Parametric_Constraint" description="ParametricConstraint" displayLabel="Parametric Constraint" priority="199800"/>
+    <PropertyCategory typeName="PointControl_PointControl" description="PointControl" displayLabel="PointControl" priority="199800"/>
+    <PropertyCategory typeName="PointGroupCategoryAttributes_Point_Group" description="PointGroupCategoryAttributes" displayLabel="Point Group" priority="4294966996"/>
+    <PropertyCategory typeName="PointOrderedListAttributes_Point_Ordered_List" description="PointOrderedListAttributes" displayLabel="Point Ordered List" priority="0"/>
+    <PropertyCategory typeName="Portal_Portal" description="Portal" displayLabel="Portal" priority="199800"/>
+    <PropertyCategory typeName="ProfilePointbyIntersectionRuleAttributes_Profile_Intersection_Point" description="ProfilePointbyIntersectionRuleAttributes" displayLabel="Profile Intersection Point" priority="0"/>
+    <PropertyCategory typeName="ProjectionProperties_Geographical_Coordinate_Systems" description="ProjectionProperties" displayLabel="Geographical Coordinate Systems" priority="299980"/>
+    <PropertyCategory typeName="Radius_Transition_Setting_Attributes_Radius_Transition_Settings" description="Radius Transition Setting Attributes" displayLabel="Radius Transition Settings" priority="299999"/>
+    <PropertyCategory typeName="SecondaryAlignment_Secondary_Alignment" description="SecondaryAlignment" displayLabel="Secondary Alignment" priority="199800"/>
+    <PropertyCategory typeName="StationingProperties_Stationing" description="StationingProperties" displayLabel="Stationing" priority="0"/>
+    <PropertyCategory typeName="StrokingDefinition_Stroking_Definition" description="StrokingDefinition" displayLabel="Stroking Definition" priority="0"/>
+    <PropertyCategory typeName="TargetAlias_Target_Alias" description="TargetAlias" displayLabel="Target Alias" priority="199800"/>
+    <PropertyCategory typeName="TemplateDrop_Template_Drop" description="TemplateDrop" displayLabel="Template Drop" priority="199800"/>
+    <PropertyCategory typeName="TemplateTransitionRuleAttributes_Template_Transition" description="TemplateTransitionRuleAttributes" displayLabel="Template Transition" priority="300000"/>
+    <PropertyCategory typeName="TerrainModelBySelectedElementAttributes_Create_from_Elements_UnLinked" description="TerrainModelBySelectedElementAttributes" displayLabel="Create from Elements (UnLinked)" priority="299999"/>
+    <PropertyCategory typeName="TriangulationOptions_Triangulation_Options" description="TriangulationOptions" displayLabel="Triangulation Options" priority="299981"/>
+    <PropertyCategory typeName="Vertical_Curve_Setting_Attributes_VerticalCurveSettings" description="Vertical Curve Setting Attributes" displayLabel="&lt;- VerticalCurveSettings -&gt;" priority="299999"/>
+</DMSchema>

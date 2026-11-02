@@ -1,0 +1,43 @@
+{
+  "name": "@itwin/storybook-auth-addon",
+  "version": "0.1.0",
+  "private": true,
+  "homepage": ".",
+  "dependencies": {
+    "@storybook/addons": "^6.5.16",
+    "@storybook/api": "^6.5.16",
+    "@storybook/components": "^6.5.16"
+  },
+  "devDependencies": {
+    "@bentley/bentleyjs-core": "2.11.0",
+    "@bentley/frontend-authorization-client": "2.11.0",
+    "@bentley/itwin-client": "2.11.0",
+    "@types/react": "^18.3.5",
+    "@types/react-dom": "^18.3.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.57.0",
+    "esbuild": "^0.25.0",
+    "eslint-config-airbnb": "^0.0.4",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-jsx-a11y": "^6.3.1",
+    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-react-hooks": "^4.0.7",
+    "eslint-plugin-react": "^7.20.3",
+    "eslint-plugin-simple-import-sort": "^5.0.3",
+    "eslint": "^8.3.0",
+    "react-dom": "^18.3.1",
+    "react": "^18.3.1",
+    "rimraf": "^3.0.2",
+    "typescript": "~6.0.3"
+  },
+  "peerDependencies": {
+    "@bentley/bentleyjs-core": "2.11.0",
+    "@bentley/frontend-authorization-client": "2.11.0"
+  },
+  "scripts": {
+    "build": "node ./scripts/build.js",
+    "test": "",
+    "clean": "rimraf build"
+  }
+}

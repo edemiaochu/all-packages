@@ -1,0 +1,87 @@
+{
+  "name": "@szewtwin/delete-szewtwin-react",
+  "entries": [
+    {
+      "version": "2.0.0",
+      "tag": "@szewtwin/delete-szewtwin-react_v2.0.0",
+      "date": "Wed, 11 Sep 2024 12:52:00 GMT",
+      "comments": {
+        "major": [
+          {
+            "comment": "Added support for react 18 and removed support for react 16"
+          }
+        ]
+      }
+    },
+    {
+      "version": "1.1.1",
+      "tag": "@szewtwin/delete-szewtwin-react_v1.1.1",
+      "date": "Thu, 14 Dec 2023 17:57:25 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Revert szewTwinUI v3"
+          }
+        ]
+      }
+    },
+    {
+      "version": "1.1.0",
+      "tag": "@szewtwin/delete-szewtwin-react_v1.1.0",
+      "date": "Wed, 06 Dec 2023 19:34:14 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Updated szewtwinui-react to 3.x"
+          }
+        ],
+        "none": [
+          {
+            "comment": "Update postcss dev dependency"
+          }
+        ]
+      }
+    },
+    {
+      "version": "1.0.0",
+      "tag": "@szewtwin/delete-szewtwin-react_v1.0.0",
+      "date": "Wed, 21 Jun 2023 16:43:17 GMT",
+      "comments": {
+        "major": [
+          {
+            "comment": "szewTwinui-react update to 2.x"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.2.1",
+      "tag": "@szewtwin/delete-szewtwin-react_v0.2.1",
+      "date": "Tue, 21 Feb 2023 20:11:46 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Update @szewtwin/szewtwinui-react version"
+          }
+        ],
+        "none": [
+          {
+            "comment": "Added LICENSE.md"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.2.0",
+      "tag": "@szewtwin/delete-szewtwin-react_v0.2.0",
+      "date": "Thu, 19 Jan 2023 15:24:47 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Added delete szewTwin component"
+          }
+        ]
+      }
+    }
+  ]
+}

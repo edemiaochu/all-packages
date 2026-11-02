@@ -1,0 +1,42 @@
+{
+  "dirs": [
+    "node_modules",
+    ".git",
+    ".rush",
+    ".yarn",
+    ".turbo",
+    ".claude*",
+    "**/common/temp",
+    "name-replacer",
+    "dist",
+    "build",
+    "lib",
+    "cjs",
+    "esm",
+    "out",
+    "coverage",
+    "obj",
+    "bin",
+    "__pycache__",
+    ".cache",
+    ".nyc_output"
+  ],
+  "exts": [
+    ".png", ".jpg", ".jpeg", ".gif", ".bmp", ".webp", ".ico",
+    ".woff", ".woff2", ".ttf", ".eot", ".otf",
+    ".map", ".snap",
+    ".zip", ".tar", ".gz", ".7z", ".rar", ".bz2",
+    ".pdf", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx",
+    ".exe", ".dll", ".so", ".dylib", ".bin", ".dat", ".db", ".sqlite",
+    ".mp3", ".mp4", ".avi", ".mov", ".webm", ".wav", ".ogg",
+    ".wasm", ".node"
+  ],
+  "files": [
+    "pnpm-lock.yaml", "yarn.lock", "package-lock.json", "shrinkwrap.yaml",
+    "brand-words.json", "dep-graph.json", "dep-graph.html",
+    "name-mapping.json", "name-mapping.csv", "all-ids-mapping.json", "ec-mapping.json",
+    "result.json", "ec-result.json", "all-ids.json", "all-ids-win.json", "all-ids-mac.json",
+    "targets.json", "targets-replaced.json",
+    "exclude-list.json", "scan-exclude.json"
+  ]
+}

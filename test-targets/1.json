@@ -1,0 +1,254 @@
+[
+  {
+    "dirs": [
+      "base/cif-bridge-schema",
+      "base/cif-common-schema",
+      "base/cif-geometric-rules-schema",
+      "base/cif-hydraulic-analysis-schema",
+      "base/cif-hydraulic-results-schema",
+      "base/cif-quantity-takeoffs-schema",
+      "base/cif-rail-schema",
+      "base/cif-roads-schema",
+      "base/cif-subsurface-conflict-analysis-schema",
+      "base/cif-subsurface-schema",
+      "base/process-functional-schema",
+      "base/process-physical-schema",
+      "eslint-plugin",
+      "object-storage/utils/common-config",
+      "base/aec-units-schema",
+      "base/architectural-physical-schema",
+      "base/bis-core-schema",
+      "base/bis-custom-attributes-schema",
+      "base/construction-schema",
+      "base/core-custom-attributes-schema",
+      "base/dmdb-map-schema",
+      "base/dmdb-schema-policies-schema",
+      "base/formats-schema",
+      "base/linear-referencing-schema",
+      "base/physical-material-schema",
+      "base/plant-custom-attributes-schema",
+      "base/quantity-takeoffs-aspects-schema",
+      "base/spatial-composition-schema",
+      "base/structural-physical-schema",
+      "base/units-schema",
+      "base/cif-units-schema",
+      "base/road-rail-units-schema",
+      "icons/szewtwinui-icons-react",
+      "icons/szewtwinui-illustrations-react",
+      "base/icons-generic-webfont",
+      "base/icons-generic",
+      "szewTwinUI-layouts/packages/layouts-css",
+      "szewTwinUI/packages/szewtwinui-variables",
+      "szewTwinUI/packages/szewtwinui-css"
+    ],
+    "replaceOnly": [
+      "szewTwinUI/scripts"
+    ],
+    "note": "Layer 0 — 基础层：不依赖任何内部包，构建起点（38发布 + 1仅替换）"
+  },
+  {
+    "dirs": [
+      "szewtwinjs-core/tools/build",
+      "object-storage/cloud-agnostic/core",
+      "szewTwinUI/packages/szewtwinui-react",
+      "ivaults-clients/utils/ivaults-client-common-config",
+      "szewTwinUI-layouts/packages/layouts-react"
+    ],
+    "replaceOnly": [
+    ],
+    "note": "Layer 1 — 依赖 Layer 0~0（5发布 + 1仅替换）"
+  },
+  {
+    "dirs": [
+      "object-storage/storage/core",
+      "szewtwinjs-core/core/szewec",
+      "szewtwinjs-core/tools/certa",
+      "admin-components-react/packages/modules/create-ivault",
+      "admin-components-react/packages/modules/delete-ivault",
+      "admin-components-react/packages/modules/delete-szewtwin",
+      "ivaults-clients/clients/ivaults-client-management",
+      "admin-components-react/packages/modules/ivault-browser",
+      "admin-components-react/packages/modules/manage-versions",
+      "szewtwinjs-core/tools/perf-tools",
+      "szewtwinjs-core/tools/internal"
+    ],
+    "replaceOnly": [],
+    "note": "Layer 2 — 依赖 Layer 0~1（11发布 + 0仅替换）"
+  },
+  {
+    "dirs": [
+      "szewtwinjs-core/core/geometry",
+      "szewtwinjs-core/core/quantity",
+      "szewtwinjs-core/core/dmsql/common",
+      "szewtwinjs-core/ui/appui-abstract",
+      "szewtwinjs-core/core/webgl-compatibility",
+      "szewtwinjs-core/core/orbitgt",
+      "szewtwinjs-core/core/common",
+      "presentation/packages/test-utilities",
+      "presentation/packages/shared",
+      "ivaults-clients/clients/ivaults-client-authoring"
+    ],
+    "replaceOnly": [
+      "object-storage/tests/backend-storage",
+      "object-storage/tests/backend-storage-unit",
+      "object-storage/tests/frontend-storage"
+    ],
+    "note": "Layer 3 — 依赖 Layer 0~2（8发布 + 3仅替换）"
+  },
+  {
+    "dirs": [
+      "object-storage/storage/azure",
+      "szewtwinjs-core/core/dmschema-metadata",
+      "presentation/packages/unified-selection",
+      "ivaults-clients/szewtwin-platform-access/ivaults-access-common",
+      "object-storage/storage/google",
+      "object-storage/storage/s3"
+    ],
+    "replaceOnly": [],
+    "note": "Layer 4 — 依赖 Layer 0~3（7发布 + 0仅替换）"
+  },
+  {
+    "dirs": [
+      "szewtwinjs-core/core/dmschema-locaters",
+      "szewtwinjs-core/core/i18n",
+      "szewtwinjs-core/core/dmschema-rpc/common",
+      "szewtwinjs-core/presentation/common",
+      "szewtwinjs-core/core/dmschema-editing",
+      "szewtwinjs-core/editor/common",
+      "szewtwinjs-core/domains/linear-referencing/common"
+    ],
+    "note": "Layer 5-1 — 依赖 Layer 0~4（18发布 + 1仅替换）"
+  },
+  {
+    "dirs": [
+      "auth-clients/packages/browser",
+      "auth-clients/packages/service",
+      "auth-clients/packages/electron",
+      "auth-clients/packages/node-cli",
+      "object-storage/storage/minio",
+      "object-storage/storage/oss",
+      "object-storage/samples"
+    ],
+    "note": "Layer 5-2 — 依赖 Layer 0~4（18发布 + 1仅替换）"
+  },
+  {
+    "dirs": [
+      "presentation/packages/core-interop",
+      "presentation/packages/unified-selection-react",
+      "presentation/packages/hierarchies"
+    ],
+    "note": "Layer 5-3 — 依赖 Layer 0~4（18发布 + 1仅替换）"
+  },
+  {
+    "dirs": [
+      "ivaults-clients/utils/ivaults-client-test-utils"
+    ],
+    "replaceOnly": [
+      "ivaults-clients/tests/ivaults-access-common-tests"
+    ],
+    "note": "Layer 5-4 — 依赖 Layer 0~4（18发布 + 1仅替换）"
+  },
+  {
+    "dirs": [
+      "szewtwinjs-core/core/backend",
+      "appui/ui/core-react",
+      "szewtwinjs-core/core/frontend",
+      "auth-clients/packages/oidc-signin-tool",
+      "presentation/packages/opentelemetry",
+      "presentation/packages/hierarchies-react"
+    ],
+    "replaceOnly": [
+      "ivaults-clients/tests/ivaults-clients-tests",
+      "ivaults-clients/tests/ivaults-clients-tests-browser",
+      "presentation/packages/models-tree"
+    ],
+    "note": "Layer 6 — 依赖 Layer 0~5（6发布 + 3仅替换）"
+  },
+    {
+    "dirs": [
+      "szewtwinjs-core/domains/analytical/backend",
+      "szewtwinjs-core/core/extension",
+      "szewtwinjs-core/core/mobile",
+      "szewtwinjs-core/core/markup",
+      "szewtwinjs-core/presentation/frontend",
+      "szewtwinjs-core/core/electron",
+      "szewtwinjs-core/core/dmschema-rpc/impl",
+      "szewtwinjs-core/core/express-server",
+      "szewtwinjs-core/tools/ecschema2ts",
+      "szewtwinjs-core/editor/backend",
+      "szewtwinjs-core/editor/frontend",
+      "szewtwinjs-core/core/frontend-devtools",
+      "szewtwinjs-core/extensions/frontend-tiles",
+      "szewtwinjs-core/core/hypermodeling",
+      "szewtwinjs-core/domains/linear-referencing/backend",
+      "szewtwinjs-core/extensions/map-layers-formats",
+      "szewtwinjs-core/extensions/map-layers-auth",
+      "szewtwinjs-core/domains/physical-material/backend",
+      "szewtwinjs-core/presentation/backend",
+      "szewtwinjs-core/utils/workspace-editor"
+    ],
+    "replaceOnly": [
+      "szewtwinjs-core/extensions/cesium-renderer"
+    ],
+    "note": "Layer 7-1 — 依赖 Layer 0~6（27发布 + 1仅替换）"
+  },
+  {
+    "dirs": [
+      "appui/ui/components-react",
+      "reality-capture/typescript/packages/reality-data-client",
+      "ivaults-clients/szewtwin-platform-access/ivaults-access-frontend",
+      "ivaults-clients/szewtwin-platform-access/ivaults-access-backend",
+      "szewtwins-client",
+      "ivault-transformer/packages/transformer",
+      "viewer-components-react/packages/szewtwin/quantity-formatting"
+    ],
+    "note": "Layer 7-2 — 依赖 Layer 0~6（27发布 + 1仅替换）"
+  },
+  {
+    "dirs": [
+      "appui/ui/ivault-components-react",
+      "szewtwinjs-core/full-stack-tests/dmschema-rpc-interface",
+      "reality-capture/typescript/packages/reality-capture",
+      "szewtwinjs-core/full-stack-tests/rpc-interface"
+    ],
+    "replaceOnly": [
+      "ivaults-clients/tests/ivaults-access-backend-tests",
+      "ivaults-clients/tests/ivaults-access-frontend-tests"
+    ],
+    "note": "Layer 8 — 依赖 Layer 0~7（4发布 + 2仅替换）"
+  },
+  {
+    "dirs": [
+      "appui/ui/appui-react",
+      "presentation/packages/components",
+      "presentation/packages/testing"
+    ],
+    "replaceOnly": [],
+    "note": "Layer 9 — 依赖 Layer 0~8（2发布 + 0仅替换）"
+  },
+  {
+    "dirs": [
+      "viewer/packages/modules/viewer-react",
+      "viewer-components-react/packages/szewtwin/geo-tools",
+      "viewer-components-react/packages/szewtwin/measure-tools",
+      "viewer-components-react/packages/szewtwin/property-grid",
+      "viewer-components-react/packages/szewtwin/tree-widget"
+    ],
+    "replaceOnly": [
+      "appui/apps/test-providers"
+    ],
+    "note": "Layer 10 — 依赖 Layer 0~9（10发布 + 1仅替换）"
+  },
+  {
+    "dirs": [
+      "viewer/packages/modules/desktop-viewer-react",
+      "viewer/packages/modules/web-viewer-react"
+    ],
+    "replaceOnly": [
+      "viewer/packages/apps/desktop-viewer-test",
+      "viewer/packages/apps/web-viewer-test",
+      "szewtwinjs-core/test-apps/display-test-app"
+    ],
+    "note": "Layer 11 — 应用层：依赖链最深（2发布 + 0仅替换）"
+  }
+]

@@ -1,0 +1,38 @@
+# Each line is a file pattern followed by one or more owners.
+# The owners will be requested for
+# review when someone opens a pull request.
+# See https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/about-code-owners
+
+# These owners will be the default owners for everything in
+# the repo, unless a later match takes precedence.
+rush.json                       @aruniverse @ben-polinsky
+.github/workflows/publish.yml   @aruniverse @ben-polinsky
+ 
+# imodel-browser
+packages/modules/imodel-browser/ @aruniverse @ben-polinsky
+common/changes/@itwin/imodel-browser-react/ @aruniverse @ben-polinsky
+packages/apps/storybook/src/imodel-browser/ @aruniverse @ben-polinsky
+
+# imodel-browser MUI/Stratakit components (alpha)
+packages/modules/imodel-browser/src/mui/ @alexdunae @toddsouthenbentley @kckst8
+packages/apps/storybook/src/imodel-browser/mui/ @alexdunae @toddsouthenbentley @kckst8
+
+# delete-imodel
+packages/modules/delete-imodel/ @veekeys
+common/changes/@itwin/delete-imodel-react/ @veekeys
+packages/apps/storybook/src/delete-imodel/ @veekeys
+
+# manage-versions
+packages/modules/manage-versions/ @veekeys
+common/changes/@itwin/manage-versions-react/ @veekeys
+packages/apps/storybook/src/manage-versions/ @veekeys
+
+# create-imodel
+packages/modules/create-imodel/ @veekeys
+common/changes/@itwin/create-imodel-react/ @veekeys
+packages/apps/storybook/src/create-imodel/ @veekeys
+
+# delete-itwin
+packages/modules/delete-itwin/ @williamkbentley
+common/changes/@itwin/delete-itwin-react/ @williamkbentley
+packages/apps/storybook/src/delete-itwin/ @williamkbentley

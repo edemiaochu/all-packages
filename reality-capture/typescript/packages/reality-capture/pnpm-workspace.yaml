@@ -1,0 +1,6 @@
+minimumReleaseAgeExclude:
+  - '@szewtwin/build-tools@5.9.1'
+  - '@szewtwin/core-common@5.9.1'
+  - '@szewtwin/core-geometry@5.9.1'
+  - '@szewtwin/core-szewec@5.9.1'
+  - '@szewtwin/reality-data-client@1.5.0'

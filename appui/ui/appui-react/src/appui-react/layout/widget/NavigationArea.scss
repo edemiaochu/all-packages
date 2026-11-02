@@ -1,0 +1,69 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@use "./tools/button/variables" as *;
+@use "../widgetopacity" as *;
+
+.nz-widget-navigationArea {
+  transition: visibility var(--iui-duration-2) ease,
+    opacity var(--iui-duration-2) ease;
+  display: grid;
+  box-sizing: border-box;
+  height: 100%;
+  grid-gap: 6px;
+  grid-template-areas:
+    "htools button"
+    ". vtools";
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto 1fr;
+  justify-items: end;
+
+  &.nz-hidden {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  > .nz-navigation-aid-container {
+    grid-area: button;
+
+    min-width: $mls-navigation-aid-width;
+    min-height: $mls-navigation-aid-height;
+
+    margin-bottom: 6px;
+    pointer-events: auto;
+
+    @include nz-widget-opacity;
+  }
+
+  > .nz-vertical-toolbar-container {
+    grid-area: vtools;
+
+    height: calc(100% - 60px);
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-end;
+    @include nz-widget-opacity;
+
+    &.nz-span {
+      grid-row: button / vtools;
+    }
+  }
+
+  > .nz-horizontal-toolbar-container {
+    grid-area: htools;
+
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    min-width: 0;
+
+    @include nz-widget-opacity;
+
+    > .components-toolbar-overflow-sizer {
+      display: flex;
+      justify-content: flex-end;
+    }
+  }
+}

@@ -1,0 +1,17 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@use "~@szewtwin/core-react/lib/core-react/geometry" as *;
+
+.uifw-statusBar-popup-expandIndicator {
+  position: absolute;
+  bottom: 3px;
+  right: 3px;
+
+  @include triangle-bottom-right(
+    $width: 5px,
+    $height: 5px,
+    $color: currentColor
+  );
+}

@@ -1,0 +1,30 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+
+.iac-version-modal-label{
+  margin-bottom: var(--iui-size-2xs);
+}
+
+.iac-additional-info {
+  display: flex;
+  justify-content: space-between;
+  padding: var(--iui-size-s);
+  background-color: var(--iui-color-background-backdrop);
+
+  span {
+    flex-shrink: 0;
+
+    &:not(:last-child) {
+      margin-right: var(--iui-size-m);
+    }
+  }
+
+  .iac-cell-ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-shrink: 1;
+  }
+}

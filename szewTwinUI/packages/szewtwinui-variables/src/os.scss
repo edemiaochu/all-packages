@@ -1,0 +1,18 @@
+// Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+// See LICENSE.md in the project root for license terms and full copyright notice.
+@use './themes/index' as themes;
+@use './colors';
+
+:where([data-iui-theme]) {
+  @media (prefers-color-scheme: dark) {
+    @include themes.dark-theme;
+  }
+
+  @media (prefers-color-scheme: light) and (prefers-contrast: more) {
+    @include themes.light-hc-theme;
+  }
+
+  @media (prefers-color-scheme: dark) and (prefers-contrast: more) {
+    @include themes.dark-hc-theme;
+  }
+}

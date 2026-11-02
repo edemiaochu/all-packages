@@ -1,0 +1,67 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+/** @packageDocumentation
+ * @module Toolbar
+ */
+
+import "./Surface.scss";
+import * as React from "react";
+import classnames from "classnames";
+import { Surface as IUI_Surface } from "@szewtwin/szewtwinui-react";
+import {
+  calculateToolbarOpacity,
+  getToolbarBackgroundColor,
+  useRefs,
+  useWidgetOpacityContext,
+} from "@szewtwin/core-react/internal";
+import { UiFramework } from "../../UiFramework.js";
+import { ProcessDetector } from "@szewtwin/core-szewec";
+import { useConditionalValue } from "../../hooks/useConditionalValue.js";
+import { SyncUiEventId } from "../../syncui/UiSyncEvent.js";
+import type { ToolbarContext } from "./Toolbar.js";
+
+type ToolbarContextProps = NonNullable<
+  React.ContextType<typeof ToolbarContext>
+>;
+
+interface SurfaceProps extends React.ComponentProps<typeof IUI_Surface> {
+  orientation: ToolbarContextProps["orientation"];
+}
+
+/** @internal */
+export const Surface = React.forwardRef<HTMLDivElement, SurfaceProps>(
+  function Surface({ className, style, orientation, ...rest }, forwardedRed) {
+    const { ref, proximityScale } = useWidgetOpacityContext<HTMLDivElement>();
+    const refs = useRefs(ref, forwardedRed);
+
+    const calculateOpacity = useConditionalValue(() => {
+      if (ProcessDetector.isMobileBrowser) return false;
+      if (UiFramework.visibility.snapWidgetOpacity) return true;
+      return false;
+    }, [SyncUiEventId.ShowHideManagerSettingChange]);
+    const opacity = React.useMemo(() => {
+      if (!calculateOpacity) return undefined;
+      return calculateToolbarOpacity(proximityScale);
+    }, [proximityScale, calculateOpacity]);
+    const backgroundColor =
+      opacity === undefined ? undefined : getToolbarBackgroundColor(opacity);
+
+    return (
+      <IUI_Surface
+        {...rest}
+        style={{
+          backgroundColor,
+          ...style,
+        }}
+        className={classnames(
+          "uifw-toolbar-group-surface",
+          `uifw-${orientation}`,
+          className
+        )}
+        ref={refs}
+      />
+    );
+  }
+);

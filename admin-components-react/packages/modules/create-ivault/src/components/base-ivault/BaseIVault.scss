@@ -1,0 +1,70 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+
+.iac-overlay-container {
+  position: fixed;
+  z-index: 99999;
+  background-color: rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  left: 0;
+}
+
+.iac-content-container {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: var(--iui-size-l);
+}
+
+.iac-ivault-properties-container {
+  display: flex;
+  flex-grow: 1;
+
+  > *:last-child {
+    margin-left: var(--iui-size-l);
+  }
+}
+
+.iac-inputs-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-grow: 1;
+
+  > *:not(:last-child) {
+    margin-bottom: var(--iui-size-m);
+  }
+}
+
+.iac-extent-inputs-container {
+  display: flex;
+
+  > *:first-child {
+    margin-right: var(--iui-size-m);
+  }
+}
+
+.iac-extent-container {
+  display: flex;
+  flex-grow: 5;
+}
+
+.iac-ivault-base {
+  padding: var(--iui-size-xl);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
+}
+
+.iac-model-wrapper-element {
+  width: 100%;
+  max-width: 600px;
+}

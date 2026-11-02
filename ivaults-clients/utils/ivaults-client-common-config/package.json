@@ -1,0 +1,45 @@
+{
+  "name": "@szewtwin/ivaults-client-common-config",
+  "version": "0.0.0",
+  "description": "Common configuration for iVaults API client wrappers.",
+  "keywords": [
+    "Szewec",
+    "iVault",
+    "szewTwin",
+    "szewTwin platform",
+    "szewTwin.js"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/szewTwin/ivaults-clients"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Szewec Systems, Inc.",
+    "url": "http://www.szewec.com"
+  },
+  "scripts": {
+    "build": "",
+    "clean": "",
+    "lint": "",
+    "lint-fix": "sort-package-json",
+    "spell-check": ""
+  },
+  "devDependencies": {
+    "@szewtwin/eslint-plugin": "^6.0.0",
+    "@rushstack/eslint-patch": "^1.2.0",
+    "@typescript-eslint/eslint-plugin": "~6.14.0",
+    "@typescript-eslint/parser": "~6.14.0",
+    "eslint": "~8.55.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-import-resolver-node": "^0.3.7",
+    "eslint-plugin-deprecation": "~1.5.0",
+    "eslint-plugin-import": "~2.29.0",
+    "eslint-plugin-mocha": "~10.2.0",
+    "eslint-plugin-prefer-arrow": "~1.2.3",
+    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "^2.8.8",
+    "sort-package-json": "~1.53.1",
+    "typescript": "^5.8.3"
+  }
+}

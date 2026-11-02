@@ -1,0 +1,323 @@
+{
+  "name": "@szewtwin/service-authorization",
+  "entries": [
+    {
+      "date": "Mon, 30 Mar 2026 16:53:21 GMT",
+      "version": "2.1.1",
+      "tag": "@szewtwin/service-authorization_v2.1.1",
+      "comments": {
+        "patch": [
+          {
+            "author": "50554904+hl662@users.noreply.github.com",
+            "package": "@szewtwin/service-authorization",
+            "commit": "517ef259cdf12176123433b63c56331cdb5db936",
+            "comment": "chore: upgrade all packages to @szewtwin/eslint-plugin@6 and eslint@9"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Mon, 12 Jan 2026 19:52:14 GMT",
+      "version": "2.1.0",
+      "tag": "@szewtwin/service-authorization_v2.1.0",
+      "comments": {
+        "none": [
+          {
+            "author": "Gytis.Cepkauskas@szewec.com",
+            "package": "@szewtwin/service-authorization",
+            "commit": "0f3d2ee177b6109bad952c045846ebd4819dfbed",
+            "comment": " "
+          }
+        ]
+      }
+    },
+    {
+      "date": "Mon, 27 Oct 2025 12:14:12 GMT",
+      "version": "2.1.0",
+      "tag": "@szewtwin/service-authorization_v2.1.0",
+      "comments": {
+        "minor": [
+          {
+            "author": "66480813+paulius-valiunas@users.noreply.github.com",
+            "package": "@szewtwin/service-authorization",
+            "commit": "ca03d6d5b41fceee1a07639741327f59ffec3614",
+            "comment": "Add the ability to send additional request headers to the authorization server"
+          }
+        ],
+        "none": [
+          {
+            "author": "GytisCepk@users.noreply.github.com",
+            "package": "@szewtwin/service-authorization",
+            "commit": "ca03d6d5b41fceee1a07639741327f59ffec3614",
+            "comment": " "
+          },
+          {
+            "author": "ben-polinsky@users.noreply.github.com",
+            "package": "@szewtwin/service-authorization",
+            "commit": "ca03d6d5b41fceee1a07639741327f59ffec3614",
+            "comment": ""
+          }
+        ]
+      }
+    },
+    {
+      "date": "Mon, 23 Jun 2025 14:20:52 GMT",
+      "version": "2.0.0",
+      "tag": "@szewtwin/service-authorization_v2.0.0",
+      "comments": {
+        "none": [
+          {
+            "author": "66480813+paulius-valiunas@users.noreply.github.com",
+            "package": "@szewtwin/service-authorization",
+            "commit": "2d522e180132be3d23818e570a1e7f6da9233560",
+            "comment": "update dependencies"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Wed, 04 Jun 2025 20:44:05 GMT",
+      "version": "2.0.0",
+      "tag": "@szewtwin/service-authorization_v2.0.0",
+      "comments": {
+        "major": [
+          {
+            "author": "pankhur94@users.noreply.github.com",
+            "package": "@szewtwin/service-authorization",
+            "commit": "ae310a6d34c939543963d3063c837370caafcdd9",
+            "comment": "Drop support for v3 and v4 and bump jwks-rsa to latest major"
+          }
+        ],
+        "patch": [
+          {
+            "author": "GytisCepk@users.noreply.github.com",
+            "package": "@szewtwin/service-authorization",
+            "commit": "ae310a6d34c939543963d3063c837370caafcdd9",
+            "comment": "Add '@szewtwin/core-geometry' as a dependency"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Mon, 16 Dec 2024 21:41:11 GMT",
+      "version": "1.2.3",
+      "tag": "@szewtwin/service-authorization_v1.2.3",
+      "comments": {
+        "patch": [
+          {
+            "author": "GytisCepk@users.noreply.github.com",
+            "package": "@szewtwin/service-authorization",
+            "commit": "f39647a2d8e7326ef0bef7594ce4baad35da03b8",
+            "comment": "Add email property to introspection response"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Tue, 18 Jun 2024 19:11:49 GMT",
+      "version": "1.2.2",
+      "tag": "@szewtwin/service-authorization_v1.2.2",
+      "comments": {
+        "patch": [
+          {
+            "author": "ben-polinsky@users.noreply.github.com",
+            "package": "@szewtwin/service-authorization",
+            "commit": "f1465b0f0fc422baad21759d0aaff094d4391e84",
+            "comment": "fix latest sec vulnerabilities; run audit during ci"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Wed, 08 May 2024 21:11:26 GMT",
+      "version": "1.2.1",
+      "tag": "@szewtwin/service-authorization_v1.2.1",
+      "comments": {
+        "patch": [
+          {
+            "author": "ben-polinsky@users.noreply.github.com",
+            "package": "@szewtwin/service-authorization",
+            "commit": "26561d12deb510bc9d418faa285c2966f73fe5b3",
+            "comment": "ts assert syntax changes"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Thu, 14 Mar 2024 15:38:52 GMT",
+      "version": "1.2.0",
+      "tag": "@szewtwin/service-authorization_v1.2.0",
+      "comments": {
+        "minor": [
+          {
+            "author": "Andrew.DiNunzio@szewec.com",
+            "package": "@szewtwin/service-authorization",
+            "commit": "77f681fedcdbab4d9840633ac98364e6096bc884",
+            "comment": "Add org to introspection response"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Mon, 13 Nov 2023 15:21:13 GMT",
+      "version": "1.1.0",
+      "tag": "@szewtwin/service-authorization_v1.1.0",
+      "comments": {
+        "minor": [
+          {
+            "author": "Jake-Screen@users.noreply.github.com",
+            "package": "@szewtwin/service-authorization",
+            "commit": "022b04c78e5370a607641603be9391c04d0b238f",
+            "comment": ""
+          }
+        ]
+      }
+    },
+    {
+      "version": "1.0.3",
+      "tag": "@szewtwin/service-authorization_v1.0.3",
+      "date": "Tue, 25 Jul 2023 15:42:36 GMT",
+      "comments": {}
+    },
+    {
+      "version": "1.0.2",
+      "tag": "@szewtwin/service-authorization_v1.0.2",
+      "date": "Tue, 25 Jul 2023 14:33:09 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "increase timeout"
+          }
+        ]
+      }
+    },
+    {
+      "version": "1.0.1",
+      "tag": "@szewtwin/service-authorization_v1.0.1",
+      "date": "Fri, 21 Jul 2023 10:59:14 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "fix dependency version ranges"
+          },
+          {
+            "comment": "Update got to 12.6.1"
+          }
+        ]
+      }
+    },
+    {
+      "version": "1.0.0",
+      "tag": "@szewtwin/service-authorization_v1.0.0",
+      "date": "Wed, 17 May 2023 20:26:35 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "add core-common as direct dep (types)"
+          },
+          {
+            "comment": "Update peer deps to use >= for core-szewec"
+          }
+        ],
+        "major": [
+          {
+            "comment": "v1.0 Release"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.8.0",
+      "tag": "@szewtwin/service-authorization_v0.8.0",
+      "date": "Tue, 14 Mar 2023 20:05:10 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Drop support for Node 12, Node 14 and Node 16."
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.7.0",
+      "tag": "@szewtwin/service-authorization_v0.7.0",
+      "date": "Tue, 03 Jan 2023 21:06:26 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Update minimum szewTwin.js version to 3.3.0"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.6.3",
+      "tag": "@szewtwin/service-authorization_v0.6.3",
+      "date": "Fri, 23 Dec 2022 16:03:26 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Upgraded jsonwebtoken dependency"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.6.2",
+      "tag": "@szewtwin/service-authorization_v0.6.2",
+      "date": "Mon, 21 Mar 2022 12:23:06 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Cast to resolve type error between union type"
+          },
+          {
+            "comment": "Update token handling to provide better error message when an empty string or invalid token format is provided."
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.6.1",
+      "tag": "@szewtwin/service-authorization_v0.6.1",
+      "date": "Tue, 25 Jan 2022 15:34:41 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "update core dependencies"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.6.0",
+      "tag": "@szewtwin/service-authorization_v0.6.0",
+      "date": "Mon, 24 Jan 2022 19:35:01 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Update to use szewTwin.js 3.0 official release"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.5.0",
+      "tag": "@szewtwin/service-authorization_v0.5.0",
+      "date": "Fri, 17 Dec 2021 14:14:35 GMT",
+      "comments": {}
+    },
+    {
+      "version": "0.4.0",
+      "tag": "@szewtwin/service-authorization_v0.4.0",
+      "date": "Wed, 15 Dec 2021 20:20:04 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "pin deps to core rc"
+          }
+        ]
+      }
+    }
+  ]
+}

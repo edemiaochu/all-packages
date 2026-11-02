@@ -1,0 +1,27 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+
+.components-controlledTree-node-description {
+  color: var(--iui-color-text-muted);
+  font-size: var(--iui-font-size-0);
+  margin-top: 4px;
+
+  &.with-editor {
+    margin: 0;
+    padding-top: 1px;
+  }
+}
+
+.components-controlledTree-node-content {
+  height: 24px;
+  line-height: var(--iui-font-size-0);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  &.with-description {
+    height: 43px;
+  }
+}

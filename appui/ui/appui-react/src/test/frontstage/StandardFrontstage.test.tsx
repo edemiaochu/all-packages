@@ -1,0 +1,252 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+import * as React from "react";
+import type { ContentGroupProps, ContentProps } from "../../appui-react.js";
+import {
+  BackstageAppButton,
+  ContentGroup,
+  ContentGroupProvider,
+  StageUsage,
+  StandardContentLayouts,
+  UiFramework,
+} from "../../appui-react.js";
+import TestUtils from "../TestUtils.js";
+import type { StandardFrontstageProps } from "../../appui-react/frontstage/StandardFrontstageProvider.js";
+import { StandardFrontstageProvider } from "../../appui-react/frontstage/StandardFrontstageProvider.js";
+import { InternalFrontstageManager } from "../../appui-react/frontstage/InternalFrontstageManager.js";
+
+async function getSavedViewLayoutProps() {
+  return Promise.resolve({
+    contentGroupProps: {
+      id: "main-content-group",
+      layout: StandardContentLayouts.singleView,
+      contents: [
+        {
+          id: "savedContent",
+          classId: "saved_class",
+        },
+      ],
+    },
+  });
+}
+
+class BasicContentGroupProvider extends ContentGroupProvider {
+  private initialContentGroupProps: ContentGroupProps = {
+    id: "main-content-group",
+    layout: StandardContentLayouts.singleView,
+    contents: [
+      {
+        id: "primaryContent",
+        classId: "test_class",
+        applicationData: {
+          isInitialContentTestData: true,
+        },
+      },
+    ],
+  };
+
+  public override async contentGroup(): Promise<ContentGroup> {
+    return new ContentGroup(this.initialContentGroupProps);
+  }
+}
+
+class TestContentGroupProvider extends ContentGroupProvider {
+  private hasSavedData = false;
+  private initialContentGroupProps: ContentGroupProps = {
+    id: "main-content-group",
+    layout: StandardContentLayouts.singleView,
+    contents: [
+      {
+        id: "primaryContent",
+        classId: "test_class",
+        applicationData: {
+          isInitialContentTestData: true,
+        },
+      },
+    ],
+  };
+
+  public override prepareToSaveProps(contentGroupProps: ContentGroupProps) {
+    this.hasSavedData = true;
+    const newContentsArray = contentGroupProps.contents.map(
+      (content: ContentProps) => {
+        const newContent = { ...content };
+        if (newContent.applicationData) delete newContent.applicationData;
+        return newContent;
+      }
+    );
+    return { ...contentGroupProps, contents: newContentsArray };
+  }
+
+  public override applyUpdatesToSavedProps(
+    contentGroupProps: ContentGroupProps
+  ) {
+    const newContentsArray = contentGroupProps.contents.map(
+      (content: ContentProps) => {
+        const newAppData = {
+          ...content.applicationData,
+          supports: [
+            "issueResolutionMarkers",
+            "viewIdSelection",
+            "3dModels",
+            "2dModels",
+          ],
+          isInitialContentTestData: false,
+        };
+        return { ...content, applicationData: newAppData };
+      }
+    );
+    return { ...contentGroupProps, contents: newContentsArray };
+  }
+
+  public override async contentGroup(): Promise<ContentGroup> {
+    if (this.hasSavedData) {
+      const savedViewLayoutProps = await getSavedViewLayoutProps();
+      if (savedViewLayoutProps) {
+        const contentGroupProps = this.applyUpdatesToSavedProps(
+          savedViewLayoutProps.contentGroupProps
+        );
+        return new ContentGroup(contentGroupProps);
+      }
+    }
+
+    return new ContentGroup(this.initialContentGroupProps);
+  }
+}
+
+describe("ContentGroupProvider", () => {
+  afterEach(() => {
+    UiFramework.frontstages.clearFrontstageProviders();
+  });
+
+  beforeEach(() => {
+    vi.spyOn(
+      InternalFrontstageManager,
+      "activeToolSettingsProvider",
+      "get"
+    ).mockImplementation(() => undefined);
+    UiFramework.frontstages.clearFrontstageProviders();
+  });
+
+  it("should exercise base Content Group Provider", async () => {
+    const provider = new BasicContentGroupProvider();
+    const contentGroup = await provider.contentGroup();
+    const savedContentGroupProps = provider.prepareToSaveProps(
+      contentGroup.toJSON()
+    );
+    expect(savedContentGroupProps).to.exist;
+    const retrievedContentGroupProps = provider.applyUpdatesToSavedProps(
+      savedContentGroupProps
+    );
+    expect(retrievedContentGroupProps).to.exist;
+  });
+
+  it("Should provide Content Group", async () => {
+    const provider = new TestContentGroupProvider();
+
+    expect(provider).to.exist;
+    const contentGroup = await provider.contentGroup();
+    expect(contentGroup).to.exist;
+
+    expect(contentGroup.groupId).to.contain("main-content-group-");
+    expect(contentGroup.propsId).to.eql("main-content-group");
+    expect(contentGroup.contentPropsList.length).to.eql(1);
+    expect(
+      contentGroup.contentPropsList[0].applicationData?.isInitialContentTestData
+    ).toEqual(true);
+
+    const savedContentGroupProps = provider.prepareToSaveProps(
+      contentGroup.toJSON()
+    );
+    expect(savedContentGroupProps).to.exist;
+    expect(savedContentGroupProps.contents[0].applicationData).to.not.exist;
+
+    const retrievedContentGroupProps = provider.applyUpdatesToSavedProps(
+      savedContentGroupProps
+    );
+    expect(retrievedContentGroupProps.contents[0].applicationData).to.exist;
+  });
+
+  it("openStandardFrontstage with no corner items", async () => {
+    const ui2StageProps: StandardFrontstageProps = {
+      id: "Ui2",
+      version: 1.1,
+      contentGroupProps: new TestContentGroupProvider(),
+      hideNavigationAid: true,
+      cornerButton: undefined,
+      usage: StageUsage.General,
+    };
+
+    const standardFrontstageProvider = new StandardFrontstageProvider(
+      ui2StageProps
+    );
+    UiFramework.frontstages.addFrontstageProvider(standardFrontstageProvider);
+    await UiFramework.frontstages.setActiveFrontstage(
+      standardFrontstageProvider.id
+    );
+    await TestUtils.flushAsyncOperations();
+
+    expect(UiFramework.frontstages.activeFrontstageId).toEqual(
+      standardFrontstageProvider.id
+    );
+  });
+
+  it("openStandardFrontstage with corner items", async () => {
+    const ui2StageProps: StandardFrontstageProps = {
+      id: "Ui2",
+      version: 1.1,
+      contentGroupProps: new TestContentGroupProvider(),
+      cornerButton: <BackstageAppButton icon={"icon-szewec-systems"} />,
+      usage: StageUsage.General,
+    };
+
+    const standardFrontstageProvider = new StandardFrontstageProvider(
+      ui2StageProps
+    );
+    UiFramework.frontstages.addFrontstageProvider(standardFrontstageProvider);
+    await UiFramework.frontstages.setActiveFrontstage(
+      standardFrontstageProvider.id
+    );
+    await TestUtils.flushAsyncOperations();
+
+    expect(UiFramework.frontstages.activeFrontstageId).toEqual(
+      standardFrontstageProvider.id
+    );
+  });
+
+  it("openStandardFrontstage with corner items", async () => {
+    const testGroupProps: ContentGroupProps = {
+      id: "main-content-group",
+      layout: StandardContentLayouts.singleView,
+      contents: [
+        {
+          id: "primaryContent",
+          classId: "test_class",
+          applicationData: {
+            isInitialContentTestData: true,
+          },
+        },
+      ],
+    };
+
+    const testStageProps: StandardFrontstageProps = {
+      id: "test",
+      contentGroupProps: testGroupProps,
+      hideStatusBar: true,
+      usage: StageUsage.Private,
+    };
+
+    const standardFrontstageProvider = new StandardFrontstageProvider(
+      testStageProps
+    );
+    UiFramework.frontstages.addFrontstageProvider(standardFrontstageProvider);
+    await UiFramework.frontstages.setActiveFrontstage(
+      standardFrontstageProvider.id
+    );
+    expect(UiFramework.frontstages.activeFrontstageId).toEqual(
+      standardFrontstageProvider.id
+    );
+  });
+});

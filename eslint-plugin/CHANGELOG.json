@@ -1,0 +1,1204 @@
+{
+  "name": "@szewtwin/eslint-plugin",
+  "entries": [
+    {
+      "date": "Thu, 22 Jan 2026 21:03:22 GMT",
+      "version": "6.0.0",
+      "tag": "@szewtwin/eslint-plugin_v6.0.0",
+      "comments": {
+        "major": [
+          {
+            "author": "anmolshres98@users.noreply.github.com",
+            "package": "@szewtwin/eslint-plugin",
+            "commit": "4c33fc7959a2bef1064afc12e28922500971fb0c",
+            "comment": "Drop node 18 support and update `eslint-plugin-jsdoc` to 51.x"
+          }
+        ],
+        "patch": [
+          {
+            "author": "108895074+MichaelSwigerAtSzewec@users.noreply.github.com",
+            "package": "@szewtwin/eslint-plugin",
+            "commit": "4c33fc7959a2bef1064afc12e28922500971fb0c",
+            "comment": "enable ignoreOverloadsWithDifferentJSDoc for @typescript-eslint/unified-signatures rule"
+          },
+          {
+            "author": "66480813+paulius-valiunas@users.noreply.github.com",
+            "package": "@szewtwin/eslint-plugin",
+            "commit": "4c33fc7959a2bef1064afc12e28922500971fb0c",
+            "comment": "change wording in the require-version-in-deprecation rule to be more gramatically correct"
+          }
+        ],
+        "minor": [
+          {
+            "author": "66480813+paulius-valiunas@users.noreply.github.com",
+            "package": "@szewtwin/eslint-plugin",
+            "commit": "4c33fc7959a2bef1064afc12e28922500971fb0c",
+            "comment": "Enable no-internal rule to check for preview tags"
+          },
+          {
+            "author": "66480813+paulius-valiunas@users.noreply.github.com",
+            "package": "@szewtwin/eslint-plugin",
+            "commit": "4c33fc7959a2bef1064afc12e28922500971fb0c",
+            "comment": "update require-version-in-deprecation for new deprecation policy"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Fri, 09 May 2025 15:11:14 GMT",
+      "version": "5.2.1",
+      "tag": "@szewtwin/eslint-plugin_v5.2.1",
+      "comments": {
+        "patch": [
+          {
+            "author": "anmolshres98@users.noreply.github.com",
+            "package": "@szewtwin/eslint-plugin",
+            "commit": "553f5c3cbcbb602e3762dcfc2d9e010a11599d19",
+            "comment": "Fix processing of 'no-internal' rule throwing error on default import statements"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Wed, 07 May 2025 14:47:01 GMT",
+      "version": "5.2.0",
+      "tag": "@szewtwin/eslint-plugin_v5.2.0",
+      "comments": {
+        "minor": [
+          {
+            "author": "anmolshres98@users.noreply.github.com",
+            "package": "@szewtwin/eslint-plugin",
+            "commit": "5a633051b5643bef92bbcda674a5b2ac0df3ee47",
+            "comment": "Update `no-internal` rule check to run when extending internal class, setting internal class as parameter type or variable type, passing internal class constructor as argument, and in `instanceof` expression. Additionally, report all instances at time of import."
+          }
+        ]
+      }
+    },
+    {
+      "date": "Fri, 21 Mar 2025 21:30:49 GMT",
+      "version": "5.1.0",
+      "tag": "@szewtwin/eslint-plugin_v5.1.0",
+      "comments": {
+        "patch": [
+          {
+            "author": "anmolshres98@users.noreply.github.com",
+            "package": "@szewtwin/eslint-plugin",
+            "commit": "e592b52d5ad611cc47cc90fb0a94bfb823e2e5e8",
+            "comment": "Update @typescript-eslint/restrict-template-expressions rule to warn with no options"
+          },
+          {
+            "author": "66480813+paulius-valiunas@users.noreply.github.com",
+            "package": "@szewtwin/eslint-plugin",
+            "commit": "e592b52d5ad611cc47cc90fb0a94bfb823e2e5e8",
+            "comment": "update typescript-eslint"
+          }
+        ],
+        "minor": [
+          {
+            "author": "anmolshres98@users.noreply.github.com",
+            "package": "@szewtwin/eslint-plugin",
+            "commit": "e592b52d5ad611cc47cc90fb0a94bfb823e2e5e8",
+            "comment": "Update @typescript-eslint/restrict-template-expressions to warn with future error notice"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Mon, 16 Dec 2024 22:46:33 GMT",
+      "version": "5.0.0",
+      "tag": "@szewtwin/eslint-plugin_v5.0.0",
+      "comments": {
+        "prerelease": [
+          {
+            "author": "36916096+karolis-zukauskas@users.noreply.github.com",
+            "package": "@szewtwin/eslint-plugin",
+            "commit": "eed2eaac864fd3a96ff0ac0c21e38aa1e8b10836",
+            "comment": "Do not disable @typescript-eslint/unbound-method in ui plugin"
+          }
+        ],
+        "minor": [
+          {
+            "author": "aruniverse@users.noreply.github.com",
+            "package": "@szewtwin/eslint-plugin",
+            "commit": "eed2eaac864fd3a96ff0ac0c21e38aa1e8b10836",
+            "comment": "disallow non-null assertions using the `!` postfix operator"
+          }
+        ],
+        "major": [
+          {
+            "author": "33036725+wgoehrig@users.noreply.github.com",
+            "package": "@szewtwin/eslint-plugin",
+            "commit": "eed2eaac864fd3a96ff0ac0c21e38aa1e8b10836",
+            "comment": "Updated to support ESLint v9 and typescript-eslint v8.11"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Thu, 18 Jul 2024 20:42:48 GMT",
+      "version": "4.1.1",
+      "tag": "@szewtwin/eslint-plugin_v4.1.1",
+      "comments": {
+        "patch": [
+          {
+            "author": "anmolshres98@users.noreply.github.com",
+            "package": "@szewtwin/eslint-plugin",
+            "commit": "86730c4c5eca33608c63f9679c58a9bab082e238",
+            "comment": "Add optional parameter for creating CSV in no-internal-summary-table-creator.js"
+          },
+          {
+            "author": "anmolshres98@users.noreply.github.com",
+            "package": "@szewtwin/eslint-plugin",
+            "commit": "86730c4c5eca33608c63f9679c58a9bab082e238",
+            "comment": "Don't create csv report by default and add JSDoc for the summary table creator function"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Mon, 17 Jun 2024 21:01:01 GMT",
+      "version": "4.1.0",
+      "tag": "@szewtwin/eslint-plugin_v4.1.0",
+      "comments": {
+        "minor": [
+          {
+            "author": "anmolshres98@users.noreply.github.com",
+            "package": "@szewtwin/eslint-plugin",
+            "commit": "2ced6d5b4f6faed8b32a4f11e5fb0fc0f1934025",
+            "comment": "Add new custom formatter for 'no-internal' rule violations that creates a summary table with report of all violations and writes the table to a csv file."
+          }
+        ]
+      }
+    },
+    {
+      "date": "Wed, 08 May 2024 15:56:58 GMT",
+      "version": "4.0.2",
+      "tag": "@szewtwin/eslint-plugin_v4.0.2",
+      "comments": {
+        "patch": [
+          {
+            "author": "ben-polinsky@users.noreply.github.com",
+            "package": "@szewtwin/eslint-plugin",
+            "commit": "ee7c152b1af6670a75a0e66da53141fa41a9fb10",
+            "comment": "fix csv output generation"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Mon, 06 May 2024 15:27:56 GMT",
+      "version": "4.0.1",
+      "tag": "@szewtwin/eslint-plugin_v4.0.1",
+      "comments": {
+        "patch": [
+          {
+            "author": "ben-polinsky@users.noreply.github.com",
+            "package": "@szewtwin/eslint-plugin",
+            "commit": "abcfe90c50d1329772789d26b96a6542684dfcb3",
+            "comment": "remove console.log; simplify logic a tad"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Wed, 10 Apr 2024 15:31:15 GMT",
+      "version": "4.0.0",
+      "tag": "@szewtwin/eslint-plugin_v4.0.0",
+      "comments": {
+        "minor": [
+          {
+            "author": " 48823762+yashincontrol@users.noreply.github.com",
+            "package": "@szewtwin/eslint-plugin",
+            "commit": "c989b2f77b45a90ff202a8a9d92d44cd31bcc2d9",
+            "comment": "Added support for TypeScript 5.0"
+          },
+          {
+            "author": "24278440+saskliutas@users.noreply.github.com",
+            "package": "@szewtwin/eslint-plugin",
+            "commit": "c989b2f77b45a90ff202a8a9d92d44cd31bcc2d9",
+            "comment": "Bumped plugins versions"
+          }
+        ],
+        "prerelease": [
+          {
+            "author": "33036725+wgoehrig@users.noreply.github.com",
+            "package": "@szewtwin/eslint-plugin",
+            "commit": "c989b2f77b45a90ff202a8a9d92d44cd31bcc2d9",
+            "comment": "Disable some of the newer lint rules."
+          }
+        ],
+        "major": [
+          {
+            "author": "ben-polinsky@users.noreply.github.com",
+            "package": "@szewtwin/eslint-plugin",
+            "commit": "c989b2f77b45a90ff202a8a9d92d44cd31bcc2d9",
+            "comment": "Modify extensions rule to accept @beta tags instead of @preview tags."
+          },
+          {
+            "author": "Jake-Screen@users.noreply.github.com",
+            "package": "@szewtwin/eslint-plugin",
+            "commit": "c989b2f77b45a90ff202a8a9d92d44cd31bcc2d9",
+            "comment": "Converting to using eslint flat config"
+          },
+          {
+            "author": "yashincontrol@users.noreply.github.com",
+            "package": "@szewtwin/eslint-plugin",
+            "commit": "c989b2f77b45a90ff202a8a9d92d44cd31bcc2d9",
+            "comment": "Update eslint to 8.36.0"
+          }
+        ]
+      }
+    },
+    {
+      "version": "3.6.0",
+      "tag": "@szewtwin/eslint-plugin_v3.6.0",
+      "date": "Wed, 08 Feb 2023 14:58:40 GMT",
+      "comments": {}
+    },
+    {
+      "version": "3.5.5",
+      "tag": "@szewtwin/eslint-plugin_v3.5.5",
+      "date": "Thu, 26 Jan 2023 22:53:27 GMT",
+      "comments": {}
+    },
+    {
+      "version": "3.5.4",
+      "tag": "@szewtwin/eslint-plugin_v3.5.4",
+      "date": "Wed, 18 Jan 2023 15:27:15 GMT",
+      "comments": {}
+    },
+    {
+      "version": "3.5.3",
+      "tag": "@szewtwin/eslint-plugin_v3.5.3",
+      "date": "Fri, 13 Jan 2023 17:23:07 GMT",
+      "comments": {}
+    },
+    {
+      "version": "3.5.2",
+      "tag": "@szewtwin/eslint-plugin_v3.5.2",
+      "date": "Wed, 11 Jan 2023 16:46:30 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "security fixes"
+          }
+        ]
+      }
+    },
+    {
+      "version": "3.5.1",
+      "tag": "@szewtwin/eslint-plugin_v3.5.1",
+      "date": "Thu, 15 Dec 2022 16:38:29 GMT",
+      "comments": {}
+    },
+    {
+      "version": "3.5.0",
+      "tag": "@szewtwin/eslint-plugin_v3.5.0",
+      "date": "Wed, 07 Dec 2022 19:12:37 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "do not recommend indentation for ternary expressions"
+          },
+          {
+            "comment": "Fix `no-internal-report`, rename eslint plugin scope from `@szewec` to `@szewtwin`"
+          }
+        ]
+      }
+    },
+    {
+      "version": "3.4.7",
+      "tag": "@szewtwin/eslint-plugin_v3.4.7",
+      "date": "Wed, 30 Nov 2022 14:28:19 GMT",
+      "comments": {}
+    },
+    {
+      "version": "3.4.6",
+      "tag": "@szewtwin/eslint-plugin_v3.4.6",
+      "date": "Tue, 22 Nov 2022 14:24:19 GMT",
+      "comments": {}
+    },
+    {
+      "version": "3.4.5",
+      "tag": "@szewtwin/eslint-plugin_v3.4.5",
+      "date": "Thu, 17 Nov 2022 21:32:50 GMT",
+      "comments": {}
+    },
+    {
+      "version": "3.4.4",
+      "tag": "@szewtwin/eslint-plugin_v3.4.4",
+      "date": "Thu, 10 Nov 2022 19:32:17 GMT",
+      "comments": {}
+    },
+    {
+      "version": "3.4.3",
+      "tag": "@szewtwin/eslint-plugin_v3.4.3",
+      "date": "Fri, 28 Oct 2022 13:34:58 GMT",
+      "comments": {}
+    },
+    {
+      "version": "3.4.2",
+      "tag": "@szewtwin/eslint-plugin_v3.4.2",
+      "date": "Mon, 24 Oct 2022 13:23:45 GMT",
+      "comments": {}
+    },
+    {
+      "version": "3.4.1",
+      "tag": "@szewtwin/eslint-plugin_v3.4.1",
+      "date": "Mon, 17 Oct 2022 20:06:51 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "do not recommend indentation for ternary expressions"
+          }
+        ]
+      }
+    },
+    {
+      "version": "3.4.0",
+      "tag": "@szewtwin/eslint-plugin_v3.4.0",
+      "date": "Thu, 13 Oct 2022 20:24:47 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "Moved React-specific rules out of szewtwinjs-recommended and into the ui config"
+          },
+          {
+            "comment": "Updated Node types declaration to support latest v16"
+          },
+          {
+            "comment": "Add max-statements-per-line with max=1."
+          }
+        ]
+      }
+    },
+    {
+      "version": "3.3.5",
+      "tag": "@szewtwin/eslint-plugin_v3.3.5",
+      "date": "Tue, 27 Sep 2022 11:50:59 GMT",
+      "comments": {}
+    },
+    {
+      "version": "3.3.4",
+      "tag": "@szewtwin/eslint-plugin_v3.3.4",
+      "date": "Thu, 08 Sep 2022 19:00:05 GMT",
+      "comments": {}
+    },
+    {
+      "version": "3.3.3",
+      "tag": "@szewtwin/eslint-plugin_v3.3.3",
+      "date": "Tue, 06 Sep 2022 20:54:19 GMT",
+      "comments": {}
+    },
+    {
+      "version": "3.3.2",
+      "tag": "@szewtwin/eslint-plugin_v3.3.2",
+      "date": "Thu, 01 Sep 2022 14:37:22 GMT",
+      "comments": {}
+    },
+    {
+      "version": "3.3.1",
+      "tag": "@szewtwin/eslint-plugin_v3.3.1",
+      "date": "Fri, 26 Aug 2022 15:40:02 GMT",
+      "comments": {}
+    },
+    {
+      "version": "3.3.0",
+      "tag": "@szewtwin/eslint-plugin_v3.3.0",
+      "date": "Thu, 18 Aug 2022 19:08:02 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "upgrade mocha to version 10.0.0"
+          }
+        ]
+      }
+    },
+    {
+      "version": "3.2.9",
+      "tag": "@szewtwin/eslint-plugin_v3.2.9",
+      "date": "Fri, 26 Aug 2022 14:21:40 GMT",
+      "comments": {}
+    },
+    {
+      "version": "3.2.8",
+      "tag": "@szewtwin/eslint-plugin_v3.2.8",
+      "date": "Tue, 09 Aug 2022 15:52:41 GMT",
+      "comments": {}
+    },
+    {
+      "version": "3.2.7",
+      "tag": "@szewtwin/eslint-plugin_v3.2.7",
+      "date": "Mon, 01 Aug 2022 13:36:56 GMT",
+      "comments": {}
+    },
+    {
+      "version": "3.2.6",
+      "tag": "@szewtwin/eslint-plugin_v3.2.6",
+      "date": "Fri, 15 Jul 2022 19:04:43 GMT",
+      "comments": {}
+    },
+    {
+      "version": "3.2.5",
+      "tag": "@szewtwin/eslint-plugin_v3.2.5",
+      "date": "Wed, 13 Jul 2022 15:45:52 GMT",
+      "comments": {}
+    },
+    {
+      "version": "3.2.4",
+      "tag": "@szewtwin/eslint-plugin_v3.2.4",
+      "date": "Tue, 21 Jun 2022 18:06:33 GMT",
+      "comments": {}
+    },
+    {
+      "version": "3.2.3",
+      "tag": "@szewtwin/eslint-plugin_v3.2.3",
+      "date": "Fri, 17 Jun 2022 15:18:39 GMT",
+      "comments": {}
+    },
+    {
+      "version": "3.2.2",
+      "tag": "@szewtwin/eslint-plugin_v3.2.2",
+      "date": "Fri, 10 Jun 2022 16:11:37 GMT",
+      "comments": {}
+    },
+    {
+      "version": "3.2.1",
+      "tag": "@szewtwin/eslint-plugin_v3.2.1",
+      "date": "Tue, 07 Jun 2022 15:02:56 GMT",
+      "comments": {}
+    },
+    {
+      "version": "3.2.0",
+      "tag": "@szewtwin/eslint-plugin_v3.2.0",
+      "date": "Fri, 20 May 2022 13:10:54 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "Add extension API generation"
+          }
+        ]
+      }
+    },
+    {
+      "version": "3.1.3",
+      "tag": "@szewtwin/eslint-plugin_v3.1.3",
+      "date": "Fri, 15 Apr 2022 13:49:25 GMT",
+      "comments": {}
+    },
+    {
+      "version": "3.1.2",
+      "tag": "@szewtwin/eslint-plugin_v3.1.2",
+      "date": "Wed, 06 Apr 2022 22:27:56 GMT",
+      "comments": {}
+    },
+    {
+      "version": "3.1.1",
+      "tag": "@szewtwin/eslint-plugin_v3.1.1",
+      "date": "Thu, 31 Mar 2022 15:55:48 GMT",
+      "comments": {}
+    },
+    {
+      "version": "3.1.0",
+      "tag": "@szewtwin/eslint-plugin_v3.1.0",
+      "date": "Tue, 29 Mar 2022 20:53:47 GMT",
+      "comments": {}
+    },
+    {
+      "version": "3.0.3",
+      "tag": "@szewtwin/eslint-plugin_v3.0.3",
+      "date": "Fri, 25 Mar 2022 15:10:02 GMT",
+      "comments": {}
+    },
+    {
+      "version": "3.0.2",
+      "tag": "@szewtwin/eslint-plugin_v3.0.2",
+      "date": "Thu, 10 Mar 2022 21:18:13 GMT",
+      "comments": {}
+    },
+    {
+      "version": "3.0.1",
+      "tag": "@szewtwin/eslint-plugin_v3.0.1",
+      "date": "Thu, 24 Feb 2022 15:26:55 GMT",
+      "comments": {}
+    },
+    {
+      "version": "3.0.0",
+      "tag": "@szewtwin/eslint-plugin_v3.0.0",
+      "date": "Mon, 24 Jan 2022 14:00:52 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "Drop support for ESLint 6.x"
+          },
+          {
+            "comment": "rename to @szewtwin/eslint-plugin"
+          },
+          {
+            "comment": "add required-barrel-modules feature"
+          },
+          {
+            "comment": "switch to typed version of dot-notation rule"
+          },
+          {
+            "comment": "Incorporating szewTwinUI-CSS and szewTwinUI-React into iVault.js"
+          }
+        ]
+      }
+    },
+    {
+      "version": "2.19.28",
+      "tag": "@szewtwin/eslint-plugin_v2.19.28",
+      "date": "Wed, 12 Jan 2022 14:52:38 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.19.27",
+      "tag": "@szewtwin/eslint-plugin_v2.19.27",
+      "date": "Wed, 05 Jan 2022 20:07:20 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.19.26",
+      "tag": "@szewtwin/eslint-plugin_v2.19.26",
+      "date": "Wed, 08 Dec 2021 20:54:52 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.19.25",
+      "tag": "@szewtwin/eslint-plugin_v2.19.25",
+      "date": "Fri, 03 Dec 2021 20:05:49 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.19.24",
+      "tag": "@szewtwin/eslint-plugin_v2.19.24",
+      "date": "Mon, 29 Nov 2021 18:44:31 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.19.23",
+      "tag": "@szewtwin/eslint-plugin_v2.19.23",
+      "date": "Mon, 22 Nov 2021 20:41:39 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.19.22",
+      "tag": "@szewtwin/eslint-plugin_v2.19.22",
+      "date": "Wed, 17 Nov 2021 01:23:26 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.19.21",
+      "tag": "@szewtwin/eslint-plugin_v2.19.21",
+      "date": "Wed, 10 Nov 2021 10:58:24 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.19.20",
+      "tag": "@szewtwin/eslint-plugin_v2.19.20",
+      "date": "Fri, 29 Oct 2021 16:14:22 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.19.19",
+      "tag": "@szewtwin/eslint-plugin_v2.19.19",
+      "date": "Mon, 25 Oct 2021 16:16:25 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.19.18",
+      "tag": "@szewtwin/eslint-plugin_v2.19.18",
+      "date": "Thu, 21 Oct 2021 20:59:44 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.19.17",
+      "tag": "@szewtwin/eslint-plugin_v2.19.17",
+      "date": "Thu, 14 Oct 2021 21:19:43 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.19.16",
+      "tag": "@szewtwin/eslint-plugin_v2.19.16",
+      "date": "Mon, 11 Oct 2021 17:37:46 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.19.15",
+      "tag": "@szewtwin/eslint-plugin_v2.19.15",
+      "date": "Fri, 08 Oct 2021 16:44:23 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.19.14",
+      "tag": "@szewtwin/eslint-plugin_v2.19.14",
+      "date": "Fri, 01 Oct 2021 13:07:03 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.19.13",
+      "tag": "@szewtwin/eslint-plugin_v2.19.13",
+      "date": "Tue, 21 Sep 2021 21:06:40 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.19.12",
+      "tag": "@szewtwin/eslint-plugin_v2.19.12",
+      "date": "Wed, 15 Sep 2021 18:06:46 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.19.11",
+      "tag": "@szewtwin/eslint-plugin_v2.19.11",
+      "date": "Thu, 09 Sep 2021 21:04:57 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.19.10",
+      "tag": "@szewtwin/eslint-plugin_v2.19.10",
+      "date": "Wed, 08 Sep 2021 14:36:01 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.19.9",
+      "tag": "@szewtwin/eslint-plugin_v2.19.9",
+      "date": "Wed, 25 Aug 2021 15:36:01 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.19.8",
+      "tag": "@szewtwin/eslint-plugin_v2.19.8",
+      "date": "Mon, 23 Aug 2021 13:23:13 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.19.7",
+      "tag": "@szewtwin/eslint-plugin_v2.19.7",
+      "date": "Fri, 20 Aug 2021 17:47:22 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.19.6",
+      "tag": "@szewtwin/eslint-plugin_v2.19.6",
+      "date": "Tue, 17 Aug 2021 20:34:28 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.19.5",
+      "tag": "@szewtwin/eslint-plugin_v2.19.5",
+      "date": "Fri, 13 Aug 2021 21:48:08 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.19.4",
+      "tag": "@szewtwin/eslint-plugin_v2.19.4",
+      "date": "Thu, 12 Aug 2021 13:09:26 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.19.3",
+      "tag": "@szewtwin/eslint-plugin_v2.19.3",
+      "date": "Wed, 04 Aug 2021 20:29:34 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.19.2",
+      "tag": "@szewtwin/eslint-plugin_v2.19.2",
+      "date": "Tue, 03 Aug 2021 18:26:23 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.19.1",
+      "tag": "@szewtwin/eslint-plugin_v2.19.1",
+      "date": "Thu, 29 Jul 2021 20:01:11 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.19.0",
+      "tag": "@szewtwin/eslint-plugin_v2.19.0",
+      "date": "Mon, 26 Jul 2021 12:21:25 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "add and recommend no-internal-barrel-imports rule"
+          },
+          {
+            "comment": "Whitespace changes"
+          },
+          {
+            "comment": "enforce use of typed return-await alternative with try/catch handling"
+          }
+        ]
+      }
+    },
+    {
+      "version": "2.18.4",
+      "tag": "@szewtwin/eslint-plugin_v2.18.4",
+      "date": "Tue, 10 Aug 2021 19:35:13 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.18.3",
+      "tag": "@szewtwin/eslint-plugin_v2.18.3",
+      "date": "Wed, 28 Jul 2021 17:16:30 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.18.2",
+      "tag": "@szewtwin/eslint-plugin_v2.18.2",
+      "date": "Mon, 26 Jul 2021 16:18:31 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.18.1",
+      "tag": "@szewtwin/eslint-plugin_v2.18.1",
+      "date": "Fri, 16 Jul 2021 17:45:09 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.18.0",
+      "tag": "@szewtwin/eslint-plugin_v2.18.0",
+      "date": "Fri, 09 Jul 2021 18:11:24 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "Typescript is now a peer-dependency"
+          }
+        ]
+      }
+    },
+    {
+      "version": "2.17.3",
+      "tag": "@szewtwin/eslint-plugin_v2.17.3",
+      "date": "Mon, 26 Jul 2021 16:08:36 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.17.2",
+      "tag": "@szewtwin/eslint-plugin_v2.17.2",
+      "date": "Thu, 08 Jul 2021 15:23:00 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.17.1",
+      "tag": "@szewtwin/eslint-plugin_v2.17.1",
+      "date": "Fri, 02 Jul 2021 15:38:30 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.17.0",
+      "tag": "@szewtwin/eslint-plugin_v2.17.0",
+      "date": "Mon, 28 Jun 2021 16:20:11 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "Output parent symbol and skip local files in no-internal eslint rule"
+          },
+          {
+            "comment": "Added no-internal-report command to @szewtwin/eslint-plugin"
+          }
+        ]
+      }
+    },
+    {
+      "version": "2.16.10",
+      "tag": "@szewtwin/eslint-plugin_v2.16.10",
+      "date": "Thu, 22 Jul 2021 20:23:45 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.16.9",
+      "tag": "@szewtwin/eslint-plugin_v2.16.9",
+      "date": "Tue, 06 Jul 2021 22:08:34 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.16.8",
+      "tag": "@szewtwin/eslint-plugin_v2.16.8",
+      "date": "Fri, 02 Jul 2021 17:40:46 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.16.7",
+      "tag": "@szewtwin/eslint-plugin_v2.16.7",
+      "date": "Mon, 28 Jun 2021 18:13:04 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.16.6",
+      "tag": "@szewtwin/eslint-plugin_v2.16.6",
+      "date": "Mon, 28 Jun 2021 13:12:55 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.16.5",
+      "tag": "@szewtwin/eslint-plugin_v2.16.5",
+      "date": "Fri, 25 Jun 2021 16:03:01 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.16.4",
+      "tag": "@szewtwin/eslint-plugin_v2.16.4",
+      "date": "Wed, 23 Jun 2021 17:09:07 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.16.3",
+      "tag": "@szewtwin/eslint-plugin_v2.16.3",
+      "date": "Wed, 16 Jun 2021 20:29:32 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.16.2",
+      "tag": "@szewtwin/eslint-plugin_v2.16.2",
+      "date": "Thu, 03 Jun 2021 18:08:11 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.16.1",
+      "tag": "@szewtwin/eslint-plugin_v2.16.1",
+      "date": "Thu, 27 May 2021 20:04:22 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.16.0",
+      "tag": "@szewtwin/eslint-plugin_v2.16.0",
+      "date": "Mon, 24 May 2021 15:58:39 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.15.6",
+      "tag": "@szewtwin/eslint-plugin_v2.15.6",
+      "date": "Wed, 26 May 2021 15:55:18 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.15.5",
+      "tag": "@szewtwin/eslint-plugin_v2.15.5",
+      "date": "Thu, 20 May 2021 15:06:26 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.15.4",
+      "tag": "@szewtwin/eslint-plugin_v2.15.4",
+      "date": "Tue, 18 May 2021 21:59:07 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.15.3",
+      "tag": "@szewtwin/eslint-plugin_v2.15.3",
+      "date": "Mon, 17 May 2021 13:31:37 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.15.2",
+      "tag": "@szewtwin/eslint-plugin_v2.15.2",
+      "date": "Wed, 12 May 2021 18:08:13 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.15.1",
+      "tag": "@szewtwin/eslint-plugin_v2.15.1",
+      "date": "Wed, 05 May 2021 13:18:31 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.15.0",
+      "tag": "@szewtwin/eslint-plugin_v2.15.0",
+      "date": "Fri, 30 Apr 2021 12:36:58 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.14.4",
+      "tag": "@szewtwin/eslint-plugin_v2.14.4",
+      "date": "Thu, 22 Apr 2021 21:07:33 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.14.3",
+      "tag": "@szewtwin/eslint-plugin_v2.14.3",
+      "date": "Thu, 15 Apr 2021 15:13:16 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.14.2",
+      "tag": "@szewtwin/eslint-plugin_v2.14.2",
+      "date": "Thu, 08 Apr 2021 14:30:09 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.14.1",
+      "tag": "@szewtwin/eslint-plugin_v2.14.1",
+      "date": "Mon, 05 Apr 2021 16:28:00 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.14.0",
+      "tag": "@szewtwin/eslint-plugin_v2.14.0",
+      "date": "Fri, 02 Apr 2021 13:18:42 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.13.0",
+      "tag": "@szewtwin/eslint-plugin_v2.13.0",
+      "date": "Tue, 09 Mar 2021 20:28:13 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "Updated to use TypeScript 4.1"
+          }
+        ]
+      }
+    },
+    {
+      "version": "2.12.3",
+      "tag": "@szewtwin/eslint-plugin_v2.12.3",
+      "date": "Mon, 08 Mar 2021 15:32:00 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.12.2",
+      "tag": "@szewtwin/eslint-plugin_v2.12.2",
+      "date": "Wed, 03 Mar 2021 18:48:52 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.12.1",
+      "tag": "@szewtwin/eslint-plugin_v2.12.1",
+      "date": "Tue, 23 Feb 2021 20:54:45 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.12.0",
+      "tag": "@szewtwin/eslint-plugin_v2.12.0",
+      "date": "Thu, 18 Feb 2021 22:10:12 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.11.2",
+      "tag": "@szewtwin/eslint-plugin_v2.11.2",
+      "date": "Thu, 18 Feb 2021 02:50:59 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.11.1",
+      "tag": "@szewtwin/eslint-plugin_v2.11.1",
+      "date": "Thu, 04 Feb 2021 17:22:41 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.11.0",
+      "tag": "@szewtwin/eslint-plugin_v2.11.0",
+      "date": "Thu, 28 Jan 2021 13:39:27 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "only allow 1 blank line"
+          },
+          {
+            "comment": "add no-internal rule"
+          }
+        ]
+      }
+    },
+    {
+      "version": "2.10.3",
+      "tag": "@szewtwin/eslint-plugin_v2.10.3",
+      "date": "Fri, 08 Jan 2021 18:34:03 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.10.2",
+      "tag": "@szewtwin/eslint-plugin_v2.10.2",
+      "date": "Fri, 08 Jan 2021 14:52:02 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.10.1",
+      "tag": "@szewtwin/eslint-plugin_v2.10.1",
+      "date": "Tue, 22 Dec 2020 00:53:38 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.10.0",
+      "tag": "@szewtwin/eslint-plugin_v2.10.0",
+      "date": "Fri, 18 Dec 2020 18:24:01 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.9.9",
+      "tag": "@szewtwin/eslint-plugin_v2.9.9",
+      "date": "Sun, 13 Dec 2020 19:00:03 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.9.8",
+      "tag": "@szewtwin/eslint-plugin_v2.9.8",
+      "date": "Fri, 11 Dec 2020 02:57:36 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.9.7",
+      "tag": "@szewtwin/eslint-plugin_v2.9.7",
+      "date": "Wed, 09 Dec 2020 20:58:23 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.9.6",
+      "tag": "@szewtwin/eslint-plugin_v2.9.6",
+      "date": "Mon, 07 Dec 2020 18:40:48 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.9.5",
+      "tag": "@szewtwin/eslint-plugin_v2.9.5",
+      "date": "Sat, 05 Dec 2020 01:55:56 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.9.4",
+      "tag": "@szewtwin/eslint-plugin_v2.9.4",
+      "date": "Wed, 02 Dec 2020 20:55:40 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.9.3",
+      "tag": "@szewtwin/eslint-plugin_v2.9.3",
+      "date": "Mon, 23 Nov 2020 20:57:56 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.9.2",
+      "tag": "@szewtwin/eslint-plugin_v2.9.2",
+      "date": "Mon, 23 Nov 2020 15:33:50 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.9.1",
+      "tag": "@szewtwin/eslint-plugin_v2.9.1",
+      "date": "Thu, 19 Nov 2020 17:03:42 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.9.0",
+      "tag": "@szewtwin/eslint-plugin_v2.9.0",
+      "date": "Wed, 18 Nov 2020 16:01:50 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "Semicolons are now required by default everywhere where they apply"
+          }
+        ]
+      }
+    },
+    {
+      "version": "2.8.1",
+      "tag": "@szewtwin/eslint-plugin_v2.8.1",
+      "date": "Tue, 03 Nov 2020 00:33:56 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.8.0",
+      "tag": "@szewtwin/eslint-plugin_v2.8.0",
+      "date": "Fri, 23 Oct 2020 17:04:02 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "Added jsdoc ESLint rule for UI packages"
+          }
+        ]
+      }
+    },
+    {
+      "version": "2.7.6",
+      "tag": "@szewtwin/eslint-plugin_v2.7.6",
+      "date": "Wed, 11 Nov 2020 16:28:23 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.7.5",
+      "tag": "@szewtwin/eslint-plugin_v2.7.5",
+      "date": "Fri, 23 Oct 2020 16:23:50 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.7.4",
+      "tag": "@szewtwin/eslint-plugin_v2.7.4",
+      "date": "Mon, 19 Oct 2020 17:57:01 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.7.3",
+      "tag": "@szewtwin/eslint-plugin_v2.7.3",
+      "date": "Wed, 14 Oct 2020 17:00:58 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.7.2",
+      "tag": "@szewtwin/eslint-plugin_v2.7.2",
+      "date": "Tue, 13 Oct 2020 18:20:38 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.7.1",
+      "tag": "@szewtwin/eslint-plugin_v2.7.1",
+      "date": "Thu, 08 Oct 2020 13:04:35 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.7.0",
+      "tag": "@szewtwin/eslint-plugin_v2.7.0",
+      "date": "Fri, 02 Oct 2020 18:03:32 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "Added 'jam3/no-sanitizer-with-danger' ESLint rule for UI React packages"
+          }
+        ]
+      }
+    },
+    {
+      "version": "2.6.5",
+      "tag": "@szewtwin/eslint-plugin_v2.6.5",
+      "date": "Sat, 26 Sep 2020 16:06:34 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.6.4",
+      "tag": "@szewtwin/eslint-plugin_v2.6.4",
+      "date": "Tue, 22 Sep 2020 17:40:07 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.6.3",
+      "tag": "@szewtwin/eslint-plugin_v2.6.3",
+      "date": "Mon, 21 Sep 2020 14:47:09 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.6.2",
+      "tag": "@szewtwin/eslint-plugin_v2.6.2",
+      "date": "Mon, 21 Sep 2020 13:07:43 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.6.1",
+      "tag": "@szewtwin/eslint-plugin_v2.6.1",
+      "date": "Fri, 18 Sep 2020 13:15:08 GMT",
+      "comments": {}
+    },
+    {
+      "version": "2.6.0",
+      "tag": "@szewtwin/eslint-plugin_v2.6.0",
+      "date": "Thu, 17 Sep 2020 13:16:12 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "Moved ESLint configuration to a plugin"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+# build output
+lib
+build
+coverage
+dist
+
+# Generated
+common/api
+common/changes
+common/temp
+CHANGELOG.json
+CHANGELOG.md
+
+# pnpm specific
+pnpm-lock.yaml
+
+# codemod specific
+__testfixtures__
+
+# storybook specific
+storybook-static
+
+# playwright specific
+playwright-report
+
+# test-app specific
+routeTree.gen.ts
+
+# temporary until prettier is updated
+useTranslation.tsx

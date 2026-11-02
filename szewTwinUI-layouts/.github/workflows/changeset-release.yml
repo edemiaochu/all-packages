@@ -1,0 +1,40 @@
+name: CD
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  release:
+    name: Release
+    if: github.repository == 'iTwin/iTwinUI-layouts'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Use Node 18.X
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+
+      - run: yarn
+
+      - name: Use npm token
+        run: |
+          echo npmAuthToken: "$NODE_AUTH_TOKEN" >> ./.yarnrc.yml
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPMJS_PUBLISH_ITWIN }}
+
+      - name: Create release PR or publish to npm
+        uses: changesets/action@v1
+        with:
+          publish: yarn release
+          title: Release packages
+          commit: Release packages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPMJS_PUBLISH_ITWIN }}

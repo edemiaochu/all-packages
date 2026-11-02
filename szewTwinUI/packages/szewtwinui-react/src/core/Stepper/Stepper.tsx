@@ -1,0 +1,160 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+import cx from 'classnames';
+import * as React from 'react';
+import { Box } from '../../utils/index.js';
+import type { PolymorphicForwardRefComponent } from '../../utils/index.js';
+import { StepperStep } from './StepperStep.js';
+import { FloatingDelayGroup } from '@floating-ui/react';
+import { defaultTooltipDelay } from '../Tooltip/Tooltip.js';
+
+export type StepperLocalization = {
+  stepsCountLabel: (currentStep: number, totalSteps: number) => string;
+};
+
+export type StepProperties = {
+  /**
+   * The title/label of the step.
+   */
+  name: string;
+  /**
+   * A tooltip giving detailed description to this step.
+   */
+  description?: string;
+  /**
+   * Custom content displayed in the step's circle.
+   */
+  stepContent?: () => React.ReactNode;
+} & React.ComponentProps<'li'>;
+
+export type StepperProps = {
+  /**
+   * Current step index, 0 - based.
+   */
+  currentStep?: number;
+  /**
+   * An array of step objects.
+   */
+  steps: StepProperties[];
+  /**
+   *  The type of Stepper to display.
+   *  @default 'default'
+   */
+  type?: 'default' | 'long';
+  /**
+   *  Option to provide localized strings.
+   */
+  localization?: StepperLocalization;
+  /**
+   *  Click handler on completed step.
+   */
+  onStepClick?: (clickedIndex: number) => void;
+  /**
+   * Callback that can provide additional props for `<li>` representing a step.
+   */
+  stepProps?: (index: number) => React.ComponentProps<'li'>;
+  /**
+   * Allows props to be passed for track content.
+   */
+  trackContentProps?: (index: number) => React.ComponentProps<'div'>;
+  /**
+   * Allows props to be passed for circle.
+   */
+  circleProps?: (index: number) => React.ComponentProps<'span'>;
+  /**
+   * Allows props to be passed for name.
+   */
+  nameProps?: (index: number) => React.ComponentProps<'span'>;
+  /**
+   * Allows props to be passed for label.
+   */
+  labelProps?: React.ComponentProps<'div'>;
+  /**
+   * Allows props to be passed for label count.
+   */
+  labelCountProps?: React.ComponentProps<'span'>;
+};
+
+const defaultStepperLocalization: StepperLocalization = {
+  stepsCountLabel: (currentStep, totalSteps) =>
+    `Step ${currentStep} of ${totalSteps}:`,
+};
+
+export const Stepper = React.forwardRef((props, ref) => {
+  const {
+    currentStep,
+    steps,
+    type = 'default',
+    localization = defaultStepperLocalization,
+    onStepClick,
+    stepProps,
+    trackContentProps,
+    circleProps,
+    nameProps,
+    labelProps,
+    labelCountProps,
+    className,
+    ...rest
+  } = props;
+
+  const boundedCurrentStep = Math.min(
+    Math.max(0, currentStep ?? 0),
+    steps.length - 1,
+  );
+
+  return (
+    <Box className={cx('iui-stepper', className)} ref={ref} {...rest}>
+      <FloatingDelayGroup delay={defaultTooltipDelay}>
+        <ol>
+          {steps.map((s, index) => {
+            const thisStepProps = stepProps?.(index);
+            const thisTrackContentProps = trackContentProps?.(index);
+            const thisCircleProps = circleProps?.(index);
+            const thisNameProps = nameProps?.(index);
+            return (
+              <StepperStep
+                stepProps={thisStepProps}
+                trackContentProps={thisTrackContentProps}
+                circleProps={thisCircleProps}
+                nameProps={thisNameProps}
+                key={index}
+                index={index}
+                title={type === 'long' ? '' : s.name}
+                currentStepNumber={boundedCurrentStep}
+                totalSteps={steps.length}
+                type={type}
+                onClick={onStepClick}
+                description={s.description}
+                stepContent={s.stepContent}
+              />
+            );
+          })}
+        </ol>
+      </FloatingDelayGroup>
+      {type === 'long' && (
+        <Box
+          as='div'
+          {...labelProps}
+          className={cx('iui-stepper-steps-label', labelProps?.className)}
+        >
+          <Box
+            as='span'
+            {...labelCountProps}
+            className={cx(
+              'iui-stepper-steps-label-count',
+              labelCountProps?.className,
+            )}
+          >
+            {localization.stepsCountLabel(boundedCurrentStep + 1, steps.length)}
+          </Box>
+          {steps[boundedCurrentStep].name}
+        </Box>
+      )}
+    </Box>
+  );
+}) as PolymorphicForwardRefComponent<'div', StepperProps>;
+if (process.env.NODE_ENV === 'development') {
+  Stepper.displayName = 'Stepper';
+}

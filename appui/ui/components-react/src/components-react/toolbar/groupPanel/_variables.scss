@@ -1,0 +1,17 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@forward "~@szewtwin/core-react/lib/core-react/style/themecolors";
+@forward "~@szewtwin/core-react/lib/core-react/typography";
+@forward "../variables";
+
+$panel-padding-left: 16px;
+$panel-padding-right: 8px;
+$panel-padding-top: $panel-padding-right;
+$panel-padding-bottom: 12px;
+$title-color: var(--iui-color-text);
+$back-arrow-thickness: 2px;
+$back-arrow-size-val: 6;
+$title-horizontal-margin: 20px;
+$title-horizontal-back-arrow-margin: 28px;

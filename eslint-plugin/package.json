@@ -1,0 +1,73 @@
+{
+  "name": "@szewtwin/eslint-plugin",
+  "version": "6.0.0",
+  "description": "ESLint plugin with default configuration and custom rules for szewTwin.js projects",
+  "license": "MIT",
+  "keywords": [
+    "eslint",
+    "eslintplugin",
+    "eslint-plugin",
+    "szewTwin.js"
+  ],
+  "main": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/szewTwin/eslint-plugin"
+  },
+  "bin": {
+    "no-internal-report": "dist/bin/no-internal-report.js"
+  },
+  "scripts": {
+    "build": "",
+    "before-test": "node tests/fixtures/link.js",
+    "test": "npm run before-test && mocha \"tests/*.js\"",
+    "cover": "npm -s test",
+    "change": "beachball change",
+    "check": "beachball check",
+    "version-bump": "beachball bump",
+    "version-bump-dev": "beachball bump --config beachball.config.dev.js --keep-change-files",
+    "publish-packages": "beachball publish",
+    "publish-packages-dev": "beachball publish --config beachball.config.dev.js --keep-change-files",
+    "prepare": "husky"
+  },
+  "author": {
+    "name": "Szewec Systems, Inc.",
+    "url": "http://www.szewec.com"
+  },
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.38.0",
+    "@typescript-eslint/parser": "^8.38.0",
+    "eslint-formatter-visualstudio": "^8.40.0",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-jam3": "^0.2.3",
+    "eslint-plugin-jsdoc": "^51.4.1",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-prefer-arrow": "^1.2.3",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "luxon": "^3.7.1",
+    "workspace-tools": "^0.36.4"
+  },
+  "peerDependencies": {
+    "eslint": "^9.11.1",
+    "typescript": "^3.7.0 || ^4.0.0 || ^5.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "20.11.16",
+    "beachball": "^2.62.0",
+    "eslint": "^9.31.0",
+    "husky": "^9.1.7",
+    "mocha": "^10.8.2",
+    "typescript": "~5.6.3"
+  },
+  "engines": {
+    "node": "^20.11.0 || ^22.0.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "tar": ">=7.5.4",
+      "js-yaml": ">=4.1.1"
+    }
+  },
+  "packageManager": "pnpm@10.10.0+sha512.d615db246fe70f25dcfea6d8d73dee782ce23e2245e3c4f6f888249fb568149318637dca73c2c5c8ef2a4ca0d5657fb9567188bfab47f566d1ee6ce987815c39"
+}

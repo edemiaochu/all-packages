@@ -1,0 +1,36 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@use "~@szewtwin/core-react/lib/core-react/z-index" as *;
+@use "variables" as *;
+
+.nz-widget-floatingTab {
+  position: absolute;
+  padding: 0 1em;
+  display: flex;
+  align-items: center;
+  background: var(--iui-color-background-backdrop-hover);
+  user-select: none;
+  -webkit-user-select: none;
+  white-space: nowrap;
+  height: $nz-widget-tab-height;
+  border-radius: $nz-widget-tab-border-radius;
+  color: var(--iui-color-text-disabled);
+  pointer-events: none;
+  opacity: $nz-dragged-widget-opacity;
+  gap: 6px;
+
+  @include uicore-z-index(drag-preview);
+
+  &.nz-hidden {
+    display: none;
+  }
+
+  > span {
+    max-width: 12em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: $nz-widget-tab-font-size;
+  }
+}

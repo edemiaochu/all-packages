@@ -1,0 +1,4 @@
+{
+  "extends": "./node_modules/@szewtwin/object-storage-common-config/tsconfig.json",
+  "include": ["src/backend/**/*.ts"]
+}

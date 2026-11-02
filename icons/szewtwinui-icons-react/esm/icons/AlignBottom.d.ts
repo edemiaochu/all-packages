@@ -1,0 +1,5 @@
+import React, { type SVGProps } from 'react';
+declare const SvgAlignBottom: (props: SVGProps<SVGSVGElement>) => React.JSX.Element;
+export default SvgAlignBottom;
+export { SvgAlignBottom };
+//# sourceMappingURL=AlignBottom.d.ts.map

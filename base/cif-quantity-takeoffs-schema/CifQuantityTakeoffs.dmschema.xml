@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ==================================================================================
+|  * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+|  * See LICENSE.md in the project root for license terms and full copyright notice.
+======================================================================================= -->
+<DMSchema schemaName="CifQuantityTakeoffs" alias="cifqto" version="01.00.01" description="iVault Bridge schema for common Quantity Takeoff data from Civil Infrastructure Framework (CIF) applications." xmlns="http://www.szewec.com/schemas/Szewec.DMXML.3.2">
+    <DMSchemaReference name="BisCore" version="01.00.14" alias="bis"/>
+    <DMSchemaReference name="CoreCustomAttributes" version="01.00.03" alias="CoreCA"/>
+    <DMSchemaReference name="QuantityTakeoffsAspects" version="01.00.01" alias="qto"/>
+    <DMSchemaReference name="RoadRailUnits" version="01.00.01" alias="rru"/>
+    <DMCustomAttributes>
+        <ProductionStatus xmlns="CoreCustomAttributes.01.00.03">
+            <SupportedUse>Production</SupportedUse>
+        </ProductionStatus>
+    </DMCustomAttributes>
+    <DMEntityClass typeName="QTO_MaterialAspect" description="Subclass of QuantityTakeoffsAspects.MaterialAspect class, hiding its properties from the User Interface." modifier="Sealed">
+        <BaseClass>qto:MaterialAspect</BaseClass>
+        <DMCustomAttributes>
+            <HiddenClass xmlns="CoreCustomAttributes.01.00.03"/>
+        </DMCustomAttributes>
+        <DMProperty propertyName="Material" typeName="string">
+            <DMCustomAttributes>
+                <HiddenProperty xmlns="CoreCustomAttributes.01.00.03"/>
+            </DMCustomAttributes>
+        </DMProperty>
+        <DMProperty propertyName="MaterialDensity" typeName="double">
+            <DMCustomAttributes>
+                <HiddenProperty xmlns="CoreCustomAttributes.01.00.03"/>
+            </DMCustomAttributes>
+        </DMProperty>
+        <DMProperty propertyName="Weight" typeName="double">
+            <DMCustomAttributes>
+                <HiddenProperty xmlns="CoreCustomAttributes.01.00.03"/>
+            </DMCustomAttributes>
+        </DMProperty>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsQTO_MaterialAspect" modifier="Sealed" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="QTO_MaterialAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="QTO_SurfaceAreaAspect" description="Subclass of QuantityTakeoffsAspects.SurfaceAreaAspect class, hiding its properties from the User Interface." modifier="Sealed">
+        <BaseClass>qto:SurfaceAreaAspect</BaseClass>
+        <DMCustomAttributes>
+            <HiddenClass xmlns="CoreCustomAttributes.01.00.03"/>
+        </DMCustomAttributes>
+        <DMProperty propertyName="GrossSurfaceArea" typeName="double">
+            <DMCustomAttributes>
+                <HiddenProperty xmlns="CoreCustomAttributes.01.00.03"/>
+            </DMCustomAttributes>
+        </DMProperty>
+        <DMProperty propertyName="NetSurfaceArea" typeName="double">
+            <DMCustomAttributes>
+                <HiddenProperty xmlns="CoreCustomAttributes.01.00.03"/>
+            </DMCustomAttributes>
+        </DMProperty>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsQTO_SurfaceAreaAspect" modifier="Sealed" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="QTO_SurfaceAreaAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="QTO_VolumeAspect" description="Subclass of QuantityTakeoffsAspects.VolumeAspect class, hiding its properties from the User Interface." modifier="Sealed">
+        <BaseClass>qto:VolumeAspect</BaseClass>
+        <DMCustomAttributes>
+            <HiddenClass xmlns="CoreCustomAttributes.01.00.03"/>
+        </DMCustomAttributes>
+        <DMProperty propertyName="GrossVolume" typeName="double">
+            <DMCustomAttributes>
+                <HiddenProperty xmlns="CoreCustomAttributes.01.00.03"/>
+            </DMCustomAttributes>
+        </DMProperty>
+        <DMProperty propertyName="NetVolume" typeName="double">
+            <DMCustomAttributes>
+                <HiddenProperty xmlns="CoreCustomAttributes.01.00.03"/>
+            </DMCustomAttributes>
+        </DMProperty>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsQTO_VolumeAspect" modifier="Sealed" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="QTO_VolumeAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="QTO_SideAreasAspect" description="Subclass of QuantityTakeoffsAspects.SideAreasAspect class, hiding its properties from the User Interface." modifier="Sealed">
+        <BaseClass>qto:SideAreasAspect</BaseClass>
+        <DMCustomAttributes>
+            <HiddenClass xmlns="CoreCustomAttributes.01.00.03"/>
+        </DMCustomAttributes>
+        <DMProperty propertyName="BottomGrossArea" typeName="double">
+            <DMCustomAttributes>
+                <HiddenProperty xmlns="CoreCustomAttributes.01.00.03"/>
+            </DMCustomAttributes>
+        </DMProperty>
+        <DMProperty propertyName="BottomNetArea" typeName="double">
+            <DMCustomAttributes>
+                <HiddenProperty xmlns="CoreCustomAttributes.01.00.03"/>
+            </DMCustomAttributes>
+        </DMProperty>
+        <DMProperty propertyName="LeftSideGrossArea" typeName="double">
+            <DMCustomAttributes>
+                <HiddenProperty xmlns="CoreCustomAttributes.01.00.03"/>
+            </DMCustomAttributes>
+        </DMProperty>
+        <DMProperty propertyName="LeftSideNetArea" typeName="double">
+            <DMCustomAttributes>
+                <HiddenProperty xmlns="CoreCustomAttributes.01.00.03"/>
+            </DMCustomAttributes>
+        </DMProperty>
+        <DMProperty propertyName="RightSideGrossArea" typeName="double">
+            <DMCustomAttributes>
+                <HiddenProperty xmlns="CoreCustomAttributes.01.00.03"/>
+            </DMCustomAttributes>
+        </DMProperty>
+        <DMProperty propertyName="RightSideNetArea" typeName="double">
+            <DMCustomAttributes>
+                <HiddenProperty xmlns="CoreCustomAttributes.01.00.03"/>
+            </DMCustomAttributes>
+        </DMProperty>
+        <DMProperty propertyName="TopGrossArea" typeName="double">
+            <DMCustomAttributes>
+                <HiddenProperty xmlns="CoreCustomAttributes.01.00.03"/>
+            </DMCustomAttributes>
+        </DMProperty>
+        <DMProperty propertyName="TopNetArea" typeName="double">
+            <DMCustomAttributes>
+                <HiddenProperty xmlns="CoreCustomAttributes.01.00.03"/>
+            </DMCustomAttributes>
+        </DMProperty>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsQTO_SideAreasAspect" modifier="Sealed" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="QTO_SideAreasAspect"/>
+        </Target>
+    </DMRelationshipClass>
+<DMEntityClass typeName="QTO_DimensionsAspect" description="Subclass of QuantityTakeoffsAspects.DimensionsAspect class, hiding its properties from the User Interface." modifier="Sealed">
+        <BaseClass>qto:DimensionsAspect</BaseClass>
+        <DMCustomAttributes>
+            <HiddenClass xmlns="CoreCustomAttributes.01.00.03"/>
+        </DMCustomAttributes>
+        <DMProperty propertyName="Height" typeName="double">
+            <DMCustomAttributes>
+                <HiddenProperty xmlns="CoreCustomAttributes.01.00.03"/>
+            </DMCustomAttributes>
+        </DMProperty>
+        <DMProperty propertyName="Length" typeName="double">
+            <DMCustomAttributes>
+                <HiddenProperty xmlns="CoreCustomAttributes.01.00.03"/>
+            </DMCustomAttributes>
+        </DMProperty>
+        <DMProperty propertyName="Width" typeName="double">
+            <DMCustomAttributes>
+                <HiddenProperty xmlns="CoreCustomAttributes.01.00.03"/>
+            </DMCustomAttributes>
+        </DMProperty>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsQTO_DimensionsAspect" modifier="Sealed" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="QTO_DimensionsAspect"/>
+        </Target>
+    </DMRelationshipClass>
+</DMSchema>

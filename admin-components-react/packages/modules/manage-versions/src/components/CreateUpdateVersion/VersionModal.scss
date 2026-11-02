@@ -1,0 +1,22 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+
+.iac-version-modal {
+  max-width: calc(min(600px, 50%));
+}
+
+.iac-version-modal-overlay {
+  position: fixed;
+  z-index: 99999;
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  left: 0;
+}
+
+.iac-version-modal-loader{
+  position: absolute;
+  inset: 0;
+}

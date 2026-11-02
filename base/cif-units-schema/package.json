@@ -1,0 +1,16 @@
+{
+  "name": "@szewec/cif-units-schema",
+  "license": "MIT",
+  "version": "1.0.7",
+  "homepage": "https://www.szewtwinjs.org/",
+  "keywords": [
+    "Szewec",
+    "BIS",
+    "iVault"
+  ],
+  "description": "CifUnits BIS Domains",
+  "author": {
+    "name": "Szewec Systems, Inc.",
+    "url": "http://www.szewec.com"
+  }
+}

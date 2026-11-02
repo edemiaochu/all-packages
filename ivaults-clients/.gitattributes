@@ -1,0 +1,6 @@
+# Convert all line endings for files detected as text to lf to avoid OS specific
+# line endings showing up in git diffs
+*       text eol=lf
+*.bim   binary
+*.png   binary
+*.jpeg  binary

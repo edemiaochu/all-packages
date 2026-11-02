@@ -1,0 +1,24 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@use "~@szewtwin/core-react/lib/core-react/z-index" as *;
+
+.uifw-card {
+  background-color: hsl(var(--iui-color-background-hsl) / 0.9);
+  @include uicore-z-index(content-card-popup);
+
+  .uifw-card-content {
+    padding: 6px 10px;
+  }
+
+  .uifw-card-separator {
+    height: 2px;
+    margin-bottom: 1px;
+    background: rgba(var(--iui-color-foreground-hsl), 0.45);
+  }
+}
+
+.uifw-card-gap {
+  height: 4px;
+}

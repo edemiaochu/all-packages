@@ -1,0 +1,10 @@
+// Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+// See LICENSE.md in the project root for license terms and full copyright notice.
+
+@mixin iui-button-idea {
+  border-radius: var(--iui-border-radius-round);
+  box-shadow: var(--iui-shadow-5);
+  position: fixed;
+  inset-block-end: var(--iui-size-s);
+  inset-inline-end: var(--iui-size-m);
+}

@@ -1,0 +1,105 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@use "~@szewtwin/core-react/lib/core-react/z-index" as *;
+
+.components-timeline-thumb {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--iui-color-background);
+  box-sizing: border-box;
+  width: 38px;
+  height: 20px;
+  border-radius: var(--iui-border-radius-1);
+  border: 1px solid var(--iui-color-border);
+  transform: translateX(-19.2px);
+}
+
+.components-timeline-rail-marker-container {
+  position: absolute;
+  width: 100%;
+  top: 0;
+
+  .components-timeline-tooltip {
+    @include uicore-z-index(tooltip);
+    position: absolute;
+    top: -8px;
+    display: inline-block;
+    transform: translateX(-50px);
+    border-bottom: 1px dotted rgba(0, 0, 0, var(--iui-opacity-3));
+    font-size: 14px;
+
+    .tooltip-text {
+      width: 100px;
+      background-color: rgba(0, 0, 0, var(--iui-opacity-3));
+      color: #fff;
+      // opacity: 0.8;
+      text-align: center;
+      border-radius: 6px;
+      padding: 8px 0;
+      position: absolute;
+      z-index: 1;
+      bottom: 150%;
+
+      &:after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: rgba(0, 0, 0, var(--iui-opacity-3)) transparent
+          transparent transparent;
+      }
+    }
+  }
+}
+
+.scrubber-handle {
+  pointer-events: none;
+  position: absolute;
+  width: 38px;
+  height: 20px;
+  border-radius: var(--iui-border-radius-1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  cursor: pointer;
+
+  > div {
+    width: 1px;
+    height: 10px;
+    margin: 0 1px;
+    background-color: var(--iui-color-border-subtle);
+  }
+}
+
+.scrubber-track {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 4px;
+  z-index: 1;
+  cursor: pointer;
+}
+
+.components-timeline-date-marker {
+  pointer-events: none;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(50%);
+}
+
+.date-marker-default {
+  height: 12px;
+  width: 3px;
+  border-radius: var(--iui-border-radius-1);
+  transform: translateY(1px);
+  background-color: var(--iui-color-border);
+}

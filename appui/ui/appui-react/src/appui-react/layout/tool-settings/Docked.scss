@@ -1,0 +1,30 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+
+.uifw-toolSettings-docked {
+  display: flex;
+  height: 100%;
+  gap: var(--iui-size-m);
+}
+
+.uifw-toolSettings-docked_container {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--iui-size-2xs);
+  align-items: flex-start;
+}
+
+.toolsettings-appear {
+  opacity: var(--iui-opacity-6);
+  transition: opacity var(--iui-duration-1) ease-in-out;
+  transform: translateY(-100%);
+
+  &-active {
+    opacity: var(--iui-opacity-2);
+    transform: translateY(0);
+    transition: opacity var(--iui-duration-1) ease-in-out,
+      transform var(--iui-duration-2) ease-out;
+  }
+}

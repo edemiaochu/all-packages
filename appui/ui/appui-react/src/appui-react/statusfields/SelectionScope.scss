@@ -1,0 +1,17 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+.uifw-statusFields-selectionScope {
+  display: flex;
+  align-items: center;
+}
+
+.uifw-statusFields-selectionScope-selector {
+  min-width: 140px;
+}
+
+.uifw-statusFields-selectionScope-label {
+  margin-right: var(--iui-size-xs);
+  white-space: nowrap;
+}

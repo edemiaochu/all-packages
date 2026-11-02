@@ -1,0 +1,5 @@
+import React, { type SVGProps } from 'react';
+declare const SvgSearch: (props: SVGProps<SVGSVGElement>) => React.JSX.Element;
+export default SvgSearch;
+export { SvgSearch };
+//# sourceMappingURL=Search.d.ts.map

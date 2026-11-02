@@ -1,0 +1,256 @@
+const path = require("path");
+const { RuleTester } = require("eslint");
+const SzewecESLintPlugin = require("../dist");
+const PublicExtensionsExports =
+  SzewecESLintPlugin.rules["public-extension-exports"];
+
+const fixtureDir = path.join(
+  __dirname,
+  "fixtures",
+  "no-internal",
+  "workspace-pkg-1"
+);
+const tester = new RuleTester({
+  languageOptions: {
+    parser: require("@typescript-eslint/parser"),
+    parserOptions: {
+      projectService: {
+        allowDefaultProject: ['*.ts*'],
+        defaultProject: path.join(fixtureDir, "tsconfig.test.json"),
+      },
+      ecmaVersion: 6,
+      sourceType: "module",
+      tsconfigRootDir: fixtureDir,
+    },
+  },
+});
+
+tester.run("public-extension-exports", PublicExtensionsExports, {
+  // extensions can only be public
+  valid: [
+    {
+      code: `
+      /**
+       * @extensions
+       * @public
+       */
+      export function destroyAllIVaults(): void{
+      }
+      `,
+      options: [{ releaseTags: ["public", "beta"] }],
+    },
+    // test defaults
+    {
+      code: `
+        /**
+         * @extensions
+         * @public
+         */
+        export function destroyAllIVaults(): void{
+        }
+        `,
+    },
+    // empty options triggers default
+    {
+      code: `
+        /**
+         * @extensions
+         * @public
+         */
+        export function destroyAllIVaults(): void{
+        }
+        `,
+      options: [{}],
+    },
+    // namespace rule
+    {
+      code: `
+        /**
+         * @public
+         * @extensions
+         */
+        export namespace Dangerous {
+          /**
+           * @public
+           * @extensions
+           */
+          export function destroyAllIVaults(): void{
+          }
+        }
+        `,
+    },
+    // Namespace rule, no false positive
+    {
+      code: `
+      /**
+       * @public
+       */
+        export namespace Tileset3dSchema {
+          /**
+           * @public
+           */
+          export interface asdkljas {
+            [key: string]: any;
+          }
+        }
+        `,
+    },
+    /**
+     * CSV Output:
+     * NOTE: There's not a great way to test this programmatically from within the eslint test runner.
+     * Please check that the lib/GeneratedExtensionApi.csv file is created and contains the expected data after your test runs.
+     */
+    {
+      code: `
+        /**
+         * @extensions
+         * @public
+         */
+        export function destroyAllIVaults(): void{
+        }
+        `,
+      options: [{ outputApiFile: true }],
+    },
+  ],
+  invalid: [
+    // extensions require public tag.
+    {
+      code: `
+        /**
+         * @extensions
+         */
+        export function destroyAllIVaults(): void {
+        }
+        `,
+      errors: [
+        {
+          message: `Extension exports must be annotated with both an @extensions and @public tag. Please review the tags for "destroyAllIVaults".`,
+        },
+      ],
+    },
+    // used to allow preview, but no longer
+    {
+      code: `
+      /**
+       * @extensions
+       * @preview
+       */
+      export function destroyAllIVaults(): void {
+      }
+      `,
+      errors: [
+        {
+          message: `Extension exports must be annotated with both an @extensions and @public tag. Please review the tags for "destroyAllIVaults".`,
+        },
+      ],
+    },
+    // added options do nothing for extensions
+    {
+      code: `
+      /**
+       * @extensions
+       */
+      export function destroyAllIVaults(): void {
+      }
+      `,
+      errors: [
+        {
+          message: `Extension exports must be annotated with both an @extensions and @public tag. Please review the tags for "destroyAllIVaults".`,
+        },
+      ],
+      options: [{ releaseTags: ["beta", "alpha", "internal"] }],
+    },
+    // no internal for extensions
+    {
+      code: `
+          /**
+           * @extensions
+           * @internal
+           */
+          export function destroyAllIVaults(): void {
+          }
+          `,
+      errors: [
+        {
+          message: `Extension exports must be annotated with both an @extensions and @public tag. Please review the tags for "destroyAllIVaults".`,
+        },
+      ],
+      options: [{ releaseTags: ["public", "beta", "internal"] }],
+    },
+    // no alpha for extensions
+    {
+      code: `
+          /**
+           * @extensions
+           * @alpha
+           */
+          export function destroyAllIVaults(): void {
+          }
+          `,
+      errors: [
+        {
+          message: `Extension exports must be annotated with both an @extensions and @public tag. Please review the tags for "destroyAllIVaults".`,
+        },
+      ],
+      options: [{ releaseTags: ["public", "alpha", "beta", "internal"] }],
+    },
+    // no beta for extensions
+    {
+      code: `
+          /**
+           * @extensions
+           * @beta
+           */
+          export function destroyAllIVaults(): void {
+          }
+          `,
+      errors: [
+        {
+          message: `Extension exports must be annotated with both an @extensions and @public tag. Please review the tags for "destroyAllIVaults".`,
+        },
+      ],
+      options: [{ releaseTags: ["public", "beta", "internal"] }],
+    },
+    // namespace must have extensions tag if child has it
+    {
+      code: `
+        /**
+         * @public
+         */
+        export namespace Dangerous{
+          /**
+           * @public
+           * @extensions
+           */
+          export function destroyAllIVaults(): void{
+          }
+        }
+        `,
+      errors: [
+        {
+          message: `Namespace "Dangerous" requires an @extensions tag because one of its members is tagged for @extensions.`,
+        },
+      ],
+    },
+    // no tags on namespace, but child has @extensions
+    {
+      code: `
+        /**
+         */
+        export namespace Dangerous{
+          /**
+           * @public
+           * @extensions
+           */
+          export function destroyAllIVaults(): void{
+          }
+        }
+        `,
+      errors: [
+        {
+          message: `Namespace "Dangerous" requires an @extensions tag because one of its members is tagged for @extensions.`,
+        },
+      ],
+    },
+  ],
+});

@@ -1,0 +1,197 @@
+// Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+// See LICENSE.md in the project root for license terms and full copyright notice.
+@use '../mixins';
+
+// ----------------------------------------------------------------------------
+
+.iui-expandable-block {
+  --_iui-expandable-block-expander-icon-fill: var(--iui-color-icon);
+  --_iui-expandable-block-expander-icon-transform: none;
+
+  --_iui-expandable-block-border: 1px solid var(--_iui-expandable-block-border-color);
+  --_iui-expandable-block-border-color: var(--iui-color-border);
+  --_iui-expandable-block-background-color: var(--iui-color-background);
+  --_iui-expandable-block-content-padding: var(--iui-size-s);
+  --_iui-expandable-block-header-background-color-disabled: var(--iui-color-background-disabled);
+  --_iui-expandable-block-header-background-color-hover: var(--iui-color-background-hover);
+  --_iui-expandable-block-header-focus-offset: -2px;
+  --_iui-expandable-block-header-focus-thickness: 2px;
+
+  --_iui-expandable-block-header-caption-color-hover: var(--iui-color-text-hover);
+
+  &[data-iui-expanded='true'] {
+    --_iui-expandable-block-header-bottom-border-radius: 0;
+    --_iui-expandable-block-expander-icon-transform: rotate(90deg);
+  }
+
+  --_iui-expandable-block-expander-icon-size: var(--iui-size-m);
+  --_iui-expandable-block-header-gap: var(--iui-size-s);
+  --_iui-expandable-block-header-padding: var(--iui-size-s);
+
+  display: flex;
+  flex-direction: column;
+  isolation: isolate;
+  inline-size: 100%;
+  border-radius: var(--iui-border-radius-1);
+
+  &[data-iui-size='small'] {
+    --_iui-expandable-block-expander-icon-size: var(--iui-size-s);
+    --_iui-expandable-block-header-gap: var(--iui-size-xs);
+    --_iui-expandable-block-header-padding: calc(var(--iui-size-s) * 0.5) var(--iui-size-xs);
+  }
+
+  &[data-iui-variant='borderless'] {
+    --_iui-expandable-block-border: none;
+    --_iui-expandable-block-background-color: transparent;
+    --_iui-expandable-block-content-padding: none;
+    --_iui-expandable-block-header-background-color-disabled: transparent;
+    --_iui-expandable-block-header-focus-offset: -1px;
+    --_iui-expandable-block-header-focus-thickness: 1px;
+
+    &[data-iui-expanded='true'] {
+      --_iui-expandable-block-header-bottom-border-radius: inherit;
+    }
+  }
+}
+
+.iui-expandable-header {
+  @include mixins.iui-reset;
+  @include mixins.iui-focus(
+    $offset: var(--_iui-expandable-block-header-focus-offset),
+    $thickness: var(--_iui-expandable-block-header-focus-thickness)
+  );
+  display: flex;
+  gap: var(--_iui-expandable-block-header-gap);
+  align-items: center;
+  padding: var(--_iui-expandable-block-header-padding);
+  cursor: pointer;
+  user-select: none;
+  color: var(--iui-color-text);
+  font: inherit;
+  z-index: 1;
+  text-align: start;
+  background-color: var(--_iui-expandable-block-background-color);
+  border: var(--_iui-expandable-block-border);
+  border-radius: inherit;
+  border-end-start-radius: var(--_iui-expandable-block-header-bottom-border-radius, inherit);
+  border-end-end-radius: var(--_iui-expandable-block-header-bottom-border-radius, inherit);
+  transition: background-color var(--iui-duration-1) ease-out;
+  @media (forced-colors: active) {
+    --_iui-expandable-block-expander-icon-fill: CanvasText;
+  }
+
+  &:where(:hover) {
+    --_iui-expandable-block-expander-icon-fill: var(--iui-color-icon-hover);
+    --_iui-expandable-block-header-caption-color: var(--_iui-expandable-block-header-caption-color-hover);
+    --_iui-expandable-block-header-label-color: var(--iui-color-text-hover);
+
+    background-color: var(--_iui-expandable-block-header-background-color-hover);
+
+    @media (forced-colors: active) {
+      --_iui-expandable-block-expander-icon-fill: Highlight;
+      --_iui-expandable-block-header-caption-color-hover: Highlight;
+      --_iui-expandable-block-header-label-color: Highlight;
+      border-color: Highlight;
+    }
+  }
+
+  &:is([disabled], :disabled, [aria-disabled='true'], [data-iui-disabled='true']) {
+    --_iui-expandable-block-expander-icon-fill: var(--iui-color-icon-disabled);
+    --_iui-expandable-block-header-caption-color: var(--iui-color-text-disabled);
+    --_iui-expandable-block-header-label-color: var(--iui-color-text-disabled);
+
+    cursor: not-allowed;
+    background-color: var(--_iui-expandable-block-header-background-color-disabled);
+    border-color: var(--iui-color-border-disabled);
+
+    @media (forced-colors: active) {
+      --_iui-expandable-block-expander-icon-fill: GrayText;
+      --_iui-expandable-block-header-caption-color: GrayText;
+      --_iui-expandable-block-header-label-color: GrayText;
+      border-color: GrayText;
+    }
+  }
+}
+
+.iui-expandable-block-icon {
+  --iui-svg-size: var(--_iui-expandable-block-expander-icon-size);
+  --iui-svg-fill: var(--_iui-expandable-block-expander-icon-fill);
+  transform: var(--_iui-expandable-block-expander-icon-transform);
+  transition: fill var(--iui-duration-1) ease-out;
+  @media (prefers-reduced-motion: no-preference) {
+    transition:
+      fill var(--iui-duration-1) ease-out,
+      transform var(--iui-duration-1) ease-out;
+  }
+}
+
+.iui-expandable-block-label {
+  display: flex;
+  flex-direction: column;
+  flex: auto;
+  min-inline-size: 0;
+  font-size: var(--iui-font-size-2);
+  color: var(--_iui-expandable-block-header-label-color, inherit);
+}
+
+:is(.iui-expandable-block-title, .iui-expandable-block-caption) {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color var(--iui-duration-1) ease;
+  @media (forced-colors: active) {
+    transition: none;
+  }
+}
+
+.iui-expandable-block-caption {
+  font-size: var(--iui-font-size-0);
+  color: var(--_iui-expandable-block-header-caption-color, var(--iui-color-text-muted));
+}
+
+.iui-expandable-content {
+  background-color: var(--_iui-expandable-block-background-color);
+  border-inline-end: var(--_iui-expandable-block-border);
+  border-inline-start: var(--_iui-expandable-block-border);
+  border-end-start-radius: inherit;
+  border-end-end-radius: inherit;
+
+  // using transition technique from https://css-tricks.com/css-grid-can-do-auto-height-transitions/
+  display: grid;
+  grid-template-rows: 0fr;
+  grid-template-columns: minmax(0, 1fr);
+  overflow: hidden;
+  transition: all var(--iui-duration-1) ease-out;
+  transition-property: opacity;
+  @media (prefers-reduced-motion: no-preference) {
+    transition-property: grid-template-rows, visibility, opacity, transform;
+  }
+
+  > div {
+    min-block-size: 0;
+    visibility: hidden;
+    padding-inline: var(--_iui-expandable-block-content-padding);
+    @media (prefers-reduced-motion: no-preference) {
+      transition: visibility var(--iui-duration-1) ease-out;
+    }
+    align-self: end;
+  }
+
+  :where(.iui-expandable-block[data-iui-expanded='true']) & {
+    grid-template-rows: 1fr;
+
+    > div {
+      padding-block: var(--_iui-expandable-block-content-padding);
+      border-block-end: var(--_iui-expandable-block-border);
+      visibility: visible;
+    }
+  }
+
+  :where(.iui-expandable-block:not([data-iui-expanded='true'])) & {
+    opacity: 0;
+    @supports not (top: Round(1px, 1px)) {
+      transform: translateY(-1rem);
+    }
+    transform: translateY(Round(-1rem, 1px));
+  }
+}

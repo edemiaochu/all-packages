@@ -1,0 +1,23 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+import { render, screen } from "@testing-library/react";
+import * as React from "react";
+import { Gap } from "../../core-react.js";
+
+describe("<Gap />", () => {
+  it("renders correctly", () => {
+    render(<Gap data-testid="tested" />);
+    expect(screen.getByTestId("tested").style).to.include({
+      paddingLeft: "10px",
+    });
+  });
+
+  it("renders correctly with size", () => {
+    render(<Gap size="20px" data-testid="tested" />);
+    expect(screen.getByTestId("tested").style).to.include({
+      paddingLeft: "20px",
+    });
+  });
+});

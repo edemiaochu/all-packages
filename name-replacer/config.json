@@ -1,0 +1,24 @@
+{
+  "iTwin": {
+    "baseName": "szewTwin",
+    "overrides": {
+      "Itwin": "Szewtwin",
+      "itWin": "szewtWin",
+      "iTWin": "szewTwin",
+      "ItWin": "SzewtWin"
+    }
+  },
+  "iModel": {
+    "baseName": "iVault",
+    "overrides": {
+      "Imodel": "Ivault",
+      "iModeL": "iVaulT"
+    }
+  },
+  "Bentley": {
+    "baseName": "Szew",
+    "overrides": {
+      "beNTlEY": "szEW"
+    }
+  }
+}

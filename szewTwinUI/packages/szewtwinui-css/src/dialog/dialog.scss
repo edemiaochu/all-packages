@@ -1,0 +1,187 @@
+// Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+// See LICENSE.md in the project root for license terms and full copyright notice.
+@use '../mixins';
+
+$iui-dialog-width: 380px;
+$iui-dialog-min-height: 7.75rem; // 7.75rem = 124px = title bar height + margins + button height + partially visible text
+
+.iui-dialog-wrapper {
+  position: fixed;
+  overflow: hidden;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  pointer-events: none;
+  transform: translateX(0); // creates containing block for position: fixed
+  z-index: 999;
+  isolation: isolate;
+
+  &[data-iui-relative='true'] {
+    position: absolute;
+  }
+}
+
+.iui-dialog {
+  z-index: 999;
+  isolation: isolate;
+  border-radius: var(--iui-border-radius-1);
+  box-shadow: var(--iui-shadow-5);
+  position: fixed;
+  padding-block: var(--iui-size-s);
+  padding-inline: var(--iui-size-m);
+  pointer-events: auto;
+  background-color: var(--iui-color-background);
+  display: flex;
+  flex-direction: column;
+  @media (forced-colors: active) {
+    border: 1px solid;
+  }
+
+  &:not(.iui-dialog-visible) {
+    visibility: hidden;
+    opacity: 0;
+  }
+
+  transition:
+    visibility var(--iui-duration-0) linear var(--iui-duration-1),
+    opacity var(--iui-duration-1) ease-out;
+
+  &.iui-dialog-visible {
+    animation: iui-fade-in var(--iui-duration-1) ease-out;
+  }
+
+  @keyframes iui-slide-up {
+    from {
+      transform: translateY(100%);
+    }
+  }
+}
+
+.iui-dialog-default {
+  max-inline-size: Max(50%, $iui-dialog-width);
+  min-inline-size: Min(100%, $iui-dialog-width);
+  min-block-size: $iui-dialog-min-height;
+  max-block-size: 100vh;
+  max-block-size: 100dvh;
+
+  &:not([data-iui-placement]) {
+    @supports not (top: Round(1px, 1px)) {
+      inset-inline-start: 50%;
+      inset-block-start: 33%;
+      transform: translate(-50%, -33%);
+    }
+
+    inset-inline-start: Round(50%, 1px);
+    inset-block-start: Round(33%, 1px);
+    transform: translate(Round(-50%, 1px), Round(-33%, 1px));
+  }
+
+  &[data-iui-placement='top-left'] {
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    margin-inline-start: var(--iui-size-s);
+    margin-block-start: var(--iui-size-m);
+  }
+
+  &[data-iui-placement='top-right'] {
+    inset-block-start: 0;
+    inset-inline-end: 0;
+    margin-inline-end: var(--iui-size-s);
+    margin-block-start: var(--iui-size-m);
+  }
+
+  &[data-iui-placement='bottom-left'] {
+    inset-block-end: 0;
+    inset-inline-start: 0;
+    margin-inline-start: var(--iui-size-s);
+    margin-block-end: var(--iui-size-m);
+  }
+
+  &[data-iui-placement='bottom-right'] {
+    inset-block-end: 0;
+    inset-inline-end: 0;
+    margin-inline-end: var(--iui-size-s);
+    margin-block-end: var(--iui-size-m);
+  }
+}
+
+.iui-dialog-full-page {
+  border-radius: 0;
+  block-size: 100vh;
+  block-size: 100dvb;
+  inline-size: 100vw;
+  inline-size: 100vi;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  will-change: transform;
+
+  &:not(.iui-dialog-visible) {
+    transform: translateY(100%);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition:
+      visibility var(--iui-duration-0) linear var(--iui-duration-2),
+      opacity var(--iui-duration-0) linear var(--iui-duration-2),
+      transform var(--iui-duration-1) ease-in;
+
+    &.iui-dialog-visible {
+      animation:
+        iui-slide-up var(--iui-duration-2) ease-out,
+        iui-fade-in var(--iui-duration-2) ease-out;
+    }
+  }
+}
+
+.iui-dialog-draggable {
+  border: 1px solid var(--iui-color-border);
+}
+
+.iui-dialog-title {
+  margin-block: 0;
+  font: inherit;
+  margin-inline-end: auto;
+  overflow: hidden;
+  overflow-wrap: break-word;
+}
+
+.iui-dialog-title-bar {
+  display: flex;
+  align-items: center;
+  margin-block-end: var(--iui-size-s);
+  font-size: var(--iui-font-size-3);
+}
+
+.iui-dialog-title-bar-filled {
+  font-size: var(--iui-font-size-2);
+  padding-block: calc(var(--iui-size-s) * 0.5);
+  padding-inline: var(--iui-size-m);
+  margin-inline: calc(0px - var(--iui-size-m)); // negative margin to counteract dialog padding
+  margin-block: calc(0px - var(--iui-size-s)) var(--iui-size-s);
+  cursor: grab;
+  background-color: var(--iui-color-background-backdrop);
+  border-block-end: 1px solid var(--iui-color-border);
+  border-start-start-radius: var(--iui-border-radius-1);
+  border-start-end-radius: var(--iui-border-radius-1);
+  touch-action: pinch-zoom; // Prevent panning on touch devices since it interferes with useDragAndDrop dragging logic
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.iui-dialog-content {
+  flex-grow: 2;
+  margin-inline: calc(0px - var(--iui-size-m));
+  padding-inline: var(--iui-size-m);
+  overflow-y: auto;
+}
+
+.iui-dialog-button-bar {
+  margin-block-start: var(--iui-size-s);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--iui-size-xs);
+}

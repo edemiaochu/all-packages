@@ -1,0 +1,14 @@
+{
+  "extends": "./node_modules/@szewtwin/build-tools/tsconfig-base.json",
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "jsx": "react-jsx",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "noImplicitOverride": false,
+    "resolveJsonModule": true,
+    "lib": ["DOM", "ES2019"]
+  },
+  "include": ["src"]
+}

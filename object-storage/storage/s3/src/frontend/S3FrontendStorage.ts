@@ -1,0 +1,101 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+import {
+  assertRelativeDirectory,
+  instanceOfUrlTransferInput,
+  metadataToHeaders,
+} from "@szewtwin/object-storage-core/lib/common/internal";
+import {
+  FrontendConfigUploadInput,
+  FrontendStorage,
+  FrontendTransferData,
+  FrontendUploadInMultiplePartsInput,
+  FrontendUrlDownloadInput,
+  FrontendUrlUploadInput,
+} from "@szewtwin/object-storage-core/lib/frontend";
+import { streamToTransferTypeFrontend } from "@szewtwin/object-storage-core/lib/frontend/internal";
+import { FrontendUrlTransferClient } from "@szewtwin/object-storage-core/lib/frontend/internal";
+
+import { FrontendS3ConfigDownloadInput } from "./FrontendInterfaces";
+import { createAndUseClientFrontend } from "./internal";
+import {
+  FrontendS3ClientWrapper,
+  FrontendS3ClientWrapperFactory,
+} from "./wrappers";
+
+export class S3FrontendStorage extends FrontendStorage {
+  public constructor(
+    private _clientWrapperFactory: FrontendS3ClientWrapperFactory,
+    protected _urlTransferClient: FrontendUrlTransferClient = new FrontendUrlTransferClient()
+  ) {
+    super();
+  }
+
+  public download(
+    input: (FrontendUrlDownloadInput | FrontendS3ConfigDownloadInput) & {
+      transferType: "buffer";
+    }
+  ): Promise<ArrayBuffer>;
+
+  public download(
+    input: (FrontendUrlDownloadInput | FrontendS3ConfigDownloadInput) & {
+      transferType: "stream";
+    }
+  ): Promise<ReadableStream>;
+
+  public async download(
+    input: FrontendUrlDownloadInput | FrontendS3ConfigDownloadInput
+  ): Promise<FrontendTransferData> {
+    if (instanceOfUrlTransferInput(input))
+      return this._urlTransferClient.download(input);
+    else assertRelativeDirectory(input.reference.relativeDirectory);
+
+    return createAndUseClientFrontend(
+      () => this._clientWrapperFactory.create(input.transferConfig),
+      async (clientWrapper: FrontendS3ClientWrapper) => {
+        const downloadStream = await clientWrapper.download(input.reference);
+        return streamToTransferTypeFrontend(downloadStream, input.transferType);
+      }
+    );
+  }
+
+  public async upload(
+    input: FrontendUrlUploadInput | FrontendConfigUploadInput
+  ): Promise<void> {
+    const { data, metadata } = input;
+
+    if (instanceOfUrlTransferInput(input))
+      return this._urlTransferClient.upload(
+        input.url,
+        data,
+        "PUT",
+        metadata ? metadataToHeaders(metadata, "x-amz-meta-") : undefined
+      );
+    else {
+      assertRelativeDirectory(input.reference.relativeDirectory);
+      return createAndUseClientFrontend(
+        () => this._clientWrapperFactory.create(input.transferConfig),
+        async (clientWrapper: FrontendS3ClientWrapper) =>
+          clientWrapper.upload(input.reference, data, metadata)
+      );
+    }
+  }
+
+  public async uploadInMultipleParts(
+    input: FrontendUploadInMultiplePartsInput
+  ): Promise<void> {
+    assertRelativeDirectory(input.reference.relativeDirectory);
+
+    return createAndUseClientFrontend(
+      () => this._clientWrapperFactory.create(input.transferConfig),
+      async (clientWrapper: FrontendS3ClientWrapper) =>
+        clientWrapper.uploadInMultipleParts(
+          input.reference,
+          input.data,
+          input.options
+        )
+    );
+  }
+}

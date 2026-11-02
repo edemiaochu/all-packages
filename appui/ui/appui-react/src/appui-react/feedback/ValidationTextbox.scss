@@ -1,0 +1,49 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@use "~@szewtwin/core-react/lib/core-react/inputs/variables" as *;
+@use "~@szewtwin/core-react/lib/core-react/style/baseline" as *;
+
+.uifw-ValidationTextbox {
+  font-family: var(--iui-font-sans);
+  position: relative;
+  padding: $uicore-unbordered-padding;
+  width: 12em;
+  height: 1em;
+
+  .ValidationTextbox-input {
+    position: absolute;
+    min-height: 28px;
+    padding: $uicore-iui-input-padding;
+    width: 12em;
+    left: 0px;
+    top: 0px;
+  }
+
+  .ValidationTextbox-invalid {
+    border-color: var(--iui-color-text-negative);
+  }
+
+  .ValidationTextbox-invalid:focus {
+    border-color: var(--iui-color-text-negative);
+  }
+
+  .ValidationTextbox-icon {
+    position: absolute;
+    padding: $uicore-bordered-padding;
+    width: var(--iui-size-l);
+    height: var(--iui-size-l);
+    line-height: var(--iui-size-l);
+    font-size: var(--iui-font-size-2);
+    cursor: pointer;
+    top: 0px;
+    right: 0px;
+    text-align: center;
+    color: var(--iui-color-text);
+
+    &:hover {
+      color: var(--iui-color-text-accent);
+    }
+  }
+}

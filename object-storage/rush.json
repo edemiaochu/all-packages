@@ -1,0 +1,96 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/rush/v5/rush.schema.json",
+  "rushVersion": "5.172.0",
+  "pnpmVersion": "9.15.5",
+  "ensureConsistentVersions": true,
+  "projectFolderMinDepth": 1,
+  "projectFolderMaxDepth": 2,
+  "repository": {
+    "url": "https://github.com/iTwin/object-storage",
+    "defaultBranch": "main",
+    "defaultRemote": "origin"
+  },
+  "projects": [
+    {
+      "packageName": "@szewtwin/object-storage-common-config",
+      "projectFolder": "utils/common-config",
+      "shouldPublish": false,
+      "reviewCategory": "common"
+    },
+    {
+      "packageName": "@szewtwin/cloud-agnostic-core",
+      "projectFolder": "cloud-agnostic/core",
+      "versionPolicyName": "lockStepVersionObjectStorage",
+      "reviewCategory": "common"
+    },
+    {
+      "packageName": "@szewtwin/object-storage-core",
+      "projectFolder": "storage/core",
+      "versionPolicyName": "lockStepVersionObjectStorage",
+      "reviewCategory": "common"
+    },
+    {
+      "packageName": "@szewtwin/object-storage-tests-backend",
+      "projectFolder": "tests/backend-storage",
+      "shouldPublish": false,
+      "reviewCategory": "common"
+    },
+    {
+      "packageName": "@szewtwin/object-storage-tests-backend-unit",
+      "projectFolder": "tests/backend-storage-unit",
+      "shouldPublish": false,
+      "reviewCategory": "common"
+    },
+    {
+      "packageName": "@szewtwin/object-storage-tests-frontend",
+      "projectFolder": "tests/frontend-storage",
+      "shouldPublish": false,
+      "reviewCategory": "common"
+    },
+    {
+      "packageName": "@szewtwin/object-storage-azure",
+      "projectFolder": "storage/azure",
+      "versionPolicyName": "lockStepVersionObjectStorage",
+      "tags": [
+        "integration-tested"
+      ],
+      "reviewCategory": "common"
+    },
+    {
+      "packageName": "@szewtwin/object-storage-google",
+      "projectFolder": "storage/google",
+      "versionPolicyName": "lockStepVersionObjectStorage",
+      "tags": [
+        "integration-tested"
+      ],
+      "reviewCategory": "common"
+    },
+    {
+      "packageName": "@szewtwin/object-storage-s3",
+      "projectFolder": "storage/s3",
+      "versionPolicyName": "lockStepVersionObjectStorage",
+      "reviewCategory": "common"
+    },
+    {
+      "packageName": "@szewtwin/object-storage-minio",
+      "projectFolder": "storage/minio",
+      "versionPolicyName": "lockStepVersionObjectStorage",
+      "tags": [
+        "integration-tested"
+      ],
+      "reviewCategory": "common"
+    },
+    {
+      "packageName": "@szewtwin/object-storage-oss",
+      "projectFolder": "storage/oss",
+      "versionPolicyName": "lockStepVersionObjectStorage",
+      "reviewCategory": "common"
+    },
+    {
+      "packageName": "@szewtwin/object-storage-samples",
+      "projectFolder": "samples",
+      "shouldPublish": false,
+      "reviewCategory": "common"
+    }
+  ]
+}

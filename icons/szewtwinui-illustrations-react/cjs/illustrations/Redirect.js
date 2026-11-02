@@ -1,0 +1,20 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.SvgRedirect = void 0;
+const react_1 = __importDefault(require("react"));
+const SvgRedirect = (props) => (react_1.default.createElement("svg", { viewBox: "0 0 392.918 230.632", ...props },
+    react_1.default.createElement("path", { d: "M244.928 162.97H147.99l-69.909 60.235h236.756z", fill: "#edeff2" }),
+    react_1.default.createElement("path", { d: "M78.08 223.205h236.757v6.643H78.081zM239.73 182.005h-7.01l-16.233-19.596H177.27l-16.943 19.596h-7.128v12.885h.018a13.886 13.886 0 005.84 12.076c17.938 12.643 57.34 12.782 74.912 0a14.017 14.017 0 005.74-12.076h.02z", fill: "#c6cacf" }),
+    react_1.default.createElement("path", { d: "M156.676 172.77l20.594-23.817h39.217l19.97 24.105a14.147 14.147 0 01-2.488 20.451c-17.571 12.783-56.974 12.643-74.911 0a14.114 14.114 0 01-2.382-20.739z", fill: "#fafcff" }),
+    react_1.default.createElement("path", { d: "M164.15 171.838l17.487-22.885h30.125l17.182 23.12a11.49 11.49 0 01-2.02 16.609c-14.271 10.381-46.271 10.268-60.84 0a11.463 11.463 0 01-1.933-16.844z", fill: "#b1c854" }),
+    react_1.default.createElement("path", { d: "M199.78 89.86v87.664c-.85 2.237-5.887 2.157-6.642 0V89.86a6.302 6.302 0 006.642 0z", fill: "#edeff2" }),
+    react_1.default.createElement("path", { d: "M199.78 89.86v7.295a5.425 5.425 0 01-6.642 0v-7.294a5.426 5.426 0 006.642 0z", fill: "#c6cacf" }),
+    react_1.default.createElement("path", { d: "M241.57 51.18c-.069.069-.126.137-.194.205l-40.887 40.887a5.415 5.415 0 01-.558.478 5.674 5.674 0 01-6.945 0 5.505 5.505 0 01-.547-.478l-40.886-40.887c-.068-.068-.125-.136-.194-.204a5.695 5.695 0 01.194-7.845l40.886-40.887a5.697 5.697 0 018.05 0l40.887 40.887a5.695 5.695 0 01.193 7.845z", fill: "#ffdb86" }),
+    react_1.default.createElement("g", { fill: "#4d5860" },
+        react_1.default.createElement("path", { d: "M196.463 88.347a4.865 4.865 0 01-3.464-1.436L156.91 50.823a4.905 4.905 0 010-6.929l36.089-36.089a4.905 4.905 0 016.928 0l36.089 36.09a4.905 4.905 0 010 6.928l-36.09 36.088a4.865 4.865 0 01-3.463 1.436zm0-78.71a1.626 1.626 0 00-1.155.479L159.22 46.204a1.636 1.636 0 000 2.31l36.09 36.088a1.671 1.671 0 002.307 0l36.09-36.088a1.636 1.636 0 000-2.31l-36.088-36.09a1.628 1.628 0 00-1.155-.477z" }),
+        react_1.default.createElement("path", { d: "M219.303 37.018l-12.852-3.125 1.708 4.03a28.598 28.598 0 00-11.7 8.332 28.598 28.598 0 00-11.7-8.332l1.707-4.03-12.85 3.125 6.491 11.884 1.593-3.76c.413.142 10.842 3.828 10.842 12.291V68.42h7.834V57.433c0-8.375 10.434-12.147 10.842-12.29l1.593 3.759z" }))));
+exports.SvgRedirect = SvgRedirect;
+exports.default = SvgRedirect;

@@ -1,0 +1,55 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@use "../z-index" as *;
+@use "../icons/variables" as *;
+
+.core-radial-menu {
+  visibility: hidden;
+  position: fixed;
+
+  @include uicore-z-index(dialog);
+
+  &.opened {
+    visibility: inherit;
+  }
+
+  > .core-radial-menu-container {
+    margin-left: -50%;
+    margin-top: -50%;
+
+    .core-radial-menu-sector {
+      stroke: var(--iui-color-background-disabled);
+      fill: var(--iui-color-background);
+      stroke-width: 1px;
+
+      &.selected {
+        fill: var(--iui-color-background-accent-muted);
+      }
+    }
+
+    .core-radial-menu-button-svg {
+      .core-radial-menu-button-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .core-radial-menu-button-icon {
+          height: $uicore-icons-small;
+          width: $uicore-icons-small;
+          line-height: $uicore-icons-small;
+          color: var(--iui-color-text);
+        }
+
+        .core-radial-menu-button-content {
+          cursor: default;
+          color: var(--iui-color-text);
+          font-size: var(--iui-font-size-0);
+          user-select: none;
+          -webkit-user-select: none;
+        }
+      }
+    }
+  }
+}

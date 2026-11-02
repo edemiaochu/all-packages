@@ -1,0 +1,1910 @@
+[
+  {
+    "name": "@iproject/admin-components-react-scripts",
+    "folder": "admin-components-react/common/scripts",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "admin-components-react",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/platform-storybook",
+    "folder": "admin-components-react/packages/apps/storybook",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "admin-components-react",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/create-iwork-react",
+    "folder": "admin-components-react/packages/modules/create-iwork",
+    "publish": true,
+    "category": null,
+    "versionPolicy": "independentModule",
+    "subproject": "admin-components-react",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/delete-iproject-react",
+    "folder": "admin-components-react/packages/modules/delete-iproject",
+    "publish": true,
+    "category": null,
+    "versionPolicy": "independentModule",
+    "subproject": "admin-components-react",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/delete-iwork-react",
+    "folder": "admin-components-react/packages/modules/delete-iwork",
+    "publish": true,
+    "category": null,
+    "versionPolicy": "independentModule",
+    "subproject": "admin-components-react",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/iwork-browser-react",
+    "folder": "admin-components-react/packages/modules/iwork-browser",
+    "publish": true,
+    "category": null,
+    "versionPolicy": "independentModule",
+    "subproject": "admin-components-react",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/manage-versions-react",
+    "folder": "admin-components-react/packages/modules/manage-versions",
+    "publish": true,
+    "category": null,
+    "versionPolicy": "independentModule",
+    "subproject": "admin-components-react",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/storybook-auth-addon",
+    "folder": "admin-components-react/packages/modules/storybook-auth-addon",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "admin-components-react",
+    "tool": "Rush"
+  },
+  {
+    "name": "appui",
+    "folder": "appui",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "appui",
+    "tool": "pnpm"
+  },
+  {
+    "name": "test-app",
+    "folder": "appui/apps/test-app",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "appui",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@iproject/appui-test-providers",
+    "folder": "appui/apps/test-providers",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "appui",
+    "tool": "pnpm"
+  },
+  {
+    "name": "appui-storybook",
+    "folder": "appui/docs/storybook",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "appui",
+    "tool": "pnpm"
+  },
+  {
+    "name": "e2e-tests",
+    "folder": "appui/e2e-tests",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "appui",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@iproject/appui-codemod",
+    "folder": "appui/tools/codemod",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "appui",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@iproject/appui-react",
+    "folder": "appui/ui/appui-react",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "appui",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@iproject/components-react",
+    "folder": "appui/ui/components-react",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "appui",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@iproject/core-react",
+    "folder": "appui/ui/core-react",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "appui",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@iproject/iwork-components-react",
+    "folder": "appui/ui/iwork-components-react",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "appui",
+    "tool": "pnpm"
+  },
+  {
+    "name": "auth-clients",
+    "folder": "auth-clients",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "auth-clients",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@iproject/browser-authorization",
+    "folder": "auth-clients/packages/browser",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "auth-clients",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@iproject/electron-authorization",
+    "folder": "auth-clients/packages/electron",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "auth-clients",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@iproject/node-cli-authorization",
+    "folder": "auth-clients/packages/node-cli",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "auth-clients",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@iproject/oidc-signin-tool",
+    "folder": "auth-clients/packages/oidc-signin-tool",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "auth-clients",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@iproject/service-authorization",
+    "folder": "auth-clients/packages/service",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "auth-clients",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@szewec/aec-units-schema",
+    "folder": "base/aec-units-schema",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "base",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@szewec/architectural-physical-schema",
+    "folder": "base/architectural-physical-schema",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "base",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@szewec/bis-core-schema",
+    "folder": "base/bis-core-schema",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "base",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@szewec/bis-custom-attributes-schema",
+    "folder": "base/bis-custom-attributes-schema",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "base",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@szewec/cif-bridge-schema",
+    "folder": "base/cif-bridge-schema",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "base",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@szewec/cif-common-schema",
+    "folder": "base/cif-common-schema",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "base",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@szewec/cif-geometric-rules-schema",
+    "folder": "base/cif-geometric-rules-schema",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "base",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@szewec/cif-hydraulic-analysis-schema",
+    "folder": "base/cif-hydraulic-analysis-schema",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "base",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@szewec/cif-hydraulic-results-schema",
+    "folder": "base/cif-hydraulic-results-schema",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "base",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@szewec/cif-quantity-takeoffs-schema",
+    "folder": "base/cif-quantity-takeoffs-schema",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "base",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@szewec/cif-rail-schema",
+    "folder": "base/cif-rail-schema",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "base",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@szewec/cif-roads-schema",
+    "folder": "base/cif-roads-schema",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "base",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@szewec/cif-subsurface-conflict-analysis-schema",
+    "folder": "base/cif-subsurface-conflict-analysis-schema",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "base",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@szewec/cif-subsurface-schema",
+    "folder": "base/cif-subsurface-schema",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "base",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@szewec/cif-units-schema",
+    "folder": "base/cif-units-schema",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "base",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@szewec/construction-schema",
+    "folder": "base/construction-schema",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "base",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@szewec/core-custom-attributes-schema",
+    "folder": "base/core-custom-attributes-schema",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "base",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@szewec/dmdb-map-schema",
+    "folder": "base/dmdb-map-schema",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "base",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@szewec/dmdb-schema-policies-schema",
+    "folder": "base/dmdb-schema-policies-schema",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "base",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@szewec/formats-schema",
+    "folder": "base/formats-schema",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "base",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@szewec/icons-generic",
+    "folder": "base/icons-generic",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "base",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@szewec/icons-generic-webfont",
+    "folder": "base/icons-generic-webfont",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "base",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@szewec/linear-referencing-schema",
+    "folder": "base/linear-referencing-schema",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "base",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@szewec/physical-material-schema",
+    "folder": "base/physical-material-schema",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "base",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@szewec/plant-custom-attributes-schema",
+    "folder": "base/plant-custom-attributes-schema",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "base",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@szewec/process-functional-schema",
+    "folder": "base/process-functional-schema",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "base",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@szewec/process-physical-schema",
+    "folder": "base/process-physical-schema",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "base",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@szewec/quantity-takeoffs-aspects-schema",
+    "folder": "base/quantity-takeoffs-aspects-schema",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "base",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@szewec/road-rail-units-schema",
+    "folder": "base/road-rail-units-schema",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "base",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@szewec/spatial-composition-schema",
+    "folder": "base/spatial-composition-schema",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "base",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@szewec/structural-physical-schema",
+    "folder": "base/structural-physical-schema",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "base",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@szewec/units-schema",
+    "folder": "base/units-schema",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "base",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@szewtwin/szewtwinui-icons-react",
+    "folder": "icons/szewtwinui-icons-react",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "icons",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@szewtwin/szewtwinui-illustrations-react",
+    "folder": "icons/szewtwinui-illustrations-react",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "icons",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@iproject/core-backend",
+    "folder": "iprojectjs-core/core/backend",
+    "publish": true,
+    "category": "backend",
+    "versionPolicy": "prerelease-monorepo-lockStep",
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/core-common",
+    "folder": "iprojectjs-core/core/common",
+    "publish": true,
+    "category": "common",
+    "versionPolicy": "prerelease-monorepo-lockStep",
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/ecschema-editing",
+    "folder": "iprojectjs-core/core/ecschema-editing",
+    "publish": true,
+    "category": "backend",
+    "versionPolicy": "prerelease-monorepo-lockStep",
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/ecschema-locaters",
+    "folder": "iprojectjs-core/core/ecschema-locaters",
+    "publish": true,
+    "category": "backend",
+    "versionPolicy": "prerelease-monorepo-lockStep",
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/ecschema-metadata",
+    "folder": "iprojectjs-core/core/ecschema-metadata",
+    "publish": true,
+    "category": "common",
+    "versionPolicy": "prerelease-monorepo-lockStep",
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/ecschema-rpcinterface-common",
+    "folder": "iprojectjs-core/core/ecschema-rpc/common",
+    "publish": true,
+    "category": "common",
+    "versionPolicy": "prerelease-monorepo-lockStep",
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/ecschema-rpcinterface-impl",
+    "folder": "iprojectjs-core/core/ecschema-rpc/impl",
+    "publish": true,
+    "category": "backend",
+    "versionPolicy": "prerelease-monorepo-lockStep",
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/ecsql-common",
+    "folder": "iprojectjs-core/core/ecsql/common",
+    "publish": true,
+    "category": "common",
+    "versionPolicy": "prerelease-monorepo-lockStep",
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/core-electron",
+    "folder": "iprojectjs-core/core/electron",
+    "publish": true,
+    "category": "backend",
+    "versionPolicy": "prerelease-monorepo-lockStep",
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/express-server",
+    "folder": "iprojectjs-core/core/express-server",
+    "publish": true,
+    "category": "backend",
+    "versionPolicy": "prerelease-monorepo-lockStep",
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/core-extension",
+    "folder": "iprojectjs-core/core/extension",
+    "publish": true,
+    "category": "common",
+    "versionPolicy": "prerelease-monorepo-lockStep",
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/core-frontend",
+    "folder": "iprojectjs-core/core/frontend",
+    "publish": true,
+    "category": "frontend",
+    "versionPolicy": "prerelease-monorepo-lockStep",
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/frontend-devtools",
+    "folder": "iprojectjs-core/core/frontend-devtools",
+    "publish": true,
+    "category": "frontend",
+    "versionPolicy": "prerelease-monorepo-lockStep",
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/core-geometry",
+    "folder": "iprojectjs-core/core/geometry",
+    "publish": true,
+    "category": "common",
+    "versionPolicy": "prerelease-monorepo-lockStep",
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/hypermodeling-frontend",
+    "folder": "iprojectjs-core/core/hypermodeling",
+    "publish": true,
+    "category": "frontend",
+    "versionPolicy": "prerelease-monorepo-lockStep",
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/core-i18n",
+    "folder": "iprojectjs-core/core/i18n",
+    "publish": true,
+    "category": "frontend",
+    "versionPolicy": "prerelease-monorepo-lockStep",
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/core-markup",
+    "folder": "iprojectjs-core/core/markup",
+    "publish": true,
+    "category": "frontend",
+    "versionPolicy": "prerelease-monorepo-lockStep",
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/core-mobile",
+    "folder": "iprojectjs-core/core/mobile",
+    "publish": true,
+    "category": "backend",
+    "versionPolicy": "prerelease-monorepo-lockStep",
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/core-orbitgt",
+    "folder": "iprojectjs-core/core/orbitgt",
+    "publish": true,
+    "category": "common",
+    "versionPolicy": "prerelease-monorepo-lockStep",
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/core-quantity",
+    "folder": "iprojectjs-core/core/quantity",
+    "publish": true,
+    "category": "common",
+    "versionPolicy": "prerelease-monorepo-lockStep",
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/core-szew",
+    "folder": "iprojectjs-core/core/szew",
+    "publish": true,
+    "category": "common",
+    "versionPolicy": "prerelease-monorepo-lockStep",
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/webgl-compatibility",
+    "folder": "iprojectjs-core/core/webgl-compatibility",
+    "publish": true,
+    "category": "frontend",
+    "versionPolicy": "prerelease-monorepo-lockStep",
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/analytical-backend",
+    "folder": "iprojectjs-core/domains/analytical/backend",
+    "publish": true,
+    "category": "backend",
+    "versionPolicy": "prerelease-monorepo-lockStep",
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/linear-referencing-backend",
+    "folder": "iprojectjs-core/domains/linear-referencing/backend",
+    "publish": true,
+    "category": "backend",
+    "versionPolicy": "prerelease-monorepo-lockStep",
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/linear-referencing-common",
+    "folder": "iprojectjs-core/domains/linear-referencing/common",
+    "publish": true,
+    "category": "common",
+    "versionPolicy": "prerelease-monorepo-lockStep",
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/physical-material-backend",
+    "folder": "iprojectjs-core/domains/physical-material/backend",
+    "publish": true,
+    "category": "backend",
+    "versionPolicy": "prerelease-monorepo-lockStep",
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/editor-backend",
+    "folder": "iprojectjs-core/editor/backend",
+    "publish": true,
+    "category": "edit",
+    "versionPolicy": "prerelease-monorepo-lockStep",
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/editor-common",
+    "folder": "iprojectjs-core/editor/common",
+    "publish": true,
+    "category": "edit",
+    "versionPolicy": "prerelease-monorepo-lockStep",
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/editor-frontend",
+    "folder": "iprojectjs-core/editor/frontend",
+    "publish": true,
+    "category": "edit",
+    "versionPolicy": "prerelease-monorepo-lockStep",
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "example-code-app",
+    "folder": "iprojectjs-core/example-code/app",
+    "publish": false,
+    "category": "internal",
+    "versionPolicy": null,
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "example-code-snippets",
+    "folder": "iprojectjs-core/example-code/snippets",
+    "publish": false,
+    "category": "internal",
+    "versionPolicy": null,
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/cesium-renderer",
+    "folder": "iprojectjs-core/extensions/cesium-renderer",
+    "publish": false,
+    "category": "frontend",
+    "versionPolicy": null,
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/frontend-tiles",
+    "folder": "iprojectjs-core/extensions/frontend-tiles",
+    "publish": true,
+    "category": "frontend",
+    "versionPolicy": "prerelease-monorepo-lockStep",
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/map-layers-auth",
+    "folder": "iprojectjs-core/extensions/map-layers-auth",
+    "publish": true,
+    "category": "extensions",
+    "versionPolicy": "prerelease-monorepo-lockStep",
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/map-layers-formats",
+    "folder": "iprojectjs-core/extensions/map-layers-formats",
+    "publish": true,
+    "category": "extensions",
+    "versionPolicy": "prerelease-monorepo-lockStep",
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "extension-prototype",
+    "folder": "iprojectjs-core/extensions/test-extension",
+    "publish": false,
+    "category": "internal",
+    "versionPolicy": null,
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "backend-integration-tests",
+    "folder": "iprojectjs-core/full-stack-tests/backend",
+    "publish": false,
+    "category": "internal",
+    "versionPolicy": null,
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "core-full-stack-tests",
+    "folder": "iprojectjs-core/full-stack-tests/core",
+    "publish": false,
+    "category": "internal",
+    "versionPolicy": null,
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/ecschema-rpcinterface-tests",
+    "folder": "iprojectjs-core/full-stack-tests/ecschema-rpc-interface",
+    "publish": true,
+    "category": "integration-testing",
+    "versionPolicy": "prerelease-monorepo-lockStep",
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "presentation-full-stack-tests",
+    "folder": "iprojectjs-core/full-stack-tests/presentation",
+    "publish": false,
+    "category": "internal",
+    "versionPolicy": null,
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "rpc-full-stack-tests",
+    "folder": "iprojectjs-core/full-stack-tests/rpc",
+    "publish": false,
+    "category": "internal",
+    "versionPolicy": null,
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/rpcinterface-full-stack-tests",
+    "folder": "iprojectjs-core/full-stack-tests/rpc-interface",
+    "publish": true,
+    "category": "integration-testing",
+    "versionPolicy": "prerelease-monorepo-lockStep",
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/presentation-backend",
+    "folder": "iprojectjs-core/presentation/backend",
+    "publish": true,
+    "category": "backend",
+    "versionPolicy": "prerelease-monorepo-lockStep",
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/presentation-common",
+    "folder": "iprojectjs-core/presentation/common",
+    "publish": true,
+    "category": "common",
+    "versionPolicy": "prerelease-monorepo-lockStep",
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/presentation-frontend",
+    "folder": "iprojectjs-core/presentation/frontend",
+    "publish": true,
+    "category": "frontend",
+    "versionPolicy": "prerelease-monorepo-lockStep",
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "display-performance-test-app",
+    "folder": "iprojectjs-core/test-apps/display-performance-test-app",
+    "publish": false,
+    "category": "internal",
+    "versionPolicy": null,
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "display-test-app",
+    "folder": "iprojectjs-core/test-apps/display-test-app",
+    "publish": false,
+    "category": "internal",
+    "versionPolicy": null,
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "export-gltf",
+    "folder": "iprojectjs-core/test-apps/export-gltf",
+    "publish": false,
+    "category": "internal",
+    "versionPolicy": null,
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "imjs-importer",
+    "folder": "iprojectjs-core/test-apps/imjs-importer",
+    "publish": false,
+    "category": "internal",
+    "versionPolicy": null,
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "iwork-from-geojson",
+    "folder": "iprojectjs-core/test-apps/iwork-from-geojson",
+    "publish": false,
+    "category": "internal",
+    "versionPolicy": null,
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "iwork-from-orbitgt-pointcloud",
+    "folder": "iprojectjs-core/test-apps/iwork-from-orbitgt",
+    "publish": false,
+    "category": "internal",
+    "versionPolicy": null,
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "iwork-from-reality-model",
+    "folder": "iprojectjs-core/test-apps/iwork-from-reality-model",
+    "publish": false,
+    "category": "internal",
+    "versionPolicy": null,
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/build-tools",
+    "folder": "iprojectjs-core/tools/build",
+    "publish": true,
+    "category": "tools",
+    "versionPolicy": "prerelease-monorepo-lockStep",
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/certa",
+    "folder": "iprojectjs-core/tools/certa",
+    "publish": true,
+    "category": "tools",
+    "versionPolicy": "prerelease-monorepo-lockStep",
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/ecschema2ts",
+    "folder": "iprojectjs-core/tools/ecschema2ts",
+    "publish": true,
+    "category": "tools",
+    "versionPolicy": "prerelease-monorepo-lockStep",
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "internal-tools",
+    "folder": "iprojectjs-core/tools/internal",
+    "publish": false,
+    "category": "internal",
+    "versionPolicy": null,
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/perf-tools",
+    "folder": "iprojectjs-core/tools/perf-tools",
+    "publish": true,
+    "category": "tools",
+    "versionPolicy": "prerelease-monorepo-lockStep",
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/appui-abstract",
+    "folder": "iprojectjs-core/ui/appui-abstract",
+    "publish": true,
+    "category": "frontend",
+    "versionPolicy": "prerelease-monorepo-lockStep",
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/workspace-editor",
+    "folder": "iprojectjs-core/utils/workspace-editor",
+    "publish": true,
+    "category": "backend",
+    "versionPolicy": "prerelease-monorepo-lockStep",
+    "subproject": "iprojectjs-core",
+    "tool": "Rush"
+  },
+  {
+    "name": "iprojectui-monorepo",
+    "folder": "iProjectUI",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "iProjectUI",
+    "tool": "pnpm"
+  },
+  {
+    "name": "css-workshop",
+    "folder": "iProjectUI/apps/css-workshop",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "iProjectUI",
+    "tool": "pnpm"
+  },
+  {
+    "name": "portal",
+    "folder": "iProjectUI/apps/portal",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "iProjectUI",
+    "tool": "pnpm"
+  },
+  {
+    "name": "react-workshop",
+    "folder": "iProjectUI/apps/react-workshop",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "iProjectUI",
+    "tool": "pnpm"
+  },
+  {
+    "name": "website",
+    "folder": "iProjectUI/apps/website",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "iProjectUI",
+    "tool": "pnpm"
+  },
+  {
+    "name": "examples",
+    "folder": "iProjectUI/examples",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "iProjectUI",
+    "tool": "pnpm"
+  },
+  {
+    "name": "configs",
+    "folder": "iProjectUI/internal/configs",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "iProjectUI",
+    "tool": "pnpm"
+  },
+  {
+    "name": "helpers",
+    "folder": "iProjectUI/internal/helpers",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "iProjectUI",
+    "tool": "pnpm"
+  },
+  {
+    "name": "minimal-sandbox",
+    "folder": "iProjectUI/minimal-sandbox",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "iProjectUI",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@iproject/iprojectui-css",
+    "folder": "iProjectUI/packages/iprojectui-css",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "iProjectUI",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@iproject/iprojectui-react",
+    "folder": "iProjectUI/packages/iprojectui-react",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "iProjectUI",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@iproject/iprojectui-variables",
+    "folder": "iProjectUI/packages/iprojectui-variables",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "iProjectUI",
+    "tool": "pnpm"
+  },
+  {
+    "name": "vite-playground",
+    "folder": "iProjectUI/playgrounds/vite",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "iProjectUI",
+    "tool": "pnpm"
+  },
+  {
+    "name": "a11y",
+    "folder": "iProjectUI/testing/a11y",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "iProjectUI",
+    "tool": "pnpm"
+  },
+  {
+    "name": "e2e",
+    "folder": "iProjectUI/testing/e2e",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "iProjectUI",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@iproject/iprojectui-layouts-monorepo",
+    "folder": "iProjectUI-layouts",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "iProjectUI-layouts",
+    "tool": "Yarn"
+  },
+  {
+    "name": "@iproject/iprojectui-layouts-demo",
+    "folder": "iProjectUI-layouts/demo",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "iProjectUI-layouts",
+    "tool": "Yarn"
+  },
+  {
+    "name": "@iproject/iprojectui-layouts-css",
+    "folder": "iProjectUI-layouts/packages/layouts-css",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "iProjectUI-layouts",
+    "tool": "Yarn"
+  },
+  {
+    "name": "@iproject/iprojectui-layouts-react",
+    "folder": "iProjectUI-layouts/packages/layouts-react",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "iProjectUI-layouts",
+    "tool": "Yarn"
+  },
+  {
+    "name": "@iproject/iworks-client-authoring",
+    "folder": "iworks-clients/clients/iworks-client-authoring",
+    "publish": true,
+    "category": null,
+    "versionPolicy": "clientPackagesLockStep",
+    "subproject": "iworks-clients",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/iworks-client-management",
+    "folder": "iworks-clients/clients/iworks-client-management",
+    "publish": true,
+    "category": null,
+    "versionPolicy": "clientPackagesLockStep",
+    "subproject": "iworks-clients",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/iworks-access-backend",
+    "folder": "iworks-clients/iproject-platform-access/iworks-access-backend",
+    "publish": true,
+    "category": null,
+    "versionPolicy": "interopPackagesLockStep",
+    "subproject": "iworks-clients",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/iworks-access-common",
+    "folder": "iworks-clients/iproject-platform-access/iworks-access-common",
+    "publish": true,
+    "category": null,
+    "versionPolicy": "interopPackagesLockStep",
+    "subproject": "iworks-clients",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/iworks-access-frontend",
+    "folder": "iworks-clients/iproject-platform-access/iworks-access-frontend",
+    "publish": true,
+    "category": null,
+    "versionPolicy": "interopPackagesLockStep",
+    "subproject": "iworks-clients",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/iworks-access-backend-tests",
+    "folder": "iworks-clients/tests/iworks-access-backend-tests",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "iworks-clients",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/iworks-access-common-tests",
+    "folder": "iworks-clients/tests/iworks-access-common-tests",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "iworks-clients",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/iworks-access-frontend-tests",
+    "folder": "iworks-clients/tests/iworks-access-frontend-tests",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "iworks-clients",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/iworks-clients-tests",
+    "folder": "iworks-clients/tests/iworks-clients-tests",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "iworks-clients",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/iworks-clients-tests-browser",
+    "folder": "iworks-clients/tests/iworks-clients-tests-browser",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "iworks-clients",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/iworks-client-common-config",
+    "folder": "iworks-clients/utils/iworks-client-common-config",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "iworks-clients",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/iworks-client-test-utils",
+    "folder": "iworks-clients/utils/iworks-client-test-utils",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "iworks-clients",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/cloud-agnostic-core",
+    "folder": "object-storage/cloud-agnostic/core",
+    "publish": true,
+    "category": null,
+    "versionPolicy": "lockStepVersionObjectStorage",
+    "subproject": "object-storage",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/object-storage-samples",
+    "folder": "object-storage/samples",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "object-storage",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/object-storage-azure",
+    "folder": "object-storage/storage/azure",
+    "publish": true,
+    "category": null,
+    "versionPolicy": "lockStepVersionObjectStorage",
+    "subproject": "object-storage",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/object-storage-core",
+    "folder": "object-storage/storage/core",
+    "publish": true,
+    "category": null,
+    "versionPolicy": "lockStepVersionObjectStorage",
+    "subproject": "object-storage",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/object-storage-google",
+    "folder": "object-storage/storage/google",
+    "publish": true,
+    "category": null,
+    "versionPolicy": "lockStepVersionObjectStorage",
+    "subproject": "object-storage",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/object-storage-minio",
+    "folder": "object-storage/storage/minio",
+    "publish": true,
+    "category": null,
+    "versionPolicy": "lockStepVersionObjectStorage",
+    "subproject": "object-storage",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/object-storage-oss",
+    "folder": "object-storage/storage/oss",
+    "publish": true,
+    "category": null,
+    "versionPolicy": "lockStepVersionObjectStorage",
+    "subproject": "object-storage",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/object-storage-s3",
+    "folder": "object-storage/storage/s3",
+    "publish": true,
+    "category": null,
+    "versionPolicy": "lockStepVersionObjectStorage",
+    "subproject": "object-storage",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/object-storage-tests-backend",
+    "folder": "object-storage/tests/backend-storage",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "object-storage",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/object-storage-tests-backend-unit",
+    "folder": "object-storage/tests/backend-storage-unit",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "object-storage",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/object-storage-tests-frontend",
+    "folder": "object-storage/tests/frontend-storage",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "object-storage",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/object-storage-common-config",
+    "folder": "object-storage/utils/common-config",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "object-storage",
+    "tool": "Rush"
+  },
+  {
+    "name": "presentation",
+    "folder": "presentation",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "presentation",
+    "tool": "pnpm"
+  },
+  {
+    "name": "presentation-apps-full-stack-tests",
+    "folder": "presentation/apps/full-stack-tests",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "presentation",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@load-tests/backend",
+    "folder": "presentation/apps/load-tests/backend",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "presentation",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@load-tests/frontend",
+    "folder": "presentation/apps/load-tests/tests",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "presentation",
+    "tool": "pnpm"
+  },
+  {
+    "name": "presentation-performance-tests",
+    "folder": "presentation/apps/performance-tests",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "presentation",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@test-app/backend",
+    "folder": "presentation/apps/test-app/backend",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "presentation",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@test-app/common",
+    "folder": "presentation/apps/test-app/common",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "presentation",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@test-app/frontend",
+    "folder": "presentation/apps/test-app/frontend",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "presentation",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@iproject/presentation-components",
+    "folder": "presentation/packages/components",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "presentation",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@iproject/presentation-core-interop",
+    "folder": "presentation/packages/core-interop",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "presentation",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@iproject/presentation-hierarchies",
+    "folder": "presentation/packages/hierarchies",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "presentation",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@iproject/presentation-hierarchies-react",
+    "folder": "presentation/packages/hierarchies-react",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "presentation",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@iproject/presentation-models-tree",
+    "folder": "presentation/packages/models-tree",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "presentation",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@iproject/presentation-opentelemetry",
+    "folder": "presentation/packages/opentelemetry",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "presentation",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@iproject/presentation-shared",
+    "folder": "presentation/packages/shared",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "presentation",
+    "tool": "pnpm"
+  },
+  {
+    "name": "presentation-test-utilities",
+    "folder": "presentation/packages/test-utilities",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "presentation",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@iproject/unified-selection",
+    "folder": "presentation/packages/unified-selection",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "presentation",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@iproject/unified-selection-react",
+    "folder": "presentation/packages/unified-selection-react",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "presentation",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@iproject/reality-capture-monorepo",
+    "folder": "reality-capture",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "reality-capture",
+    "tool": "pnpm"
+  },
+  {
+    "name": "reality-capture-examples",
+    "folder": "reality-capture/typescript/examples",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "reality-capture",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@iproject/reality-capture",
+    "folder": "reality-capture/typescript/packages/reality-capture",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "reality-capture",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@iproject/reality-data-client",
+    "folder": "reality-capture/typescript/packages/reality-data-client",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "reality-capture",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@iproject/viewer-scripts",
+    "folder": "viewer/common/scripts",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "viewer",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/desktop-viewer-test",
+    "folder": "viewer/packages/apps/desktop-viewer-test",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "viewer",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/web-viewer-test",
+    "folder": "viewer/packages/apps/web-viewer-test",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "viewer",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/desktop-viewer-react",
+    "folder": "viewer/packages/modules/desktop-viewer-react",
+    "publish": true,
+    "category": null,
+    "versionPolicy": "independentModule",
+    "subproject": "viewer",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/test-local-extension",
+    "folder": "viewer/packages/modules/test-local-extension",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "viewer",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/test-remote-extension",
+    "folder": "viewer/packages/modules/test-remote-extension",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "viewer",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/viewer-react",
+    "folder": "viewer/packages/modules/viewer-react",
+    "publish": true,
+    "category": null,
+    "versionPolicy": "independentModule",
+    "subproject": "viewer",
+    "tool": "Rush"
+  },
+  {
+    "name": "@iproject/web-viewer-react",
+    "folder": "viewer/packages/modules/web-viewer-react",
+    "publish": true,
+    "category": null,
+    "versionPolicy": "independentModule",
+    "subproject": "viewer",
+    "tool": "Rush"
+  },
+  {
+    "name": "iproject-desktop-viewer-template",
+    "folder": "viewer/packages/templates/desktop",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "viewer",
+    "tool": "Rush"
+  },
+  {
+    "name": "iproject-web-viewer-template",
+    "folder": "viewer/packages/templates/web",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "viewer",
+    "tool": "Rush"
+  },
+  {
+    "name": "viewer-components-react",
+    "folder": "viewer-components-react",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "viewer-components-react",
+    "tool": "pnpm"
+  },
+  {
+    "name": "learning-snippets",
+    "folder": "viewer-components-react/apps/learning-snippets",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "viewer-components-react",
+    "tool": "pnpm"
+  },
+  {
+    "name": "vcr-performance-tests",
+    "folder": "viewer-components-react/apps/performance-tests",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "viewer-components-react",
+    "tool": "pnpm"
+  },
+  {
+    "name": "test-viewer",
+    "folder": "viewer-components-react/apps/test-viewer",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "viewer-components-react",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@iproject/breakdown-trees-react",
+    "folder": "viewer-components-react/packages/archive/breakdown-trees",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "viewer-components-react",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@iproject/infrastructure-iot-react",
+    "folder": "viewer-components-react/packages/archive/infrastructure-iot",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "viewer-components-react",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@iproject/iwork-react-hooks",
+    "folder": "viewer-components-react/packages/archive/iwork-react-hooks",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "viewer-components-react",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@szew/iwork-select-react",
+    "folder": "viewer-components-react/packages/archive/iwork-select",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "viewer-components-react",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@szew/markup-frontstage-react",
+    "folder": "viewer-components-react/packages/archive/markup-frontstage",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "viewer-components-react",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@iproject/ec3-widget-react",
+    "folder": "viewer-components-react/packages/iproject/ec3-widget",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "viewer-components-react",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@iproject/geo-tools-react",
+    "folder": "viewer-components-react/packages/iproject/geo-tools",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "viewer-components-react",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@iproject/grouping-mapping-widget",
+    "folder": "viewer-components-react/packages/iproject/grouping-mapping-widget",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "viewer-components-react",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@iproject/map-layers",
+    "folder": "viewer-components-react/packages/iproject/map-layers",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "viewer-components-react",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@iproject/measure-tools-react",
+    "folder": "viewer-components-react/packages/iproject/measure-tools",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "viewer-components-react",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@iproject/one-click-lca-react",
+    "folder": "viewer-components-react/packages/iproject/one-click-lca-widget",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "viewer-components-react",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@iproject/property-grid-react",
+    "folder": "viewer-components-react/packages/iproject/property-grid",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "viewer-components-react",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@iproject/quantity-formatting-react",
+    "folder": "viewer-components-react/packages/iproject/quantity-formatting",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "viewer-components-react",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@iproject/reports-config-widget-react",
+    "folder": "viewer-components-react/packages/iproject/reports-config-widget",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "viewer-components-react",
+    "tool": "pnpm"
+  },
+  {
+    "name": "test-utilities",
+    "folder": "viewer-components-react/packages/iproject/test-utilities",
+    "publish": false,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "viewer-components-react",
+    "tool": "pnpm"
+  },
+  {
+    "name": "@iproject/tree-widget-react",
+    "folder": "viewer-components-react/packages/iproject/tree-widget",
+    "publish": true,
+    "category": null,
+    "versionPolicy": null,
+    "subproject": "viewer-components-react",
+    "tool": "pnpm"
+  }
+]

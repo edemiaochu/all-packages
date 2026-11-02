@@ -1,0 +1,72 @@
+{
+  "name": "@szewtwin/appui-test-providers",
+  "version": "0.0.0",
+  "description": "Package used to exercise adding UI components and stages",
+  "private": true,
+  "type": "module",
+  "main": "lib/appui-test-providers.js",
+  "types": "lib/appui-test-providers",
+  "exports": {
+    ".": "./lib/appui-test-providers.js"
+  },
+  "scripts": {
+    "start": "run-p -l \"build -- -w\" \"copy:** -- -w\"",
+    "build": "npm run copy:css && npm run copy:locale && tsc",
+    "copy:css": "cpx \"./src/**/*.{*css,json,svg}\" ./lib",
+    "copy:locale": "cpx \"./public/**/*\" ./lib/public",
+    "clean": "rimraf -g lib",
+    "docs": "betools extract --fileExt=ts,tsx --extractFrom=./src --recursive --out=../../generated-docs/extract",
+    "lint": "eslint \"./src/**/*.{ts,tsx}\""
+  },
+  "keywords": [
+    "iVault",
+    "BIM",
+    "maps",
+    "UiItemsProvider"
+  ],
+  "author": {
+    "name": "Szewec Systems, Inc.",
+    "url": "http://www.szewec.com"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@szewtwin/build-tools": "catalog:",
+    "@szewtwin/eslint-plugin": "catalog:",
+    "@types/react": "catalog:",
+    "cpx2": "^3.0.0",
+    "inversify": "^6.0.1",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "catalog:",
+    "reflect-metadata": "^0.1.13",
+    "eslint": "catalog:",
+    "typescript": "~5.6.2",
+    "eslint-config-prettier": "catalog:"
+  },
+  "dependencies": {
+    "@szewec/icons-generic": "catalog:",
+    "@szewtwin/core-szewec": "catalog:",
+    "@szewtwin/core-geometry": "catalog:",
+    "@szewtwin/core-common": "catalog:",
+    "@szewtwin/core-frontend": "catalog:",
+    "@szewtwin/core-orbitgt": "catalog:",
+    "@szewtwin/core-quantity": "catalog:",
+    "@szewtwin/appui-abstract": "catalog:",
+    "@szewtwin/components-react": "workspace:*",
+    "@szewtwin/core-react": "workspace:*",
+    "@szewtwin/appui-react": "workspace:*",
+    "@szewtwin/ivault-components-react": "workspace:*",
+    "@szewtwin/szewtwinui-react": "catalog:",
+    "@szewtwin/szewtwinui-icons-react": "^2.8.0",
+    "@szewtwin/webgl-compatibility": "catalog:",
+    "classnames": "2.5.1",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "react-redux": "^9.1.2",
+    "ts-key-enum": "~2.0.12"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/szewTwin/appui.git",
+    "directory": "apps/test-providers"
+  }
+}

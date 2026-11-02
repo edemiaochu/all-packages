@@ -1,0 +1,176 @@
+// Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+// See LICENSE.md in the project root for license terms and full copyright notice.
+@import './breakpoints';
+
+.iui-layouts-page {
+  height: 100vh;
+  display: grid;
+  grid-template:
+    'header header' auto
+    'sidenav content' 1fr
+    'sidenav bottom-bar' auto / auto 1fr;
+
+  &-header {
+    grid-area: header;
+  }
+
+  &-sidenav {
+    grid-area: sidenav;
+
+    //#region If side navigation is present, remove the env(safe-area-inset-left) from the left side of content area
+    ~ .iui-layouts-page-content-padded {
+
+      @include small-monitor {
+        padding-left: calc(var(--iui-size-l) * 2);
+      }
+
+      @include tablet {
+        padding-left: var(--iui-size-xl);
+      }
+
+      @include mobile {
+        padding-left: var(--iui-size-l);
+      }
+    }
+    //#endregion If side navigation is present, remove the env(safe-area-inset-left) from the left side of content area
+  }
+
+  &-content {
+    grid-area: content;
+    overflow: overlay;
+    background-color: var(--iui-color-background-backdrop);
+
+    &-padded {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      //#region Add env(safe-area-inset-*) for iPhone notch on the left & right sides of content area
+
+      padding: var(--iui-size-xl) unquote('max(var(--iui-size-2xl), env(safe-area-inset-right))') var(--iui-size-xl) unquote('max(var(--iui-size-2xl), env(safe-area-inset-left))');
+
+      @include small-monitor {
+        padding: var(--iui-size-l)
+          unquote(
+            'max(calc(var(--iui-size-l) * 2), env(safe-area-inset-right))'
+          )
+          var(--iui-size-l)
+          unquote('max(calc(var(--iui-size-l) * 2), env(safe-area-inset-left))');
+      }
+
+      @include tablet {
+        padding: var(--iui-size-m)
+          unquote('max(var(--iui-size-xl), env(safe-area-inset-right))')
+          var(--iui-size-m)
+          unquote('max(var(--iui-size-xl), env(safe-area-inset-left))');
+      }
+
+      @include mobile {
+        padding: var(--iui-size-xs)
+          unquote('max(var(--iui-size-l), env(safe-area-inset-right))')
+          var(--iui-size-xs)
+          unquote('max(var(--iui-size-l), env(safe-area-inset-left))');
+      }
+      //#endregion Add env(safe-area-inset-*) for iPhone notch on the left & right sides of content area
+    }
+
+    &-centered {
+      max-width: 1440px;
+      width: 100%;
+    }
+
+    &-title-area {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: calc(var(--iui-size-s) * 3);
+    }
+
+    &-tools {
+      display: flex;
+      flex-direction: row;
+      margin-bottom: calc(var(--iui-size-s) * 2);
+      justify-content: space-between;
+
+      &-left,
+      &-right {
+        display: flex;
+        justify-content: flex-start;
+        flex-direction: row;
+        gap: var(--iui-size-xs);
+        align-items: center;
+        min-width: 0;
+        flex-basis: 50%;
+      }
+
+      &-right {
+        justify-content: flex-end;
+      }
+    }
+  }
+
+  &-bottom-bar {
+    grid-area: bottom-bar;
+    height: calc(var(--iui-size-s)*5 + var(--iui-size-l)); //this is the sizes of the two bottom buttons of side nav
+
+    @include mobile {
+      height: fit-content;
+    }
+  }
+
+  &-action-bar {
+    background-color: var(--iui-color-background);
+    border-top: 2px solid var(--iui-color-border);
+    margin-inline: auto;
+    padding-inline: unquote('max(calc(var(--iui-size-xl) * 2), env(safe-area-inset-right))') unquote('max(calc(var(--iui-size-xl) * 2), env(safe-area-inset-left))');
+
+    height: inherit;
+    display: grid;
+    gap: var(--iui-size-xs);
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-areas: 'left center right';
+
+    //#region Add env(safe-area-inset-*) for iPhone notch on the left & right sides of content area
+
+    @include small-monitor {
+      padding-inline: unquote('max(calc(var(--iui-size-l) * 2), env(safe-area-inset-right))') unquote('max(calc(var(--iui-size-l) * 2), env(safe-area-inset-left))');
+    }
+
+    @include tablet {
+      padding-inline: unquote('max(var(--iui-size-xl), env(safe-area-inset-right))') unquote('max(var(--iui-size-xl), env(safe-area-inset-left))');
+    }
+
+    @include mobile {
+      padding: unquote('max(var(--iui-size-s), env(safe-area-inset-right))') unquote('max(var(--iui-size-s), env(safe-area-inset-left))');
+      grid-template-columns: 1fr;
+      grid-template-areas: 'left'
+        'center'
+        'right';
+      justify-items: flex-start;
+    }
+    //#endregion Add env(safe-area-inset-*) for iPhone notch on the left & right sides of content area
+
+    &-left,
+    &-center,
+    &-right {
+      display: flex;
+      align-items: center;
+    }
+
+    &-left {
+      grid-area: left;
+      justify-content: flex-start;
+    }
+
+    &-center {
+      grid-area: center;
+      justify-content: center;
+    }
+
+
+    &-right {
+      grid-area: right;
+      justify-content: flex-end;
+    }
+  }
+
+}

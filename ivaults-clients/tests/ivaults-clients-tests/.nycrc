@@ -1,0 +1,8 @@
+{
+  "extends": "./node_modules/@szewtwin/ivaults-client-common-config/base.nycrc",
+  "cwd": "../../",
+  "include": [
+    "clients/ivaults-client-management/src/**/*",
+    "clients/ivaults-client-management/lib/**/*"
+  ]
+}

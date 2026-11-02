@@ -1,0 +1,63 @@
+{
+  "name": "transformer-performance-tests",
+  "private": true,
+  "license": "MIT",
+  "version": "0.1.0",
+  "scripts": {
+    "build": "tsc 1>&2",
+    "clean": "rimraf lib",
+    "lint": "eslint \"./test/**/*.ts\" 1>&2",
+    "test": "mocha --delay --timeout 300000 --require ts-node/register test/**/*.test.ts",
+    "format": "prettier \"./test/**/*.ts\" --write",
+    "test-mocha": "mocha --delay --timeout 300000 \"./lib/**/TransformerRegression.test.js\"",
+    "process-reports": "node scripts/process-reports"
+  },
+  "repository": {},
+  "dependencies": {
+    "@itwin/core-backend": "^5.9.1",
+    "@itwin/core-bentley": "^5.9.1",
+    "@itwin/core-common": "^5.9.1",
+    "@itwin/core-geometry": "^5.9.1",
+    "@itwin/core-quantity": "^5.9.1",
+    "@szewtwin/ivault-transformer": "workspace:*",
+    "@itwin/ecschema-metadata": "^5.9.1",
+    "@itwin/imodels-access-backend": "^6.0.1",
+    "@itwin/imodels-client-authoring": "^6.0.1",
+    "@itwin/imodels-access-common": "^6.0.1",
+    "@itwin/object-storage-azure": "^3.0.4",
+    "@itwin/node-cli-authorization": "^3.0.1",
+    "@itwin/perf-tools": "^4.10.12",
+    "dotenv": "^10.0.0",
+    "dotenv-expand": "^5.1.0",
+    "fs-extra": "^8.1.0",
+    "yargs": "^16.0.0"
+  },
+  "devDependencies": {
+    "@itwin/build-tools": "^5.9.1",
+    "@itwin/eslint-plugin": "^6.0.0",
+    "@itwin/oidc-signin-tool": "5.1.2",
+    "@itwin/itwins-client": "^1.6.1",
+    "@types/chai": "^4.1.4",
+    "@types/fs-extra": "^4.0.7",
+    "@types/mocha": "^8.2.2",
+    "@types/node": "^22",
+    "@types/yargs": "^12.0.5",
+    "chai": "^4.3.6",
+    "eslint": "^9.11.1",
+    "eslint-config-prettier": "^9.1.0",
+    "prettier": "^3.1.1",
+    "mocha": "^10.0.0",
+    "rimraf": "^3.0.2",
+    "ts-node": "^10.7.0",
+    "typescript": "~5.6.2"
+  },
+  "eslintConfig": {
+    "plugins": [
+      "@itwin"
+    ],
+    "extends": "plugin:@itwin/itwinjs-recommended",
+    "parserOptions": {
+      "project": "./tsconfig.json"
+    }
+  }
+}

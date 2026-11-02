@@ -1,0 +1,58 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@use "~@szewtwin/core-react/lib/core-react/inputs/variables" as *;
+
+.components-filtering-input {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 5px;
+}
+
+// Input wrapper
+.components-filtering-input-input {
+  position: relative;
+  flex: 1;
+
+  // The input itself
+  input {
+    min-height: 28px;
+    padding: $uicore-iui-input-padding;
+    box-sizing: border-box;
+  }
+
+  input::-ms-clear {
+    display: none;
+  }
+}
+
+.components-filtering-input-input-components {
+  display: flex;
+  position: absolute;
+  right: 8px;
+  top: 1px;
+  bottom: 0px;
+
+  > .icon {
+    align-self: center;
+    border: none;
+    outline: none;
+  }
+}
+
+@mixin filtering-button-base {
+  margin-left: 6px;
+}
+
+.components-filtering-input-clear {
+  @include filtering-button-base;
+  color: var(--iui-color-text-muted);
+  font-size: "12px";
+}
+
+.components-filtering-input-loader {
+  margin-bottom: auto;
+  margin-top: auto;
+}

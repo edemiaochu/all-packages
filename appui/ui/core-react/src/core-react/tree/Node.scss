@@ -1,0 +1,68 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+
+$node-font-size: var(--iui-font-size-1);
+
+.core-tree-node {
+  /* Rules applied to the <be-tree-node> itself */
+  display: flex;
+  box-sizing: border-box;
+  width: fit-content;
+  min-width: 100%;
+  font-family: var(--iui-font-sans);
+  font-size: $node-font-size;
+  color: var(--iui-color-text);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  cursor: default;
+  padding: 1px 1px 0px 1px;
+
+  > .contents {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 5px;
+
+    > .core-progress-indicator {
+      margin: 0 4px;
+    }
+
+    > .expansion-toggle {
+      display: inline-block;
+      margin-top: auto;
+      margin-bottom: auto;
+    }
+
+    > .core-image-checkbox {
+      top: -1px;
+    }
+  }
+
+  &-icon {
+    width: 16px;
+
+    > .bui-webfont-icon {
+      display: inline-block;
+      width: 16px;
+      text-align: center;
+      vertical-align: middle;
+    }
+  }
+
+  &.is-focused,
+  &:focus {
+    outline: 1px dotted #000;
+  }
+
+  &:not(.is-hover-disabled) {
+    &:hover {
+      background: var(--iui-color-background-hover);
+    }
+  }
+
+  &.is-selected {
+    background: var(--iui-color-background-accent-muted);
+  }
+}

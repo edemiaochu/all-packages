@@ -1,0 +1,125 @@
+// Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+// See LICENSE.md in the project root for license terms and full copyright notice.
+@use 'header-buttons';
+@use '../mixins';
+
+.iui-page-header {
+  --_iui-header-brand-label-font-size: var(--iui-font-size-2);
+  --_iui-header-height: calc(var(--iui-size-s) * 5);
+  --_iui-header-icon-scale: none;
+
+  @include mixins.iui-reset;
+  display: flex;
+  justify-content: space-between;
+  inline-size: 100%;
+  block-size: var(--_iui-header-height);
+  user-select: none;
+  background-color: var(--iui-color-background);
+  border-block-end: 2px solid var(--iui-color-border);
+  color: var(--iui-color-text);
+  @media (prefers-reduced-motion: no-preference) {
+    transition: height var(--iui-duration-1) ease-out;
+  }
+
+  &[data-iui-size='slim'] {
+    --_iui-header-brand-label-font-size: var(--iui-font-size-1);
+    --_iui-header-height: calc(var(--iui-size-s) * 3);
+    --_iui-header-icon-scale: scale(0.66666);
+  }
+}
+
+.iui-page-header-left,
+.iui-page-header-center,
+.iui-page-header-right {
+  display: flex;
+  align-items: center;
+}
+
+.iui-page-header-right {
+  .iui-button {
+    block-size: 100%;
+    border-radius: 0;
+    flex-shrink: 0;
+    @media (forced-colors: active) {
+      border-block-start-width: 0;
+      border-block-end-width: 0;
+    }
+
+    &:hover {
+      background-color: var(--iui-color-background-hover);
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .iui-avatar {
+      &,
+      * {
+        transition:
+          width var(--iui-duration-1) ease-out,
+          height var(--iui-duration-1) ease-out,
+          font-size var(--iui-duration-1) ease-out;
+      }
+    }
+  }
+}
+
+.iui-page-header-divider {
+  block-size: calc(var(--iui-size-s) * 2);
+  border-inline-start: 2px solid var(--iui-color-border);
+  @media (forced-colors: active) {
+    display: none;
+  }
+}
+
+.iui-header-breadcrumbs {
+  --_iui-breadcrumbs-height: 100%;
+}
+
+.iui-header-brand {
+  @include header-buttons.iui-header-brand;
+}
+
+.iui-header-brand-icon {
+  @include header-buttons.iui-header-brand-icon;
+}
+
+.iui-header-brand-label {
+  @include header-buttons.iui-header-brand-label;
+}
+
+.iui-page-header-left,
+.iui-header-breadcrumbs,
+.iui-header-breadcrumbs-list {
+  overflow: hidden;
+  box-sizing: content-box !important;
+  margin-block-end: calc(0px - var(--iui-size-2xs));
+  padding-block-end: var(--iui-size-2xs);
+}
+
+.iui-header-breadcrumb-button {
+  @include header-buttons.iui-header-breadcrumb-button;
+}
+
+.iui-header-breadcrumb-button-split {
+  @include header-buttons.iui-header-breadcrumb-button-split;
+}
+
+.iui-header-breadcrumb-item {
+  @include header-buttons.iui-header-breadcrumb-item;
+}
+
+.iui-header-breadcrumb-button-wrapper {
+  @include header-buttons.iui-header-breadcrumb-button-wrapper;
+}
+
+.iui-header-breadcrumb-button-icon {
+  @include header-buttons.iui-header-breadcrumb-button-icon;
+}
+
+.iui-header-breadcrumb-button-dropdown-icon {
+  @include header-buttons.iui-header-breadcrumb-button-dropdown-icon;
+}
+
+.iui-header-breadcrumb-button-text {
+  @include header-buttons.iui-header-breadcrumb-button-text;
+}

@@ -1,0 +1,5 @@
+import React, { type SVGProps } from 'react';
+declare const SvgShare: (props: SVGProps<SVGSVGElement>) => React.JSX.Element;
+export default SvgShare;
+export { SvgShare };
+//# sourceMappingURL=Share.d.ts.map

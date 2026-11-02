@@ -1,0 +1,58 @@
+// Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+// See LICENSE.md in the project root for license terms and full copyright notice.
+@use 'base';
+@use 'default';
+@use 'borderless';
+@use 'pill';
+
+.iui-tabs-wrapper {
+  @include base.iui-tabs-wrapper;
+
+  &[data-iui-orientation='horizontal'] {
+    @include base.iui-tabs-horizontal;
+  }
+
+  &[data-iui-orientation='vertical'] {
+    @include base.iui-tabs-vertical;
+  }
+}
+
+.iui-tabs-actions-wrapper {
+  @include base.iui-tabs-actions-wrapper;
+}
+
+.iui-tabs-actions {
+  @include base.iui-tabs-actions;
+}
+
+.iui-tabs-content {
+  @include base.iui-tabs-content;
+}
+
+.iui-tabs {
+  @include base.iui-tabs;
+
+  &.iui-default {
+    @include default.iui-tabs-default;
+  }
+
+  &.iui-borderless {
+    @include borderless.iui-tabs-borderless;
+  }
+
+  &.iui-pill {
+    @include pill.iui-tabs-pill;
+  }
+
+  &.iui-animated {
+    @include base.iui-tab-animated;
+  }
+
+  &:not(.iui-animated) {
+    @include base.iui-tab-not-animated;
+  }
+}
+
+.iui-tab-label {
+  @include base.iui-tab-label;
+}

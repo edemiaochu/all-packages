@@ -1,0 +1,10 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@use "~@szewtwin/core-react/lib/core-react/inputs/variables";
+
+@forward "~@szewtwin/core-react/lib/core-react/inputs/variables";
+
+$editor-component-height-small: 24px;
+$editor-iui-input-padding: variables.$uicore-iui-input-padding;

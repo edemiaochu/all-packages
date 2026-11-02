@@ -1,0 +1,48 @@
+{
+  "name": "auth-clients",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Authorization clients for the iTwin platform",
+  "scripts": {
+    "build": "lage build",
+    "clean": "lage clean --no-cache",
+    "docs": "lage docs",
+    "lint": "lage lint",
+    "lint:fix": "lage lint:fix",
+    "test": "lage test",
+    "test:integration": "lage test:integration --reset-cache",
+    "cover": "lage cover",
+    "change": "beachball change",
+    "check": "beachball check",
+    "version-bump": "beachball bump",
+    "publish-packages": "beachball publish --access public"
+  },
+  "keywords": [
+    "Bentley",
+    "Authorization",
+    "iTwin",
+    "digital-twin",
+    "OIDC"
+  ],
+  "author": {
+    "name": "Bentley Systems, Inc.",
+    "url": "http://www.bentley.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iTwin/auth-clients"
+  },
+  "devDependencies": {
+    "beachball": "^2.54.0",
+    "lage": "^2.14.6"
+  },
+  "pnpm": {
+    "overrides": {
+      "path-to-regexp": "0.1.12",
+      "serialize-javascript@<=7.0.2": ">=7.0.3",
+      "picomatch@<2.3.2": ">=2.3.2"
+    }
+  },
+  "packageManager": "pnpm@9.15.9+sha512.68046141893c66fad01c079231128e9afb89ef87e2691d69e4d40eee228988295fd4682181bae55b58418c3a253bde65a505ec7c5f9403ece5cc3cd37dcf2531"
+}

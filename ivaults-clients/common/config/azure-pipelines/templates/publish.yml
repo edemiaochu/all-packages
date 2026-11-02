@@ -1,0 +1,18 @@
+steps:
+  - task: NodeTool@0
+    displayName: Install Node@$(nodeVersion)
+    inputs:
+      versionSpec: $(nodeVersion)
+      checkLatest: true
+
+  - script: node common/scripts/install-run-rush.js install --purge
+    displayName: rush install
+
+  - script: node common/scripts/install-run-rush.js rebuild -v
+    displayName: rush rebuild
+
+  - script: node common/scripts/install-run-rush.js publish --publish --include-all --set-access-level public
+    displayName: rush publish package
+    condition: and(succeeded(), eq(variables['Agent.OS'], 'Windows_NT'), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), startsWith(variables['Build.SourceBranch'], 'refs/heads/backport/')))
+    env:
+      NPM_AUTH_TOKEN: $(npmToken)

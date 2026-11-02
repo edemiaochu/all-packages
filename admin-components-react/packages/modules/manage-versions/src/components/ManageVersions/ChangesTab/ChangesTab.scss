@@ -1,0 +1,18 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+
+.iac-changes-table {
+  .iui-table-body .iui-table-cell {
+    word-break: break-word;
+  }
+
+  .iac-create-version-icon-hidden {
+    visibility: hidden;
+  }
+
+  .iac-changes-tab-actions {
+    gap: var(--iui-size-2xs);
+  }
+}

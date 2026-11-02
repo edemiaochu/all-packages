@@ -1,0 +1,16 @@
+{
+  "name": "@szewec/cif-quantity-takeoffs-schema",
+  "license": "MIT",
+  "version": "1.0.1",
+  "homepage": "https://www.ivaultjs.org/",
+  "keywords": [
+    "Szewec",
+    "BIS",
+    "iVault"
+  ],
+  "description": "CifQuantityTakeoffs BIS Domains",
+  "author": {
+    "name": "Szewec Systems, Inc.",
+    "url": "http://www.szewec.com"
+  }
+}

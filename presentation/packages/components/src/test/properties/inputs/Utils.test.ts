@@ -1,0 +1,81 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { Format, FormatType, ParserSpec, QuantityParseResult } from "@szewtwin/core-quantity";
+import {
+  getDecimalRoundingError,
+  getPersistenceUnitRoundingError,
+} from "../../../presentation-components/properties/inputs/Utils.js";
+
+describe("getDecimalRoundingError", () => {
+  it("returns correct results", () => {
+    expect(getDecimalRoundingError("123")).toBe(0.5);
+    expect(getDecimalRoundingError("123.456")).toBe(0.0005);
+    expect(getDecimalRoundingError("123.457 unit")).toBe(0.0005);
+    expect(getDecimalRoundingError("invalid number")).toBeUndefined();
+  });
+});
+
+describe("getPersistenceUnitRoundingError", () => {
+  const format = new Format("test format");
+  const parserSpec = { parseToQuantityValue: vi.fn<(value: string) => QuantityParseResult>(), format };
+
+  beforeEach(() => {
+    parserSpec.parseToQuantityValue.mockReset();
+  });
+
+  it("uses decimal precision if there is decimal separator", () => {
+    parserSpec.parseToQuantityValue.mockReturnValue({ ok: true, value: 0.05 });
+
+    const result = getPersistenceUnitRoundingError("123.4 unit", parserSpec as unknown as ParserSpec);
+    expect(result).toBe(0.05);
+    expect(parserSpec.parseToQuantityValue).toHaveBeenCalledWith("0.05unit");
+  });
+
+  it("uses fractional precision if there is fractional separator", () => {
+    parserSpec.parseToQuantityValue.mockReturnValue({ ok: true, value: 1 / 8 });
+
+    const result = getPersistenceUnitRoundingError("3/4 unit", parserSpec as unknown as ParserSpec);
+    expect(result).toBe(1 / 8);
+    expect(parserSpec.parseToQuantityValue).toHaveBeenCalledWith("1/8unit");
+  });
+
+  it("uses decimal precision if format type is 'Decimal`", () => {
+    parserSpec.parseToQuantityValue.mockReturnValue({ ok: true, value: 0.5 });
+    vi.spyOn(format, "type", "get").mockReturnValue(FormatType.Decimal);
+
+    const result = getPersistenceUnitRoundingError("123", parserSpec as unknown as ParserSpec);
+    expect(result).toBe(0.5);
+    expect(parserSpec.parseToQuantityValue).toHaveBeenCalledWith("0.5");
+  });
+
+  it("uses fractional precision if format type is 'Fractional`", () => {
+    parserSpec.parseToQuantityValue.mockReturnValue({ ok: true, value: 1 / 2 });
+    vi.spyOn(format, "type", "get").mockReturnValue(FormatType.Fractional);
+
+    const result = getPersistenceUnitRoundingError("123", parserSpec as unknown as ParserSpec);
+    expect(result).toBe(1 / 2);
+    expect(parserSpec.parseToQuantityValue).toHaveBeenCalledWith("1/2");
+  });
+
+  it("returns undefined for other format types", () => {
+    parserSpec.parseToQuantityValue.mockReturnValue({ ok: true, value: 0.5 });
+    vi.spyOn(format, "type", "get").mockReturnValue(FormatType.Azimuth);
+
+    const result = getPersistenceUnitRoundingError("123'", parserSpec as unknown as ParserSpec);
+    expect(result).toBeUndefined();
+    expect(parserSpec.parseToQuantityValue).not.toHaveBeenCalled();
+  });
+
+  it("returns undefined for invalid numbers types", () => {
+    parserSpec.parseToQuantityValue.mockReturnValue({ ok: true, value: 0.5 });
+    vi.spyOn(format, "type", "get").mockReturnValue(FormatType.Fractional);
+
+    const result = getPersistenceUnitRoundingError("not a number", parserSpec as unknown as ParserSpec);
+    expect(result).toBeUndefined();
+    expect(parserSpec.parseToQuantityValue).not.toHaveBeenCalled();
+  });
+});

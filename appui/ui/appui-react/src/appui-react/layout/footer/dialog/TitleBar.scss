@@ -1,0 +1,30 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@use "~@szewtwin/core-react/lib/core-react/typography" as *;
+@use "variables" as *;
+
+.nz-footer-dialog-titleBar {
+  $horizontal-padding: $nz-dialog-padding;
+  $vertical-padding: 12px;
+
+  background-color: var(--iui-color-background-backdrop);
+  border-bottom: 1px solid var(--iui-color-border-subtle);
+  min-height: $nz-footer-title-bar-height;
+  box-sizing: border-box;
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  grid-gap: $horizontal-padding;
+  padding-left: $horizontal-padding;
+  padding-right: $horizontal-padding;
+
+  > .nz-title {
+    @include title;
+    color: var(--iui-color-text);
+    white-space: nowrap;
+    overflow: hidden;
+  }
+}

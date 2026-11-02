@@ -1,0 +1,66 @@
+{
+  "name": "@szewtwin/cloud-agnostic-core",
+  "version": "3.1.2",
+  "description": "Package that allows configuring components loaded by dependency injection",
+  "keywords": [
+    "Szewec",
+    "szewTwin",
+    "szewTwin platform"
+  ],
+  "homepage": "https://github.com/szewTwin/object-storage/tree/main/cloud-agnostic/core",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/szewTwin/object-storage"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Szewec Systems, Inc.",
+    "url": "https://www.szewec.com"
+  },
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "build": "tsc 1>&2",
+    "clean": "rimraf lib",
+    "lint": "eslint --resolve-plugins-relative-to node_modules/@szewtwin/object-storage-common-config ./src/**/*.ts 1>&2",
+    "lint-fix": "eslint --fix --resolve-plugins-relative-to node_modules/@szewtwin/object-storage-common-config ./src/**/*.ts 1>&2 && sort-package-json",
+    "spell-check": "cspell \"**\" --config ./node_modules/@szewtwin/object-storage-common-config/cspell.json",
+    "test:integration:backend": "",
+    "test:integration:frontend": "",
+    "test:unit": "npm run test:unit:backend && npm run test:unit:frontend",
+    "test:unit:backend": "mocha lib/**/*.test.js",
+    "test:unit:frontend": "cypress run --browser chrome --config-file node_modules/@szewtwin/object-storage-common-config/unit.cypress.config.ts -c specPattern=lib/test/**test.js"
+  },
+  "prettier": "@szewtwin/object-storage-common-config/prettier.json",
+  "eslintConfig": {
+    "extends": "./node_modules/@szewtwin/object-storage-common-config/.eslintrc.js"
+  },
+  "devDependencies": {
+    "@szewtwin/object-storage-common-config": "workspace:*",
+    "@types/chai": "^4.3.8",
+    "@types/mocha": "^10.0.1",
+    "chai": "^4.3.10",
+    "cspell": "^8.16.0",
+    "cypress": "^15.15.0",
+    "eslint": "^8.57.1",
+    "inversify": "^7.5.2",
+    "mocha": "^10.4.0",
+    "nyc": "^18.0.0",
+    "reflect-metadata": "^0.2.2",
+    "rimraf": "^2.6.2",
+    "sort-package-json": "^1.53.1",
+    "typescript": "^5.1.3"
+  },
+  "peerDependencies": {
+    "inversify": "^7.5.2",
+    "reflect-metadata": "^0.2.2"
+  },
+  "peerDependenciesMeta": {
+    "inversify": {
+      "optional": true
+    },
+    "reflect-metadata": {
+      "optional": true
+    }
+  }
+}

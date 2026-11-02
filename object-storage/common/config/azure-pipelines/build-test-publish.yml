@@ -1,0 +1,44 @@
+name:
+  $(Date:yyyy.M.d)$(Rev:.r)
+
+parameters:
+- name: runRushAudit
+  type: boolean
+  default: true
+
+variables:
+  node20Version: '20.18.2'
+
+trigger: none
+
+jobs:
+  - job: BuildAndTest
+    strategy:
+      matrix:
+        linux-node-20:
+          imageName: 'ubuntu-latest'
+          nodeVersion: $(node20Version)
+          runFrontendIntegrationTests: true
+        windows-node-20:
+          imageName: 'windows-latest'
+          nodeVersion: $(node20Version)
+          runFrontendIntegrationTests: true
+    pool:
+        vmImage: $(imageName)
+    variables:
+      - group: object-storage - Integration Tests Variables
+    workspace:
+      clean: all
+
+    steps:
+    - template: templates/build-test.yml
+      parameters:
+        runRushAudit: ${{ parameters.runRushAudit }}
+
+  - job: Publish
+    dependsOn: BuildAndTest
+    pool: 
+      vmImage: 'windows-latest'
+   
+    steps:
+    - template: templates/publish.yml

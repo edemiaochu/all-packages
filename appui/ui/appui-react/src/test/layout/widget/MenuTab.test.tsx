@@ -1,0 +1,122 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+import { Rectangle } from "@szewtwin/core-react/internal";
+import { act, fireEvent, render, waitFor } from "@testing-library/react";
+import * as React from "react";
+import { ShowWidgetIconContext } from "../../../appui-react/layout/base/NineZone.js";
+import type { NineZoneState } from "../../../appui-react/layout/state/NineZoneState.js";
+import { createNineZoneState } from "../../../appui-react/layout/state/NineZoneState.js";
+import type { TabState } from "../../../appui-react/layout/state/TabState.js";
+import type { WidgetState } from "../../../appui-react/layout/state/WidgetState.js";
+import { addPanelWidget } from "../../../appui-react/layout/state/internal/PanelStateHelpers.js";
+import { addTab } from "../../../appui-react/layout/state/internal/TabStateHelpers.js";
+import { TabIdContext } from "../../../appui-react/layout/widget/ContentRenderer.js";
+import { WidgetMenuTab } from "../../../appui-react/layout/widget/MenuTab.js";
+import { WidgetOverflowContext } from "../../../appui-react/layout/widget/Overflow.js";
+import {
+  WidgetContext,
+  WidgetIdContext,
+} from "../../../appui-react/layout/widget/Widget.js";
+import { TestNineZoneProvider } from "../Providers.js";
+
+describe("MenuTab", () => {
+  interface WrapperProps {
+    defaultState: NineZoneState;
+    widgetId: WidgetState["id"];
+    tabId: TabState["id"];
+  }
+
+  function Wrapper({
+    children,
+    defaultState,
+    widgetId,
+    tabId,
+  }: React.PropsWithChildren<WrapperProps>) {
+    return (
+      <TestNineZoneProvider defaultState={defaultState}>
+        <WidgetIdContext.Provider value={widgetId}>
+          <TabIdContext.Provider value={tabId}>
+            {children}
+          </TabIdContext.Provider>
+        </WidgetIdContext.Provider>
+      </TestNineZoneProvider>
+    );
+  }
+
+  it("should render", () => {
+    let state = createNineZoneState();
+    state = addTab(state, "t1", { label: "Tab 1" });
+    state = addPanelWidget(state, "top", "w1", ["t1"]);
+    const { getByRole } = render(<WidgetMenuTab />, {
+      wrapper: (props: any) => (
+        <Wrapper defaultState={state} widgetId="w1" tabId="t1" {...props} />
+      ),
+    });
+    getByRole("menuitemcheckbox", { name: "Tab 1" });
+  });
+
+  it("should render with badge and icon", async () => {
+    let state = createNineZoneState();
+    state = addTab(state, "t1");
+    state = addPanelWidget(state, "top", "w1", ["t1"]);
+    const { findByText } = render(
+      <ShowWidgetIconContext.Provider value={true}>
+        <WidgetMenuTab badge={<>badge</>} icon={<>icon</>} />
+      </ShowWidgetIconContext.Provider>,
+      {
+        wrapper: (props: any) => (
+          <Wrapper defaultState={state} widgetId="w1" tabId="t1" {...props} />
+        ),
+      }
+    );
+    await findByText("icon");
+    await findByText("badge");
+  });
+
+  it("should close overflow menu", async () => {
+    let state = createNineZoneState();
+    state = addTab(state, "t1", { label: "Tab 1" });
+    state = addPanelWidget(state, "top", "w1", ["t1"]);
+    const close = vi.fn();
+    const { getByRole } = render(
+      <WidgetOverflowContext.Provider value={{ close }}>
+        <WidgetContext.Provider value={{ measure: () => new Rectangle() }}>
+          <WidgetMenuTab />
+        </WidgetContext.Provider>
+      </WidgetOverflowContext.Provider>,
+      {
+        wrapper: (props: any) => (
+          <Wrapper defaultState={state} widgetId="w1" tabId="t1" {...props} />
+        ),
+      }
+    );
+    const tab = getByRole("menuitemcheckbox", { name: "Tab 1" });
+
+    // On drag start
+    act(() => {
+      fireEvent.mouseDown(tab);
+      fireEvent.mouseMove(document, { clientX: 10, clientY: 10 });
+    });
+    await waitFor(() => expect(close).toHaveBeenCalledOnce());
+    close.mockReset();
+
+    // On click
+    act(() => {
+      fireEvent.mouseDown(tab);
+      fireEvent.mouseUp(document);
+    });
+    await waitFor(() => expect(close).toHaveBeenCalledOnce());
+    close.mockReset();
+
+    // On double click
+    act(() => {
+      fireEvent.mouseDown(tab);
+      fireEvent.mouseUp(document);
+      fireEvent.mouseDown(tab);
+      fireEvent.mouseUp(document);
+    });
+    await waitFor(() => expect(close).toHaveBeenCalledOnce());
+  });
+});

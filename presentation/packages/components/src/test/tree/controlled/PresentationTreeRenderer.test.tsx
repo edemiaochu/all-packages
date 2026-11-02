@@ -1,0 +1,625 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+/* eslint-disable @typescript-eslint/no-deprecated */
+
+import { ResolvablePromise } from "presentation-test-utilities";
+import { EMPTY, Subject } from "rxjs";
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { StandardTypeNames } from "@szewtwin/appui-abstract";
+import {
+  AbstractTreeNodeLoaderWithProvider,
+  computeVisibleNodes,
+  ITreeNodeLoader,
+  MutableTreeModel,
+  TreeActions,
+  TreeModelSource,
+  TreeNodeLoadResult,
+  UiComponents,
+} from "@szewtwin/components-react";
+import { BeEvent } from "@szewtwin/core-szewec";
+import { EmptyLocalization } from "@szewtwin/core-common";
+import { IVaultApp, IVaultConnection } from "@szewtwin/core-frontend";
+import { Descriptor, PresentationError, PresentationStatus, PropertyValueFormat } from "@szewtwin/presentation-common";
+import { Presentation, PresentationManager } from "@szewtwin/presentation-frontend";
+import { translate } from "../../../presentation-components/common/Utils.js";
+import {
+  DMClassInfo,
+  getIVaultMetadataProvider,
+} from "../../../presentation-components/instance-filter-builder/DMMetadataProvider.js";
+import { PresentationInstanceFilterInfo } from "../../../presentation-components/instance-filter-builder/PresentationFilterBuilder.js";
+import { PresentationTreeRenderer } from "../../../presentation-components/tree/controlled/PresentationTreeRenderer.js";
+import { PresentationTreeDataProvider } from "../../../presentation-components/tree/DataProvider.js";
+import { IPresentationTreeDataProvider } from "../../../presentation-components/tree/IPresentationTreeDataProvider.js";
+import { PresentationTreeNodeItem } from "../../../presentation-components/tree/PresentationTreeNodeItem.js";
+import { createTestDMClassInfo, createTestPropertyInfo, stubVirtualization } from "../../_helpers/Common.js";
+import { createTestContentDescriptor, createTestPropertiesContentField } from "../../_helpers/Content.js";
+import { act, cleanup, render, waitFor } from "../../TestUtils.js";
+import { createTreeModelNodeInput } from "./Helpers.js";
+
+describe("PresentationTreeRenderer", () => {
+  stubVirtualization();
+
+  const onCloseEvent = new BeEvent<() => void>();
+  const testIvault = {
+    key: "renderer-test-ivault",
+    onClose: onCloseEvent,
+    createQueryReader: vi.fn().mockReturnValue({ toArray: async () => [] }),
+  } as unknown as IVaultConnection;
+
+  const baseTreeProps = {
+    ivault: testIvault,
+    treeActions: {
+      onNodeCheckboxClicked: vi.fn(),
+      onNodeExpanded: vi.fn(),
+      onNodeCollapsed: vi.fn(),
+      onNodeClicked: vi.fn(),
+      onNodeMouseDown: vi.fn(),
+      onNodeMouseMove: vi.fn(),
+      onNodeEditorActivated: vi.fn(),
+      onTreeKeyDown: vi.fn(),
+      onTreeKeyUp: vi.fn(),
+    } as TreeActions,
+    dataProvider: {} as IPresentationTreeDataProvider,
+    height: 100,
+    width: 100,
+    nodeHeight: () => 20,
+  };
+
+  const dataProviderStub = { ivault: testIvault, rulesetId: "test-ruleset", createRequestOptions: () => ({}) };
+
+  const nodeLoaderStub = {
+    loadNode: vi.fn<ITreeNodeLoader["loadNode"]>(),
+    modelSource: {},
+    dataProvider: dataProviderStub,
+  };
+
+  const presentationManager = { getNodesCount: vi.fn<PresentationManager["getNodesCount"]>() };
+
+  const localization = new EmptyLocalization();
+
+  beforeAll(async () => {
+    // need to initialize for immer patches to be enabled.
+    await UiComponents.initialize(localization);
+  });
+
+  afterAll(() => {
+    UiComponents.terminate();
+  });
+
+  beforeEach(() => {
+    vi.spyOn(IVaultApp, "localization", "get").mockReturnValue(localization);
+    vi.spyOn(Presentation, "presentation", "get").mockReturnValue(
+      presentationManager as unknown as PresentationManager,
+    );
+    vi.spyOn(Presentation, "localization", "get").mockReturnValue(localization);
+
+    // stub getDMClassInfo to prevent unhandled errors when filter dialog opens
+    const classInfo = createTestDMClassInfo();
+    const metadataProvider = getIVaultMetadataProvider(baseTreeProps.ivault);
+    vi.spyOn(metadataProvider, "getDMClassInfo").mockResolvedValue(
+      new DMClassInfo(classInfo.id, classInfo.name, classInfo.label, new Set(), new Set()),
+    );
+
+    nodeLoaderStub.loadNode.mockReturnValue(EMPTY);
+    presentationManager.getNodesCount.mockResolvedValue(15);
+  });
+
+  afterEach(() => {
+    nodeLoaderStub.loadNode.mockReset();
+    presentationManager.getNodesCount.mockReset();
+  });
+
+  const property = createTestPropertyInfo({ name: "TestProperty", type: StandardTypeNames.Bool });
+  const propertyField = createTestPropertiesContentField({
+    properties: [{ property }],
+    name: property.name,
+    label: property.name,
+    type: { typeName: StandardTypeNames.Bool, valueFormat: PropertyValueFormat.Primitive },
+  });
+  const initialFilter: PresentationInstanceFilterInfo = {
+    filter: { field: propertyField, operator: "is-false" },
+    usedClasses: [],
+  };
+
+  function setupTreeModel(setup: (model: MutableTreeModel) => void) {
+    const model = new MutableTreeModel();
+    setup(model);
+    const modelSource = new TreeModelSource(model);
+    const visibleNodes = computeVisibleNodes(model);
+    nodeLoaderStub.modelSource = modelSource;
+    return {
+      modelSource,
+      visibleNodes,
+      nodeLoader: nodeLoaderStub as unknown as AbstractTreeNodeLoaderWithProvider<PresentationTreeDataProvider>,
+    };
+  }
+
+  it("renders default tree node", async () => {
+    const { visibleNodes, nodeLoader } = setupTreeModel((model) => {
+      const input = createTreeModelNodeInput({ id: "A" });
+      // use non presentation tree node item
+      (input as any).item = { id: "A", label: input.label };
+      model.setChildren(undefined, [input], 0);
+    });
+
+    const { queryByText, container } = render(
+      <PresentationTreeRenderer {...baseTreeProps} visibleNodes={visibleNodes} nodeLoader={nodeLoader} />,
+    );
+
+    await waitFor(() => expect(queryByText("A")).not.toBeNull());
+    expect(container.querySelector(".presentation-components-node")).toBeNull();
+  });
+
+  it("renders filter builder dialog when node filter button is clicked", async () => {
+    const { visibleNodes, nodeLoader } = setupTreeModel((model) => {
+      model.setChildren(
+        undefined,
+        [
+          createTreeModelNodeInput({
+            id: "A",
+            item: { filtering: { descriptor: createTestContentDescriptor({ fields: [] }), ancestorFilters: [] } },
+          }),
+        ],
+        0,
+      );
+    });
+
+    const { queryByText, container, baseElement, user, findByText } = render(
+      <PresentationTreeRenderer {...baseTreeProps} visibleNodes={visibleNodes} nodeLoader={nodeLoader} />,
+    );
+
+    await waitFor(() => expect(queryByText("A")).not.toBeNull());
+    expect(container.querySelector(".presentation-components-node")).not.toBeNull();
+
+    const filterButton = container.querySelector(".presentation-components-node-action-buttons button");
+    expect(filterButton).not.toBeNull();
+    await user.click(filterButton!);
+
+    // wait for dialog to be visible
+    await findByText("instance-filter-builder.filter");
+
+    const closeButton = await waitFor(() =>
+      baseElement.querySelector(".presentation-instance-filter-dialog-close-button"),
+    );
+    expect(closeButton).not.toBeNull();
+    await user.click(closeButton!);
+
+    const dialog = await waitFor(() => baseElement.querySelector(".presentation-instance-filter-dialog"));
+    expect(dialog).toBeNull();
+  });
+
+  it("renders filter builder dialog using lazy loaded descriptor when node filter button is clicked", async () => {
+    const descriptorPromise = new ResolvablePromise<Descriptor>();
+    const { visibleNodes, nodeLoader } = setupTreeModel((model) => {
+      model.setChildren(
+        undefined,
+        [
+          createTreeModelNodeInput({
+            id: "A",
+            item: { filtering: { descriptor: async () => descriptorPromise, ancestorFilters: [] } },
+          }),
+        ],
+        0,
+      );
+    });
+
+    const { findByText, container, baseElement, user } = render(
+      <PresentationTreeRenderer {...baseTreeProps} visibleNodes={visibleNodes} nodeLoader={nodeLoader} />,
+    );
+
+    await findByText("A");
+    expect(container.querySelector(".presentation-components-node")).not.toBeNull();
+
+    const filterButton = await waitFor(() =>
+      container.querySelector(".presentation-components-node-action-buttons button"),
+    );
+    expect(filterButton).not.toBeNull();
+    await user.click(filterButton!);
+
+    // wait for dialog to be visible
+    await waitFor(() => {
+      expect(baseElement.querySelector(".presentation-instance-filter-dialog")).not.toBeNull();
+    });
+
+    // wait for spinner to be visible
+    await waitFor(() => {
+      expect(baseElement.querySelector(".presentation-instance-filter-dialog-progress")).not.toBeNull();
+    });
+
+    await act(async () => {
+      await descriptorPromise.resolve(createTestContentDescriptor({ fields: [] }));
+    });
+
+    // wait for spinner to disappear
+    await waitFor(() => {
+      expect(baseElement.querySelector(".presentation-instance-filter-dialog-progress")).toBeNull();
+    });
+  });
+
+  it("does not render filter dialog when tree model does not find a matching node", async () => {
+    const { visibleNodes, nodeLoader } = setupTreeModel((model) => {
+      model.setChildren(
+        undefined,
+        [
+          createTreeModelNodeInput({
+            id: "A",
+            item: { filtering: { descriptor: createTestContentDescriptor({ fields: [] }), ancestorFilters: [] } },
+          }),
+        ],
+        0,
+      );
+    });
+
+    // stub getNode method to make it return undefined when onFilterClick() is called.
+    vi.spyOn(nodeLoader.modelSource.getModel(), "getNode").mockReturnValue(undefined);
+
+    const { queryByText, baseElement, user, container } = render(
+      <PresentationTreeRenderer {...baseTreeProps} visibleNodes={visibleNodes} nodeLoader={nodeLoader} />,
+    );
+    await waitFor(() => expect(queryByText("A")).not.toBeNull());
+
+    const filterButton = container.querySelector(".presentation-components-node-action-buttons button");
+    expect(filterButton).not.toBeNull();
+    await user.click(filterButton!);
+
+    // assert that dialog is not loaded
+    const dialog = await waitFor(() => baseElement.querySelector(".presentation-instance-filter-dialog"));
+    expect(dialog).toBeNull();
+    cleanup();
+  });
+
+  it("applies filter and closes dialog", async () => {
+    const { visibleNodes, modelSource, nodeLoader } = setupTreeModel((model) => {
+      model.setChildren(
+        undefined,
+        [
+          createTreeModelNodeInput({
+            id: "A",
+            item: {
+              filtering: { descriptor: createTestContentDescriptor({ fields: [propertyField] }), ancestorFilters: [] },
+            },
+          }),
+        ],
+        0,
+      );
+    });
+
+    const result = render(
+      <PresentationTreeRenderer {...baseTreeProps} visibleNodes={visibleNodes} nodeLoader={nodeLoader} />,
+    );
+
+    const { queryByText } = result;
+    await waitFor(() => expect(queryByText("A")).not.toBeNull());
+
+    await applyFilter(result, propertyField.label);
+
+    const nodeItem = modelSource.getModel().getNode("A")?.item as PresentationTreeNodeItem;
+    expect(nodeItem.filtering?.active).toBeDefined();
+  });
+
+  it("sets `node.isLoading` to true when filter is applied", async () => {
+    const subject = new Subject<TreeNodeLoadResult>();
+    nodeLoaderStub.loadNode.mockReset();
+    nodeLoaderStub.loadNode.mockImplementation(() => subject);
+
+    const { visibleNodes, modelSource, nodeLoader } = setupTreeModel((model) => {
+      model.setChildren(
+        undefined,
+        [
+          createTreeModelNodeInput({
+            id: "A",
+            item: {
+              filtering: { descriptor: createTestContentDescriptor({ fields: [propertyField] }), ancestorFilters: [] },
+            },
+          }),
+        ],
+        0,
+      );
+    });
+
+    const result = render(
+      <PresentationTreeRenderer {...baseTreeProps} visibleNodes={visibleNodes} nodeLoader={nodeLoader} />,
+    );
+
+    const { queryByText } = result;
+    await waitFor(() => expect(queryByText("A")).not.toBeNull());
+
+    await applyFilter(result, propertyField.label);
+
+    await waitFor(() => expect(nodeLoaderStub.loadNode).toHaveBeenCalledOnce());
+    expect(modelSource.getModel().getNode("A")?.isLoading).toBe(true);
+    subject.complete();
+  });
+
+  it("calls `onFilterApplied` when filter is applied", async () => {
+    const onFilterAppliedSpy = vi.fn();
+
+    const { visibleNodes, nodeLoader } = setupTreeModel((model) => {
+      model.setChildren(
+        undefined,
+        [
+          createTreeModelNodeInput({
+            id: "A",
+            item: {
+              filtering: { descriptor: createTestContentDescriptor({ fields: [propertyField] }), ancestorFilters: [] },
+            },
+          }),
+        ],
+        0,
+      );
+    });
+
+    const result = render(
+      <PresentationTreeRenderer
+        {...baseTreeProps}
+        visibleNodes={visibleNodes}
+        nodeLoader={nodeLoader}
+        onFilterApplied={onFilterAppliedSpy}
+      />,
+    );
+
+    const { queryByText } = result;
+    await waitFor(() => expect(queryByText("A")).not.toBeNull());
+    await applyFilter(result, propertyField.label);
+
+    await waitFor(() => expect(onFilterAppliedSpy).toHaveBeenCalledOnce());
+    cleanup();
+  });
+
+  it("does not call `onFilterApplied` when filter is cleared", async () => {
+    const onFilterAppliedSpy = vi.fn();
+
+    const { visibleNodes, modelSource, nodeLoader } = setupTreeModel((model) => {
+      model.setChildren(
+        undefined,
+        [
+          createTreeModelNodeInput({
+            id: "A",
+            item: {
+              filtering: {
+                descriptor: createTestContentDescriptor({ fields: [propertyField] }),
+                ancestorFilters: [],
+                active: {} as unknown as PresentationInstanceFilterInfo,
+              },
+            },
+          }),
+        ],
+        0,
+      );
+    });
+
+    const { getByText, getByRole, user } = render(
+      <PresentationTreeRenderer
+        {...baseTreeProps}
+        visibleNodes={visibleNodes}
+        nodeLoader={nodeLoader}
+        onFilterApplied={onFilterAppliedSpy}
+      />,
+    );
+    await waitFor(() => getByText("A"));
+    // ensure that initially the filter is enabled
+    let nodeItem = modelSource.getModel().getNode("A")?.item as PresentationTreeNodeItem;
+    expect(nodeItem.filtering?.active).toBeDefined();
+
+    const clearFilterButton = await waitFor(() => getByRole("button", { name: "tree.clear-hierarchy-level-filter" }));
+    await user.click(clearFilterButton);
+
+    await waitFor(() => {
+      nodeItem = modelSource.getModel().getNode("A")?.item as PresentationTreeNodeItem;
+      expect(nodeItem.filtering?.active).toBeUndefined();
+    });
+
+    expect(onFilterAppliedSpy).not.toHaveBeenCalled();
+    cleanup();
+  });
+
+  it("renders results count when filtering dialog has valid filter", async () => {
+    const { visibleNodes, nodeLoader } = setupTreeModel((model) => {
+      model.setChildren(
+        undefined,
+        [
+          createTreeModelNodeInput({
+            id: "A",
+            item: {
+              filtering: {
+                descriptor: createTestContentDescriptor({ fields: [propertyField] }),
+                active: initialFilter,
+                ancestorFilters: [],
+              },
+            },
+          }),
+        ],
+        0,
+      );
+    });
+
+    const result = render(
+      <PresentationTreeRenderer {...baseTreeProps} visibleNodes={visibleNodes} nodeLoader={nodeLoader} />,
+    );
+
+    const { queryByText } = result;
+    await waitFor(() => expect(queryByText("A")).not.toBeNull());
+
+    await openFilterDialog(result);
+
+    await waitFor(() => expect(queryByText(/15$/i)).not.toBeNull());
+    expect(presentationManager.getNodesCount).toHaveBeenCalledOnce();
+  });
+
+  it("renders information message if results set too large error is thrown", async () => {
+    presentationManager.getNodesCount.mockReset();
+    presentationManager.getNodesCount.mockImplementation(async () => {
+      throw new PresentationError(PresentationStatus.ResultSetTooLarge, "Results set too large");
+    });
+    const limit = 5;
+
+    dataProviderStub.createRequestOptions = () => {
+      return { sizeLimit: limit };
+    };
+
+    const { visibleNodes, nodeLoader } = setupTreeModel((model) => {
+      model.setChildren(
+        undefined,
+        [
+          createTreeModelNodeInput({
+            id: "A",
+            item: {
+              filtering: {
+                descriptor: createTestContentDescriptor({ fields: [propertyField] }),
+                active: initialFilter,
+                ancestorFilters: [],
+              },
+            },
+          }),
+        ],
+        0,
+      );
+    });
+
+    const result = render(
+      <PresentationTreeRenderer {...baseTreeProps} visibleNodes={visibleNodes} nodeLoader={nodeLoader} />,
+    );
+
+    const { queryByText } = result;
+    await waitFor(() => expect(queryByText("A")).not.toBeNull());
+
+    await openFilterDialog(result);
+
+    await waitFor(() => expect(presentationManager.getNodesCount).toHaveBeenCalledOnce());
+    expect(queryByText(translate("tree.filter-dialog.result-limit-exceeded"), { exact: false })).not.toBeNull();
+  });
+
+  it("does not render result if unknown error is encountered", async () => {
+    presentationManager.getNodesCount.mockReset();
+    presentationManager.getNodesCount.mockImplementation(async () => {
+      throw new Error("Test Error");
+    });
+
+    const { visibleNodes, nodeLoader } = setupTreeModel((model) => {
+      model.setChildren(
+        undefined,
+        [
+          createTreeModelNodeInput({
+            id: "A",
+            item: {
+              filtering: {
+                descriptor: createTestContentDescriptor({ fields: [propertyField] }),
+                active: initialFilter,
+                ancestorFilters: [],
+              },
+            },
+          }),
+        ],
+        0,
+      );
+    });
+
+    const result = render(
+      <PresentationTreeRenderer {...baseTreeProps} visibleNodes={visibleNodes} nodeLoader={nodeLoader} />,
+    );
+
+    const { queryByText } = result;
+    await waitFor(() => expect(queryByText("A")).not.toBeNull());
+
+    await openFilterDialog(result);
+
+    await waitFor(() => expect(presentationManager.getNodesCount).toHaveBeenCalledOnce());
+    expect(queryByText(/tree.filter-dialog/i)).toBeNull();
+  });
+
+  it("clears filter if apply button is pressed after filtering rules are cleared", async () => {
+    const { visibleNodes, modelSource, nodeLoader } = setupTreeModel((model) => {
+      model.setChildren(
+        undefined,
+        [
+          createTreeModelNodeInput({
+            id: "A",
+            item: {
+              filtering: { descriptor: createTestContentDescriptor({ fields: [propertyField] }), ancestorFilters: [] },
+            },
+          }),
+        ],
+        0,
+      );
+    });
+
+    const result = render(
+      <PresentationTreeRenderer {...baseTreeProps} visibleNodes={visibleNodes} nodeLoader={nodeLoader} />,
+    );
+
+    const { queryByText, user } = result;
+    await waitFor(() => expect(queryByText("A")).not.toBeNull());
+
+    await applyFilter(result, propertyField.label);
+
+    // ensure that initially the filter is enabled
+    let nodeItem = modelSource.getModel().getNode("A")?.item as PresentationTreeNodeItem;
+    expect(nodeItem.filtering?.active).toBeDefined();
+
+    await openFilterDialog(result);
+
+    const { baseElement } = result;
+
+    // clear all filter selections
+    const resetButton = await waitFor(() => {
+      const button = baseElement.querySelector<HTMLInputElement>(".presentation-instance-filter-dialog-reset-button");
+      expect(button?.disabled).toBe(false);
+      return button;
+    });
+    await user.click(resetButton!);
+
+    // pressing apply on empty filter clears it
+    const applyButton = await waitFor(() => {
+      const button = baseElement.querySelector<HTMLInputElement>(".presentation-instance-filter-dialog-apply-button");
+      return button;
+    });
+    await user.click(applyButton!);
+
+    await waitFor(() => {
+      expect(baseElement.querySelector(".presentation-instance-filter-dialog")).toBeNull();
+    });
+
+    nodeItem = modelSource.getModel().getNode("A")?.item as PresentationTreeNodeItem;
+    expect(nodeItem.filtering?.active).toBeUndefined();
+    cleanup();
+  });
+});
+
+async function openFilterDialog({ getByRole, baseElement, user }: ReturnType<typeof render>) {
+  const filterButton = getByRole("button", { name: "tree.filter-hierarchy-level" });
+  await user.click(filterButton);
+
+  // wait for dialog to be visible
+  await waitFor(() => {
+    expect(baseElement.querySelector(".presentation-instance-filter-dialog")).not.toBeNull();
+  });
+}
+
+async function applyFilter(result: ReturnType<typeof render>, propertyLabel: string) {
+  await openFilterDialog(result);
+  const { baseElement, getByTitle, user } = result;
+
+  // select property in filter builder dialog
+  // open property selector
+  const propertySelector = baseElement.querySelector<HTMLInputElement>(".fb-property-name input");
+  expect(propertySelector).not.toBeNull();
+  await user.click(propertySelector!);
+  // select property
+  const property = await waitFor(() => getByTitle(propertyLabel));
+  await user.click(property);
+
+  // wait until apply button is enabled
+  const applyButton = await waitFor(() => {
+    const button = baseElement.querySelector<HTMLInputElement>(".presentation-instance-filter-dialog-apply-button");
+    expect(button?.disabled).toBe(false);
+    return button;
+  });
+  await user.click(applyButton!);
+
+  // wait until dialog closes
+  await waitFor(() => {
+    expect(baseElement.querySelector(".presentation-instance-filter-dialog")).toBeNull();
+  });
+}

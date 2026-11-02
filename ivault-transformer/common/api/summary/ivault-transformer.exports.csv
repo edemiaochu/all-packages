@@ -1,0 +1,25 @@
+sep=;
+Release Tag;API Item Type;API Item Name
+public;class;ChangedInstanceIds
+public;type;ChangedInstanceIdsInitOptions
+public;class;ChangedInstanceOps
+public;type;ExportChangesOptions
+beta;type;ExporterInitOptions
+beta;interface;ExportSchemaResult
+internal;function;hasEntityChanged
+alpha;function;initializeBranchProvenance
+beta;interface;InitOptions
+beta;class;IVaultExporter
+beta;class;IVaultExportHandler
+beta;class;IVaultImporter
+beta;interface;IVaultImportOptions
+beta;class;IVaultTransformer
+beta;interface;IVaultTransformOptions
+beta;interface;OptimizeGeometryOptions
+beta;type;ProcessChangesOptions
+alpha;interface;ProvenanceInitArgs
+alpha;interface;ProvenanceInitResult
+beta;interface;RelationshipPropsForDelete
+beta;interface;TargetScopeProvenanceJsonProps
+beta;class;TemplateModelCloner
+public;enum;TransformerLoggerCategory

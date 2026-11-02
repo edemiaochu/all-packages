@@ -1,0 +1,31 @@
+// Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+// See LICENSE.md in the project root for license terms and full copyright notice.
+@use 'base';
+
+@mixin iui-tabs-pill {
+  --_iui-tab-bg-color: transparent;
+  --_iui-tab-bg-color-hover: var(--iui-color-background-transparent-hover);
+  --_iui-tab-bg-color-selected: transparent;
+  --_iui-tab-bg-color-selected-hover: var(--iui-color-background-transparent-hover);
+  --_iui-tab-bg-color-disabled: transparent;
+
+  justify-content: space-evenly;
+  gap: var(--iui-size-3xs);
+
+  > .iui-tab {
+    flex: 1 1 0;
+  }
+
+  .iui-tab {
+    display: flex;
+    padding: var(--iui-size-2xs);
+    inline-size: 100%;
+    justify-content: center;
+    border-radius: var(--iui-border-radius-1);
+
+    &::after {
+      inset-block-end: 0;
+      inset-inline-start: 0;
+    }
+  }
+}

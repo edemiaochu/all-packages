@@ -1,0 +1,55 @@
+# iTwin.js Extract API Build
+
+name: Extract API
+
+on:
+  pull_request:
+    branches:
+      - master
+      - stable
+    types: [opened, synchronize, reopened, ready_for_review]
+
+jobs:
+  files-changed:
+    if: '! github.event.pull_request.draft'
+    runs-on: ubuntu-latest
+    name: Detect what files changed
+    outputs:
+      packages: ${{ steps.changes.outputs.packages }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Check for file changes
+        uses: dorny/paths-filter@v4
+        id: changes
+        with:
+          filters: |
+            packages:
+              - 'packages/**'
+
+  extract-api:
+    needs: [files-changed]
+    if: ${{ needs.files-changed.outputs.packages == 'true' }}
+    runs-on: ubuntu-latest
+    name: Extract API
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v5
+
+      - name: Use Node.js 24
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Extract API
+        env:
+          TF_BUILD: 1
+        run: pnpm lage extract-api check-internal

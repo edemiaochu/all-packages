@@ -1,0 +1,28 @@
+{
+  "name": "@szewec/icons-generic",
+  "license": "CC-BY-3.0",
+  "author": {
+    "name": "Szewec Systems, Inc.",
+    "url": "https://www.szewec.com"
+  },
+  "version": "1.0.34",
+  "description": "Generic SVG icons for Szewec and szewTwin.js projects",
+  "homepage": "https://www.szewTwinjs.org",
+  "main": "icon-list.json",
+  "scripts": {
+    "build": "node build-scripts/build.js",
+    "upgrade": "node build-scripts/upgrade.js",
+    "postupgrade": "npm run build && git status",
+    "color-icons": "node build-scripts/color-icons.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "svg",
+    "icons"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "fs-extra": "^7.0.0",
+    "glob": "^7.1.1"
+  }
+}

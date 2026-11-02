@@ -1,0 +1,165 @@
+trigger:
+  branches:
+    include:
+      - master
+      - stable
+
+pr:
+  drafts: false
+  branches:
+    include:
+      - master
+      - stable
+
+resources:
+  repositories:
+    - repository: itwinjs-core
+      type: github
+      endpoint: iModelJs
+      name: iTwin/itwinjs-core
+      ref: refs/heads/master
+
+variables:
+  - name: pnpm_config_cache
+    value: $(Pipeline.Workspace)/.pnpm-store
+
+stages:
+  - stage: Check_Changes
+    condition: eq(variables['Build.Reason'], 'PullRequest')
+    jobs:
+    - job: detect_docs_change
+      displayName: Check docs changes
+      steps:
+      - checkout: self
+        fetchDepth: 0
+        clean: true
+
+      - powershell: |
+          try {
+            $paths = @(
+              ".azure-pipelines/generate-docs.yaml",
+              "packages/components/*",
+              "packages/testing/*",
+              "packages/opentelemetry/*",
+              "apps/test-app/*",
+              "apps/full-stack-tests/src/components/*",
+              "apps/full-stack-tests/src/testing/*"
+            )
+            $sourceBranch = "origin/$(System.PullRequest.SourceBranch)"
+            $targetBranch = "origin/$(System.PullRequest.targetBranchName)"
+
+            Write-Host "Comparing changes between $sourceBranch and $targetBranch branches"
+            # Run git diff command to ensure it does not fail
+            git diff --name-only $(git merge-base $targetBranch $sourceBranch) | out-null
+            if (-not $?) {
+              exit 1
+            }
+
+            $diff=$(git diff --name-only $(git merge-base $targetBranch $sourceBranch))
+            $files=$diff -split ' '
+            Write-Host "Changed files:"
+            foreach ($file in $files) {
+              Write-Host $file
+            }
+
+            foreach ($file in $files) {
+              foreach ($path in $paths) {
+                if ($file -like $path) {
+                  Write-Host "Changed files affect documentation site, running check"
+                  Write-Host "##vso[task.setvariable variable=docsModified;isOutput=true]True"
+                  exit 0
+                }
+              }
+            }
+
+            Write-Host "Changed files do not affect documentation site, skipping check"
+          } catch {
+            Write-Error $_.Exception.Message
+            exit 1
+          }
+        name: changed_files
+        displayName: Check changed files
+
+  - stage: Generate_Docs
+    dependsOn: Check_Changes
+    condition: |
+      or(
+        ne(variables['Build.Reason'], 'PullRequest'),
+        and(
+          succeeded(),
+          eq(dependencies.Check_Changes.outputs['detect_docs_change.changed_files.docsModified'], 'true')
+        )
+      )
+    jobs:
+      - job:
+        displayName: Generate Docs
+        workspace:
+          clean: all
+
+        steps:
+          - checkout: self
+            clean: true
+
+          - task: UseNode@1
+            displayName: "Use Node 24"
+            inputs:
+              version: 24
+
+          - task: Cache@2
+            displayName: Cache pnpm
+            inputs:
+              key: 'pnpm | "$(Agent.OS)" | pnpm-lock.yaml'
+              path: $(pnpm_config_cache)
+
+          - script: corepack enable
+            displayName: "Enable corepack"
+
+          - script: pnpm config set store-dir $(pnpm_config_cache)
+            displayName: "Setup pnpm"
+            env:
+              COREPACK_INTEGRITY_KEYS: 0
+
+          - script: pnpm install
+            displayName: Run 'pnpm install'
+
+          - script: pnpm docs:all
+            displayName: Run 'pnpm docs:all'
+
+          - script: pnpm gather-docs
+            displayName: Run 'pnpm gather-docs'
+
+          - task: CopyFiles@2
+            displayName: 'Copy generated docs to: $(Build.StagingDirectory)'
+            inputs:
+              SourceFolder: $(Build.SourcesDirectory)/build
+              TargetFolder: $(Build.StagingDirectory)
+
+          - task: PublishBuildArtifacts@1
+            displayName: 'Publish Artifact: Presentation Docs'
+            inputs:
+              PathtoPublish: '$(Build.StagingDirectory)/docs/'
+              ArtifactName: 'Presentation Docs'
+
+  - stage: Validate_Docs
+    dependsOn: Generate_Docs
+    condition: and(succeeded('Generate_Docs'), in(variables['Build.Reason'], 'IndividualCI', 'PullRequest', 'Manual'))
+    jobs:
+      - template: common/config/azure-pipelines/jobs/docs-build.yaml@itwinjs-core
+        parameters:
+          checkout: itwinjs-core
+          ignoreAudit: true
+          useCurrentPresentationDocsArtifact: true
+
+  - stage: Tag_Docs
+    dependsOn: Validate_Docs
+    condition: and(succeeded('Validate_Docs'), in(variables['Build.Reason'], 'IndividualCI', 'Manual'))
+    jobs:
+      - job:
+        displayName: Tag Docs
+        steps:
+          - task: tagBuildOrRelease@0
+            displayName: Tag Docs
+            inputs:
+              type: "Build"
+              tags: "hasDocs"
+            condition: and(contains(variables['Build.SourceVersionMessage'], '[publish docs]'), not(contains(variables['Build.SourceVersionMessage'], '(dev)')))

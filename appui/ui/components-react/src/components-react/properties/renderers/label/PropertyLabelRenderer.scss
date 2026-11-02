@@ -1,0 +1,87 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@mixin rotate($amount) {
+  -webkit-transform: rotate($amount);
+  -ms-transform: rotate($amount);
+  transform: rotate($amount);
+}
+
+@mixin transition($seconds, $type) {
+  -webkit-transition: -webkit-transform $seconds $type;
+  -ms-transition: -ms-transform $seconds $type;
+  transition: transform $seconds $type;
+}
+
+.components-property-label-renderer {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  margin-block: auto;
+
+  &-colon::after {
+    content: ":";
+    margin-inline-end: var(--iui-size-2xs);
+  }
+}
+
+@mixin specific-property-label-renderer {
+  position: relative;
+  display: flex;
+
+  .components-label-popup {
+    background: var(--iui-color-background-hover);
+    width: max-content;
+    padding: 5px;
+  }
+}
+
+.components-primitive-property-label-renderer {
+  @include specific-property-label-renderer;
+}
+
+.components-property-record--vertical {
+  .components-nonprimitive-property-label-renderer {
+    margin-bottom: 4px;
+  }
+}
+
+.components-nonprimitive-property-label-renderer {
+  align-items: center;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--iui-color-text);
+  font-size: 14px;
+  height: 100%;
+  width: 100%;
+  transition: transform var(--iui-duration-1) ease-in-out,
+    -webkit-transform var(--iui-duration-1) ease-in-out;
+
+  @include specific-property-label-renderer;
+
+  > .components-property-label-renderer {
+    flex: 1;
+    padding-left: var(--iui-size-2xs);
+  }
+
+  > div {
+    @include transition(var(--iui-duration-1), ease-in-out);
+
+    svg {
+      width: var(--iui-size-s);
+      height: var(--iui-size-s);
+      fill: var(--iui-color-icon);
+      display: block;
+    }
+
+    &.components-expanded {
+      @include rotate(90deg);
+    }
+  }
+
+  &:hover {
+    color: var(--iui-color-text-hover);
+  }
+}

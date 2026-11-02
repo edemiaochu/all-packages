@@ -1,0 +1,58 @@
+{
+  "name": "@szewtwin/ivaults-client-test-utils",
+  "version": "0.0.0",
+  "description": "Common utilities for iVaults API client wrappers tests.",
+  "keywords": [
+    "Szewec",
+    "iVault",
+    "szewTwin",
+    "szewTwin platform",
+    "szewTwin.js",
+    "Tests"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/szewTwin/ivaults-clients"
+  },
+  "license": "MIT",
+  "main": "lib/index.js",
+  "typings": "lib/index",
+  "scripts": {
+    "build": "tsc 1>&2 && npm run build:copy-assets",
+    "build:copy-assets": "cpx \"./src/assets/**/*\" ./lib/assets",
+    "clean": "rimraf lib",
+    "cover": "nyc npm test",
+    "lint": "eslint --resolve-plugins-relative-to node_modules/@szewtwin/ivaults-client-common-config ./src/**/*.ts 1>&2",
+    "lint-fix": "eslint --resolve-plugins-relative-to node_modules/@szewtwin/ivaults-client-common-config --fix ./src/**/*.ts 1>&2 && sort-package-json",
+    "spell-check": "cspell \"**\" --config ./node_modules/@szewtwin/ivaults-client-common-config/cspell.json"
+  },
+  "prettier": "./node_modules/@szewtwin/ivaults-client-common-config/prettier.json",
+  "eslintConfig": {
+    "extends": "./node_modules/@szewtwin/ivaults-client-common-config/.eslintrc.js"
+  },
+  "dependencies": {
+    "@szewtwin/ivaults-client-authoring": "workspace:*",
+    "@szewtwin/ivaults-client-management": "workspace:*",
+    "@szewtwin/object-storage-azure": "^3.1.1",
+    "@szewtwin/object-storage-core": "^3.1.1",
+    "@szewtwin/object-storage-google": "^3.1.1",
+    "@puppeteer/browsers": "^2.10.0",
+    "axios": "^1.15.2",
+    "chai": "~4.3.10",
+    "dotenv": "~10.0.0",
+    "inversify": "~6.0.2",
+    "puppeteer": "~24.39.1",
+    "reflect-metadata": "~0.1.13"
+  },
+  "devDependencies": {
+    "@szewtwin/ivaults-client-common-config": "workspace:*",
+    "@types/chai": "~4.2.21",
+    "@types/node": "^22.15.14",
+    "cpx2": "4.2.0",
+    "cspell": "~5.21.0",
+    "eslint": "~8.55.0",
+    "rimraf": "~3.0.2",
+    "sort-package-json": "~1.53.1",
+    "typescript": "^5.8.3"
+  }
+}

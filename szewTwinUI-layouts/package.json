@@ -1,0 +1,72 @@
+{
+  "private": true,
+  "name": "@itwin/itwinui-layouts-monorepo",
+  "author": {
+    "name": "Bentley Systems, Inc.",
+    "url": "http://www.bentley.com"
+  },
+  "workspaces": [
+    "packages/*",
+    "demo"
+  ],
+  "packageManager": "yarn@3.1.1",
+  "scripts": {
+    "start": "yarn build:css && yarn build:react && concurrently -n demo,css,react -k \"yarn start:demo\" \"yarn build:css:watch\" \"yarn build:react:watch\"",
+    "start:demo": "yarn workspace @itwin/itwinui-layouts-demo dev",
+    "build:demo": "yarn workspace @itwin/itwinui-layouts-demo build",
+    "build:css": "yarn workspace @itwin/itwinui-layouts-css build",
+    "build:css:watch": "yarn workspace @itwin/itwinui-layouts-css build:watch",
+    "build:react": "yarn workspace @itwin/itwinui-layouts-react build",
+    "build:react:watch": "yarn workspace @itwin/itwinui-layouts-react build:watch",
+    "build": "yarn build:css && yarn lint:copyright --fix packages/layouts-css/dist/* && yarn build:react",
+    "build:watch": "yarn build && concurrently -n css,react -k \"yarn build:css:watch\" \"yarn build:react:watch\"",
+    "test": "yarn build && yarn workspace @itwin/itwinui-layouts-demo test",
+    "test:ci": "yarn workspace @itwin/itwinui-layouts-demo test:ci",
+    "test:approve": "yarn workspace @itwin/itwinui-layouts-demo test:approve",
+    "lint:js": "eslint \"*/**/*.{js,ts,tsx}\" --max-warnings=0",
+    "lint:css": "stylelint \"**/*.scss\"",
+    "lint:copyright": "node scripts/copyrightLinter.js",
+    "lint": "yarn lint:js && yarn lint:css",
+    "prepare": "husky install",
+    "pre-commit": "lint-staged",
+    "build-docker": "yarn workspace @itwin/itwinui-layouts-demo build-docker",
+    "release": "yarn build && yarn publish",
+    "publish": "yarn workspaces foreach --no-private npm publish --tolerate-republish --access public"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.26.1",
+    "@typescript-eslint/eslint-plugin": "^6.13.1",
+    "@typescript-eslint/parser": "^6.13.1",
+    "concurrently": "^7.0.0",
+    "eslint": "^8.54.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.1",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "husky": "^7.0.0",
+    "lint-staged": "^11.2.6",
+    "postcss": "^8.4.31",
+    "postcss-scss": "^4.0.4",
+    "prettier": "^3.1.0",
+    "stylelint": "^15.10.1",
+    "stylelint-config-sass-guidelines": "^9.0.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "*.{scss}": [
+      "prettier --write",
+      "stylelint --fix"
+    ],
+    "*.{js,ts,tsx,scss}": [
+      "yarn lint:copyright --fix"
+    ]
+  }
+}

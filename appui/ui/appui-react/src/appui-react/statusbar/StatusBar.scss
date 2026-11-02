@@ -1,0 +1,89 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@use "~@szewtwin/core-react/lib/core-react/style/breakpoints" as *;
+@use "../layout/safearea" as *;
+
+.uifw-statusBar {
+  display: flex;
+
+  &.nz-safe-area-left {
+    @include nz-safe-area-left;
+  }
+
+  &.nz-safe-area-right {
+    @include nz-safe-area-right;
+  }
+
+  &.nz-safe-area-bottom {
+    @include nz-safe-area-bottom;
+  }
+}
+
+.uifw-statusBar-space-between {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.uifw-statusBar-left {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+.uifw-statusBar-center {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.uifw-statusBar-right {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+.uifw-statusBar-docked {
+  width: 100%;
+  background-color: var(--iui-color-background);
+
+  .uifw-statusBar-item-container {
+    @include for-medium-desktop-up {
+      padding-left: var(--iui-size-m);
+    }
+
+    @include for-small-desktop-down {
+      padding-left: var(--iui-size-s);
+    }
+
+    @include for-phone-only {
+      padding-left: var(--iui-size-xs);
+    }
+
+    &:has(.uifw-statusBar-separator) {
+      padding-left: 0;
+
+      + .uifw-statusBar-item-container {
+        padding-left: 0;
+      }
+    }
+  }
+
+  .uifw-statusBar-left .uifw-statusBar-item-container {
+    &:first-child {
+      padding-left: 0;
+    }
+  }
+}
+
+.uifw-statusBar-item-container {
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  align-items: center;
+}

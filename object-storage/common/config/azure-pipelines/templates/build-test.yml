@@ -1,0 +1,49 @@
+parameters:
+- name: runRushAudit
+  type: boolean
+  default: true
+
+steps:
+  - task: NodeTool@0
+    displayName: Install Node@$(nodeVersion)
+    inputs:
+      versionSpec: $(nodeVersion)
+      checkLatest: true
+
+  - task: DownloadSecureFile@1
+    name: DownloadGCPAuthFile
+    displayName: 'Download GCP Secure Auth File'
+    inputs:
+      secureFile: 'object-storage-tests-connection.json'
+
+  - script: node common/scripts/install-run-rush.js install --purge
+    displayName: rush install
+
+  - script: node common/scripts/install-run-rush.js audit
+    displayName: rush audit
+    condition: and(succeeded(), eq('${{ parameters.runRushAudit }}', true))
+
+  - script: node common/scripts/install-run-rush.js rebuild -v
+    displayName: rush rebuild
+
+  - script: node common/scripts/install-run-rush.js lint
+    displayName: rush lint
+
+  - script: node common/scripts/install-run-rush.js spell-check
+    displayName: rush spell-check
+
+  - script: node common/scripts/install-run-rush.js test:unit --verbose
+    displayName: rush test:unit
+
+  - script: node common/scripts/install-run-rush.js test:integration:backend --only tag:integration-tested --verbose
+    displayName: rush test:integration:backend
+    env:
+      TEST_AZURE_STORAGE_ACCOUNT_KEY: $(TEST_AZURE_STORAGE_ACCOUNT_KEY)
+      GOOGLE_APPLICATION_CREDENTIALS: $(DownloadGCPAuthFile.secureFilePath)
+
+  - script: node common/scripts/install-run-rush.js test:integration:frontend --only tag:integration-tested --verbose
+    displayName: rush test:integration:frontend
+    condition: and(succeeded(), eq(variables.runFrontendIntegrationTests, true))
+    env:
+      TEST_AZURE_STORAGE_ACCOUNT_KEY: $(TEST_AZURE_STORAGE_ACCOUNT_KEY)
+      GOOGLE_APPLICATION_CREDENTIALS: $(DownloadGCPAuthFile.secureFilePath)

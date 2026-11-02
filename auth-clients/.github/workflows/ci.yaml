@@ -1,0 +1,74 @@
+name: Auth Clients CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  Auth-Clients-CI:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Configure git
+        run: |
+          git config --local user.email imodeljs-admin@users.noreply.github.com
+          git config --local user.name imodeljs-admin
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Install packages
+        run: pnpm install
+
+      - name: Audit packages
+        run: pnpm audit --audit-level=high
+
+      - name: Beachball check
+        run: pnpm check
+
+      - name: Build packages
+        run: pnpm build
+
+      - name: Lint packages
+        run: pnpm lint
+
+      # Necessary for running linux tests in a dbus session
+      #   See packages/electron/README.md for more details
+      - name: Install Packages - Linux
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y libsecret-1-dev
+          sudo apt-get install -y dbus-x11
+          sudo apt-get install -y gnome-keyring
+        if: runner.os == 'Linux'
+
+      # Tests are run in a dbus session after creating a keyring password for compatibility with Keytar
+      #   See packages/electron/README.md for more details
+      - name: pnpm cover - Linux
+        run: >-
+          dbus-run-session -- sh -c
+          "echo 'keyringPassword' | gnome-keyring-daemon -r -d --unlock ;
+           xvfb-run --auto-servernum --server-args='-screen 0, 1600x900x24' pnpm cover --verbose"
+        if: runner.os == 'Linux'
+
+      - name: pnpm cover - Windows/Mac
+        run: pnpm cover --verbose
+        if: runner.os == 'Windows' || runner.os == 'macOS'

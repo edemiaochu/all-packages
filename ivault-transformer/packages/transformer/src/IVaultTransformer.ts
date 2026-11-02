@@ -1,0 +1,2688 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+/** @packageDocumentation
+ * @module iVaults
+ */
+import * as path from "path";
+import * as Semver from "semver";
+import * as nodeAssert from "assert";
+import {
+  assert,
+  Guid,
+  Id64,
+  Id64Array,
+  Id64Set,
+  Id64String,
+  IVaultStatus,
+  Logger,
+  MarkRequired,
+  YieldManager,
+} from "@szewtwin/core-szewec";
+import * as DMSchemaMetaData from "@szewtwin/dmschema-metadata";
+import {
+  Angle,
+  AxisIndex,
+  Matrix3d,
+  Point3d,
+  Transform,
+  Vector3d,
+} from "@szewtwin/core-geometry";
+import {
+  BriefcaseManager,
+  ChangedDMInstance,
+  ChangesetDMAdaptor,
+  ChangeSummaryManager,
+  ChannelRootAspect,
+  ConcreteEntity,
+  DefinitionElement,
+  DefinitionModel,
+  DefinitionPartition,
+  DMSchemaXmlContext,
+  // eslint-disable-next-line @typescript-eslint/no-redeclare
+  Element,
+  ElementAspect,
+  ElementMultiAspect,
+  ElementRefersToElements,
+  ElementUniqueAspect,
+  Entity,
+  EntityReferences,
+  ExternalSourceAspect,
+  GeometricElement,
+  GeometricElement3d,
+  IVaultDb,
+  IVaultHost,
+  IVaultJsFs,
+  InformationPartitionElement,
+  KnownLocations,
+  Model,
+  PartialDMChangeUnifier,
+  RecipeDefinitionElement,
+  Relationship,
+  RelationshipProps,
+  Schema,
+  SqliteChangeOp,
+  SqliteChangesetReader,
+  Subject,
+} from "@szewtwin/core-backend";
+import {
+  ChangesetFileProps,
+  ChangesetIndexAndId,
+  Code,
+  CodeProps,
+  CodeSpec,
+  ConcreteEntityTypes,
+  DMJsNames,
+  ElementAspectProps,
+  ElementProps,
+  EntityReference,
+  ExternalSourceAspectProps,
+  FontProps,
+  GeometricElement3dProps,
+  GeometricElementProps,
+  Helmert2DWithZOffset,
+  IVault,
+  IVaultError,
+  ModelProps,
+  Placement2d,
+  Placement3d,
+  QueryBinder,
+  RelatedElement,
+  SourceAndTarget,
+} from "@szewtwin/core-common";
+import {
+  ChangedInstanceIds,
+  ExportChangesOptions,
+  ExporterInitOptions,
+  ExportSchemaResult,
+  IVaultExporter,
+  IVaultExportHandler,
+} from "./IVaultExporter";
+import { IVaultImporter, OptimizeGeometryOptions } from "./IVaultImporter";
+import { TransformerLoggerCategory } from "./TransformerLoggerCategory";
+import { IVaultCloneContext } from "./IVaultCloneContext";
+import { EntityUnifier } from "./EntityUnifier";
+import { rangesFromRangeAndSkipped } from "./Algo";
+import { SyncTypeResolver } from "./SyncTypeResolver";
+import { ProvenanceManager } from "./ProvenanceManager";
+import { Property } from "@szewtwin/dmschema-metadata";
+
+const loggerCategory: string = TransformerLoggerCategory.IVaultTransformer;
+
+/** Options provided to the [[IVaultTransformer]] constructor.
+ * @beta
+ * @note if adding an option, you must explicitly add its serialization to [[IVaultTransformer.saveStateToFile]]!
+ */
+export interface IVaultTransformOptions {
+  /** The Id of the Element in the **target** iVault that represents the **source** repository as a whole and scopes its [ExternalSourceAspect]($backend) instances.
+   * It is always a good idea to define this, although particularly necessary in any multi-source scenario such as multiple branches that reverse synchronize
+   * or physical consolidation.
+   */
+  targetScopeElementId?: Id64String;
+
+  /** Set to `true` if IVaultTransformer should not record its provenance.
+   * Provenance tracks a target element back to its corresponding source element and is essential for [[IVaultTransformer.process]] to work properly when [[IVaultTransformOptions.argsForProcessChanges]] are provided.
+   * Turning off IVaultTransformer provenance is really only relevant for producing snapshots or another one time transformations.
+   * @note See the [[includeSourceProvenance]] option for determining whether existing source provenance is cloned into the target.
+   * @note The default is `false` which means that new IVaultTransformer provenance will be recorded.
+   */
+  noProvenance?: boolean;
+
+  /** Set to `true` to clone existing source provenance into the target.
+   * @note See the [[noProvenance]] option for determining whether new IVaultTransformer provenance is recorded.
+   * @note The default is `false` which means that existing provenance in the source will not be carried into the target.
+   */
+  includeSourceProvenance?: boolean;
+
+  /** Flag that indicates that the target iVault was created by copying the source iVault.
+   * This is common when the target iVault is intended to be a *branch* of the source iVault.
+   * This *hint* is essential to properly initialize the source to target element mapping and to cause provenance to be recorded for future synchronizations.
+   * @note This *hint* is typically only set for the first synchronization after the iVault was copied since every other synchronization can utilize the provenance.
+   */
+  wasSourceIVaultCopiedToTarget?: boolean;
+
+  /** Flag that indicates whether or not the transformation process needs to consider the source geometry before cloning/transforming.
+   * For standard cases, it is not required to load the source GeometryStream in JavaScript since the cloning happens in native code.
+   * Also, the target GeometryStream will be available in JavaScript prior to insert.
+   * @note If the source geometry affects the class mapping or transformation logic, then this flag should be set to `true`. The default is `false`.
+   * @see [IVaultExporter.wantGeometry]($transformer)
+   */
+  loadSourceGeometry?: boolean;
+
+  /** Flag that indicates whether or not the transformation process should clone using binary geometry.
+   *
+   * Prefer to never to set this flag. If you need geometry changes, instead override [[IVaultTransformer.onTransformElement]]
+   * and provide an [ElementGeometryBuilderParams]($common) to the `elementGeometryBuilderParams`
+   * property of [ElementProps]($common) instead, it is much faster. You can read geometry during the transformation by setting the
+   * [[IVaultTransformOptions.loadSourceGeometry]] property to `true`, and passing that to a [GeometryStreamIterator]($common)
+   * @note this flag will be deprecated when `elementGeometryBuilderParams` is no longer an alpha API
+   *
+   * @default true
+   */
+  cloneUsingBinaryGeometry?: boolean;
+
+  /** Flag that indicates that ids should be preserved while copying elements to the target
+   * Intended only for pure-filter transforms, so you can keep parts of the source, while deleting others,
+   * and element ids are guaranteed to be the same, (other entity ids are not, however)
+   * @note The target must be empty.
+   * @note It is invalid to insert elements during the transformation, do not use this with transformers that try to.
+   * @note This does not preserve the ids of non-element entities such as link table relationships, or aspects, etc.
+   * @default false
+   * @beta
+   */
+  preserveElementIdsForFiltering?: boolean;
+
+  /** The behavior to use when an element reference (id) is found stored as a reference on an element in the source,
+   * but the referenced element does not actually exist in the source.
+   * It is possible to craft an iVault with dangling references/invalidated relationships by, e.g., deleting certain
+   * elements without fixing up references.
+   *
+   * @note "reject" will throw an error and reject the transformation upon finding this case.
+   * @note "ignore" passes the issue down to consuming applications, iVaults that have invalid element references
+   *       like this can cause errors, and you should consider adding custom logic in your transformer to remove the
+   *       reference depending on your use case.
+   * @default "reject"
+   * @beta
+   */
+  danglingReferencesBehavior?: "reject" | "ignore";
+
+  /** If defined, options to be supplied to [[IVaultImporter.optimizeGeometry]] by [[IVaultTransformer.process]]
+   * as a post-processing step to optimize the geometry in the iVault.
+   * @beta
+   */
+  optimizeGeometry?: OptimizeGeometryOptions;
+
+  /**
+   * force the insertion of external source aspects to provide provenance, even if there are federation guids
+   * in the source that we can use. This can make some operations (like transforming new elements or initializing forks)
+   * much slower due to needing to insert aspects, but prevents requiring change information for future merges.
+   * @default false
+   */
+  forceExternalSourceAspectProvenance?: boolean;
+
+  /**
+   * Do not detach the change cache that we build. Use this if you want to do multiple transformations to
+   * the same iVaults, to avoid the performance cost of reinitializing the change cache which can be
+   * expensive. You should only use this if you know the cache will be reused.
+   * @note You must detach the change cache yourself.
+   * @default false
+   */
+  noDetachChangeCache?: boolean;
+
+  /**
+   * Do not error out if a scoping ESA @see ExternalSourceAspectProps is found without a version or jsonProperties defined on that scoping ESA.
+   * If true, the version and jsonproperties will be properly set on the scoping ESA @see TargetScopeProvenanceJsonProps after the transformer is complete.
+   * These properties not being defined are a sign that this branching relationship was created with an older version of the transformer, and setting this option to 'unsafe-migrate' is not without risk.
+   * Depending on the state of the branching relationship at the time of using this option, some data may be lost.
+   * @note This should only need to be set to 'unsafe-migrate' at most once for a branching relationship. For future transformations on the branching relationship, the @see TargetScopeProvenanceJsonProps will be present.
+   * @default "reject"
+   */
+  branchRelationshipDataBehavior?: "unsafe-migrate" | "reject";
+
+  /**
+   * Skip propagating changes made to the root subject, dictionaryModel and IVaultImporter._realityDataSourceLinkPartitionStaticId (0xe)
+   * If it is set to false, changes to root elements are propagated, the root subject name gets changed and leads to the iVaultDb.name property being updated in .initializeiVaultDb
+   * @default true
+   */
+  skipPropagateChangesToRootElements?: boolean;
+
+  /**
+   * Arguments to use for the processing of changes. The args being defined or not defined will influence the behavior of @see [[IVaultTransformer.process]].
+   * @default undefined
+   */
+  argsForProcessChanges?: ProcessChangesOptions;
+
+  /**
+   * A flag that determines if spatial elements from the source db should be transformed if:
+   * source and target iVault GCS/CRS data is the same, but they have differing additional transforms
+   * source and target iVault ECEF locations differ
+   * @default false
+   */
+  tryAlignGeolocation?: boolean;
+}
+
+/**
+ * Data type for persisting change version information within provenance Scope ExternalSourceAspect.
+ * Additionally, forward synchronization version is stored in Scope aspect's 'version' field.
+ * @beta
+ */
+export interface TargetScopeProvenanceJsonProps {
+  /** An array of changeset indices to ignore when doing a reverse sync. This array gets appended to during a forward sync and cleared
+   *  during a reverse sync. Since a forward sync pushes a changeset to the branch db, the changeset pushed to the branch db
+   *  by the forward sync isn't considered part of the changes made on the branch db and therefore doesn't need to be synced back to master
+   *  during a forward sync.
+   */
+  pendingReverseSyncChangesetIndices: number[];
+  /** An array of changeset indices to ignore when doing a forward sync. This array gets appended to during a reverse sync and cleared
+   *  during a forward sync. Since a reverse sync pushes a changeset to the master db, the changeset pushed to the master db
+   *  by the reverse sync isn't considered part of the changes made on the master db and therefore doesn't need to be synced back to the branch
+   *  during a forward sync.
+   */
+  pendingSyncChangesetIndices: number[];
+  /** the latest changesetid/index reverse synced into master */
+  reverseSyncVersion: string;
+}
+
+/**
+ * Apply a function to each Id64 in a supported container type of Id64s.
+ * Currently only supports raw Id64String or RelatedElement-like objects containing an `id` property that is a Id64String,
+ * which matches the possible containers of references in [Element.requiredReferenceKeys]($backend).
+ * @internal
+ */
+function mapId64<R>(
+  idContainer: Id64String | RelatedElement | undefined,
+  func: (id: Id64String) => R
+): R[] {
+  const isId64String = (arg: any): arg is Id64String => {
+    const isString = typeof arg === "string";
+    assert(() => !isString || Id64.isValidId64(arg));
+    return isString;
+  };
+  const isRelatedElem = (arg: any): arg is RelatedElement =>
+    arg && typeof arg === "object" && "id" in arg;
+  const results = [];
+
+  // is a string if compressed or singular id64, but check for singular just checks if it's a string so do this test first
+  if (idContainer === undefined) {
+    // nothing
+  } else if (isId64String(idContainer)) {
+    results.push(func(idContainer));
+  } else if (isRelatedElem(idContainer)) {
+    results.push(func(idContainer.id));
+  } else {
+    throw Error(
+      [
+        `Id64 container '${JSON.stringify(idContainer)}' is unsupported.`,
+        "Currently only singular Id64 strings or prop-like objects containing an 'id' property are supported.",
+      ].join("\n")
+    );
+  }
+  return results;
+}
+
+/** Arguments you can pass to [[IVaultTransformer.initialize]]
+ * @beta
+ */
+export interface InitOptions {
+  /**
+   * Include changes from this changeset up through and including the current changeset.
+   * @note To form a range of versions to process, set `startChangeset` for the start (inclusive)
+   * of the desired range and open the source iVault as of the end (inclusive) of the desired range.
+   * @default the current changeset of the sourceDb, if undefined
+   */
+  startChangeset?: {
+    id?: string;
+    index?: number;
+  };
+}
+
+/**
+ * Arguments used during [[IVaultTransformer.process]] if provided in [[IVaultTransformOptions.argsForProcessChanges]].
+ * @beta
+ */
+export type ProcessChangesOptions = ExportChangesOptions & {
+  /** how to call saveChanges on the target. Must call targetDb.saveChanges, should not edit the iVault */
+  saveTargetChanges?: (transformer: IVaultTransformer) => Promise<void>;
+  /**
+   * The forward sync 'version' to set on the scoping ESA @see ExternalSourceAspectProps upon startup, if the version property on the scoping ESA is undefined or empty string.
+   * @note This option is not without risk! You must also set @see branchRelationshipDataBehavior to "unsafe-migrate".
+   * @note This value is ignored if the version property on the scoping ESA is NOT undefined or empty string.
+   * @default ""
+   */
+  unsafeFallbackSyncVersion?: string;
+  /**
+   * The reverse sync version to set on the scoping ESA @see TargetScopeProvenanceJsonProps upon startup, if the reverseSync property on the scoping ESA is undefined or empty string.
+   * @note This option is not without risk! You must also set @see branchRelationshipDataBehavior to "unsafe-migrate".
+   * @note This value is ignored if the reverseSyncVersion property on the scoping ESA is NOT undefined or empty string.
+   * @default ""
+   */
+  unsafeFallbackReverseSyncVersion?: string;
+  /**
+   * Do not check that process (with [[IVaultTransformOptions.argsForProcessChanges]] provided) is called from the next changeset index.
+   * This is an unsafe option (e.g. it can cause data loss in future branch operations)
+   * and you should not use it.
+   * @default false
+   */
+  ignoreMissingChangesetsInSynchronizations?: boolean;
+};
+
+type ChangeDataState =
+  | "uninited"
+  | "has-changes"
+  | "no-changes"
+  | "unconnected";
+
+/**
+ * @beta
+ */
+export interface RelationshipPropsForDelete {
+  id: Id64String;
+  classFullName: string;
+}
+
+/** Base class used to transform a source iVault into a different target iVault.
+ * @see [iVault Transformation and Data Exchange]($docs/learning/transformer/index.md), [IVaultExporter]($transformer), [IVaultImporter]($transformer)
+ * @beta
+ */
+export class IVaultTransformer extends IVaultExportHandler {
+  /** The IVaultExporter that will export from the source iVault. */
+  public readonly exporter: IVaultExporter;
+  /** The IVaultImporter that will import into the target iVault. */
+  public readonly importer: IVaultImporter;
+  /** The normally read-only source iVault.
+   * @note The source iVault will need to be read/write when provenance is being stored during a reverse synchronization.
+   */
+  public readonly sourceDb: IVaultDb;
+  /** The read/write target iVault. */
+  public readonly targetDb: IVaultDb;
+  /** The IVaultTransformContext for this IVaultTransformer. */
+  public readonly context: IVaultCloneContext;
+  /** The transform to be applied to the placement of spatial elements
+   * This transform should be applied when:
+   * - source and target db have different ECEF locations
+   * - source and target db have matching GCS/CRS data, but differing `geographicCoordinateSystem.additionalTransform.helmert2DWithZOffset`
+   * @note for ECEF transforms, this can only be used when source and target are linearly located ivaults
+   * @note for non linearly located ivaults, this transform will be a linear transform derived from Helmert Transforms from the src and target iVaults.
+   * @beta
+   */
+  private _linearSpatialTransform?: Transform;
+  private _syncTypeResolver!: SyncTypeResolver;
+  protected _provenanceManager!: ProvenanceManager;
+
+  /** The Id of the Element in the **target** iVault that represents the **source** repository as a whole and scopes its [ExternalSourceAspect]($backend) instances. */
+  public get targetScopeElementId(): Id64String {
+    return this._options.targetScopeElementId;
+  }
+
+  /** a set of elements for which source provenance will be explicitly tracked by ExternalSourceAspects */
+  protected _elementsWithExplicitlyTrackedProvenance = new Set<Id64String>();
+
+  protected _partiallyCommittedElementIds: Id64Set = new Set<Id64String>();
+  protected _partiallyCommittedAspectIds: Id64Set = new Set<Id64String>();
+
+  /**
+   * Tracks target element IDs that were remapped by Code during the current
+   * transformation pass. Used to prevent deletion of target elements that have been remapped
+   * to a new source element in the same pass (e.g., when a source element is deleted and a
+   * new one with the same properties is added, causing a remap to the same target).
+   */
+  private _targetElementIdsRemappedByCode: Id64Set = new Set<Id64String>();
+
+  /**
+   * Tracks target model IDs that were imported (inserted or updated) during the current
+   * transformation pass. Used to prevent deletion of target models that have been recreated
+   * in the same pass (e.g. when a partition element is recreated with a new model).
+   */
+  private _targetModelsImportedInCurrentTransform: Id64Set =
+    new Set<Id64String>();
+
+  /** the options that were used to initialize this transformer */
+  private readonly _options: MarkRequired<
+    IVaultTransformOptions,
+    "targetScopeElementId" | "danglingReferencesBehavior"
+  >;
+  private _changesetRanges: [number, number][] | undefined = undefined;
+
+  /**
+   * Set if the transformer is being used to perform the provenance initialization step of a fork initialization.
+   * In general don't use the transformer for that, prefer [[BranchProvenanceInitializer.initializeBranchProvenance]]
+   */
+  private _isProvenanceInitTransform?: boolean;
+
+  /** The element classes that are considered to define provenance in the iVault */
+  public static get provenanceElementClasses(): (typeof Entity)[] {
+    return ProvenanceManager.provenanceElementClasses;
+  }
+
+  /** The element aspect classes that are considered to define provenance in the iVault */
+  public static get provenanceElementAspectClasses(): (typeof Entity)[] {
+    return ProvenanceManager.provenanceElementAspectClasses;
+  }
+
+  /** Construct a new IVaultTransformer
+   * @param source Specifies the source IVaultExporter or the source IVaultDb that will be used to construct the source IVaultExporter.
+   * @param target Specifies the target IVaultImporter or the target IVaultDb that will be used to construct the target IVaultImporter.
+   * @param options The options that specify how the transformation should be done.
+   */
+  public constructor(
+    source: IVaultDb | IVaultExporter,
+    target: IVaultDb | IVaultImporter,
+    options?: IVaultTransformOptions
+  ) {
+    super();
+    // initialize IVaultTransformOptions
+    this._options = {
+      ...options,
+      // non-falsy defaults
+      cloneUsingBinaryGeometry: options?.cloneUsingBinaryGeometry ?? true,
+      targetScopeElementId:
+        options?.targetScopeElementId ?? IVault.rootSubjectId,
+      danglingReferencesBehavior:
+        options?.danglingReferencesBehavior ?? "reject",
+      branchRelationshipDataBehavior:
+        options?.branchRelationshipDataBehavior ?? "reject",
+      skipPropagateChangesToRootElements:
+        options?.skipPropagateChangesToRootElements ?? true,
+      tryAlignGeolocation: options?.tryAlignGeolocation ?? false,
+    };
+    // check if authorization client is defined
+    if (IVaultHost.authorizationClient === undefined) {
+      Logger.logWarning(
+        loggerCategory,
+        "Authorization client is not set in IVaultHost. If the transformer needs an accessToken, then it will fail."
+      );
+    }
+    this._isProvenanceInitTransform = this._options
+      .wasSourceIVaultCopiedToTarget
+      ? true
+      : undefined;
+    // initialize exporter and sourceDb
+    if (source instanceof IVaultDb) {
+      this.exporter = new IVaultExporter(source);
+    } else {
+      this.exporter = source;
+    }
+    this.sourceDb = this.exporter.sourceDb;
+    this.exporter.registerHandler(this);
+    this.exporter.wantGeometry = options?.loadSourceGeometry ?? false; // optimization to not load source GeometryStreams by default
+    if (!this._options.includeSourceProvenance) {
+      // clone provenance from the source iVault into the target iVault?
+      IVaultTransformer.provenanceElementClasses.forEach((cls) =>
+        this.exporter.excludeElementClass(cls.classFullName)
+      );
+      IVaultTransformer.provenanceElementAspectClasses.forEach((cls) =>
+        this.exporter.excludeElementAspectClass(cls.classFullName)
+      );
+    }
+    this.exporter.excludeElementAspectClass(ChannelRootAspect.classFullName); // Channel boundaries within the source iVault are not relevant to the target iVault
+    this.exporter.excludeElementAspectClass("BisCore:TextAnnotationData"); // This ElementAspect is auto-created by the BisCore:TextAnnotation2d/3d element handlers
+    // initialize importer and targetDb
+    if (target instanceof IVaultDb) {
+      this.importer = new IVaultImporter(target, {
+        preserveElementIdsForFiltering:
+          this._options.preserveElementIdsForFiltering,
+        skipPropagateChangesToRootElements:
+          this._options.skipPropagateChangesToRootElements,
+      });
+    } else {
+      this.importer = target;
+      this.validateSharedOptionsMatch();
+    }
+    this.targetDb = this.importer.targetDb;
+    // create the IVaultCloneContext, it must be initialized later
+    this.context = new IVaultCloneContext(this.sourceDb, this.targetDb);
+
+    // this internal is guaranteed stable for just transformer usage
+    /* eslint-disable @szewtwin/no-internal */
+    if (("codeValueBehavior" in this.sourceDb) as any) {
+      (this.sourceDb as any).codeValueBehavior = "exact";
+      (this.targetDb as any).codeValueBehavior = "exact";
+    }
+    /* eslint-enable @szewtwin/no-internal */
+    this._syncTypeResolver = new SyncTypeResolver(
+      this.context,
+      this._options.targetScopeElementId,
+      !!this._isProvenanceInitTransform,
+      !!this._options.argsForProcessChanges
+    );
+    this._provenanceManager = new ProvenanceManager(
+      this._options.targetScopeElementId,
+      this._options,
+      this._syncTypeResolver
+    );
+    if (this._options.tryAlignGeolocation) {
+      if (
+        this.sourceDb.geographicCoordinateSystem ||
+        this.targetDb.geographicCoordinateSystem
+      ) {
+        Logger.logTrace(
+          loggerCategory,
+          "Aligning Additional transforms between ivaults due to ivaults containing GeographicCoordinateSystem data"
+        );
+        this._linearSpatialTransform =
+          this.calculateTransformFromHelmertTransforms();
+      } else if (this.sourceDb.ecefLocation && this.targetDb.ecefLocation) {
+        Logger.logTrace(
+          loggerCategory,
+          "Aligning ECEF Location's between ivaults due to ivaults not containing GeographicCoordinateSystem data"
+        );
+        this._linearSpatialTransform = this.calculateEcefTransform();
+      } else
+        Logger.logTrace(
+          loggerCategory,
+          "No Geolcation data to align, both GCS and ECEF are undefined"
+        );
+    }
+  }
+
+  /** validates that the importer set on the transformer has the same values for its shared options as the transformer.
+   *  @note This expects that the importer is already set on the transformer.
+   */
+  private validateSharedOptionsMatch() {
+    if (
+      Boolean(this._options.preserveElementIdsForFiltering) !==
+      this.importer.options.preserveElementIdsForFiltering
+    ) {
+      const errMessage =
+        "A custom importer was passed as a target but its 'preserveElementIdsForFiltering' option is out of sync with the transformer's option.";
+      throw new Error(errMessage);
+    }
+    if (
+      Boolean(this._options.skipPropagateChangesToRootElements) !==
+      this.importer.options.skipPropagateChangesToRootElements
+    ) {
+      const errMessage =
+        "A custom importer was passed as a target but its 'skipPropagateChangesToRootElements' option is out of sync with the transformer's option.";
+      throw new Error(errMessage);
+    }
+  }
+
+  /** Dispose any native resources associated with this IVaultTransformer. */
+  public dispose(): void {
+    Logger.logTrace(loggerCategory, "dispose()");
+    this.context[Symbol.dispose]();
+  }
+
+  /** Log current settings that affect IVaultTransformer's behavior. */
+  private logSettings(): void {
+    Logger.logInfo(
+      TransformerLoggerCategory.IVaultExporter,
+      `this.exporter.visitElements=${this.exporter.visitElements}`
+    );
+    Logger.logInfo(
+      TransformerLoggerCategory.IVaultExporter,
+      `this.exporter.visitRelationships=${this.exporter.visitRelationships}`
+    );
+    Logger.logInfo(
+      TransformerLoggerCategory.IVaultExporter,
+      `this.exporter.wantGeometry=${this.exporter.wantGeometry}`
+    );
+    Logger.logInfo(
+      TransformerLoggerCategory.IVaultExporter,
+      `this.exporter.wantSystemSchemas=${this.exporter.wantSystemSchemas}`
+    );
+    Logger.logInfo(
+      TransformerLoggerCategory.IVaultExporter,
+      `this.exporter.wantTemplateModels=${this.exporter.wantTemplateModels}`
+    );
+    Logger.logInfo(
+      loggerCategory,
+      `this.targetScopeElementId=${this.targetScopeElementId}`
+    );
+    Logger.logInfo(
+      loggerCategory,
+      `this._noProvenance=${this._options.noProvenance}`
+    );
+    Logger.logInfo(
+      loggerCategory,
+      `this._includeSourceProvenance=${this._options.includeSourceProvenance}`
+    );
+    Logger.logInfo(
+      loggerCategory,
+      `this._cloneUsingBinaryGeometry=${this._options.cloneUsingBinaryGeometry}`
+    );
+    Logger.logInfo(
+      loggerCategory,
+      `this._wasSourceIVaultCopiedToTarget=${this._options.wasSourceIVaultCopiedToTarget}`
+    );
+    Logger.logInfo(
+      TransformerLoggerCategory.IVaultImporter,
+      `this.importer.autoExtendProjectExtents=${JSON.stringify(
+        this.importer.options.autoExtendProjectExtents
+      )}`
+    );
+    Logger.logInfo(
+      TransformerLoggerCategory.IVaultImporter,
+      `this.importer.simplifyElementGeometry=${this.importer.options.simplifyElementGeometry}`
+    );
+  }
+
+  /**
+   * Previously the transformer would insert provenance always pointing to the "target" relationship.
+   * It should (and now by default does) instead insert provenance pointing to the provenanceSource
+   * SEE: https://github.com/szewTwin/ivault-transformer/issues/54
+   * This exists only to facilitate testing that the transformer can handle the older, flawed method
+   */
+  private _forceOldRelationshipProvenanceMethod = false;
+
+  /** Create an ExternalSourceAspectProps in a standard way for an Element in an iVault --> iVault transformation. */
+  public async initElementProvenance(
+    sourceElementId: Id64String,
+    targetElementId: Id64String
+  ): Promise<ExternalSourceAspectProps> {
+    return this._provenanceManager.initElementProvenance(
+      sourceElementId,
+      targetElementId
+    );
+  }
+
+  /** the changeset in the scoping element's source version found for this transformation
+   * @note the version depends on whether this is a reverse synchronization or not, as
+   * it is stored separately for both synchronization directions.
+   * @note empty string and -1 for changeset and index if it has never been transformed
+   * @note empty string and -1 for changeset and index if it was transformed before federation guid update (pre 1.x) and @see [[IVaultTransformOptions.branchRelationshipDataBehavior]] === "unsafe-migrate".
+   * @throws if the version is not found in a preexisting scope aspect and @see [[IVaultTransformOptions.branchRelationshipDataBehavior]] !== "unsafe-migrate"
+   */
+  protected async getSynchronizationVersion(): Promise<ChangesetIndexAndId> {
+    return this._provenanceManager.getSynchronizationVersion();
+  }
+
+  /**
+   * @returns provenance scope aspect if it exists in the provenanceDb.
+   * Provenance scope aspect is created and inserted into provenanceDb when [[initScopeProvenance]] is invoked.
+   */
+  protected async tryGetProvenanceScopeAspect(): Promise<
+    ExternalSourceAspect | undefined
+  > {
+    return this._provenanceManager.tryGetProvenanceScopeAspect();
+  }
+
+  /**
+   * Make sure there are no conflicting other scope-type external source aspects on the *target scope element*,
+   * If there are none at all, insert one, then this must be a first synchronization.
+   */
+  protected async initScopeProvenance(): Promise<void> {
+    return this._provenanceManager.initScopeProvenance();
+  }
+
+  /**
+   * Get the IVaultDb where provenance (ExternalSourceAspects) is stored.
+   * This will be targetDb except when it is a reverse synchronization, in which case it will be sourceDb.
+   */
+  public async getProvenanceDb(): Promise<IVaultDb> {
+    return (await this.getIsReverseSynchronization())
+      ? this.sourceDb
+      : this.targetDb;
+  }
+
+  /**
+   * Get whether this is a reverse synchronization.
+   */
+  public async getIsReverseSynchronization(): Promise<boolean> {
+    return (await this._syncTypeResolver.getSyncType()) === "reverse";
+  }
+
+  /**
+   * Get whether this is a forward synchronization.
+   */
+  public async getIsForwardSynchronization(): Promise<boolean> {
+    return (await this._syncTypeResolver.getSyncType()) === "forward";
+  }
+
+  /**
+   * Updates the synchronization version on the scope ESA.
+   */
+  public async updateSynchronizationVersion({
+    initializeReverseSyncVersion = false,
+  } = {}) {
+    return this._provenanceManager.updateSynchronizationVersion({
+      initializeReverseSyncVersion,
+      sourceChangeDataState: this._sourceChangeDataState,
+    });
+  }
+
+  /** Returns `true` if *brute force* delete detections should be run.
+   * @note This is only called if [[IVaultTransformOptions.forceExternalSourceAspectProvenance]] option is true
+   * @note Not relevant for [[process]] when [[IVaultTransformOptions.argsForProcessChanges]] are provided and change history is known.
+   */
+  protected async shouldDetectDeletes(): Promise<boolean> {
+    return (await this._syncTypeResolver.getSyncType()) === "not-sync";
+  }
+
+  /** Transform the specified sourceElement into ElementProps for the target iVault.
+   * @param sourceElement The Element from the source iVault to transform.
+   * @returns ElementProps for the target iVault.
+   * @note A subclass can override this method to provide custom transform behavior.
+   * @note This can be called more than once for an element in arbitrary order, so it should not have side-effects.
+   */
+  public async onTransformElement(
+    sourceElement: Element
+  ): Promise<ElementProps> {
+    Logger.logTrace(
+      loggerCategory,
+      `onTransformElement(${
+        sourceElement.id
+      }) "${sourceElement.getDisplayLabel()}"`
+    );
+    const targetElementProps: ElementProps = await this.context.cloneElement(
+      sourceElement,
+      { binaryGeometry: this._options.cloneUsingBinaryGeometry }
+    );
+    // Special case: source element is the root subject
+    if (sourceElement.id === IVault.rootSubjectId) {
+      const targetElementId: string = this.context.findTargetElementId(
+        sourceElement.id
+      );
+      // When remapping rootSubject from source to non root subject in target, the code.scope gets remapped incorrectly.
+      // This is because the rootSubject has no parent and its code.scope is unique in that it is the id of itself.
+      // For all other subjects which do have parents the code.scope and its parent should be in agreement.
+      if (
+        targetElementId !== Id64.invalid &&
+        targetElementId !== IVault.rootSubjectId
+      ) {
+        const targetElement =
+          this.targetDb.elements.getElement(targetElementId);
+        targetElementProps.parent =
+          targetElement.parent ?? targetElementProps.parent;
+        targetElementProps.code.scope = targetElement.code.scope;
+      }
+    }
+    if (sourceElement instanceof Subject) {
+      if (targetElementProps.jsonProperties?.Subject?.Job) {
+        // don't propagate source channels into target (legacy bridge case)
+        targetElementProps.jsonProperties.Subject.Job = undefined;
+      }
+    }
+
+    if (
+      this._linearSpatialTransform !== undefined &&
+      sourceElement instanceof GeometricElement3d
+    ) {
+      // can check the sourceElement since this IVaultTransformer does not remap classes
+      const placement = Placement3d.fromJSON(
+        (targetElementProps as GeometricElement3dProps).placement
+      );
+
+      if (placement.isValid) {
+        placement.multiplyTransform(this._linearSpatialTransform);
+        (targetElementProps as GeometricElement3dProps).placement = placement;
+      }
+    }
+    return targetElementProps;
+  }
+
+  /**
+   * Calculate the transform between two ECEF locations
+   * @param srcDb
+   * @param targetDb
+   * @returns Transform that converts relative coordinates in the source iVault to relative coordinates in the target iVault.
+   * @note This can only be used if both source and target iVaults are linearly located
+   */
+  public calculateEcefTransform(): Transform | undefined {
+    const srcEcefLoc = this.sourceDb.ecefLocation;
+    const targetEcefLoc = this.targetDb.ecefLocation;
+
+    if (srcEcefLoc === undefined || targetEcefLoc === undefined) {
+      throw new IVaultError(
+        IVaultStatus.NoGeoLocation,
+        "Both source and target ECEF locations must be defined to calculate the transform."
+      );
+    }
+    if (srcEcefLoc.getTransform().isAlmostEqual(targetEcefLoc.getTransform())) {
+      Logger.logTrace(
+        loggerCategory,
+        "ECEF data is already aligned. No spatial transforms needed."
+      );
+      return undefined;
+    }
+
+    const srcSpatialToECEF = srcEcefLoc.getTransform(); // converts relative to ECEF in relation to source
+    const targetECEFToSpatial = targetEcefLoc.getTransform().inverse(); // converts ECEF to relative in relation to target
+    if (!targetECEFToSpatial) {
+      throw new IVaultError(
+        IVaultStatus.NoGeoLocation,
+        "Failed to invert target ECEF transform."
+      );
+    }
+    const ecefTransform =
+      targetECEFToSpatial.multiplyTransformTransform(srcSpatialToECEF); // chain both transforms
+
+    return ecefTransform;
+  }
+
+  public static convertHelmertToTransform(
+    helmert: Helmert2DWithZOffset | undefined
+  ): Transform {
+    if (!helmert) {
+      return Transform.createIdentity();
+    }
+
+    const rotationXY = Matrix3d.createRotationAroundAxisIndex(
+      AxisIndex.Z,
+      Angle.createDegrees(helmert?.rotDeg)
+    );
+    rotationXY.scaleColumnsInPlace(helmert.scale, helmert.scale, 1.0);
+    const translation = Vector3d.create(
+      helmert.translationX,
+      helmert.translationY,
+      helmert.translationZ
+    );
+    const helmertTransform = Transform.createRefs(translation, rotationXY);
+
+    return helmertTransform;
+  }
+
+  public calculateTransformFromHelmertTransforms(): Transform | undefined {
+    if (
+      this.sourceDb.geographicCoordinateSystem?.horizontalCRS === undefined ||
+      this.sourceDb.geographicCoordinateSystem?.verticalCRS === undefined
+    ) {
+      throw new IVaultError(
+        IVaultStatus.BadRequest,
+        "Source iVault does not have a geographic coordinate system defined."
+      );
+    }
+    if (
+      this.targetDb.geographicCoordinateSystem?.horizontalCRS === undefined ||
+      this.targetDb.geographicCoordinateSystem.verticalCRS === undefined
+    ) {
+      throw new IVaultError(
+        IVaultStatus.BadRequest,
+        "Target iVault does not have a geographic coordinate system defined."
+      );
+    }
+    if (
+      !this.sourceDb.geographicCoordinateSystem.horizontalCRS.equals(
+        this.targetDb.geographicCoordinateSystem.horizontalCRS
+      ) ||
+      !this.sourceDb.geographicCoordinateSystem.verticalCRS.equals(
+        this.targetDb.geographicCoordinateSystem.verticalCRS
+      )
+    ) {
+      throw new IVaultError(
+        IVaultStatus.MismatchGcs,
+        "Source and target geographic coordinate systems must match to calculate the spatial transform."
+      );
+    }
+    if (
+      this.sourceDb.geographicCoordinateSystem.additionalTransform ===
+      this.targetDb.geographicCoordinateSystem.additionalTransform
+    ) {
+      Logger.logTrace(
+        loggerCategory,
+        "Geolocation data is already aligned. No spatial transforms needed."
+      );
+      return undefined;
+    }
+
+    const srcScale =
+      this.sourceDb.geographicCoordinateSystem.additionalTransform
+        ?.helmert2DWithZOffset?.scale ?? 1;
+    const targetScale =
+      this.targetDb.geographicCoordinateSystem.additionalTransform
+        ?.helmert2DWithZOffset?.scale ?? 1;
+
+    if (srcScale !== targetScale) {
+      throw new IVaultError(
+        IVaultStatus.MismatchGcs,
+        "Spatial transform is non rigid. Source and target Helmert transforms must have the same scale to calculate a rigid spatial transform."
+      );
+    }
+
+    const srcTransform = IVaultTransformer.convertHelmertToTransform(
+      this.sourceDb.geographicCoordinateSystem.additionalTransform
+        ?.helmert2DWithZOffset
+    ); // moves elements to where src helmert transform would move them at render time
+    const targetTransformInv = IVaultTransformer.convertHelmertToTransform(
+      this.targetDb.geographicCoordinateSystem.additionalTransform
+        ?.helmert2DWithZOffset
+    ).inverse(); // negates target helmert transform that is applied at render time
+
+    if (!targetTransformInv) {
+      throw new IVaultError(
+        IVaultStatus.NoGeoLocation,
+        "Failed to invert target Helmert transform."
+      );
+    }
+
+    const combinedTransform =
+      targetTransformInv.multiplyTransformTransform(srcTransform);
+
+    return combinedTransform;
+  }
+
+  // if undefined, it can be initialized by calling [[this.processChangesets]]
+  private _deletedSourceRelationshipData?: Map<
+    Id64String,
+    {
+      sourceIdInTarget?: Id64String;
+      targetIdInTarget?: Id64String;
+      classFullName: Id64String;
+      relId?: Id64String;
+      provenanceAspectId?: Id64String;
+    }
+  > = undefined;
+
+  /** Returns true if a change within sourceElement is detected.
+   * @param sourceElement The Element from the source iVault
+   * @note A subclass can override this method to provide custom change detection behavior.
+   */
+  protected hasElementChanged(sourceElement: Element): boolean {
+    const sourceDbChanges = this.exporter.sourceDbChanges;
+    return (
+      !sourceDbChanges || // are we processing changes? if not then element is considered as changed
+      sourceDbChanges.element.insertIds.has(sourceElement.id) ||
+      sourceDbChanges.element.updateIds.has(sourceElement.id)
+    );
+  }
+
+  protected async completePartiallyCommittedElements() {
+    for (const sourceElementId of this._partiallyCommittedElementIds) {
+      const sourceElement = this.sourceDb.elements.getElement({
+        id: sourceElementId,
+        wantGeometry: this.exporter.wantGeometry,
+        wantBRepData: this.exporter.wantGeometry,
+      });
+      const targetId = this.context.findTargetElementId(sourceElementId);
+      if (Id64.isInvalid(targetId)) {
+        throw new Error(
+          `source-target element mapping not found for element "${sourceElementId}" when completing partially committed elements. This is a bug.`
+        );
+      }
+
+      const targetProps = await this.onTransformElement(sourceElement);
+      // eslint-disable-next-line @typescript-eslint/no-deprecated
+      this.targetDb.elements.updateElement({ ...targetProps, id: targetId });
+    }
+  }
+
+  protected async completePartiallyCommittedAspects() {
+    for (const sourceAspectId of this._partiallyCommittedAspectIds) {
+      const sourceAspect = this.sourceDb.elements.getAspect(sourceAspectId);
+      const targetAspectId = this.context.findTargetAspectId(sourceAspectId);
+      if (Id64.isInvalid(targetAspectId)) {
+        throw new Error(
+          `source-target aspect mapping not found for aspect "${sourceAspectId}" when completing partially committed aspects. This is a bug.`
+        );
+      }
+      const targetAspectProps =
+        await this.onTransformElementAspect(sourceAspect);
+      // eslint-disable-next-line @typescript-eslint/no-deprecated
+      this.targetDb.elements.updateAspect({
+        ...targetAspectProps,
+        id: targetAspectId,
+      });
+    }
+  }
+
+  private async doAllReferencesExistInTarget(entity: ConcreteEntity) {
+    let allReferencesExist = true;
+    for (const referenceId of entity.getReferenceIds()) {
+      const referencedEntityId = EntityReferences.toId64(referenceId);
+      if (
+        referencedEntityId === IVault.repositoryModelId ||
+        referencedEntityId === IVault.dictionaryId ||
+        referencedEntityId === "0xe"
+      ) {
+        continue;
+      }
+
+      if (
+        allReferencesExist &&
+        !EntityReferences.isValid(
+          await this.context.findTargetEntityId(referenceId)
+        )
+      ) {
+        // if we care about references existing then we cannot return early and must check all other references.
+        if (this._options.danglingReferencesBehavior === "ignore") {
+          return false;
+        }
+        allReferencesExist = false;
+      }
+
+      if (this._options.danglingReferencesBehavior === "reject") {
+        await this.assertReferenceExistsInSource(referenceId, entity);
+      }
+    }
+    return allReferencesExist;
+  }
+
+  private async assertReferenceExistsInSource(
+    referenceId: EntityReference,
+    entity: ConcreteEntity
+  ) {
+    const referencedExistsInSource = await EntityUnifier.exists(this.sourceDb, {
+      entityReference: referenceId,
+    });
+    if (!referencedExistsInSource) {
+      throw new IVaultError(
+        IVaultStatus.NotFound,
+        [
+          `Found a reference to an element "${referenceId}" that doesn't exist while looking for references of "${entity.id}".`,
+          "This must have been caused by an upstream application that changed the iVault.",
+          "You can set the IVaultTransformOptions.danglingReferencesBehavior option to 'ignore' to ignore this,",
+          `and the referenceId found on "${entity.id}" will not be carried over to corresponding target element.`,
+        ].join("\n")
+      );
+    }
+  }
+
+  /** Cause the specified Element and its child Elements (if applicable) to be exported from the source iVault and imported into the target iVault.
+   * @param sourceElementId Identifies the Element from the source iVault to import.
+   * @note This method is called from [[process]], so it only needs to be called directly when processing a subset of an iVault.
+   */
+  public async processElement(sourceElementId: Id64String): Promise<void> {
+    await this.initialize();
+    if (sourceElementId === IVault.rootSubjectId) {
+      throw new IVaultError(
+        IVaultStatus.BadRequest,
+        "The root Subject should not be directly imported"
+      );
+    }
+    return this.exporter.exportElement(sourceElementId);
+  }
+
+  /** Import child elements into the target IVaultDb
+   * @param sourceElementId Import the child elements of this element in the source IVaultDb.
+   * @note This method is called from [[process]], so it only needs to be called directly when processing a subset of an iVault.
+   */
+  public async processChildElements(
+    sourceElementId: Id64String
+  ): Promise<void> {
+    await this.initialize();
+    return this.exporter.exportChildElements(sourceElementId);
+  }
+
+  /** Override of [IVaultExportHandler.shouldExportElement]($transformer) that is called to determine if an element should be exported from the source iVault.
+   * @note Reaching this point means that the element has passed the standard exclusion checks in IVaultExporter.
+   */
+  public override async shouldExportElement(
+    _sourceElement: Element
+  ): Promise<boolean> {
+    return true;
+  }
+
+  /**
+   * If they haven't been already, import all of the required references
+   * @internal do not call, override or implement this, it will be removed
+   */
+  public override async preExportElement(
+    sourceElement: Element
+  ): Promise<void> {
+    if (!this.hasElementChanged(sourceElement)) {
+      Logger.logTrace(
+        loggerCategory,
+        `Skipping unchanged element (${sourceElement.id}, ${sourceElement.getDisplayLabel()}).`
+      );
+      return;
+    }
+
+    const elemClass = sourceElement.constructor as typeof Element;
+
+    const unresolvedReferences = elemClass.requiredReferenceKeys
+      .map((referenceKey) => {
+        const idContainer = sourceElement[referenceKey as keyof Element];
+        const referenceType =
+          elemClass.requiredReferenceKeyTypeMap[referenceKey];
+        // For now we just consider all required references to be elements (as they are in biscore), and do not support
+        // entities that refuse to be inserted without a different kind of entity (e.g. aspect or relationship) first being inserted
+        assert(
+          referenceType === ConcreteEntityTypes.Element ||
+            referenceType === ConcreteEntityTypes.Model
+        );
+        return mapId64(idContainer, (id) => {
+          if (id === Id64.invalid || id === IVault.rootSubjectId)
+            return undefined; // not allowed to directly export the root subject
+          if (!this.context.isBetweenIVaults) {
+            // Within the same iVault, can use existing DefinitionElements without remapping
+            // This is relied upon by the TemplateModelCloner
+            // TODO: extract this out to only be in the TemplateModelCloner
+            const asDefinitionElem = this.sourceDb.elements.tryGetElement(
+              id,
+              DefinitionElement
+            );
+            if (
+              asDefinitionElem &&
+              !(asDefinitionElem instanceof RecipeDefinitionElement)
+            ) {
+              this.context.remapElement(id, id);
+            }
+          }
+          return id;
+        }).filter(
+          (
+            sourceReferenceId: Id64String | undefined
+          ): sourceReferenceId is Id64String => {
+            if (sourceReferenceId === undefined) return false;
+            const referenceInTargetId =
+              this.context.findTargetElementId(sourceReferenceId);
+            const isInTarget = Id64.isValid(referenceInTargetId);
+            return !isInTarget;
+          }
+        );
+      })
+      .flat();
+
+    if (unresolvedReferences.length > 0) {
+      for (const reference of unresolvedReferences) {
+        const processState = await this.getElemTransformState(reference);
+        // must export element first
+        if (processState.needsElemImport)
+          await this.exporter.exportElement(reference);
+        if (processState.needsModelImport)
+          await this.exporter.exportModel(reference);
+      }
+    }
+  }
+
+  private async getElemTransformState(elementId: Id64String) {
+    const dbHasModel = async (db: IVaultDb, id: Id64String) => {
+      const maybeModelId = EntityReferences.fromEntityType(
+        id,
+        ConcreteEntityTypes.Model
+      );
+      return EntityUnifier.exists(db, { entityReference: maybeModelId });
+    };
+    const isSubModeled = await dbHasModel(this.sourceDb, elementId);
+    const idOfElemInTarget = this.context.findTargetElementId(elementId);
+    const isElemInTarget = Id64.invalid !== idOfElemInTarget;
+    const needsModelImport =
+      isSubModeled &&
+      (!isElemInTarget || !(await dbHasModel(this.targetDb, idOfElemInTarget)));
+    return { needsElemImport: !isElemInTarget, needsModelImport };
+  }
+
+  // In szewTwin js 5.x Elements.queryElementIdByCode() uses Code class to query id:
+  // https://github.com/szewTwin/szewtwinjs-core/blob/master/core/backend/src/IVaultDb.ts#L2779
+  // Code class constructor trims white spaces from code value.
+  // Custom implementation of queryElementIdByCode() was added to support querying elements with code values that have trailing whitespaces.
+  // It mimicks 4.x implementation: https://github.com/szewTwin/szewtwinjs-core/blob/9c8b394ec3878a39764be81f928fd8b0b9115d31/core/backend/src/IVaultDb.ts#L1882
+  private async queryElementIdByCode(
+    iVault: IVaultDb,
+    code: Required<CodeProps>
+  ): Promise<Id64String | undefined> {
+    if (Id64.isInvalid(code.spec)) throw new Error("Invalid CodeSpec");
+
+    if (code.value === undefined) throw new Error("Invalid Code");
+
+    const query =
+      "SELECT DMInstanceId FROM BisCore:Element WHERE CodeSpec.Id=? AND CodeScope.Id=? AND CodeValue=?";
+    const queryBinder = new QueryBinder()
+      .bindId(1, code.spec)
+      .bindId(2, Id64.fromString(code.scope))
+      .bindString(3, code.value);
+    const queryReader = iVault.createQueryReader(query, queryBinder, {
+      usePrimaryConn: true,
+    });
+    return (await queryReader.step()) ? queryReader.current[0] : undefined;
+  }
+
+  /** Override of [IVaultExportHandler.onExportElement]($transformer) that imports an element into the target iVault when it is exported from the source iVault.
+   * This override calls [[onTransformElement]] and then [IVaultImporter.importElement]($transformer) to update the target iVault.
+   */
+  public override async onExportElement(sourceElement: Element): Promise<void> {
+    let targetElementId: Id64String = Id64.invalid;
+    let targetElementProps: ElementProps;
+    if (this._options.wasSourceIVaultCopiedToTarget) {
+      targetElementId = sourceElement.id;
+      targetElementProps =
+        this.targetDb.elements.getElementProps(targetElementId);
+    } else {
+      targetElementId = this.context.findTargetElementId(sourceElement.id);
+      targetElementProps = await this.onTransformElement(sourceElement);
+    }
+
+    // if an existing remapping was not yet found, check by FederationGuid
+    if (
+      this.context.isBetweenIVaults &&
+      !Id64.isValid(targetElementId) &&
+      sourceElement.federationGuid !== undefined
+    ) {
+      targetElementId =
+        this.targetDb.elements.getIdFromFederationGuid(
+          sourceElement.federationGuid
+        ) ?? Id64.invalid;
+      if (Id64.isValid(targetElementId))
+        this.context.remapElement(sourceElement.id, targetElementId); // record that the targetElement was found
+    }
+
+    // if an existing remapping was not yet found, check by Code as long as the CodeScope is valid (invalid means a missing reference so not worth checking)
+    if (
+      !Id64.isValidId64(targetElementId) &&
+      Id64.isValidId64(targetElementProps.code.scope)
+    ) {
+      // respond the same way to undefined code value as the @see Code class, but don't use that class because it trims
+      // whitespace from the value, and there are iVaults out there with untrimmed whitespace that we ought not to trim
+      targetElementProps.code.value = targetElementProps.code.value ?? "";
+      const maybeTargetElementId = await this.queryElementIdByCode(
+        this.targetDb,
+        targetElementProps.code as Required<CodeProps>
+      );
+      if (undefined !== maybeTargetElementId) {
+        const maybeTargetElem =
+          this.targetDb.elements.getElement(maybeTargetElementId);
+        if (
+          maybeTargetElem.classFullName === targetElementProps.classFullName
+        ) {
+          // ensure code remapping doesn't change the target class
+          targetElementId = maybeTargetElementId;
+          this.context.remapElement(sourceElement.id, targetElementId); // record that the targetElement was found by Code
+          this._targetElementIdsRemappedByCode.add(targetElementId);
+        } else {
+          targetElementProps.code = Code.createEmpty(); // clear out invalid code
+        }
+      }
+    }
+
+    if (!this.hasElementChanged(sourceElement)) {
+      Logger.logTrace(
+        loggerCategory,
+        `Skipping unchanged element (${sourceElement.id}, ${sourceElement.getDisplayLabel()}).`
+      );
+      return;
+    }
+
+    if (!(await this.doAllReferencesExistInTarget(sourceElement))) {
+      this._partiallyCommittedElementIds.add(sourceElement.id);
+    }
+
+    // targetElementId will be valid (indicating update) or undefined (indicating insert)
+    targetElementProps.id = Id64.isValid(targetElementId)
+      ? targetElementId
+      : undefined;
+
+    if (this._options.preserveElementIdsForFiltering) {
+      const isValid = Id64.isValid(targetElementId);
+      if (isValid && targetElementId !== sourceElement.id) {
+        // Element found with different id
+        throw new Error(
+          `Element id(${sourceElement.id}) cannot be preserved. Found a different mapping(${targetElementId}) from source element`
+        );
+      } else if (isValid && targetElementId === sourceElement.id) {
+        // targetElementId is valid (indicating update)
+        this.importer.markElementToUpdateDuringPreserveIds(sourceElement.id);
+      } else if (!isValid) {
+        const sourceInTargetElemProps =
+          this.targetDb.elements.tryGetElementProps(sourceElement.id);
+
+        // if we don't find mapping for source element in target(invalid) but another element with source id exists in target
+        if (sourceInTargetElemProps) {
+          // Element id is already taken by another element
+          throw new Error(
+            `Element id(${sourceElement.id}) cannot be preserved. An unrelated element in the target already uses id: ${sourceElement.id}`
+          );
+        } else {
+          // Element id in target is available to be remapped
+          targetElementProps.id = sourceElement.id;
+        }
+      }
+    }
+
+    if (!this._options.wasSourceIVaultCopiedToTarget) {
+      await this.importer.importElement(targetElementProps); // don't need to import if iVault was copied
+    }
+
+    if (targetElementProps.id === undefined) {
+      throw new IVaultError(
+        IVaultStatus.BadElement,
+        "targetElementProps.id should be assigned by importElement"
+      );
+    }
+    this.context.remapElement(sourceElement.id, targetElementProps.id);
+
+    // the transformer does not currently 'split' or 'join' any elements, therefore, it does not
+    // insert external source aspects because federation guids are sufficient for this.
+    // Other transformer subclasses must insert the appropriate aspect (as provided by a TBD API)
+    // when splitting/joining elements
+    // physical consolidation is an example of a 'joining' transform
+    // FIXME: verify at finalization time that we don't lose provenance on new elements
+    // FIXME: make public and improve `initElementProvenance` API for usage by consolidators
+    const provenanceDb = await this.getProvenanceDb();
+    if (!this._options.noProvenance) {
+      const provenance:
+        | string
+        | MarkRequired<ExternalSourceAspectProps, "id">
+        | undefined =
+        this._options.forceExternalSourceAspectProvenance ||
+        this._elementsWithExplicitlyTrackedProvenance.has(sourceElement.id)
+          ? undefined
+          : sourceElement.federationGuid;
+      if (!provenance) {
+        const aspectProps = await this.initElementProvenance(
+          sourceElement.id,
+          targetElementProps.id
+        );
+        const foundEsaProps =
+          await ProvenanceManager.queryScopeExternalSourceAspect(
+            provenanceDb,
+            aspectProps
+          );
+        if (foundEsaProps === undefined)
+          // eslint-disable-next-line @typescript-eslint/no-deprecated
+          aspectProps.id = provenanceDb.elements.insertAspect(aspectProps);
+        else {
+          // Since initElementProvenance sets a property 'version' on the aspectProps that we wish to persist in the provenanceDb, only grab the id from the foundEsaProps.
+          aspectProps.id = foundEsaProps.aspectId;
+          // eslint-disable-next-line @typescript-eslint/no-deprecated
+          provenanceDb.elements.updateAspect(aspectProps);
+        }
+      }
+    }
+  }
+
+  /** Override of [IVaultExportHandler.onDeleteElement]($transformer) that is called when [IVaultExporter]($transformer) detects that an Element has been deleted from the source iVault.
+   * This override propagates the delete to the target iVault via [IVaultImporter.deleteElement]($transformer).
+   */
+  public override async onDeleteElement(
+    sourceElementId: Id64String
+  ): Promise<void> {
+    const targetElementId: Id64String =
+      this.context.findTargetElementId(sourceElementId);
+    if (Id64.isValidId64(targetElementId)) {
+      // Skip deletion if new / updated source element was remapped to it by Code during
+      // this transformation pass.
+      if (!this._targetElementIdsRemappedByCode.has(targetElementId)) {
+        await this.importer.deleteElement(targetElementId);
+      }
+    }
+  }
+
+  /** Override of [IVaultExportHandler.onExportModel]($transformer) that is called when a Model should be exported from the source iVault.
+   * This override calls [[onTransformModel]] and then [IVaultImporter.importModel]($transformer) to update the target iVault.
+   */
+  public override async onExportModel(sourceModel: Model): Promise<void> {
+    if (
+      this._options.skipPropagateChangesToRootElements &&
+      IVault.repositoryModelId === sourceModel.id
+    )
+      return; // The RepositoryModel should not be directly imported
+    const targetModeledElementId: Id64String = this.context.findTargetElementId(
+      sourceModel.id
+    );
+    // there can only be one repositoryModel per database, so ignore the repo model on remapped subjects
+    const isRemappedRootSubject =
+      sourceModel.id === IVault.repositoryModelId &&
+      targetModeledElementId !== sourceModel.id;
+    if (isRemappedRootSubject) return;
+    const targetModelProps: ModelProps = this.onTransformModel(
+      sourceModel,
+      targetModeledElementId
+    );
+    await this.importer.importModel(targetModelProps);
+    if (targetModelProps.id === undefined) {
+      throw new IVaultError(
+        IVaultStatus.BadModel,
+        "targetModelProps.id should be assigned by now"
+      );
+    }
+
+    this._targetModelsImportedInCurrentTransform.add(targetModelProps.id);
+  }
+
+  /** Override of [IVaultExportHandler.onDeleteModel]($transformer) that is called when [IVaultExporter]($transformer) detects that a [Model]($backend) has been deleted from the source iVault. */
+  public override async onDeleteModel(
+    sourceModelId: Id64String
+  ): Promise<void> {
+    // It is possible and apparently occasionally sensical to delete a model without deleting its underlying element.
+    // - If only the model is deleted, [[initFromExternalSourceAspects]] will have already remapped the underlying element since it still exists.
+    // - If both were deleted, [[remapDeletedSourceEntities]] will find and remap the deleted element making this operation valid
+    const targetModelId: Id64String =
+      this.context.findTargetElementId(sourceModelId);
+
+    if (!Id64.isValidId64(targetModelId)) return;
+
+    // This handles cases where model with a partition element was remapped to
+    //  new element by code value after recreation.
+    if (
+      this._targetElementIdsRemappedByCode.has(targetModelId) &&
+      this._targetModelsImportedInCurrentTransform.has(targetModelId)
+    ) {
+      Logger.logTrace(
+        loggerCategory,
+        `Skipping delete operation for model (source id: ${sourceModelId}) because the target model (id: ${targetModelId}) was remapped by Code and re-imported during this transformation pass.`
+      );
+      return;
+    }
+
+    const sql = `
+      SELECT 1
+      FROM bis.DefinitionPartition
+      WHERE DMInstanceId=:targetModelId
+      UNION
+      SELECT 1
+      FROM bis.DefinitionContainer
+      WHERE DMInstanceId=:targetModelId
+    `;
+
+    if (this.exporter.sourceDbChanges?.element.deleteIds.has(sourceModelId)) {
+      const params = new QueryBinder().bindId("targetModelId", targetModelId);
+      const reader = this.targetDb.createQueryReader(sql, params, {
+        usePrimaryConn: true,
+      });
+      const isDefinitionPartition = await reader.step();
+
+      if (isDefinitionPartition) {
+        // Skipping model deletion because model's partition will also be deleted.
+        // It expects that model will be present and will fail if it's missing.
+        // Model will be deleted when its partition will be deleted.
+        return;
+      }
+    }
+
+    try {
+      await this.importer.deleteModel(targetModelId);
+    } catch (error) {
+      const isDeletionProhibitedErr =
+        error instanceof IVaultError &&
+        (error.errorNumber === IVaultStatus.DeletionProhibited ||
+          error.errorNumber === IVaultStatus.ForeignKeyConstraint);
+      if (!isDeletionProhibitedErr) throw error;
+
+      // Transformer tries to delete models before it deletes elements. Definition models cannot be deleted unless all of their modeled elements are deleted first.
+      // In case a definition model needs to be deleted we need to skip it for now and register its modeled partition for deletion.
+      // The `OnDeleteElement` calls `DeleteElementTree` Which deletes the model together with its partition after deleting all of the modeled elements.
+      this.scheduleModeledPartitionDeletion(sourceModelId);
+    }
+  }
+
+  /** Schedule modeled partition deletion */
+  private scheduleModeledPartitionDeletion(sourceModelId: Id64String): void {
+    const deletedElements = this.exporter.sourceDbChanges?.element
+      .deleteIds as Set<Id64String>;
+    if (!deletedElements.has(sourceModelId)) {
+      deletedElements.add(sourceModelId);
+    }
+  }
+
+  /** Cause the model container, contents, and sub-models to be exported from the source iVault and imported into the target iVault.
+   * @param sourceModeledElementId Import this [Model]($backend) from the source IVaultDb.
+   * @note This method is called from [[process]], so it only needs to be called directly when processing a subset of an iVault.
+   */
+  public async processModel(sourceModeledElementId: Id64String): Promise<void> {
+    await this.initialize();
+    return this.exporter.exportModel(sourceModeledElementId);
+  }
+
+  /** Cause the model contents to be exported from the source iVault and imported into the target iVault.
+   * @param sourceModelId Import the contents of this model from the source IVaultDb.
+   * @param targetModelId Import into this model in the target IVaultDb. The target model must exist prior to this call.
+   * @param elementClassFullName Optional classFullName of an element subclass to limit import query against the source model.
+   * @note This method is called from [[process]], so it only needs to be called directly when processing a subset of an iVault.
+   */
+  public async processModelContents(
+    sourceModelId: Id64String,
+    targetModelId: Id64String,
+    elementClassFullName: string = Element.classFullName
+  ): Promise<void> {
+    await this.initialize();
+    this.targetDb.models.getModel(targetModelId); // throws if Model does not exist
+    this.context.remapElement(sourceModelId, targetModelId); // set remapping in case importModelContents is called directly
+    return this.exporter.exportModelContents(
+      sourceModelId,
+      elementClassFullName
+    );
+  }
+
+  /** Cause all sub-models that recursively descend from the specified Subject to be exported from the source iVault and imported into the target iVault. */
+  private async processSubjectSubModels(
+    sourceSubjectId: Id64String
+  ): Promise<void> {
+    await this.initialize();
+    // import DefinitionModels first
+    const childDefinitionPartitionSql = `SELECT DMInstanceId FROM ${DefinitionPartition.classFullName} WHERE Parent.Id=:subjectId`;
+    const params = new QueryBinder().bindId("subjectId", sourceSubjectId);
+    for await (const row of this.sourceDb.createQueryReader(
+      childDefinitionPartitionSql,
+      params,
+      { usePrimaryConn: true }
+    )) {
+      await this.processModel(row.id);
+    }
+
+    // import other partitions next
+    const childPartitionSql = `SELECT DMInstanceId FROM ${InformationPartitionElement.classFullName} WHERE Parent.Id=:subjectId`;
+    for await (const row of this.sourceDb.createQueryReader(
+      childPartitionSql,
+      params,
+      { usePrimaryConn: true }
+    )) {
+      const modelId: Id64String = row.id;
+      const model: Model = this.sourceDb.models.getModel(modelId);
+      if (!(model instanceof DefinitionModel)) {
+        await this.processModel(modelId);
+      }
+    }
+
+    // recurse into child Subjects
+    const childSubjectSql = `SELECT DMInstanceId FROM ${Subject.classFullName} WHERE Parent.Id=:subjectId`;
+    for await (const row of this.sourceDb.createQueryReader(
+      childSubjectSql,
+      params,
+      { usePrimaryConn: true }
+    )) {
+      await this.processSubjectSubModels(row.id);
+    }
+  }
+
+  /** Transform the specified sourceModel into ModelProps for the target iVault.
+   * @param sourceModel The Model from the source iVault to be transformed.
+   * @param targetModeledElementId The transformed Model will *break down* or *detail* this Element in the target iVault.
+   * @returns ModelProps for the target iVault.
+   * @note A subclass can override this method to provide custom transform behavior.
+   */
+  public onTransformModel(
+    sourceModel: Model,
+    targetModeledElementId: Id64String
+  ): ModelProps {
+    const targetModelProps: ModelProps = sourceModel.toJSON();
+    // don't directly edit deep object since toJSON performs a shallow clone
+    targetModelProps.modeledElement = {
+      ...targetModelProps.modeledElement,
+      id: targetModeledElementId,
+    };
+    targetModelProps.id = targetModeledElementId;
+    if (targetModelProps.parentModel === undefined) {
+      throw new IVaultError(
+        IVaultStatus.BadElement,
+        "targetElementProps must have a defined parentModel"
+      );
+    }
+    targetModelProps.parentModel = this.context.findTargetElementId(
+      targetModelProps.parentModel
+    );
+    return targetModelProps;
+  }
+
+  // FIXME<MIKE>: is this necessary when manually using low level transform APIs? (document if so)
+  private async finalizeTransformation() {
+    this.importer.finalize();
+    await this.updateSynchronizationVersion({
+      initializeReverseSyncVersion: this._isProvenanceInitTransform,
+    });
+
+    // TODO: ignore if we remove change cache usage
+    if (!this._options.noDetachChangeCache) {
+      if (ChangeSummaryManager.isChangeCacheAttached(this.sourceDb))
+        ChangeSummaryManager.detachChangeCache(this.sourceDb);
+    }
+
+    // this internal is guaranteed stable for just transformer usage
+    /* eslint-disable @szewtwin/no-internal */
+    if (("codeValueBehavior" in this.sourceDb) as any) {
+      (this.sourceDb as any).codeValueBehavior = "trim-unicode-whitespace";
+      (this.targetDb as any).codeValueBehavior = "trim-unicode-whitespace";
+    }
+    /* eslint-enable @szewtwin/no-internal */
+  }
+
+  /** Imports all relationships that subclass from the specified base class.
+   * @param baseRelClassFullName The specified base relationship class.
+   * @note This method is called from [[process]], so it only needs to be called directly when processing a subset of an iVault.
+   */
+  public async processRelationships(
+    baseRelClassFullName: string
+  ): Promise<void> {
+    await this.initialize();
+    return this.exporter.exportRelationships(baseRelClassFullName);
+  }
+
+  /** Override of [IVaultExportHandler.shouldExportRelationship]($transformer) that is called to determine if a [Relationship]($backend) should be exported.
+   * @note Reaching this point means that the relationship has passed the standard exclusion checks in [IVaultExporter]($transformer).
+   */
+  public override async shouldExportRelationship(
+    _sourceRelationship: Relationship
+  ): Promise<boolean> {
+    return true;
+  }
+
+  /** Override of [IVaultExportHandler.onExportRelationship]($transformer) that imports a relationship into the target iVault when it is exported from the source iVault.
+   * This override calls [[onTransformRelationship]] and then [IVaultImporter.importRelationship]($transformer) to update the target iVault.
+   */
+  public override async onExportRelationship(
+    sourceRelationship: Relationship
+  ): Promise<void> {
+    const sourceFedGuid = this.sourceDb.elements.getFederationGuidFromId(
+      sourceRelationship.sourceId
+    );
+    const targetFedGuid = this.sourceDb.elements.getFederationGuidFromId(
+      sourceRelationship.targetId
+    );
+
+    const targetRelationshipProps =
+      this.onTransformRelationship(sourceRelationship);
+    const targetRelationshipInstanceId = await this.importer.importRelationship(
+      targetRelationshipProps
+    );
+
+    const provenanceDb = await this.getProvenanceDb();
+    if (
+      !this._options.noProvenance &&
+      Id64.isValid(targetRelationshipInstanceId)
+    ) {
+      const needsEsaProvenance = !this._options
+        .forceExternalSourceAspectProvenance
+        ? !(sourceFedGuid && targetFedGuid)
+        : true;
+      if (needsEsaProvenance) {
+        const aspectProps =
+          await this._provenanceManager.initRelationshipProvenance(
+            sourceRelationship.id,
+            targetRelationshipInstanceId,
+            this._forceOldRelationshipProvenanceMethod
+          );
+        const foundEsaProps =
+          await ProvenanceManager.queryScopeExternalSourceAspect(
+            provenanceDb,
+            aspectProps
+          );
+        // onExportRelationship doesn't need to call updateAspect if esaProps were found, because relationship provenance doesn't have the same concept of a version as element provenance (which uses last mod time on the elements).
+        if (undefined === foundEsaProps) {
+          // eslint-disable-next-line @typescript-eslint/no-deprecated
+          aspectProps.id = provenanceDb.elements.insertAspect(aspectProps);
+        }
+      }
+    }
+  }
+
+  /** Override of [IVaultExportHandler.onDeleteRelationship]($transformer) that is called when [IVaultExporter]($transformer) detects that a [Relationship]($backend) has been deleted from the source iVault.
+   * This override propagates the delete to the target iVault via [IVaultImporter.deleteRelationship]($transformer).
+   */
+  public override async onDeleteRelationship(
+    sourceRelInstanceId: Id64String
+  ): Promise<void> {
+    nodeAssert(
+      this._deletedSourceRelationshipData,
+      "should be defined at initialization by now"
+    );
+
+    const deletedRelData =
+      this._deletedSourceRelationshipData.get(sourceRelInstanceId);
+    if (!deletedRelData) {
+      // this can occur if both the source and target deleted it
+      Logger.logWarning(
+        loggerCategory,
+        "tried to delete a relationship that wasn't in change data"
+      );
+      return;
+    }
+
+    const id =
+      deletedRelData.relId ??
+      this.targetDb.relationships.tryGetInstance(deletedRelData.classFullName, {
+        sourceId: deletedRelData.sourceIdInTarget,
+        targetId: deletedRelData.targetIdInTarget,
+      } as SourceAndTarget)?.id;
+    if (id) {
+      await this.importer.deleteRelationship({
+        id,
+        classFullName: deletedRelData.classFullName,
+      });
+    }
+
+    if (deletedRelData.provenanceAspectId) {
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-deprecated
+        (await this.getProvenanceDb()).elements.deleteAspect(
+          deletedRelData.provenanceAspectId
+        );
+      } catch (error: any) {
+        // This aspect may no longer exist if it was deleted at some other point during the transformation. This is fine.
+        if (error.errorNumber === IVaultStatus.NotFound) return;
+        throw error;
+      }
+    }
+  }
+
+  private _yieldManager = new YieldManager();
+
+  /** Transform the specified sourceRelationship into RelationshipProps for the target iVault.
+   * @param sourceRelationship The Relationship from the source iVault to be transformed.
+   * @returns RelationshipProps for the target iVault.
+   * @note A subclass can override this method to provide custom transform behavior.
+   */
+  protected onTransformRelationship(
+    sourceRelationship: Relationship
+  ): RelationshipProps {
+    const targetRelationshipProps: RelationshipProps =
+      sourceRelationship.toJSON();
+    targetRelationshipProps.sourceId = this.context.findTargetElementId(
+      sourceRelationship.sourceId
+    );
+    targetRelationshipProps.targetId = this.context.findTargetElementId(
+      sourceRelationship.targetId
+    );
+    // TODO: move to cloneRelationship in IVaultCloneContext
+    // eslint-disable-next-line @typescript-eslint/no-deprecated
+    sourceRelationship.forEach((propertyName: string, property: Property) => {
+      if (property.isPrimitive() && "Id" === property.extendedTypeName) {
+        (targetRelationshipProps as any)[DMJsNames.toJsName(propertyName)] =
+          this.context.findTargetElementId(
+            sourceRelationship.asAny[DMJsNames.toJsName(propertyName)]
+          );
+      }
+    });
+    return targetRelationshipProps;
+  }
+
+  public override async shouldExportElementAspect(
+    aspect: ElementAspect
+  ): Promise<boolean> {
+    // This override is needed to ensure that aspects are not exported if their element is not exported.
+    // This is needed in case DetachedExportElementAspectsStrategy is used.
+    return this.context.findTargetElementId(aspect.element.id) !== Id64.invalid;
+  }
+
+  /** Override of [IVaultExportHandler.onExportElementUniqueAspect]($transformer) that imports an ElementUniqueAspect into the target iVault when it is exported from the source iVault.
+   * This override calls [[onTransformElementAspect]] and then [IVaultImporter.importElementUniqueAspect]($transformer) to update the target iVault.
+   */
+  public override async onExportElementUniqueAspect(
+    sourceAspect: ElementUniqueAspect
+  ): Promise<void> {
+    const targetAspectProps = await this.onTransformElementAspect(sourceAspect);
+    if (!(await this.doAllReferencesExistInTarget(sourceAspect))) {
+      this._partiallyCommittedAspectIds.add(sourceAspect.id);
+    }
+    const targetId =
+      await this.importer.importElementUniqueAspect(targetAspectProps);
+    this.context.remapElementAspect(sourceAspect.id, targetId);
+  }
+
+  /** Override of [IVaultExportHandler.onExportElementMultiAspects]($transformer) that imports ElementMultiAspects into the target iVault when they are exported from the source iVault.
+   * This override calls [[onTransformElementAspect]] for each ElementMultiAspect and then [IVaultImporter.importElementMultiAspects]($transformer) to update the target iVault.
+   * @note ElementMultiAspects are handled as a group to make it easier to differentiate between insert, update, and delete.
+   */
+  public override async onExportElementMultiAspects(
+    sourceAspects: ElementMultiAspect[]
+  ): Promise<void> {
+    // Transform source ElementMultiAspects into target ElementAspectProps
+    const targetAspectPropsArray = sourceAspects.map(async (srcA) =>
+      this.onTransformElementAspect(srcA)
+    );
+    for (const a of sourceAspects) {
+      if (!(await this.doAllReferencesExistInTarget(a))) {
+        this._partiallyCommittedAspectIds.add(a.id);
+      }
+    }
+    // const targetAspectsToImport = targetAspectPropsArray.filter((targetAspect, i) => hasEntityChanged(sourceAspects[i], targetAspect));
+    const targetIds = await this.importer.importElementMultiAspects(
+      await Promise.all(targetAspectPropsArray),
+      (a) => {
+        const isExternalSourceAspectFromTransformer =
+          a instanceof ExternalSourceAspect &&
+          a.scope?.id === this.targetScopeElementId;
+        return (
+          !this._options.includeSourceProvenance ||
+          !isExternalSourceAspectFromTransformer
+        );
+      }
+    );
+    for (let i = 0; i < targetIds.length; ++i) {
+      this.context.remapElementAspect(sourceAspects[i].id, targetIds[i]);
+    }
+  }
+
+  /** Transform the specified sourceElementAspect into ElementAspectProps for the target iVault.
+   * @param sourceElementAspect The ElementAspect from the source iVault to be transformed.
+   * @returns ElementAspectProps for the target iVault.
+   * @note A subclass can override this method to provide custom transform behavior.
+   */
+  protected async onTransformElementAspect(
+    sourceElementAspect: ElementAspect
+  ): Promise<ElementAspectProps> {
+    const targetElementAspectProps =
+      await this.context.cloneElementAspect(sourceElementAspect);
+    return targetElementAspectProps;
+  }
+
+  /** The directory where schemas will be exported, a random temporary directory */
+  protected _schemaExportDir: string = path.join(
+    KnownLocations.tmpdir,
+    Guid.createValue()
+  );
+
+  /** Override of [IVaultExportHandler.shouldExportSchema]($transformer) that is called to determine if a schema should be exported
+   * @note the default behavior doesn't import schemas older than those already in the target
+   */
+  public override async shouldExportSchema(
+    schemaKey: DMSchemaMetaData.SchemaKey
+  ): Promise<boolean> {
+    const versionInTarget = this.targetDb.querySchemaVersion(schemaKey.name);
+    if (versionInTarget === undefined) return true;
+    return Semver.gt(
+      `${schemaKey.version.read}.${schemaKey.version.write}.${schemaKey.version.minor}`,
+      Schema.toSemverString(versionInTarget)
+    );
+  }
+
+  private _longNamedSchemasMap = new Map<string, string>();
+
+  /** Override of [IVaultExportHandler.onExportSchema]($transformer) that serializes a schema to disk for [[processSchemas]] to import into
+   * the target iVault when it is exported from the source iVault.
+   * @returns {Promise<ExportSchemaResult>} Although the type is possibly void for backwards compatibility of subclasses,
+   *                                        `IVaultTransformer.onExportSchema` always returns an[[IVaultExportHandler.ExportSchemaResult]]
+   *                                        with a defined `schemaPath` property, for subclasses to know where the schema was written.
+   *                                        Schemas are *not* guaranteed to be written to [[IVaultTransformer._schemaExportDir]] by a
+   *                                        known pattern derivable from the schema's name, so you must use this to find it.
+   */
+  public override async onExportSchema(
+    schema: DMSchemaMetaData.Schema
+  ): Promise<void | ExportSchemaResult> {
+    const ext = ".dmschema.xml";
+    let schemaFileName = schema.name + ext;
+    // many file systems have a max file-name/path-segment size of 255, so we workaround that on all systems
+    const systemMaxPathSegmentSize = 255;
+    // windows usually has a limit for the total path length of 260
+    const windowsMaxPathLimit = 260;
+    if (
+      schemaFileName.length > systemMaxPathSegmentSize ||
+      path.join(this._schemaExportDir, schemaFileName).length >=
+        windowsMaxPathLimit
+    ) {
+      // this name should be well under 255 bytes
+      // ( 100 + (Number.MAX_SAFE_INTEGER.toString().length = 16) + (ext.length = 13) ) = 129 which is less than 255
+      // You'd have to be past 2**53-1 (Number.MAX_SAFE_INTEGER) long named schemas in order to hit decimal formatting,
+      // and that's on the scale of at least petabytes. `Map.prototype.size` shouldn't return floating points, and even
+      // if they do they're in scientific notation, size bound and contain no invalid windows path chars
+      schemaFileName = `${schema.name.slice(0, 100)}${
+        this._longNamedSchemasMap.size
+      }${ext}`;
+      nodeAssert(
+        schemaFileName.length <= systemMaxPathSegmentSize,
+        "Schema name was still long. This is a bug."
+      );
+      this._longNamedSchemasMap.set(schema.name, schemaFileName);
+    }
+    this.sourceDb.exportSchema({
+      schemaName: schema.name,
+      outputDirectory: this._schemaExportDir,
+      outputFileName: schemaFileName,
+    });
+    return { schemaPath: path.join(this._schemaExportDir, schemaFileName) };
+  }
+
+  private _makeLongNameResolvingSchemaCtx(): DMSchemaXmlContext {
+    const result = new DMSchemaXmlContext();
+    result.setSchemaLocater((key) => {
+      const match = this._longNamedSchemasMap.get(key.name);
+      if (match !== undefined) return path.join(this._schemaExportDir, match);
+      return undefined;
+    });
+    return result;
+  }
+
+  /** Cause all schemas to be exported from the source iVault and imported into the target iVault.
+   * @note For performance reasons, it is recommended that [IVaultDb.saveChanges]($backend) be called after `processSchemas` is complete.
+   * It is more efficient to process *data* changes after the schema changes have been saved.
+   */
+  public async processSchemas(): Promise<void> {
+    // we do not need to initialize for this since no entities are exported
+    try {
+      IVaultJsFs.mkdirSync(this._schemaExportDir);
+      this._longNamedSchemasMap.clear();
+      await this.exporter.exportSchemas();
+      const exportedSchemaFiles = IVaultJsFs.readdirSync(this._schemaExportDir);
+      if (exportedSchemaFiles.length === 0) return;
+      const schemaFullPaths = exportedSchemaFiles.map((s) =>
+        path.join(this._schemaExportDir, s)
+      );
+      const maybeLongNameResolvingSchemaCtx =
+        this._longNamedSchemasMap.size > 0
+          ? this._makeLongNameResolvingSchemaCtx()
+          : undefined;
+      return await this.targetDb.importSchemas(schemaFullPaths, {
+        dmSchemaXmlContext: maybeLongNameResolvingSchemaCtx,
+      });
+    } finally {
+      IVaultJsFs.removeSync(this._schemaExportDir);
+      this._longNamedSchemasMap.clear();
+    }
+  }
+
+  /** Cause all fonts to be exported from the source iVault and imported into the target iVault.
+   * @note This method is called from [[process]], so it only needs to be called directly when processing a subset of an iVault.
+   */
+  public async processFonts(): Promise<void> {
+    // we do not need to initialize for this since no entities are exported
+    await this.initialize();
+    return this.exporter.exportFonts();
+  }
+
+  /** Override of [IVaultExportHandler.onExportFont]($transformer) that imports a font into the target iVault when it is exported from the source iVault. */
+  public override async onExportFont(
+    font: FontProps,
+    _isUpdate: boolean | undefined
+  ): Promise<void> {
+    this.context.importFont(font.id);
+  }
+
+  /** Cause all CodeSpecs to be exported from the source iVault and imported into the target iVault.
+   * @note This method is called from [[process]], so it only needs to be called directly when processing a subset of an iVault.
+   */
+  public async processCodeSpecs(): Promise<void> {
+    await this.initialize();
+    return this.exporter.exportCodeSpecs();
+  }
+
+  /** Cause a single CodeSpec to be exported from the source iVault and imported into the target iVault.
+   * @note This method is called from [[process]], so it only needs to be called directly when processing a subset of an iVault.
+   */
+  public async processCodeSpec(codeSpecName: string): Promise<void> {
+    await this.initialize();
+    return this.exporter.exportCodeSpecByName(codeSpecName);
+  }
+
+  /** Override of [IVaultExportHandler.shouldExportCodeSpec]($transformer) that is called to determine if a CodeSpec should be exported from the source iVault.
+   * @note Reaching this point means that the CodeSpec has passed the standard exclusion checks in [IVaultExporter]($transformer).
+   */
+  public override async shouldExportCodeSpec(
+    _sourceCodeSpec: CodeSpec
+  ): Promise<boolean> {
+    return true;
+  }
+
+  /** Override of [IVaultExportHandler.onExportCodeSpec]($transformer) that imports a CodeSpec into the target iVault when it is exported from the source iVault. */
+  public override async onExportCodeSpec(
+    sourceCodeSpec: CodeSpec
+  ): Promise<void> {
+    this.context.importCodeSpec(sourceCodeSpec.id);
+  }
+
+  /** Recursively import all Elements and sub-Models that descend from the specified Subject */
+  public async processSubject(
+    sourceSubjectId: Id64String,
+    targetSubjectId: Id64String
+  ): Promise<void> {
+    await this.initialize();
+    this.sourceDb.elements.getElement(sourceSubjectId, Subject); // throws if sourceSubjectId is not a Subject
+    this.targetDb.elements.getElement(targetSubjectId, Subject); // throws if targetSubjectId is not a Subject
+    this.context.remapElement(sourceSubjectId, targetSubjectId);
+    await this.processChildElements(sourceSubjectId);
+    await this.processSubjectSubModels(sourceSubjectId);
+    await this.completePartiallyCommittedElements();
+    await this.completePartiallyCommittedAspects();
+  }
+
+  /** state to prevent reinitialization, @see [[initialize]] */
+  private _initialized = false;
+  private _sourceChangeDataState: ChangeDataState = "uninited";
+  /** length === 0 when _changeDataState = "no-change", length > 0 means "has-changes", otherwise undefined  */
+  private _csFileProps?: ChangesetFileProps[] = undefined;
+
+  /**
+   * Initialize prerequisites of processing, you must initialize with an [[InitOptions]] if you
+   * are intending to process changes. Callers may wish to explicitly call initialize if they need to execute code after initialize but before [[process]] is called.
+   * @note Called by all `process*` functions implicitly.
+   * Overriders must call `super.initialize()` first
+   */
+  public async initialize(): Promise<void> {
+    if (this._initialized) return;
+
+    await this.initScopeProvenance();
+
+    await this._tryInitChangesetData(this._options.argsForProcessChanges);
+    await this.context.initialize();
+
+    // need exporter initialized to do remapdeletedsourceentities.
+    await this.exporter.initialize(
+      await this.getExportInitOpts(this._options.argsForProcessChanges ?? {})
+    );
+
+    // Exporter must be initialized prior to processing changesets in order to properly handle entity recreations (an entity delete followed by an insert of that same entity).
+    await this.processChangesets();
+
+    this._initialized = true;
+  }
+
+  /**
+   * Reads all the changeset files in the private member of the transformer: _csFileProps
+   * and finds the corresponding target entity for any deleted source entities and remaps the sourceId to the targetId.
+   * This function returns early if csFileProps is undefined or is of length 0.
+   * @returns void
+   */
+  private async processChangesets(): Promise<void> {
+    await this._provenanceManager.forEachTrackedElement(
+      (sourceElementId: Id64String, targetElementId: Id64String) => {
+        this.context.remapElement(sourceElementId, targetElementId);
+      }
+    );
+    if (this.exporter.sourceDbChanges)
+      await this.addCustomChanges(this.exporter.sourceDbChanges);
+
+    if (this._csFileProps === undefined || this._csFileProps.length === 0) {
+      if (
+        this.exporter.sourceDbChanges === undefined ||
+        !this.exporter.sourceDbChanges.hasChanges
+      )
+        return;
+      // our sourcedbChanges aren't empty (probably due to someone adding custom changes), change our sourceChangeDataState to has-changes
+      if (this._sourceChangeDataState === "no-changes")
+        this._sourceChangeDataState = "has-changes";
+    }
+
+    const relationshipDMClassIdsToSkip = new Set<string>();
+    for await (const row of this.sourceDb.createQueryReader(
+      "SELECT DMInstanceId FROM DMDbMeta.DMClassDef where DMInstanceId IS (BisCore.ElementDrivesElement)",
+      undefined,
+      { usePrimaryConn: true }
+    )) {
+      relationshipDMClassIdsToSkip.add(row.DMInstanceId);
+    }
+    const relationshipDMClassIds = new Set<string>();
+    for await (const row of this.sourceDb.createQueryReader(
+      "SELECT DMInstanceId FROM DMDbMeta.DMClassDef where DMInstanceId IS (BisCore.ElementRefersToElements)",
+      undefined,
+      { usePrimaryConn: true }
+    )) {
+      relationshipDMClassIds.add(row.DMInstanceId);
+    }
+
+    // For later use when processing deletes.
+    const alreadyImportedElementInserts = new Set<Id64String>();
+    const alreadyImportedModelInserts = new Set<Id64String>();
+    this.exporter.sourceDbChanges?.element.insertIds.forEach(
+      (insertedSourceElementId) => {
+        const targetElementId = this.context.findTargetElementId(
+          insertedSourceElementId
+        );
+        if (Id64.isValid(targetElementId))
+          alreadyImportedElementInserts.add(targetElementId);
+      }
+    );
+    this.exporter.sourceDbChanges?.model.insertIds.forEach(
+      (insertedSourceModelId) => {
+        const targetModelId = this.context.findTargetElementId(
+          insertedSourceModelId
+        );
+        if (Id64.isValid(targetModelId))
+          alreadyImportedModelInserts.add(targetModelId);
+      }
+    );
+
+    this._deletedSourceRelationshipData = new Map();
+
+    for (const csFile of this._csFileProps ?? []) {
+      const csReader = SqliteChangesetReader.openFile({
+        fileName: csFile.pathname,
+        db: this.sourceDb,
+        disableSchemaCheck: true,
+      });
+      // eslint-disable-next-line @typescript-eslint/no-deprecated
+      const csAdaptor = new ChangesetDMAdaptor(csReader);
+      // eslint-disable-next-line @typescript-eslint/no-deprecated
+      const dmChangeUnifier = new PartialDMChangeUnifier(this.sourceDb);
+      while (csAdaptor.step()) {
+        dmChangeUnifier.appendFrom(csAdaptor);
+      }
+      // eslint-disable-next-line @typescript-eslint/no-deprecated
+      const changes: ChangedDMInstance[] = [...dmChangeUnifier.instances];
+
+      /** a map of element ids to this transformation scope's ESA data for that element, in case the ESA is deleted in the target */
+      // eslint-disable-next-line @typescript-eslint/no-deprecated
+      const elemIdToScopeEsa = new Map<Id64String, ChangedDMInstance>();
+      for (const change of changes) {
+        if (
+          change.DMClassId !== undefined &&
+          relationshipDMClassIdsToSkip.has(change.DMClassId)
+        )
+          continue;
+        const changeType: SqliteChangeOp | undefined = change.$meta?.op;
+        if (
+          changeType === "Deleted" &&
+          change?.$meta?.classFullName === ExternalSourceAspect.classFullName &&
+          change.Scope.Id === this.targetScopeElementId &&
+          change.Kind === ExternalSourceAspect.Kind.Element
+        ) {
+          elemIdToScopeEsa.set(change.Element.Id, change);
+        }
+      }
+      // Loop to process deletes.
+      for (const change of changes) {
+        const changeType: SqliteChangeOp | undefined = change.$meta?.op;
+        const dmClassId = change.DMClassId ?? change.$meta?.fallbackClassId;
+        if (dmClassId === undefined)
+          throw new Error(
+            `DMClassId was not found for id: ${change.DMInstanceId}! Table is : ${change?.$meta?.tables}`
+          );
+        if (changeType === undefined)
+          throw new Error(
+            `ChangeType was undefined for id: ${change.DMInstanceId}.`
+          );
+        if (
+          changeType !== "Deleted" ||
+          relationshipDMClassIdsToSkip.has(dmClassId)
+        )
+          continue;
+        await this.processDeletedOp(
+          change,
+          elemIdToScopeEsa,
+          relationshipDMClassIds.has(dmClassId ?? ""),
+          alreadyImportedElementInserts,
+          alreadyImportedModelInserts
+        );
+      }
+
+      csReader.close();
+    }
+    return;
+  }
+
+  /**
+   * This will be called when transformer is called with [[IVaultTransformOptions.argsForProcessChanges]] to process changes.
+   * It will be executed after changes in changesets are populated into `sourceDbChanges` and before data processing begins.
+   * Remap table between the source and target iVaults will be built at that time, meaning that functions like [[IVaultTransformer.context.findTargetElementId]] will return meaningful results.
+   * This function should be used to modify the `sourceDbChanges`, if necessary, using `add custom change` methods in [[ChangedInstanceIds]], such as [[ChangedInstanceIds.addCustomElementChange]], [[ChangedInstanceIds.addCustomModelChange]] and other.
+   * @param sourceDbChanges the ChangedInstanceIds already populated by the exporter with the changes in source changesets, if any, passed to the transformer.
+   * @note Its expected that this function be overridden by a subclass of transformer if it needs to modify sourceDbChanges.
+   */
+  protected async addCustomChanges(
+    _sourceDbChanges: ChangedInstanceIds
+  ): Promise<void> {}
+
+  /**
+   * Helper function for processChangesets. Remaps the id of element deleted found in the 'change' to an element in the targetDb.
+   * @param change the change to process, must be of changeType "Deleted"
+   * @param mapOfDeletedElemIdToScopeEsas a map of elementIds to changedDMInstances (which are ESAs). the elementId is not the id of the esa itself, but the elementid that the esa was stored on before the esa's deletion.
+   * All ESAs in this map are part of the transformer's scope / ESA data and are tracked in case the ESA is deleted in the target.
+   * @param isRelationship is relationship or not
+   * @param alreadyImportedElementInserts used to handle entity recreation and not delete already handled element inserts.
+   * @param alreadyImportedModelInserts used to handle entity recreation and not delete already handled model inserts.
+   * @returns void
+   */
+  private async processDeletedOp(
+    // eslint-disable-next-line @typescript-eslint/no-deprecated
+    change: ChangedDMInstance,
+    // eslint-disable-next-line @typescript-eslint/no-deprecated
+    mapOfDeletedElemIdToScopeEsas: Map<string, ChangedDMInstance>,
+    isRelationship: boolean,
+    alreadyImportedElementInserts: Set<Id64String>,
+    alreadyImportedModelInserts: Set<Id64String>
+  ) {
+    // we need a connected iVault with changes to remap elements with deletions
+    const notConnectedModel = this.sourceDb.szewTwinId === undefined;
+    const noChanges =
+      (await this.getSynchronizationVersion()).index ===
+        this.sourceDb.changeset.index &&
+      (this.exporter.sourceDbChanges === undefined ||
+        !this.exporter.sourceDbChanges.hasChanges);
+    if (notConnectedModel || noChanges) return;
+
+    /**
+     * if our ChangedDMInstance is in the provenanceDb, then we can use the ids we find in the ChangedDMInstance to query for ESAs.
+     * This is because the ESAs are stored on an element Id thats present in the provenanceDb.
+     */
+    const changeDataInProvenanceDb =
+      this.sourceDb === (await this.getProvenanceDb());
+
+    const getTargetIdFromSourceId = async (id: Id64String) => {
+      let identifierValue: string | undefined;
+      let element;
+      if (isRelationship) {
+        element = this.sourceDb.elements.tryGetElement(id);
+      }
+      const fedGuid = isRelationship
+        ? element?.federationGuid
+        : change.FederationGuid;
+      if (changeDataInProvenanceDb) {
+        // TODO: clarify what happens if there are multiple (e.g. elements were merged)
+        for await (const row of this.sourceDb.createQueryReader(
+          "SELECT esa.Identifier FROM bis.ExternalSourceAspect esa WHERE Scope.Id=:scopeId AND Kind=:kind AND Element.Id=:relatedElementId LIMIT 1",
+          QueryBinder.from([
+            this.targetScopeElementId,
+            ExternalSourceAspect.Kind.Element,
+            id,
+          ]),
+          { usePrimaryConn: true }
+        )) {
+          identifierValue = row.Identifier;
+        }
+        identifierValue =
+          identifierValue ?? mapOfDeletedElemIdToScopeEsas.get(id)?.Identifier;
+      }
+
+      // Check for targetId by an esa first
+      if (changeDataInProvenanceDb && identifierValue) {
+        const targetId = identifierValue;
+        return targetId;
+      }
+
+      // Check for targetId using sourceId's fedguid if we didn't find an esa.
+      if (fedGuid) {
+        const targetId =
+          this.targetDb.elements.getIdFromFederationGuid(fedGuid);
+        return targetId;
+      }
+      return undefined;
+    };
+
+    const changedInstanceId = change.DMInstanceId;
+    if (isRelationship) {
+      const sourceIdOfRelationshipInSource = change.SourceDMInstanceId;
+      const targetIdOfRelationshipInSource = change.TargetDMInstanceId;
+      const classFullName = change.$meta?.classFullName;
+
+      const sourceIdOfRelationshipInTarget = await getTargetIdFromSourceId(
+        sourceIdOfRelationshipInSource
+      );
+      const targetIdOfRelationshipInTarget = await getTargetIdFromSourceId(
+        targetIdOfRelationshipInSource
+      );
+      if (sourceIdOfRelationshipInTarget && targetIdOfRelationshipInTarget) {
+        this._deletedSourceRelationshipData?.set(changedInstanceId, {
+          classFullName: classFullName ?? "",
+          sourceIdInTarget: sourceIdOfRelationshipInTarget,
+          targetIdInTarget: targetIdOfRelationshipInTarget,
+        });
+      } else if (
+        this.sourceDb ===
+        (await this._provenanceManager.getProvenanceSourceDb())
+      ) {
+        const relProvenance =
+          await this._provenanceManager.queryProvenanceForRelationship(
+            changedInstanceId,
+            {
+              classFullName: classFullName ?? "",
+              sourceId: sourceIdOfRelationshipInSource,
+              targetId: targetIdOfRelationshipInSource,
+            }
+          );
+        if (relProvenance && relProvenance.relationshipId)
+          this._deletedSourceRelationshipData?.set(changedInstanceId, {
+            classFullName: classFullName ?? "",
+            relId: relProvenance.relationshipId,
+            provenanceAspectId: relProvenance.aspectId,
+          });
+      }
+    } else {
+      let targetId = await getTargetIdFromSourceId(changedInstanceId);
+      if (
+        targetId === undefined &&
+        this.sourceDb ===
+          (await this._provenanceManager.getProvenanceSourceDb())
+      ) {
+        targetId =
+          await this._provenanceManager.queryProvenanceForElement(
+            changedInstanceId
+          );
+      }
+      // since we are processing one changeset at a time, we can see local source deletes
+      // of entities that were never synced and can be safely ignored
+      const deletionNotInTarget = !targetId;
+      if (deletionNotInTarget) return;
+
+      if (targetId === undefined) {
+        throw new IVaultError(
+          IVaultStatus.BadElement,
+          "targetId should be acquired from source id or element provenance"
+        );
+      }
+
+      this.context.remapElement(changedInstanceId, targetId);
+      // If an entity insert and an entity delete both point to the same entity in target iVault, that means that entity was recreated.
+      // In such case an entity update will be triggered and we no longer need to delete the entity.
+      if (alreadyImportedElementInserts.has(targetId)) {
+        this.exporter.sourceDbChanges?.element.deleteIds.delete(
+          changedInstanceId
+        );
+      }
+      if (alreadyImportedModelInserts.has(targetId)) {
+        this.exporter.sourceDbChanges?.model.deleteIds.delete(
+          changedInstanceId
+        );
+      }
+    }
+  }
+
+  private async _tryInitChangesetData(args?: ProcessChangesOptions) {
+    if (
+      !args ||
+      this.sourceDb.szewTwinId === undefined ||
+      this.sourceDb.changeset.index === undefined
+    ) {
+      this._sourceChangeDataState = "unconnected";
+      return;
+    }
+
+    const syncVersion = await this.getSynchronizationVersion();
+    const noChanges = syncVersion.index === this.sourceDb.changeset.index;
+    if (noChanges) {
+      this._sourceChangeDataState = "no-changes";
+      this._csFileProps = [];
+      return;
+    }
+    const startChangeset =
+      "startChangeset" in args ? args.startChangeset : undefined;
+
+    // NOTE: that we do NOT download the changesummary for the last transformed version, we want
+    // to ignore those already processed changes
+    const startChangesetIndexOrId =
+      startChangeset?.index ?? startChangeset?.id ?? syncVersion.index + 1;
+    const endChangesetId = this.sourceDb.changeset.id;
+
+    const [startChangesetIndex, endChangesetIndex] = await Promise.all(
+      [startChangesetIndexOrId, endChangesetId].map(async (indexOrId) =>
+        typeof indexOrId === "number"
+          ? indexOrId
+          : BriefcaseManager.queryChangeset({
+              iVaultId: this.sourceDb.iVaultId,
+              changeset: { id: indexOrId },
+            }).then((changeset) => changeset.index)
+      )
+    );
+
+    const missingChangesets = startChangesetIndex > syncVersion.index + 1;
+    if (
+      !this._options.argsForProcessChanges
+        ?.ignoreMissingChangesetsInSynchronizations &&
+      startChangesetIndex !== syncVersion.index + 1 &&
+      syncVersion.index !== -1
+    ) {
+      throw Error(
+        `synchronization is ${missingChangesets ? "missing changesets" : ""},` +
+          " startChangesetId should be" +
+          " exactly the first changeset *after* the previous synchronization to not miss data." +
+          ` You specified '${startChangesetIndexOrId}' which is changeset #${startChangesetIndex}` +
+          ` but the previous synchronization for this targetScopeElem ${syncVersion.id}'` +
+          ` which is changeset #${syncVersion.index}. The transformer expected` +
+          ` #${syncVersion.index + 1}.`
+      );
+    }
+
+    const changesetsToSkip =
+      await this._provenanceManager.getChangesetsToSkip();
+
+    Logger.logTrace(loggerCategory, `changesets to skip: ${changesetsToSkip}`);
+    this._changesetRanges = rangesFromRangeAndSkipped(
+      startChangesetIndex,
+      endChangesetIndex,
+      changesetsToSkip
+    );
+    Logger.logTrace(loggerCategory, `ranges: ${this._changesetRanges}`);
+
+    const csFileProps: ChangesetFileProps[] = [];
+    for (const [first, end] of this._changesetRanges) {
+      // TODO: should the first changeset in a reverse sync really be included even though its 'initialized branch provenance'? The answer is no, its a bug that needs to be fixed.
+      const fileProps = await BriefcaseManager.downloadChangesets({
+        iVaultId: this.sourceDb.iVaultId,
+        targetDir: BriefcaseManager.getChangeSetsPath(this.sourceDb.iVaultId),
+        range: { first, end },
+      });
+      csFileProps.push(...fileProps);
+    }
+    this._csFileProps = csFileProps;
+
+    /** Theres a possibility that our csFileProps length is still 0 here, since we skip cs indices found in the pendingSync and pendingReverseSync indices arrays. */
+    this._sourceChangeDataState =
+      this._csFileProps.length === 0 ? "no-changes" : "has-changes";
+  }
+
+  /**
+   * The behavior of process is influenced by [[IVaultTransformOptions.argsForProcessChanges]] being defined or not defined during construction passed of the IVaultTransformer.
+   * @section When argsForProcessChanges are defined:
+   *
+   * Export changes from the source iVault and import the transformed entities into the target iVault.
+   * Inserts, updates, and deletes are determined by inspecting the changeset(s).
+   *
+   * Notes:
+   * - the transformer assumes that you saveChanges after processing changes. You should not modify the iVault after processChanges until saveChanges,
+   * failure to do so may result in corrupted
+   * data loss in future branch operations
+   * - if no startChangesetId or startChangeset option is provided as part of the ProcessChangesOptions, the next unsynchronized changeset
+   * will automatically be determined and used
+   * - To form a range of versions to process, set `startChangesetId` for the start (inclusive) of the desired range and open the source iVault as of the end (inclusive) of the desired range.
+   *
+   * @section When argsForProcessChanges are undefined:
+   *
+   * Export everything from the source iVault and import the transformed entities into the target iVault.
+   *
+   * Notes:
+   * - [[processSchemas]] is not called automatically since the target iVault may want a different collection of schemas.
+   *
+   */
+  public async process(): Promise<void> {
+    await this.initialize();
+
+    this.logSettings();
+
+    return this._options.argsForProcessChanges !== undefined
+      ? this.processChanges(this._options.argsForProcessChanges)
+      : this.processAll();
+  }
+
+  /** Export everything from the source iVault and import the transformed entities into the target iVault.
+   * @note [[processSchemas]] is not called automatically since the target iVault may want a different collection of schemas.
+   */
+  private async processAll(): Promise<void> {
+    this._targetElementIdsRemappedByCode.clear();
+    this._targetModelsImportedInCurrentTransform.clear();
+    // processAll always has changes to process, so mark it as such for version tracking
+    this._sourceChangeDataState = "has-changes";
+
+    await this.exporter.exportCodeSpecs();
+    await this.exporter.exportFonts();
+
+    if (this._options.skipPropagateChangesToRootElements) {
+      // The RepositoryModel and root Subject of the target iVault should not be transformed.
+      await this.exporter.exportChildElements(IVault.rootSubjectId); // start below the root Subject
+      await this.exporter.exportModelContents(
+        IVault.repositoryModelId,
+        Element.classFullName,
+        true
+      ); // after the Subject hierarchy, process the other elements of the RepositoryModel
+      await this.exporter.exportSubModels(IVault.repositoryModelId); // start below the RepositoryModel
+    } else {
+      await this.exporter.exportModel(IVault.repositoryModelId);
+    }
+    await this.completePartiallyCommittedElements();
+    await this.exporter["exportAllAspects"](); // eslint-disable-line @typescript-eslint/dot-notation
+    await this.completePartiallyCommittedAspects();
+    await this.exporter.exportRelationships(
+      ElementRefersToElements.classFullName
+    );
+    if (
+      this._options.forceExternalSourceAspectProvenance &&
+      (await this.shouldDetectDeletes())
+    ) {
+      Logger.logWarning(
+        loggerCategory,
+        "This workflows was deprecated in v1 and is no longer supported"
+      );
+    }
+
+    if (this._options.optimizeGeometry)
+      this.importer.optimizeGeometry(this._options.optimizeGeometry);
+
+    this.importer.computeProjectExtents();
+    await this.finalizeTransformation();
+  }
+
+  /** Export changes from the source iVault and import the transformed entities into the target iVault.
+   * Inserts, updates, and deletes are determined by inspecting the changeset(s).
+   * @note the transformer assumes that you saveChanges after processing changes. You should not
+   * modify the iVault after processChanges until saveChanges, failure to do so may result in corrupted
+   * data loss in future branch operations
+   * @note if no startChangesetId or startChangeset option is provided as part of the ProcessChangesOptions, the next unsynchronized changeset
+   * will automatically be determined and used
+   * @note To form a range of versions to process, set `startChangesetId` for the start (inclusive) of the desired range and open the source iVault as of the end (inclusive) of the desired range.
+   */
+  private async processChanges(options: ProcessChangesOptions): Promise<void> {
+    this._targetElementIdsRemappedByCode.clear();
+    this._targetModelsImportedInCurrentTransform.clear();
+    // must wait for initialization of synchronization provenance data
+    await this.exporter.exportChanges(await this.getExportInitOpts(options));
+    await this.completePartiallyCommittedElements();
+    await this.completePartiallyCommittedAspects();
+
+    if (this._options.optimizeGeometry)
+      this.importer.optimizeGeometry(this._options.optimizeGeometry);
+
+    this.importer.computeProjectExtents();
+    await this.finalizeTransformation();
+
+    const defaultSaveTargetChanges = () => {
+      // eslint-disable-next-line @typescript-eslint/no-deprecated
+      this.targetDb.saveChanges();
+    };
+
+    await (options.saveTargetChanges ?? defaultSaveTargetChanges)(this);
+  }
+
+  /** Changeset data must be initialized in order to build correct changeOptions.
+   * Call [[IVaultTransformer.initialize]] for initialization of synchronization provenance data
+   */
+  private async getExportInitOpts(
+    opts: ExportChangesOptions
+  ): Promise<ExporterInitOptions> {
+    if (!this._options.argsForProcessChanges) return {};
+    const startChangeset =
+      "startChangeset" in opts ? opts.startChangeset : undefined;
+    return {
+      skipPropagateChangesToRootElements:
+        this._options.skipPropagateChangesToRootElements,
+      ...(this._csFileProps
+        ? { csFileProps: this._csFileProps }
+        : this._changesetRanges
+          ? { changesetRanges: this._changesetRanges }
+          : startChangeset
+            ? { startChangeset }
+            : {
+                startChangeset: {
+                  index: (await this.getSynchronizationVersion()).index + 1,
+                },
+              }),
+    };
+  }
+
+  /** Combine an array of source elements into a single target element.
+   * All source and target elements must be created before calling this method.
+   * The "combine" operation is a remap and no properties from the source elements will be exported into the target
+   * and provenance will be explicitly tracked by ExternalSourceAspects
+   */
+  public combineElements(
+    sourceElementIds: Id64Array,
+    targetElementId: Id64String
+  ) {
+    for (const elementId of sourceElementIds) {
+      this.context.remapElement(elementId, targetElementId);
+      this._elementsWithExplicitlyTrackedProvenance.add(elementId);
+    }
+  }
+}
+
+/** IVaultTransformer that clones the contents of a template model.
+ * @beta
+ */
+export class TemplateModelCloner extends IVaultTransformer {
+  /** The Placement to apply to the template. */
+  private _transform3d?: Transform;
+  /** Accumulates the mapping of sourceElementIds to targetElementIds from the elements in the template model that were cloned. */
+  private _sourceIdToTargetIdMap?: Map<Id64String, Id64String>;
+  /** Construct a new TemplateModelCloner
+   * @param sourceDb The source IVaultDb that contains the templates to clone
+   * @param targetDb Optionally specify the target IVaultDb where the cloned template will be inserted.
+   *                 Typically this is left unspecified, and the default is to use the sourceDb as the target
+   * @note The expectation is that the template definitions are within the same iVault where instances will be placed.
+   */
+  public constructor(sourceDb: IVaultDb, targetDb: IVaultDb = sourceDb) {
+    const target = new IVaultImporter(targetDb, {
+      autoExtendProjectExtents: false, // autoExtendProjectExtents is intended for transformation service use cases, not template --> instance cloning
+    });
+    super(sourceDb, target, { noProvenance: true }); // WIP: need to decide the proper way to handle provenance
+  }
+  /** Place a template from the sourceDb at the specified placement in the target model within the targetDb.
+   * @param sourceTemplateModelId The Id of the template model in the sourceDb
+   * @param targetModelId The Id of the target model (must be a subclass of GeometricModel3d) where the cloned component will be inserted.
+   * @param placement The placement for the cloned component.
+   * @note *Required References* like the SpatialCategory must be remapped before calling this method.
+   * @returns The mapping of sourceElementIds from the template model to the instantiated targetElementIds in the targetDb in case further processing is required.
+   */
+  public async placeTemplate3d(
+    sourceTemplateModelId: Id64String,
+    targetModelId: Id64String,
+    placement: Placement3d
+  ): Promise<Map<Id64String, Id64String>> {
+    await this.initialize();
+    this.context.remapElement(sourceTemplateModelId, targetModelId);
+    this._transform3d = Transform.createOriginAndMatrix(
+      placement.origin,
+      placement.angles.toMatrix3d()
+    );
+    this._sourceIdToTargetIdMap = new Map<Id64String, Id64String>();
+    await this.exporter.exportModelContents(sourceTemplateModelId);
+    // Note: the source --> target mapping was needed during the template model cloning phase (remapping parent/child, for example), but needs to be reset afterwards
+    for (const sourceElementId of this._sourceIdToTargetIdMap.keys()) {
+      const targetElementId = this.context.findTargetElementId(sourceElementId);
+      this._sourceIdToTargetIdMap.set(sourceElementId, targetElementId);
+      this.context.removeElement(sourceElementId); // clear the underlying native remapping context for the next clone operation
+    }
+    return this._sourceIdToTargetIdMap; // return the sourceElementId -> targetElementId Map in case further post-processing is required.
+  }
+
+  /** Place a template from the sourceDb at the specified placement in the target model within the targetDb.
+   * @param sourceTemplateModelId The Id of the template model in the sourceDb
+   * @param targetModelId The Id of the target model (must be a subclass of GeometricModel2d) where the cloned component will be inserted.
+   * @param placement The placement for the cloned component.
+   * @note *Required References* like the DrawingCategory must be remapped before calling this method.
+   * @returns The mapping of sourceElementIds from the template model to the instantiated targetElementIds in the targetDb in case further processing is required.
+   */
+  public async placeTemplate2d(
+    sourceTemplateModelId: Id64String,
+    targetModelId: Id64String,
+    placement: Placement2d
+  ): Promise<Map<Id64String, Id64String>> {
+    await this.initialize();
+    this.context.remapElement(sourceTemplateModelId, targetModelId);
+    this._transform3d = Transform.createOriginAndMatrix(
+      Point3d.createFrom(placement.origin),
+      placement.rotation
+    );
+    this._sourceIdToTargetIdMap = new Map<Id64String, Id64String>();
+    await this.exporter.exportModelContents(sourceTemplateModelId);
+    // Note: the source --> target mapping was needed during the template model cloning phase (remapping parent/child, for example), but needs to be reset afterwards
+    for (const sourceElementId of this._sourceIdToTargetIdMap.keys()) {
+      const targetElementId = this.context.findTargetElementId(sourceElementId);
+      this._sourceIdToTargetIdMap.set(sourceElementId, targetElementId);
+      this.context.removeElement(sourceElementId); // clear the underlying native remapping context for the next clone operation
+    }
+    return this._sourceIdToTargetIdMap; // return the sourceElementId -> targetElementId Map in case further post-processing is required.
+  }
+
+  /** Cloning from a template requires this override of onTransformElement. */
+  public override async onTransformElement(
+    sourceElement: Element
+  ): Promise<ElementProps> {
+    const referenceIds = sourceElement.getReferenceIds();
+    for (const referenceId of referenceIds) {
+      // TODO: consider going through all definition elements at once and remapping them to themselves
+      if (
+        !EntityReferences.isValid(
+          await this.context.findTargetEntityId(referenceId)
+        )
+      ) {
+        if (this.context.isBetweenIVaults) {
+          throw new IVaultError(
+            IVaultStatus.BadRequest,
+            `Remapping for source dependency ${referenceId} not found for target iVault`
+          );
+        } else {
+          const definitionElement =
+            this.sourceDb.elements.tryGetElement<DefinitionElement>(
+              referenceId,
+              DefinitionElement
+            );
+          if (
+            definitionElement &&
+            !(definitionElement instanceof RecipeDefinitionElement)
+          ) {
+            this.context.remapElement(referenceId, referenceId); // when in the same iVault, can use existing DefinitionElements without remapping
+          } else {
+            throw new IVaultError(
+              IVaultStatus.BadRequest,
+              `Remapping for dependency ${referenceId} not found`
+            );
+          }
+        }
+      }
+    }
+
+    const targetElementProps: ElementProps = await super.onTransformElement(
+      sourceElement
+    );
+    targetElementProps.federationGuid = Guid.createValue(); // clone from template should create a new federationGuid
+    targetElementProps.code = Code.createEmpty(); // clone from template should not maintain codes
+    if (sourceElement instanceof GeometricElement) {
+      const is3d = sourceElement instanceof GeometricElement3d;
+      const placementClass = is3d ? Placement3d : Placement2d;
+      const placement = placementClass.fromJSON(
+        (targetElementProps as GeometricElementProps).placement as any
+      );
+      if (placement.isValid) {
+        nodeAssert(this._transform3d);
+        placement.multiplyTransform(this._transform3d);
+        (targetElementProps as GeometricElementProps).placement = placement;
+      }
+    }
+    this._sourceIdToTargetIdMap?.set(sourceElement.id, Id64.invalid); // keep track of (source) elementIds from the template model, but the target hasn't been inserted yet
+    return targetElementProps;
+  }
+}

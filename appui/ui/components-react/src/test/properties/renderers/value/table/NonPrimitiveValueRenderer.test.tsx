@@ -1,0 +1,92 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+import * as React from "react";
+import { fireEvent, render } from "@testing-library/react";
+import { TableNonPrimitiveValueRenderer } from "../../../../../components-react/properties/renderers/value/table/NonPrimitiveValueRenderer.js";
+
+describe("TableNonPrimitiveValueRenderer", () => {
+  const dialogContents = (
+    <div>
+      <p>Hello</p>
+    </div>
+  );
+
+  it("renders correctly", () => {
+    const renderer = render(
+      <TableNonPrimitiveValueRenderer
+        buttonLabel="Open greeting"
+        dialogContents={dialogContents}
+        dialogTitle={"Greeting"}
+      />
+    );
+
+    // Verify that text "Open greeting" is renderer. Throws otherwise
+    renderer.getByText("Open greeting");
+  });
+
+  it("calls onDialogOpen when button gets clicked", () => {
+    const onDialogOpen = vi.fn();
+
+    const renderer = render(
+      <TableNonPrimitiveValueRenderer
+        buttonLabel="Open greeting"
+        dialogContents={dialogContents}
+        dialogTitle={"Greeting"}
+        onDialogOpen={onDialogOpen}
+      />
+    );
+
+    const button = renderer.container.getElementsByClassName(
+      "core-underlined-button"
+    )[0];
+    fireEvent.click(button);
+
+    expect(onDialogOpen).toHaveBeenCalledOnce();
+    expect(onDialogOpen.mock.calls[0][0].content).toEqual(dialogContents);
+    expect(onDialogOpen.mock.calls[0][0].title).toEqual("Greeting");
+  });
+
+  it("renders DOM exactly the same when hovered on without appropriate callbacks set", () => {
+    const renderer = render(
+      <TableNonPrimitiveValueRenderer
+        buttonLabel="Open greeting"
+        dialogContents={dialogContents}
+        dialogTitle={"Greeting"}
+      />
+    );
+
+    const renderedDom = renderer.container.innerHTML;
+
+    const button = renderer.container.getElementsByClassName(
+      "core-underlined-button"
+    )[0];
+
+    fireEvent.mouseEnter(button);
+    expect(renderer.container.innerHTML).toEqual(renderedDom);
+
+    fireEvent.mouseLeave(button);
+    expect(renderer.container.innerHTML).toEqual(renderedDom);
+  });
+
+  it("renders DOM exactly the same when clicked on without appropriate callbacks set", () => {
+    const renderer = render(
+      <TableNonPrimitiveValueRenderer
+        buttonLabel="Open greeting"
+        dialogContents={dialogContents}
+        dialogTitle={"Greeting"}
+      />
+    );
+
+    const renderedDom = renderer.container.innerHTML;
+
+    const button = renderer.container.getElementsByClassName(
+      "core-underlined-button"
+    )[0];
+
+    fireEvent.click(button);
+
+    expect(renderer.container.innerHTML).toEqual(renderedDom);
+  });
+});

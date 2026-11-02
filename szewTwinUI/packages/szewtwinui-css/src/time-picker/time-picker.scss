@@ -1,0 +1,57 @@
+// Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+// See LICENSE.md in the project root for license terms and full copyright notice.
+@use '../mixins';
+
+.iui-time-picker {
+  @include mixins.iui-reset;
+  user-select: none;
+  text-align: center;
+  block-size: calc(var(--iui-size-s) * 26);
+  display: inline-flex;
+
+  &:not(:first-child) {
+    border-inline-start: 1px solid var(--iui-color-border);
+  }
+}
+
+.iui-time,
+.iui-period {
+  padding-block: var(--iui-size-s);
+  padding-inline: var(--iui-size-xs);
+  overflow-y: auto;
+  scrollbar-width: none;
+
+  &:not(:first-child) {
+    border-inline-start: 1px solid var(--iui-color-border);
+  }
+
+  > ol {
+    @include mixins.iui-reset;
+    list-style: none;
+
+    > li {
+      @include mixins.iui-focus;
+      padding-block: calc(var(--iui-size-s) * 0.5);
+      padding-inline: var(--iui-size-m);
+      border-radius: var(--iui-border-radius-1);
+
+      &:hover {
+        cursor: pointer;
+        background-color: var(--iui-color-background-hover);
+      }
+
+      &.iui-selected {
+        font-weight: var(--iui-font-weight-semibold);
+        cursor: default;
+        @include mixins.iui-focus($color: var(--iui-color-white), $offset: -3px);
+        background-color: var(--iui-color-background-accent);
+        color: var(--iui-color-white);
+      }
+    }
+  }
+}
+
+.iui-period {
+  display: flex;
+  align-items: center;
+}

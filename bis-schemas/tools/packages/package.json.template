@@ -1,0 +1,16 @@
+{
+  "name": "${PACKAGE_NAME}",
+  "license": "MIT",
+  "version": "${PACKAGE_VERSION}",
+  "homepage": "https://www.imodeljs.org/",
+  "keywords": [
+    "Bentley",
+    "BIS",
+    "iModel"
+  ],
+  "description": "${DOMAIN_NAME} BIS Domains",
+  "author": {
+    "name": "Bentley Systems, Inc.",
+    "url": "http://www.bentley.com"
+  }
+}

@@ -1,0 +1,89 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+/** @packageDocumentation
+ * @module Tools
+ */
+import * as React from "react";
+import {
+  IVaultApp,
+  NotifyMessageDetails,
+  OutputMessagePriority,
+  Tool,
+} from "@szewtwin/core-frontend";
+import type { FrontstageDef } from "../frontstage/FrontstageDef.js";
+import { InternalFrontstageManager } from "../frontstage/InternalFrontstageManager.js";
+import { UiFramework } from "../UiFramework.js";
+import { SvgViewLayouts } from "../icons/SvgViewLayouts.js";
+import { ToolUtilities } from "@szewtwin/ivault-components-react";
+
+class RestoreFrontstageLayoutCoreTool extends Tool {
+  public static override toolId = "RestoreFrontstageLayout";
+  public static override iconSpec = "icon-view-layouts";
+
+  public static override get minArgs() {
+    return 0;
+  }
+  public static override get maxArgs() {
+    return 1;
+  }
+
+  public override async run(frontstageId?: string): Promise<boolean> {
+    let frontstageDef: FrontstageDef | undefined;
+
+    if (frontstageId) {
+      frontstageDef = await UiFramework.frontstages.getFrontstageDef(
+        frontstageId
+      );
+    } else {
+      frontstageDef = UiFramework.frontstages.activeFrontstageDef;
+    }
+
+    if (frontstageDef) frontstageDef.restoreLayout();
+    else
+      IVaultApp.notifications.outputMessage(
+        new NotifyMessageDetails(
+          OutputMessagePriority.Info,
+          UiFramework.translate("tools.RestoreFrontstageLayout.noStageFound")
+        )
+      );
+    return true;
+  }
+
+  public override async parseAndRun(...args: string[]): Promise<boolean> {
+    return this.run(args[0]);
+  }
+}
+
+/**
+ * Immediate tool that will reset the layout to that specified in the stage definition. A stage Id
+ * may be passed in, if not the active stage is used. The stage Id is case sensitive.
+ * @public
+ */
+export const RestoreFrontstageLayoutTool = ToolUtilities.defineIcon(
+  RestoreFrontstageLayoutCoreTool,
+  <SvgViewLayouts />
+);
+
+class RestoreAllFrontstagesCoreTool extends Tool {
+  public static override toolId = "RestoreAllFrontstages";
+  public static override iconSpec = "icon-view-layouts";
+
+  public override async run() {
+    const frontstages = InternalFrontstageManager.frontstageDefs;
+    for (const [, frontstage] of frontstages) {
+      frontstage.restoreLayout();
+    }
+    return true;
+  }
+}
+
+/**
+ * Immediate tool that will reset the layout of all frontstages to that specified in the stage definition.
+ * @public
+ */
+export const RestoreAllFrontstagesTool = ToolUtilities.defineIcon(
+  RestoreAllFrontstagesCoreTool,
+  <SvgViewLayouts />
+);

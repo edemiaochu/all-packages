@@ -1,0 +1,37 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@use "variables" as *;
+
+.components-toolbar-overflow-panel {
+  background: var(--iui-color-background);
+  border-radius: var(--iui-border-radius-1);
+  display: flex;
+  height: unset;
+  width: fit-content;
+  padding: unset;
+
+  &.components-vertical-components-direction-bottom {
+    right: -$components-items-border-width;
+    flex-direction: column;
+    top: 100%;
+  }
+
+  &.components-vertical-components-direction-top {
+    right: -$components-items-border-width;
+    flex-direction: column;
+    bottom: 100%;
+  }
+
+  &.components-horizontal-components-direction-right {
+    left: 100%;
+    bottom: -$components-items-border-width;
+    flex-direction: row;
+  }
+  &.components-horizontal-components-direction-left {
+    right: 100%;
+    bottom: -$components-items-border-width;
+    flex-direction: row;
+  }
+}

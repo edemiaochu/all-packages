@@ -1,0 +1,8 @@
+# Build scripts (dev tooling, not needed at runtime)
+build-scripts/
+
+# Internal maintenance docs
+MAINTENANCE.md
+
+# Dev dependencies
+node_modules/

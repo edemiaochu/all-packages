@@ -1,0 +1,42 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@forward "~@szewtwin/core-react/lib/core-react/style/themecolors";
+
+// Common
+$button-stroke-width: 2px;
+$button-background-color: var(--iui-color-background-hover);
+$button-stroke-color: var(--iui-color-background-disabled);
+$button-stroke-radius: 3px;
+
+$icon-color: var(--iui-color-text);
+$pressed-icon-color: hsl(
+  var(--iui-color-background-hsl) / var(--iui-opacity-2)
+);
+$hovered-icon-color: var(--iui-color-text-accent-hover);
+$icon-shadow: drop-shadow(
+  0 1px 0 hsl(var(--iui-color-background-hsl) / var(--iui-opacity-2))
+);
+$no-shadow: drop-shadow(0 0 0 transparent);
+
+$bar-width: 8px;
+$bar-height: 2px;
+$bar-right-corner-radius: 1px;
+
+// Mouse + Large screen
+$mls-button-width: 60px;
+$mls-button-height: 60px;
+
+$mls-navigation-aid-width: 60px;
+$mls-navigation-aid-height: 60px;
+
+$mls-icon-size: 36px;
+
+// For ui20 - include 2px for border 40+2=42 due to box-sizing:border-box.
+$mls-small-button-width: 42px;
+$mls-small-button-height: 42px;
+$mls-small-button-icon-size: 24px;
+$mls-small-button-gap: 6px;
+$small-bar-width: 4px;
+$small-bar-height: 2px;

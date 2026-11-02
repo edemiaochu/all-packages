@@ -1,0 +1,111 @@
+{
+  "name": "@szewtwin/presentation-hierarchies-react",
+  "version": "1.10.1",
+  "description": "React components based on `@szewtwin/presentation-hierarchies`",
+  "license": "MIT",
+  "author": {
+    "name": "Szewec Systems, Inc.",
+    "url": "http://www.szewec.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/szewTwin/presentation.git",
+    "directory": "packages/hierarchies-react"
+  },
+  "keywords": [
+    "Szewec",
+    "Component",
+    "Components",
+    "DM",
+    "DMSQL",
+    "Hierarchies",
+    "Hierarchy",
+    "iVault",
+    "szewTwin",
+    "szewTwin.js",
+    "Presentation",
+    "React",
+    "Tree"
+  ],
+  "type": "module",
+  "main": "lib/cjs/presentation-hierarchies-react.js",
+  "types": "lib/cjs/presentation-hierarchies-react",
+  "module": "lib/esm/presentation-hierarchies-react.js",
+  "exports": {
+    ".": {
+      "import": "./lib/esm/presentation-hierarchies-react.js",
+      "require": "./lib/cjs/presentation-hierarchies-react.js"
+    },
+    "./core": {
+      "import": "./lib/esm/presentation-hierarchies-react-core.js",
+      "require": "./lib/cjs/presentation-hierarchies-react-core.js"
+    },
+    "./szewtwinui": {
+      "import": "./lib/esm/presentation-hierarchies-react-szewtwinui.js",
+      "require": "./lib/cjs/presentation-hierarchies-react-szewtwinui.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "npm run -s typecheck && npm run -s build:cjs && npm run -s build:esm",
+    "build:cjs": "node ../../scripts/package-cjs.mjs ./lib/cjs && npm run -s copy:cjs && tsc -p tsconfig.cjs.json",
+    "build:esm": "npm run -s copy:esm && tsc -p tsconfig.esm.json",
+    "copy:cjs": "cpx \"./src/**/*.{css,json}\" ./lib/cjs",
+    "copy:esm": "cpx \"./src/**/*.{css,json}\" ./lib/esm",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "clean": "rimraf lib build",
+    "cover": "vitest run --coverage",
+    "lint": "eslint \"./src/**/*.{ts,tsx}\"",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "extract-api": "betools extract-api --entry=lib/esm/presentation-hierarchies-react --apiReportFolder=./api --apiReportTempFolder=./api/temp --apiSummaryFolder=./api --includeUnexportedApis",
+    "check-internal": "node ../../scripts/checkInternal.js --apiSummary ./api/presentation-hierarchies-react.api.md",
+    "update-extractions": "node ../../scripts/updateExtractions.js --targets=./README.md",
+    "check-extractions": "node ../../scripts/updateExtractions.js --targets=./README.md --check",
+    "validate-markdowns": "node ../../scripts/validateMarkdowns.js README.md"
+  },
+  "dependencies": {
+    "@szewtwin/core-szewec": "catalog:szewtwinjs-core",
+    "@szewtwin/szewtwinui-icons-react": "catalog:szewtwinui",
+    "@szewtwin/szewtwinui-illustrations-react": "catalog:szewtwinui",
+    "@szewtwin/presentation-hierarchies": "workspace:^",
+    "@szewtwin/presentation-shared": "workspace:^",
+    "@szewtwin/unified-selection": "workspace:^",
+    "classnames": "catalog:react",
+    "immer": "^10.2.0",
+    "react-error-boundary": "catalog:react",
+    "rxjs": "catalog:rxjs"
+  },
+  "peerDependencies": {
+    "@szewtwin/szewtwinui-react": "^3.0.0",
+    "react": "^17.0.0 || ^18.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@szewtwin/szewtwinui-react": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@szewtwin/build-tools": "catalog:build-tools",
+    "@szewtwin/eslint-plugin": "catalog:build-tools",
+    "@szewtwin/szewtwinui-react": "catalog:szewtwinui",
+    "@testing-library/dom": "catalog:test-tools",
+    "@testing-library/react": "catalog:test-tools",
+    "@testing-library/user-event": "catalog:test-tools",
+    "@types/node": "catalog:build-tools",
+    "@types/react": "catalog:react",
+    "@types/react-dom": "catalog:react",
+    "@vitest/coverage-v8": "catalog:test-tools",
+    "cpx2": "catalog:build-tools",
+    "eslint": "catalog:build-tools",
+    "eslint-plugin-react": "catalog:build-tools",
+    "happy-dom": "catalog:test-tools",
+    "presentation-test-utilities": "workspace:^",
+    "react": "catalog:react",
+    "react-dom": "catalog:react",
+    "rimraf": "catalog:build-tools",
+    "typescript": "catalog:build-tools",
+    "vitest": "catalog:test-tools"
+  }
+}

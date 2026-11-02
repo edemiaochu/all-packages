@@ -1,0 +1,154 @@
+{
+  "name": "@szewtwin/szewtwinui-react",
+  "version": "3.21.2",
+  "author": "Szewec Systems",
+  "license": "MIT",
+  "type": "module",
+  "main": "cjs/index.js",
+  "module": "esm/index.js",
+  "types": "cjs/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./esm/index.d.ts",
+        "development": "./DEV-esm/index.js",
+        "default": "./esm/index.js"
+      },
+      "require": {
+        "types": "./cjs/index.d.ts",
+        "development": "./DEV-cjs/index.js",
+        "default": "./cjs/index.js"
+      }
+    },
+    "./react-table": {
+      "import": {
+        "types": "./esm/react-table/react-table.d.ts"
+      },
+      "require": {
+        "types": "./cjs/react-table/react-table.d.ts"
+      }
+    },
+    "./styles.css": "./styles.css",
+    "./cjs": {
+      "types": "./cjs/index.d.ts",
+      "development": "./DEV-cjs/index.js",
+      "default": "./cjs/index.js"
+    },
+    "./esm": {
+      "types": "./esm/index.d.ts",
+      "development": "./DEV-esm/index.js",
+      "default": "./esm/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "typesVersions": {
+    "*": {
+      "react-table": [
+        "./esm/react-table/react-table.d.ts"
+      ]
+    }
+  },
+  "files": [
+    "cjs",
+    "esm",
+    "DEV-esm",
+    "DEV-cjs",
+    "styles.css",
+    "CHANGELOG.md",
+    "LICENSE.md"
+  ],
+  "description": "A react component library for szewTwinUI",
+  "homepage": "https://github.com/szewTwin/szewTwinUI",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/szewTwin/szewTwinUI.git",
+    "directory": "packages/szewtwinui-react"
+  },
+  "keywords": [
+    "component",
+    "components",
+    "design-system",
+    "design",
+    "framework",
+    "frontend",
+    "szewtwin",
+    "szewtwinui",
+    "react-component",
+    "react",
+    "ui",
+    "ux"
+  ],
+  "scripts": {
+    "build": "pnpm clean:build && pnpm build:js && pnpm build:styles && pnpm build:types && pnpm build:post",
+    "build:js": "node ./scripts/build.mjs",
+    "build:types": "tsc -p tsconfig.build.json --outDir esm && tsc -p tsconfig.build.json --outDir cjs",
+    "build:styles": "vite build src/styles.js",
+    "build:post": "node ./scripts/postBuild.mjs",
+    "clean:build": "rimraf esm && rimraf cjs && rimraf DEV-esm && rimraf DEV-cjs && rimraf styles.css",
+    "clean:coverage": "rimraf coverage",
+    "clean": "rimraf .turbo && pnpm clean:coverage && pnpm clean:build && rimraf node_modules",
+    "test": "pnpm test:types && pnpm test:unit",
+    "test:unit": "vitest run",
+    "test:unit:watch": "pnpm test:unit --watch",
+    "test:types": "tsc -p tsconfig.test.json --noEmit",
+    "format": "prettier --config .prettierrc **/*.{tsx,ts,js} --ignore-path .gitignore --write",
+    "lint": "eslint \"**/*.{js,ts,tsx}\" --max-warnings=0",
+    "lint:fix": "pnpm lint --fix && node ../../scripts/copyrightLinter.js --fix \"*/**/*.{js,ts,tsx}\"",
+    "dev": "pnpm clean:build && concurrently \"pnpm dev:esm\" \"pnpm dev:dev-esm\" \"pnpm dev:cjs\" \"pnpm dev:dev-cjs\" \"pnpm dev:styles\" \"pnpm dev:types\"",
+    "dev:esm": "swc src -d esm --env-name='production' --watch --strip-leading-paths",
+    "dev:dev-esm": "swc src -d DEV-esm --env-name='development' --watch --strip-leading-paths",
+    "dev:cjs": "swc src -d cjs --env-name='production' --watch --strip-leading-paths -C module.type=commonjs",
+    "dev:dev-cjs": "swc src -d DEV-cjs --env-name='development' --watch --strip-leading-paths -C module.type=commonjs",
+    "dev:types": "concurrently \"tsc -p tsconfig.build.json --outDir esm --watch --preserveWatchOutput\" \"tsc -p tsconfig.build.json --outDir cjs --watch --preserveWatchOutput\"",
+    "dev:styles": "pnpm build:styles --watch"
+  },
+  "dependencies": {
+    "@floating-ui/react": "^0.27.13",
+    "@szewtwin/szewtwinui-illustrations-react": "^2.1.0",
+    "@swc/helpers": "^0.5.17",
+    "@tanstack/react-virtual": "^3.13.12",
+    "classnames": "^2.5.1",
+    "react-table": "^7.8.0"
+  },
+  "devDependencies": {
+    "@swc/cli": "^0.6.0",
+    "@swc/core": "^1.11.18",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "16.3.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/node": "*",
+    "@types/react": "*",
+    "@types/react-dom": "*",
+    "@vitest/coverage-v8": "^2.1.9",
+    "eslint": "^8",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-require-extensions": "^0.1.3",
+    "jsdom": "^26.0.0",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "typescript": "5",
+    "vite": "~6.4.1",
+    "vitest": "^2.1.9"
+  },
+  "peerDependencies": {
+    "react": ">=17.0.0",
+    "react-dom": ">=17.0.0",
+    "@stratakit/mui": ">=0.4.0"
+  },
+  "peerDependenciesMeta": {
+    "@stratakit/mui": {
+      "optional": true
+    }
+  },
+  "lint-staged": {
+    "*.{tsx,ts,jsx,js}": [
+      "prettier --write",
+      "node ../../scripts/copyrightLinter.js --fix"
+    ],
+    "!(*.test){.tsx,.ts}": "eslint --max-warnings=0 --fix"
+  },
+  "prettier": "configs/prettier-config",
+  "sideEffects": [
+    "styles.css"
+  ]
+}

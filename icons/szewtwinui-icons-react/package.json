@@ -1,0 +1,59 @@
+{
+  "name": "@szewtwin/szewtwinui-icons-react",
+  "version": "2.11.1",
+  "description": "Exports svgs from @szewtwin/szewtwinui-icons as React Components",
+  "author": "Szewec Systems",
+  "license": "MIT",
+  "type": "module",
+  "files": [
+    "cjs",
+    "esm"
+  ],
+  "main": "cjs/index.js",
+  "module": "esm/index.js",
+  "types": "cjs/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./esm/index.d.ts",
+        "default": "./esm/index.js"
+      },
+      "require": {
+        "types": "./cjs/index.d.ts",
+        "default": "./cjs/index.js"
+      }
+    },
+    "./esm": "./esm/index.js",
+    "./cjs": "./cjs/index.js",
+    "./esm/*": "./esm/*",
+    "./cjs/*": "./cjs/*",
+    "./Svg*": {
+      "import": {
+        "types": "./esm/icons/*.d.ts",
+        "default": "./esm/icons/*.js"
+      },
+      "require": {
+        "types": "./cjs/icons/*.d.ts",
+        "default": "./cjs/icons/*.js"
+      }
+    }
+  },
+  "scripts": {
+    "build": "npm run build:esm && npm run build:cjs",
+    "build:esm": "tsc -p tsconfig.esm.json",
+    "build:cjs": "tsc -p tsconfig.cjs.json"
+  },
+  "devDependencies": {
+    "@svgr/cli": "^5.5.0",
+    "@types/react": "^18.3.23",
+    "prettier": "^1.19.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "rimraf": "^2.6.2",
+    "typescript": "~5.6.3"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.6",
+    "react-dom": ">=16.8.6"
+  }
+}

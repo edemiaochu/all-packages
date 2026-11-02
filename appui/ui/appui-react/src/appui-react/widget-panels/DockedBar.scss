@@ -1,0 +1,18 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+
+.uifw-dockedBar {
+  position: relative;
+  background-color: var(--iui-color-background);
+  height: var(--iui-component-height);
+
+  &[data-placement="top"] {
+    border-block-end: 1px solid var(--iui-color-border);
+  }
+
+  &[data-placement="bottom"] {
+    border-block-start: 1px solid var(--iui-color-border);
+  }
+}

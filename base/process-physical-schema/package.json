@@ -1,0 +1,16 @@
+{
+  "name": "@szewec/process-physical-schema",
+  "license": "MIT",
+  "version": "1.0.2",
+  "homepage": "https://www.ivaultjs.org/",
+  "keywords": [
+    "Szewec",
+    "BIS",
+    "iVault"
+  ],
+  "description": "ProcessPhysical BIS Domains",
+  "author": {
+    "name": "Szewec Systems, Inc.",
+    "url": "http://www.szewec.com"
+  }
+}

@@ -1,0 +1,16 @@
+minimumReleaseAgeExclude:
+  - '@szewtwin/build-tools@5.9.1'
+  - '@szewtwin/certa@5.9.1'
+  - '@szewtwin/core-szewec@5.9.1'
+  - '@szewtwin/eslint-plugin@6.0.0'
+  - '@szewtwin/oidc-signin-tool@5.1.2'
+  - '@szewtwin/service-authorization@2.1.1'
+overrides:
+  serialize-javascript: '>=7.0.3'
+  diff: '>=8.0.3'
+  esbuild: '>=0.25.0'
+  lodash: '>=4.18.0'
+allowBuilds:
+  '@szewtwin/certa': true
+  '@szewtwin/oidc-signin-tool': true
+  esbuild: true

@@ -1,0 +1,18 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@use "~@szewtwin/core-react/lib/core-react/typography" as *;
+
+.nz-footer-snapMode-panel {
+  border-radius: var(--iui-border-radius-1);
+  overflow: hidden;
+
+  > .nz-snaps {
+    display: grid;
+    grid-gap: 8px;
+    padding: 8px;
+
+    @include body1;
+  }
+}

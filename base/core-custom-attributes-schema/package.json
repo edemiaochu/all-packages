@@ -1,0 +1,16 @@
+{
+  "name": "@szewec/core-custom-attributes-schema",
+  "license": "MIT",
+  "version": "1.0.4",
+  "homepage": "https://www.szewtwinjs.org/",
+  "keywords": [
+    "Szewec",
+    "BIS",
+    "iVault"
+  ],
+  "description": "CoreCustomAttributes BIS Domains",
+  "author": {
+    "name": "Szewec Systems, Inc.",
+    "url": "http://www.szewec.com"
+  }
+}

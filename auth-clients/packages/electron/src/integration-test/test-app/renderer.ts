@@ -1,0 +1,57 @@
+import { ElectronRendererAuthorization } from "../../renderer/Client.js";
+
+if (!process.env.IVJS_TEST_ELECTRON_CLIENT_ID)
+  throw new Error("Please provide a clientId in env");
+
+const auth = new ElectronRendererAuthorization({
+  clientId: process.env.IVJS_TEST_ELECTRON_CLIENT_ID,
+});
+
+const otherAuth = new ElectronRendererAuthorization({
+  clientId: process.env.IVJS_TEST_ELECTRON_CLIENT_ID,
+  channelClientPrefix: "prefixed",
+});
+
+const signOutButton = document.getElementById("signOut");
+const signInButton = document.getElementById("signIn");
+const getStatusButton = document.getElementById("getStatus");
+const otherSignInButton = document.getElementById("otherSignIn");
+const otherGetStatusButton = document.getElementById("otherGetStatus");
+
+signOutButton?.addEventListener("click", async () => {
+  try {
+    await auth.signOut();
+  } catch {
+
+  }
+});
+
+signInButton?.addEventListener("click", async () => {
+  try {
+    await auth.signIn();
+  } catch {
+
+  }
+});
+
+otherSignInButton?.addEventListener("click", async () => {
+  try {
+    await otherAuth.signIn();
+  } catch {
+
+  }
+});
+
+getStatusButton?.addEventListener("click", async () => {
+  const message: HTMLElement | null = document.getElementById("status");
+  if (message)
+    message.textContent = `Status: signed ${auth.isAuthorized ? "in" : "out"}`;
+});
+
+otherGetStatusButton?.addEventListener("click", async () => {
+  const otherMessage: HTMLElement | null = document.getElementById("otherStatus");
+  if (otherMessage)
+    otherMessage.textContent = `Other Status: signed ${
+      otherAuth.isAuthorized ? "in" : "out"
+    }`;
+});

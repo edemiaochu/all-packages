@@ -1,0 +1,15 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+
+.uifw-statusbar-overflow-panel {
+  display: flex;
+  flex-direction: column;
+  padding: var(--iui-size-xs);
+  gap: var(--iui-size-2xs);
+
+  .uifw-statusBar-separator {
+    display: none;
+  }
+}

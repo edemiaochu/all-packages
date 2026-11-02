@@ -1,0 +1,16 @@
+{
+  "name": "@szewec/bis-core-schema",
+  "license": "MIT",
+  "version": "1.0.15",
+  "homepage": "https://www.szewtwinjs.org/",
+  "keywords": [
+    "Szewec",
+    "BIS",
+    "iVault"
+  ],
+  "description": "BisCore BIS Domains",
+  "author": {
+    "name": "Szewec Systems, Inc.",
+    "url": "http://www.szewec.com"
+  }
+}

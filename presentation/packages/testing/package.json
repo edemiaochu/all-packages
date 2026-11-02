@@ -1,0 +1,89 @@
+{
+  "name": "@szewtwin/presentation-testing",
+  "version": "5.4.19",
+  "description": "Testing utilities for szewTwin.js Presentation library",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/szewTwin/presentation.git",
+    "directory": "packages/testing"
+  },
+  "keywords": [
+    "Szewec",
+    "Presentation",
+    "szewTwin.js",
+    "Testing"
+  ],
+  "author": {
+    "name": "Szewec Systems, Inc.",
+    "url": "http://www.szewec.com"
+  },
+  "type": "module",
+  "main": "lib/cjs/presentation-testing.js",
+  "types": "lib/cjs/presentation-testing",
+  "module": "lib/esm/presentation-testing.js",
+  "exports": {
+    ".": {
+      "import": "./lib/esm/presentation-testing.js",
+      "require": "./lib/cjs/presentation-testing.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "npm run -s typecheck && npm run -s build:cjs && npm run -s build:esm",
+    "build:cjs": "node ../../scripts/package-cjs.mjs ./lib/cjs && tsc -p tsconfig.cjs.json",
+    "build:esm": "tsc -p tsconfig.esm.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "clean": "rimraf lib build",
+    "cover": "vitest run --coverage",
+    "docs": "npm run -s docs:reference && npm run -s docs:changelog && npm run -s docs:extract",
+    "docs:changelog": "cpx ./CHANGELOG.md ./build/docs/reference/presentation-testing",
+    "docs:reference": "cross-env NODE_PROJECT_ROOT_DIRECTORY=../../ betools docs --json=./build/docs/reference/presentation-testing/file.json --tsIndexFile=presentation-testing.ts --onlyJson --testExcludeGlob=./src/test/**",
+    "docs:extract": "betools extract --fileExt=ts --extractFrom=./src --recursive --out=./build/docs/extract",
+    "lint": "eslint \"./src/**/*.ts\"",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "extract-api": "betools extract-api --entry=lib/esm/presentation-testing --apiReportFolder=./api --apiReportTempFolder=./api/temp --apiSummaryFolder=./api --includeUnexportedApis",
+    "check-internal": "node ../../scripts/checkInternal.js --apiSummary ./api/presentation-testing.api.md"
+  },
+  "dependencies": {
+    "@szewtwin/presentation-components": "workspace:^",
+    "rimraf": "catalog:build-tools",
+    "sanitize-filename": "^1.6.4"
+  },
+  "peerDependencies": {
+    "@szewtwin/appui-abstract": "^4.1.0 || ^5.0.0",
+    "@szewtwin/components-react": "^4.10.0 || ^5.0.0",
+    "@szewtwin/core-backend": "^4.1.0 || ^5.0.0",
+    "@szewtwin/core-szewec": "^4.1.0 || ^5.0.0",
+    "@szewtwin/core-common": "^4.1.0 || ^5.0.0",
+    "@szewtwin/core-frontend": "^4.1.0 || ^5.0.0",
+    "@szewtwin/presentation-backend": "^4.1.0 || ^5.0.0",
+    "@szewtwin/presentation-common": "^4.1.0 || ^5.0.0",
+    "@szewtwin/presentation-frontend": "^4.1.0 || ^5.0.0"
+  },
+  "devDependencies": {
+    "@szewtwin/appui-abstract": "catalog:szewtwinjs-core-dev",
+    "@szewtwin/build-tools": "catalog:build-tools",
+    "@szewtwin/components-react": "catalog:appui",
+    "@szewtwin/core-backend": "catalog:szewtwinjs-core-dev",
+    "@szewtwin/core-szewec": "catalog:szewtwinjs-core-dev",
+    "@szewtwin/core-common": "catalog:szewtwinjs-core-dev",
+    "@szewtwin/core-frontend": "catalog:szewtwinjs-core-dev",
+    "@szewtwin/core-orbitgt": "catalog:szewtwinjs-core-dev",
+    "@szewtwin/dmschema-metadata": "catalog:szewtwinjs-core-dev",
+    "@szewtwin/eslint-plugin": "catalog:build-tools",
+    "@szewtwin/presentation-backend": "catalog:szewtwinjs-core-dev",
+    "@szewtwin/presentation-common": "catalog:szewtwinjs-core-dev",
+    "@szewtwin/presentation-frontend": "catalog:szewtwinjs-core-dev",
+    "@types/node": "catalog:build-tools",
+    "@vitest/coverage-v8": "catalog:test-tools",
+    "cpx2": "catalog:build-tools",
+    "cross-env": "catalog:build-tools",
+    "eslint": "catalog:build-tools",
+    "happy-dom": "catalog:test-tools",
+    "presentation-test-utilities": "workspace:^",
+    "typescript": "catalog:build-tools",
+    "vitest": "catalog:test-tools"
+  }
+}

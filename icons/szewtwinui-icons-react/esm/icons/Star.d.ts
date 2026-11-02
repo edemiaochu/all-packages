@@ -1,0 +1,5 @@
+import React, { type SVGProps } from 'react';
+declare const SvgStar: (props: SVGProps<SVGSVGElement>) => React.JSX.Element;
+export default SvgStar;
+export { SvgStar };
+//# sourceMappingURL=Star.d.ts.map

@@ -1,0 +1,91 @@
+{
+  "name": "itwinui-monorepo",
+  "version": "0.0.0",
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "apps/*",
+      "packages/*",
+      "playgrounds/*",
+      "internal/*",
+      "examples",
+      "testing/*"
+    ]
+  },
+  "lint-staged": {
+    "*.{scss}": [
+      "prettier --write",
+      "stylelint --fix"
+    ],
+    "*.{scss,html,js}": [
+      "pnpm lint:copyright --fix"
+    ],
+    "*.{tsx,ts,jsx,js}": [
+      "prettier --write",
+      "node scripts/copyrightLinter.js --fix"
+    ]
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "NODE_ENV=development turbo run dev --concurrency=15",
+    "test": "node scripts/runTests.mjs",
+    "test:css": "pnpm run build --filter=css-workshop && pnpm --filter=css-workshop run test",
+    "test:react": "pnpm run build --filter=react-workshop && pnpm --filter=react-workshop run test",
+    "test:a11y": "pnpm run build --filter=a11y && pnpm --filter=/a11y run test",
+    "test:e2e": "pnpm run build --filter=e2e && pnpm --filter=e2e run test",
+    "test:unit": "pnpm --filter=@itwin/itwinui-react run test:unit",
+    "lint": "turbo run lint",
+    "format": "turbo run format",
+    "prepare": "husky install",
+    "lint:copyright": "node scripts/copyrightLinter.js",
+    "createComponent": "node scripts/createComponent.js",
+    "approve": "pnpm run approve:css && pnpm run approve:react",
+    "approve:css": "pnpm --filter css-workshop approve",
+    "approve:react": "pnpm --filter react-workshop approve",
+    "clean": "turbo run clean && rimraf node_modules",
+    "changeset": "npx -y @changesets/cli@2.29.6",
+    "release": "pnpm run build --filter=\"{./packages/*}...\" && pnpm node ./scripts/publish-packages.mjs"
+  },
+  "devDependencies": {
+    "@szewtwin/szewtwinui-css": "workspace:*",
+    "@szewtwin/szewtwinui-variables": "workspace:*",
+    "a11y": "workspace:*",
+    "chokidar-cli": "^3.0.0",
+    "concurrently": "^8.2.2",
+    "configs": "workspace:*",
+    "cypress": "13.8.1",
+    "e2e": "workspace:*",
+    "examples": "workspace:*",
+    "execa": "^8.0.1",
+    "helpers": "workspace:*",
+    "husky": "^9.0.10",
+    "lint-staged": "^15.2.9",
+    "octokit": "^4.1.2",
+    "prettier": "~3.1.0",
+    "rimraf": "^5.0.5",
+    "turbo": "~1.12.3"
+  },
+  "resolutions": {
+    "normalize-package-data": "^6.0.0",
+    "glob-parent": "^6.0.2",
+    "strip-ansi": "^6.0.0",
+    "async": "^3.2.5",
+    "postcss": "^8.4.34",
+    "prettier": "~3.1.0",
+    "autoprefixer": "^10.4.17",
+    "semver": "^7.5.4",
+    "typescript": "~5.5.2",
+    "@types/react": "^19.0.7",
+    "@types/react-dom": "^19.0.3",
+    "cypress": "13.8.1",
+    "ws@8": "^8.17.1",
+    "cookie@<0.7.0": ">=0.7.0",
+    "esbuild": "0.25.0",
+    "sass": "npm:sass-embedded@^1.93.2"
+  },
+  "engines": {
+    "node": ">=18.14.1"
+  },
+  "packageManager": "pnpm@9.1.0",
+  "prettier": "configs/prettier-config"
+}

@@ -1,0 +1,62 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+
+import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { render, screen, waitFor } from "@testing-library/react";
+// __PUBLISH_EXTRACT_START__ QuantityFormat.FormatSetSelectorExampleImports
+import { FormatSetSelector } from "@itwin/quantity-formatting-react";
+import type { FormatSet } from "@itwin/ecschema-metadata";
+// __PUBLISH_EXTRACT_END__
+import { QuantityFormattingTestUtils } from "../../utils/QuantityFormattingTestUtils.js";
+
+describe("Quantity formatting", () => {
+  describe("Learning snippets", () => {
+    describe("FormatSetSelector", () => {
+      beforeAll(async () => {
+        await QuantityFormattingTestUtils.initialize();
+      });
+
+      afterAll(async () => {
+        await QuantityFormattingTestUtils.terminate();
+      });
+
+      it("renders FormatSetSelector", async () => {
+        // __PUBLISH_EXTRACT_START__ QuantityFormat.FormatSetSelectorExample
+        const formatSets: FormatSet[] = [
+          {
+            name: "MetricSet",
+            label: "Metric Formats",
+            unitSystem: "metric",
+            description: "Standard metric unit formats",
+            formats: {},
+          },
+          {
+            name: "ImperialSet",
+            label: "Imperial Formats",
+            unitSystem: "imperial",
+            description: "Imperial unit formats",
+            formats: {},
+          },
+        ];
+
+        const handleFormatSetChange = (_formatSet: FormatSet, _key: string) => {
+          // Handle format set change
+        };
+
+        render(
+          <FormatSetSelector
+            formatSets={formatSets}
+            selectedFormatSetKey="MetricSet"
+            activeFormatSetKey="ImperialSet"
+            onFormatSetChange={handleFormatSetChange}
+          />,
+        );
+        // __PUBLISH_EXTRACT_END__
+
+        await waitFor(() => expect(screen.getByPlaceholderText("labels.searchFormatSets")).toBeDefined());
+      });
+    });
+  });
+});

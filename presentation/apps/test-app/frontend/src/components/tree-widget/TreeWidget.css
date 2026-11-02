@@ -1,0 +1,33 @@
+/*---------------------------------------------------------------------------------------------
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
+
+.tree-widget-tabs-content {
+  padding: unset;
+}
+
+.tree-widget-header {
+  padding: 0.5em;
+  display: flex;
+  gap: 0.5em;
+}
+
+.tree-widget-header .components-filtering-input {
+  flex-grow: 4;
+  margin: 0;
+}
+.tree-widget-header .diagnostics-button {
+  flex-grow: 1;
+}
+
+.tree-widget .filtered-tree {
+  flex-grow: 1;
+  min-height: 50px;
+  height: 100%;
+  width: 100%;
+}
+
+.components-filtering-input-clear :hover {
+  cursor: pointer;
+}

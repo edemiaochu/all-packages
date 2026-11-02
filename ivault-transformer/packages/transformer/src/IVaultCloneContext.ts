@@ -1,0 +1,310 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+/** @packageDocumentation
+ * @module iVaults
+ */
+import * as assert from "assert";
+import { Id64, Id64String, Logger } from "@szewtwin/core-szewec";
+import {
+  Code,
+  CodeScopeSpec,
+  ConcreteEntityTypes,
+  DMJsNames,
+  ElementAspectProps,
+  ElementProps,
+  EntityReference,
+  IVault,
+  QueryBinder,
+  RelatedElement,
+  RelatedElementProps,
+} from "@szewtwin/core-common";
+import {
+  // eslint-disable-next-line @typescript-eslint/no-redeclare
+  Element,
+  ElementAspect,
+  EntityReferences,
+  IVaultElementCloneContext,
+  IVaultJsNative,
+} from "@szewtwin/core-backend";
+import { DMReferenceTypesCache } from "./DMReferenceTypesCache";
+import { EntityUnifier } from "./EntityUnifier";
+import { TransformerLoggerCategory } from "./TransformerLoggerCategory";
+import { Property } from "@szewtwin/dmschema-metadata";
+
+const loggerCategory: string = TransformerLoggerCategory.IVaultCloneContext;
+
+/** The context for transforming a *source* Element to a *target* Element and remapping internal identifiers to the target iVault.
+ * @beta
+ */
+export class IVaultCloneContext extends IVaultElementCloneContext {
+  private _refTypesCache = new DMReferenceTypesCache();
+  private _aspectRemapTable = new Map<Id64String, Id64String>();
+
+  /** perform necessary initialization to use a clone context, namely caching the reference types in the source's schemas */
+  public override async initialize() {
+    await this._refTypesCache.initAllSchemasInIVault(this.sourceDb);
+  }
+
+  /** Clone the specified source Element into ElementProps for the target iVault.
+   * @internal
+   */
+  public override async cloneElement(
+    sourceElement: Element,
+    cloneOptions?: IVaultJsNative.CloneElementOptions
+  ): Promise<ElementProps> {
+    const targetElementProps: ElementProps = this[
+      "_nativeContext"
+    ].cloneElement(sourceElement.id, cloneOptions);
+    // Ensure that all NavigationProperties in targetElementProps have a defined value so "clearing" changes will be part of the JSON used for update
+    // eslint-disable-next-line @typescript-eslint/no-deprecated
+    sourceElement.forEach((name: string, property: Property) => {
+      if (
+        property.isNavigation() &&
+        undefined === (sourceElement as any)[DMJsNames.toJsName(name)]
+      ) {
+        (targetElementProps as any)[DMJsNames.toJsName(name)] =
+          RelatedElement.none;
+      }
+    }, false); // exclude custom because C++ has already handled them
+    if (this.isBetweenIVaults) {
+      // The native C++ cloneElement strips off federationGuid, want to put it back if transformation is between iVaults
+      targetElementProps.federationGuid = sourceElement.federationGuid;
+      const targetElementCodeScopeType = this.targetDb.codeSpecs.getById(
+        targetElementProps.code.spec
+      ).scopeType;
+      if (
+        CodeScopeSpec.Type.Repository === targetElementCodeScopeType &&
+        targetElementProps.code.scope !== IVault.rootSubjectId
+      ) {
+        Logger.logWarning(
+          loggerCategory,
+          `Incorrect CodeScope '${targetElementCodeScopeType}' is set for target element ${targetElementProps.id}`
+        );
+      }
+    }
+    // unlike other references, code cannot be null. If it is null, use an empty code instead
+    // this will be updated back later as the transformer resolves references
+    if (
+      targetElementProps.code.scope === Id64.invalid ||
+      targetElementProps.code.spec === Id64.invalid
+    ) {
+      targetElementProps.code = Code.createEmpty();
+    }
+    const jsClass = this.sourceDb.getJsClass<typeof Element>(
+      sourceElement.classFullName
+    );
+    await jsClass["onCloned"](this, sourceElement.toJSON(), targetElementProps);
+    return targetElementProps;
+  }
+
+  /** Add a rule that remaps the specified source ElementAspect to the specified target ElementAspect. */
+  public remapElementAspect(
+    aspectSourceId: Id64String,
+    aspectTargetId: Id64String
+  ): void {
+    this._aspectRemapTable.set(aspectSourceId, aspectTargetId);
+  }
+
+  /** Remove a rule that remaps the specified source ElementAspect */
+  public removeElementAspect(aspectSourceId: Id64String): void {
+    this._aspectRemapTable.delete(aspectSourceId);
+  }
+
+  /** Look up a target AspectId from the source AspectId.
+   * @returns the target AspectId or [Id64.invalid]($szewec) if a mapping not found.
+   */
+  public findTargetAspectId(sourceAspectId: Id64String): Id64String {
+    return this._aspectRemapTable.get(sourceAspectId) ?? Id64.invalid;
+  }
+
+  /** Look up a target [EntityReference]($szewec) from a source [EntityReference]($szewec)
+   * @returns the target CodeSpecId or a [EntityReference]($szewec) containing [Id64.invalid]($szewec) if a mapping is not found.
+   */
+  public async findTargetEntityId(
+    sourceEntityId: EntityReference
+  ): Promise<EntityReference> {
+    const [type, rawId] = EntityReferences.split(sourceEntityId);
+    if (Id64.isValid(rawId)) {
+      switch (type) {
+        case ConcreteEntityTypes.Model: {
+          let targetId;
+          /**
+           * The repository model is a singleton container which exists in all iVaults which has a modelId of 0x1.
+           * It is possible to remap the root subject (id 0x1) to some other non root subject, but this is not possible for the repository model.
+           * The RepositoryModel only contains bis:Subject elements and bis:InformationpartitionElement instances (https://www.szewtwinjs.org/bis/domains/biscore.dmschema/#repositorymodel)
+           * The system handler for both bis:InformationPartitionElement and bis:Subject will only permit instances to be inserted into the RepositoryModel.
+           * https://www.szewtwinjs.org/bis/domains/biscore.dmschema/#informationpartitionelement
+           * https://www.szewtwinjs.org/bis/domains/biscore.dmschema/#subject
+           * Since there is a chance that the root subject is remapped to some other subject which has the same id as the repositoryModel, we need to ignore the remapping for the repository model.
+           */
+          if (rawId === IVault.repositoryModelId) {
+            targetId = `m${IVault.repositoryModelId}` as const;
+          } else {
+            targetId = `m${this.findTargetElementId(rawId)}` as const;
+          }
+          // Check if the model exists, `findTargetElementId` may have worked because the element exists when the model doesn't.
+          // That can occur in the transformer since a submodeled element is imported before its submodel.
+          if (
+            await EntityUnifier.exists(this.targetDb, {
+              entityReference: targetId,
+            })
+          )
+            return targetId;
+          break;
+        }
+        case ConcreteEntityTypes.Element:
+          return `e${this.findTargetElementId(rawId)}`;
+        case ConcreteEntityTypes.ElementAspect:
+          return `a${this.findTargetAspectId(rawId)}`;
+        case ConcreteEntityTypes.Relationship: {
+          const makeGetConcreteEntityTypeSql = (property: string) => `
+            CASE
+              WHEN [${property}] IS (BisCore.ElementUniqueAspect) OR [${property}] IS (BisCore.ElementMultiAspect)
+                THEN 'a'
+              WHEN [${property}] IS (BisCore.Element)
+                THEN 'e'
+              WHEN [${property}] IS (BisCore.Model)
+                THEN 'm'
+              WHEN [${property}] IS (BisCore.CodeSpec)
+                THEN 'c'
+              WHEN [${property}] IS (BisCore.ElementRefersToElements) -- TODO: ElementDrivesElement still not handled by the transformer
+                THEN 'r'
+              ELSE 'error'
+            END
+          `;
+          const sql = `
+            SELECT
+              SourceDMInstanceId,
+              TargetDMInstanceId,
+              (${makeGetConcreteEntityTypeSql(
+                "SourceDMClassId"
+              )}) AS SourceType,
+              (${makeGetConcreteEntityTypeSql("TargetDMClassId")}) AS TargetType
+            FROM BisCore:ElementRefersToElements
+            WHERE DMInstanceId=?
+            `;
+          const params = new QueryBinder().bindId(1, rawId);
+          const reader = this.sourceDb.createQueryReader(sql, params, {
+            usePrimaryConn: true,
+          });
+          const relInSource = await (async () => {
+            if (await reader.step()) {
+              const sourceId = reader.current[0];
+              const targetId = reader.current[1];
+              const sourceType = reader.current[2] as
+                | ConcreteEntityTypes
+                | "error";
+              const targetType = reader.current[3] as
+                | ConcreteEntityTypes
+                | "error";
+              if (sourceType === "error" || targetType === "error")
+                throw Error("relationship end had unknown root class");
+              return {
+                sourceId: `${sourceType}${sourceId}`,
+                targetId: `${targetType}${targetId}`,
+              } as const;
+            }
+            return undefined;
+          })();
+          if (relInSource === undefined) break;
+          // just in case prevent recursion
+          if (
+            relInSource.sourceId === sourceEntityId ||
+            relInSource.targetId === sourceEntityId
+          )
+            throw Error(
+              "link table relationship end was resolved to itself. This should be impossible"
+            );
+          const relInTarget = {
+            sourceId: await this.findTargetEntityId(relInSource.sourceId),
+            targetId: await this.findTargetEntityId(relInSource.targetId),
+          };
+          // return a null
+          if (
+            !EntityReferences.isValid(relInTarget.sourceId) ||
+            !EntityReferences.isValid(relInTarget.targetId)
+          )
+            break;
+          const relInTargetSql = `
+            SELECT DMInstanceId
+            FROM BisCore:ElementRefersToElements
+            WHERE SourceDMInstanceId=?
+              AND TargetDMInstanceId=?
+            `;
+          const relInTargetParams = new QueryBinder();
+          relInTargetParams.bindId(
+            1,
+            EntityReferences.toId64(relInTarget.sourceId)
+          );
+          relInTargetParams.bindId(
+            2,
+            EntityReferences.toId64(relInTarget.targetId)
+          );
+          const relInTargetResult = await this.targetDb
+            .createQueryReader(relInTargetSql, relInTargetParams, {
+              usePrimaryConn: true,
+            })
+            .next();
+          const relInTargetId = relInTargetResult.done
+            ? Id64.invalid
+            : relInTargetResult.value.id;
+          return `r${relInTargetId}`;
+        }
+      }
+    }
+    return `${type}${Id64.invalid}`;
+  }
+
+  /** Clone the specified source Element into ElementProps for the target iVault.
+   * @internal
+   */
+  public async cloneElementAspect(
+    sourceElementAspect: ElementAspect
+  ): Promise<ElementAspectProps> {
+    const targetElementAspectProps: ElementAspectProps =
+      sourceElementAspect.toJSON();
+    targetElementAspectProps.id = undefined;
+    const targetEntityIds: Promise<void>[] = [];
+    // eslint-disable-next-line @typescript-eslint/no-deprecated
+    sourceElementAspect.forEach((dmName, property) => {
+      const name = DMJsNames.toJsName(dmName);
+      if (property.isNavigation()) {
+        const sourceNavProp: RelatedElementProps | undefined =
+          sourceElementAspect.asAny[name];
+        if (sourceNavProp?.id) {
+          const navPropRefType = this._refTypesCache.getNavPropRefType(
+            sourceElementAspect.schemaName,
+            sourceElementAspect.className,
+            name
+          );
+          assert(
+            navPropRefType !== undefined,
+            `nav prop ref type for '${name}' was not in the cache, this is a bug.`
+          );
+          targetEntityIds.push(
+            this.findTargetEntityId(
+              EntityReferences.fromEntityType(sourceNavProp.id, navPropRefType)
+            ).then((targetEntityReference) => {
+              const targetEntityId = EntityReferences.toId64(
+                targetEntityReference
+              );
+              // spread the property in case toJSON did not deep-clone
+              (targetElementAspectProps as any)[name] = {
+                ...(targetElementAspectProps as any)[name],
+                id: targetEntityId,
+              };
+            })
+          );
+        }
+      } else if (property.isPrimitive() && "Id" === property.extendedTypeName) {
+        (targetElementAspectProps as any)[name] = this.findTargetElementId(
+          sourceElementAspect.asAny[name]
+        );
+      }
+    });
+    await Promise.all(targetEntityIds);
+    return targetElementAspectProps;
+  }
+}

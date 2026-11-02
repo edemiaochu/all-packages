@@ -1,0 +1,5 @@
+import React, { type SVGProps } from 'react';
+declare const SvgBolt: (props: SVGProps<SVGSVGElement>) => React.JSX.Element;
+export default SvgBolt;
+export { SvgBolt };
+//# sourceMappingURL=Bolt.d.ts.map

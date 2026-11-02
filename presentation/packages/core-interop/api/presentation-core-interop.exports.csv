@@ -1,0 +1,8 @@
+sep=;
+Release Tag;API Item Type;API Item Name
+public;function;createDMSchemaProvider
+public;function;createDMSqlQueryExecutor
+public;function;createIVaultKey
+public;function;createLogger
+public;function;createValueFormatter
+public;function;registerTxnListeners

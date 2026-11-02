@@ -1,0 +1,17 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@use "variables" as *;
+
+.nz-target-mergeTarget {
+  @include nz-widget-target;
+
+  &.nz-hidden {
+    display: none;
+  }
+
+  &.nz-targeted {
+    @include nz-targeted-widget-target;
+  }
+}

@@ -1,0 +1,54 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+
+import { describe, expect, it, vi } from "vitest";
+import { StandardTypeNames } from "@szewtwin/appui-abstract";
+import {
+  NumericEditorName,
+  NumericPropertyEditor,
+} from "../../../presentation-components/properties/editors/NumericPropertyEditor.js";
+import { createTestPropertyRecord } from "../../_helpers/UiComponents.js";
+import { render, waitFor } from "../../TestUtils.js";
+
+const createRecord = (initialValue?: number) => {
+  return createTestPropertyRecord(
+    { value: initialValue, displayValue: initialValue?.toString() },
+    { typename: StandardTypeNames.Double, editor: { name: NumericEditorName } },
+  );
+};
+
+describe("<NumericPropertyEditor />", () => {
+  it("renders input when property record is provided", async () => {
+    const record = createRecord();
+    const { getByTestId } = render(<NumericPropertyEditor propertyRecord={record} />);
+    expect(getByTestId("numeric-input")).not.toBeNull();
+  });
+
+  it("renders nothing when property record is not provided", async () => {
+    const { container } = render(<NumericPropertyEditor />);
+    expect(container.firstChild).toBeNull();
+  });
+
+  it("Invokes `onCommit` with correct parameters only when input container gets blurred", async () => {
+    const record = createRecord();
+    const spy = vi.fn();
+    const { getByTestId, queryByDisplayValue, user } = render(
+      <NumericPropertyEditor propertyRecord={record} onCommit={spy} />,
+    );
+
+    const inputContainer = await waitFor(() => getByTestId("numeric-input"));
+
+    await user.type(inputContainer, "1");
+    expect(spy).not.toHaveBeenCalled();
+
+    await user.tab();
+
+    await waitFor(() => expect(queryByDisplayValue("1")).not.toBeNull());
+    expect(spy).toHaveBeenCalledExactlyOnceWith({
+      propertyRecord: record,
+      newValue: { valueFormat: 0, value: 1, displayValue: "1", roundingError: 0.5 },
+    });
+  });
+});

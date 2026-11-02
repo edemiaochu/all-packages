@@ -1,0 +1,117 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@use "~@szewtwin/core-react/lib/core-react/typography" as *;
+@use "../../../target" as *;
+@use "variables" as *;
+
+.components-toolbar-item-expandable-group-tool-item {
+  $item-height: 32px;
+  $item-border-width: 2px;
+  $active-tool-stripe-height: 22px;
+  $active-tool-stripe-width: 2px;
+  $icon-size: 16px;
+  $space-between-icon-and-label: 32px - 16px;
+
+  white-space: nowrap;
+  height: $item-height;
+  color: var(--iui-color-text);
+  cursor: pointer;
+  border-radius: var(--iui-border-radius-1);
+  display: flex;
+  align-items: center;
+
+  @include body1;
+
+  @mixin components-active-tool {
+    &:not(.components-disabled) {
+      background: var(--iui-color-background-hover);
+      color: var(--iui-color-text-accent-hover);
+    }
+  }
+
+  > .components-icon {
+    width: $icon-size;
+    height: $icon-size;
+    display: inline-block;
+    margin-right: $space-between-icon-and-label;
+    margin-left: 8px;
+    position: relative;
+
+    > .components-badge {
+      position: absolute;
+      top: -8px;
+      left: -8px;
+    }
+  }
+
+  > .components-label {
+    display: inline-block;
+    margin-right: $space-after-label;
+    line-height: $item-height;
+
+    &:after {
+      display: block;
+      content: attr(title);
+      font-weight: bold;
+      height: 1px;
+      color: transparent;
+      overflow: hidden;
+      visibility: hidden;
+    }
+  }
+
+  @include components-internal-targeted {
+    &:not(.components-disabled) {
+      color: var(--iui-color-text-hover);
+
+      @include body1;
+    }
+  }
+
+  &:active {
+    @include components-active-tool;
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &.components-pointer-up {
+    @include components-internal-targeted {
+      @include components-active-tool;
+    }
+  }
+
+  &.components-focused:not(.components-disabled) {
+    color: var(--iui-color-text-accent);
+    border-color: var(--iui-color-border-accent);
+    border-width: $item-border-width;
+    border-style: solid;
+
+    @include body1;
+  }
+
+  &.components-active:not(.components-disabled) {
+    color: var(--iui-color-text-accent);
+
+    @include body1;
+
+    &::before {
+      content: "";
+      background-color: var(--iui-color-border-accent);
+      display: block;
+      position: relative;
+      top: 0;
+      left: $item-border-width + 1;
+      width: $active-tool-stripe-width;
+      height: $active-tool-stripe-height;
+      border-radius: 2px;
+    }
+  }
+
+  &.components-disabled {
+    color: var(--iui-color-text-disabled);
+  }
+}

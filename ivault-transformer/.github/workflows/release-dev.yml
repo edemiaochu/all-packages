@@ -1,0 +1,51 @@
+name: Publish dev pre-release NPM packages
+
+on:
+  workflow_dispatch:
+    inputs:
+      specialReleaseTag:
+        description: |
+          Prefix to put on the prerelease version tag, e.g. dev -> 1.1.1-dev.0.
+          If 'dev', it is a nightly release.
+        default: 'dev'
+      
+  push:
+    branches: ["main"]
+    paths:
+      - 'packages/**'
+      - '!packages/test-app/**'
+
+jobs:
+  release-packages:
+    runs-on: ubuntu-latest
+
+    name: Release packages
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        token: ${{ secrets.IMJS_ADMIN_GH_TOKEN }}
+
+    - name: Install pnpm
+      uses: pnpm/action-setup@v4
+
+    - name: Use Node.js 24
+      uses: actions/setup-node@v3
+      with:
+        node-version: 24.18.0
+        registry-url: http://localhost:4873//
+
+    - name: Install dependencies
+      run: pnpm install
+
+    - name: Build
+      run: pnpm run build
+
+    - name: Publish packages
+      run: |
+        git config --local user.email imodeljs-admin@users.noreply.github.com
+        git config --local user.name imodeljs-admin
+        pnpm publish-packages-dev -y --branch ${{ github.ref_name }} --message "Version bump [skip actions]"
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPMJS_PUBLISH_ITWIN }}
+        SPECIAL_TAG: ${{ github.event.inputs.specialReleaseTag }}

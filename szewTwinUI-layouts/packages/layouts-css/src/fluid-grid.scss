@@ -1,0 +1,18 @@
+// Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+// See LICENSE.md in the project root for license terms and full copyright notice.
+@import './breakpoints';
+
+.iui-layouts-fluid-grid {
+  --_iui-grid-item-min-width: 256px;
+
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(Min(100%, var(--_iui-grid-item-min-width)), 1fr)
+  );
+  gap: var(--iui-size-l);
+
+  &.iui-layouts-fluid-grid > * {
+    width: 100%;
+  }
+}

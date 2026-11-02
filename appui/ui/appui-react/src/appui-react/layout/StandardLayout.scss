@@ -1,0 +1,86 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@layer appui.component {
+  .nz-standardLayout {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+
+    display: grid;
+    grid-template-columns: minmax(0, auto) 1fr minmax(0, auto);
+    grid-template-rows: minmax(0, auto) minmax(0, auto) 1fr minmax(0, auto) minmax(
+        0,
+        auto
+      );
+    grid-template-areas:
+      "ts ts ts"
+      "tp tp tp"
+      "lp cc rp"
+      "bp bp bp"
+      "sb sb sb";
+
+    > .nz-appContent {
+      grid-row: ts-end / bp-end;
+      grid-column: 1 / -1;
+
+      // TODO: clean-up #uifw-contentlayout-div
+      position: relative;
+    }
+
+    > .nz-toolSettings {
+      grid-area: ts;
+    }
+
+    > .nz-centerContent {
+      grid-area: cc;
+
+      pointer-events: none;
+    }
+
+    > .nz-statusBar {
+      grid-area: sb;
+    }
+
+    &.nz-pinned-left {
+      > .nz-appContent {
+        grid-column-start: 2;
+      }
+    }
+
+    &.nz-pinned-right {
+      > .nz-appContent {
+        grid-column-end: -2;
+      }
+    }
+
+    &.nz-pinned-top {
+      > .nz-appContent {
+        grid-row-start: tp-end;
+      }
+    }
+
+    &.nz-pinned-bottom {
+      > .nz-appContent {
+        grid-row-end: bp-start;
+      }
+    }
+  }
+
+  .nz-standardLayout_topPanel {
+    grid-area: tp;
+  }
+
+  .nz-standardLayout_leftPanel {
+    grid-area: lp;
+  }
+
+  .nz-standardLayout_rightPanel {
+    grid-area: rp;
+  }
+
+  .nz-standardLayout_bottomPanel {
+    grid-area: bp;
+  }
+}

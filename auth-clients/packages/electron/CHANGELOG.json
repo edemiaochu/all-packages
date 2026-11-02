@@ -1,0 +1,780 @@
+{
+  "name": "@szewtwin/electron-authorization",
+  "entries": [
+    {
+      "date": "Mon, 30 Mar 2026 16:53:21 GMT",
+      "version": "0.22.3",
+      "tag": "@szewtwin/electron-authorization_v0.22.3",
+      "comments": {
+        "patch": [
+          {
+            "author": "50554904+hl662@users.noreply.github.com",
+            "package": "@szewtwin/electron-authorization",
+            "commit": "517ef259cdf12176123433b63c56331cdb5db936",
+            "comment": "chore: upgrade all packages to @szewtwin/eslint-plugin@6 and eslint@9"
+          },
+          {
+            "author": "50554904+hl662@users.noreply.github.com",
+            "package": "@szewtwin/electron-authorization",
+            "commit": "517ef259cdf12176123433b63c56331cdb5db936",
+            "comment": "Fix ESM exports by adding .js extensions to all relative imports and emitting lib/esm/package.json with type module"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Tue, 17 Mar 2026 07:19:34 GMT",
+      "version": "0.22.2",
+      "tag": "@szewtwin/electron-authorization_v0.22.2",
+      "comments": {
+        "patch": [
+          {
+            "author": "98940208+GytisCepk@users.noreply.github.com",
+            "package": "@szewtwin/electron-authorization",
+            "commit": "871457b35458addbe18d62997a4a6305d1e331da",
+            "comment": "Add support for Electron 41"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Mon, 19 Jan 2026 08:38:00 GMT",
+      "version": "0.22.1",
+      "tag": "@szewtwin/electron-authorization_v0.22.1",
+      "comments": {
+        "patch": [
+          {
+            "author": "98940208+GytisCepk@users.noreply.github.com",
+            "package": "@szewtwin/electron-authorization",
+            "commit": "3388420c67ab74d8bba01807e4ed2c64b060d0ba",
+            "comment": "Add support for Electron 40"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Mon, 12 Jan 2026 19:52:14 GMT",
+      "version": "0.22.0",
+      "tag": "@szewtwin/electron-authorization_v0.22.0",
+      "comments": {
+        "minor": [
+          {
+            "author": "alex.dunae@szewec.com",
+            "package": "@szewtwin/electron-authorization",
+            "commit": "0f3d2ee177b6109bad952c045846ebd4819dfbed",
+            "comment": "Add onUserStateChanged event to auth-client instances and deprecate onUserStateChanged static event"
+          },
+          {
+            "author": "alex.dunae@szewec.com",
+            "package": "@szewtwin/electron-authorization",
+            "commit": "0f3d2ee177b6109bad952c045846ebd4819dfbed",
+            "comment": "Allow customizing IPC channel names"
+          }
+        ],
+        "patch": [
+          {
+            "author": "GytisCepk@users.noreply.github.com",
+            "package": "@szewtwin/electron-authorization",
+            "commit": "0f3d2ee177b6109bad952c045846ebd4819dfbed",
+            "comment": "Add support for Electron 39"
+          }
+        ],
+        "none": [
+          {
+            "author": "Gytis.Cepkauskas@szewec.com",
+            "package": "@szewtwin/electron-authorization",
+            "commit": "0f3d2ee177b6109bad952c045846ebd4819dfbed",
+            "comment": " "
+          }
+        ]
+      }
+    },
+    {
+      "date": "Mon, 27 Oct 2025 12:14:12 GMT",
+      "version": "0.21.2",
+      "tag": "@szewtwin/electron-authorization_v0.21.2",
+      "comments": {
+        "none": [
+          {
+            "author": "35135765+grigasp@users.noreply.github.com",
+            "package": "@szewtwin/electron-authorization",
+            "commit": "ca03d6d5b41fceee1a07639741327f59ffec3614",
+            "comment": "Bump `@playwright/test` dev dependency version to `~1.56.1`."
+          }
+        ],
+        "patch": [
+          {
+            "author": "GytisCepk@users.noreply.github.com",
+            "package": "@szewtwin/electron-authorization",
+            "commit": "ca03d6d5b41fceee1a07639741327f59ffec3614",
+            "comment": "Add support for Electron 37"
+          },
+          {
+            "author": "ben-polinsky@users.noreply.github.com",
+            "package": "@szewtwin/electron-authorization",
+            "commit": "ca03d6d5b41fceee1a07639741327f59ffec3614",
+            "comment": "pnpm up to bump form-data to 4.0.4"
+          },
+          {
+            "author": "GytisCepk@users.noreply.github.com",
+            "package": "@szewtwin/electron-authorization",
+            "commit": "ca03d6d5b41fceee1a07639741327f59ffec3614",
+            "comment": "Add support for Electron 38"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Mon, 23 Jun 2025 14:20:52 GMT",
+      "version": "0.21.1",
+      "tag": "@szewtwin/electron-authorization_v0.21.1",
+      "comments": {
+        "patch": [
+          {
+            "author": "pankhur94@users.noreply.github.com",
+            "package": "@szewtwin/electron-authorization",
+            "commit": "2d522e180132be3d23818e570a1e7f6da9233560",
+            "comment": "fix issue importing electron"
+          }
+        ],
+        "none": [
+          {
+            "author": "66480813+paulius-valiunas@users.noreply.github.com",
+            "package": "@szewtwin/electron-authorization",
+            "commit": "2d522e180132be3d23818e570a1e7f6da9233560",
+            "comment": "update dependencies"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Wed, 04 Jun 2025 20:44:05 GMT",
+      "version": "0.21.0",
+      "tag": "@szewtwin/electron-authorization_v0.21.0",
+      "comments": {
+        "minor": [
+          {
+            "author": "pankhur94@users.noreply.github.com",
+            "package": "@szewtwin/electron-authorization",
+            "commit": "ae310a6d34c939543963d3063c837370caafcdd9",
+            "comment": "Drop support for core v3 and v4  & for electron version <34"
+          }
+        ],
+        "none": [
+          {
+            "author": "pankhur94@users.noreply.github.com",
+            "package": "@szewtwin/electron-authorization",
+            "commit": "ae310a6d34c939543963d3063c837370caafcdd9",
+            "comment": ""
+          }
+        ]
+      }
+    },
+    {
+      "date": "Fri, 28 Feb 2025 16:26:52 GMT",
+      "version": "0.20.0",
+      "tag": "@szewtwin/electron-authorization_v0.20.0",
+      "comments": {
+        "minor": [
+          {
+            "author": "3654177+abeesh@users.noreply.github.com",
+            "package": "@szewtwin/electron-authorization",
+            "commit": "9e41ad6e2bf1c9100f4958d9303e2e4d584fc1e0",
+            "comment": "Exposed a few methods to the derived class to support other clients"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Mon, 17 Feb 2025 21:20:34 GMT",
+      "version": "0.19.8",
+      "tag": "@szewtwin/electron-authorization_v0.19.8",
+      "comments": {
+        "none": [
+          {
+            "author": "50554904+hl662@users.noreply.github.com",
+            "package": "@szewtwin/electron-authorization",
+            "commit": "88804ed4738935fe185313037de31be288c01f58",
+            "comment": ""
+          },
+          {
+            "author": "ben-polinsky@users.noreply.github.com",
+            "package": "@szewtwin/electron-authorization",
+            "commit": "88804ed4738935fe185313037de31be288c01f58",
+            "comment": "remove networkidle from electron integration tests"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Mon, 16 Dec 2024 21:41:11 GMT",
+      "version": "0.19.8",
+      "tag": "@szewtwin/electron-authorization_v0.19.8",
+      "comments": {
+        "patch": [
+          {
+            "author": "ben-polinsky@users.noreply.github.com",
+            "package": "@szewtwin/electron-authorization",
+            "commit": "f39647a2d8e7326ef0bef7594ce4baad35da03b8",
+            "comment": "Delete stored token if application scopes change"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Wed, 20 Nov 2024 18:34:06 GMT",
+      "version": "0.19.7",
+      "tag": "@szewtwin/electron-authorization_v0.19.7",
+      "comments": {
+        "patch": [
+          {
+            "author": "33036725+wgoehrig@users.noreply.github.com",
+            "package": "@szewtwin/electron-authorization",
+            "commit": "6aea6cc2225668d77e30e0902cdfca62e0ebb8d4",
+            "comment": "Update to username v7.0.0"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Tue, 29 Oct 2024 21:49:00 GMT",
+      "version": "0.19.6",
+      "tag": "@szewtwin/electron-authorization_v0.19.6",
+      "comments": {
+        "patch": [
+          {
+            "author": "GytisCepk@users.noreply.github.com",
+            "package": "@szewtwin/electron-authorization",
+            "commit": "1934666d29263673fe8002d4f852d1f7a258f218",
+            "comment": "Add support for Electron 33"
+          },
+          {
+            "author": "GytisCepk@users.noreply.github.com",
+            "package": "@szewtwin/electron-authorization",
+            "commit": "1934666d29263673fe8002d4f852d1f7a258f218",
+            "comment": "Add support for Electron 32"
+          }
+        ],
+        "none": [
+          {
+            "author": "ben-polinsky@users.noreply.github.com",
+            "package": "@szewtwin/electron-authorization",
+            "commit": "1934666d29263673fe8002d4f852d1f7a258f218",
+            "comment": ""
+          }
+        ]
+      }
+    },
+    {
+      "date": "Tue, 02 Jul 2024 22:24:53 GMT",
+      "version": "0.19.5",
+      "tag": "@szewtwin/electron-authorization_v0.19.5",
+      "comments": {
+        "patch": [
+          {
+            "author": "GytisCepk@users.noreply.github.com",
+            "package": "@szewtwin/electron-authorization",
+            "commit": "25a2827d219260cde76998a640b0c73f0a77aa3a",
+            "comment": "Add support for Electron 31"
+          },
+          {
+            "author": "50554904+hl662@users.noreply.github.com",
+            "package": "@szewtwin/electron-authorization",
+            "commit": "25a2827d219260cde76998a640b0c73f0a77aa3a",
+            "comment": "Add missing CJS and ESM support for subpath imports"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Tue, 18 Jun 2024 19:11:49 GMT",
+      "version": "0.19.4",
+      "tag": "@szewtwin/electron-authorization_v0.19.4",
+      "comments": {
+        "patch": [
+          {
+            "author": "ben-polinsky@users.noreply.github.com",
+            "package": "@szewtwin/electron-authorization",
+            "commit": "f1465b0f0fc422baad21759d0aaff094d4391e84",
+            "comment": "fix latest sec vulnerabilities; run audit during ci"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Tue, 11 Jun 2024 21:25:12 GMT",
+      "version": "0.19.3",
+      "tag": "@szewtwin/electron-authorization_v0.19.3",
+      "comments": {
+        "patch": [
+          {
+            "author": "ben-polinsky@users.noreply.github.com",
+            "package": "@szewtwin/electron-authorization",
+            "commit": "04e8a750a1ec920ca1cf7fd2c61c388b9af9f677",
+            "comment": "Only listen on hostname and port provided in redirectUris. Previously, we would listen on any local interface with the selected port."
+          }
+        ]
+      }
+    },
+    {
+      "date": "Wed, 08 May 2024 21:11:26 GMT",
+      "version": "0.19.2",
+      "tag": "@szewtwin/electron-authorization_v0.19.2",
+      "comments": {
+        "patch": [
+          {
+            "author": "ben-polinsky@users.noreply.github.com",
+            "package": "@szewtwin/electron-authorization",
+            "commit": "26561d12deb510bc9d418faa285c2966f73fe5b3",
+            "comment": "clean up `this` usage"
+          },
+          {
+            "author": "GytisCepk@users.noreply.github.com",
+            "package": "@szewtwin/electron-authorization",
+            "commit": "26561d12deb510bc9d418faa285c2966f73fe5b3",
+            "comment": "Add support for Electron 30"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Thu, 28 Mar 2024 13:12:45 GMT",
+      "version": "0.19.1",
+      "tag": "@szewtwin/electron-authorization_v0.19.1",
+      "comments": {
+        "patch": [
+          {
+            "author": "ben-polinsky@users.noreply.github.com",
+            "package": "@szewtwin/electron-authorization",
+            "commit": "5ecd674a9302f10ed593fe07c42a1508d34add4c",
+            "comment": "defaultExpiryBufferInSeconds should be internal"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Thu, 28 Mar 2024 09:11:38 GMT",
+      "version": "0.19.0",
+      "tag": "@szewtwin/electron-authorization_v0.19.0",
+      "comments": {
+        "minor": [
+          {
+            "author": "17436829+GintV@users.noreply.github.com",
+            "package": "@szewtwin/electron-authorization",
+            "commit": "254f3a5d08bf205a3360639cd1e5ffa72565b4dd",
+            "comment": "Unify expiry buffer accross electron auth clients - added ability to set expiryBuffer for ElectronRendererAuthorization, defaulting to 10 min - added defaultExpiryBufferInSeconds to be reused in both electron auth clients - added ElectronRendererAuthorization._tokenRequest to be returned instead of Promise.reject() to short-circuit any recursive use of ElectronRendererAuthorization.getAccessToken"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Thu, 14 Mar 2024 15:38:52 GMT",
+      "version": "0.18.5",
+      "tag": "@szewtwin/electron-authorization_v0.18.5",
+      "comments": {
+        "patch": [
+          {
+            "author": "GytisCepk@users.noreply.github.com",
+            "package": "@szewtwin/electron-authorization",
+            "commit": "77f681fedcdbab4d9840633ac98364e6096bc884",
+            "comment": "Add support for Electron 29"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Wed, 21 Feb 2024 19:26:31 GMT",
+      "version": "0.18.4",
+      "tag": "@szewtwin/electron-authorization_v0.18.4",
+      "comments": {
+        "patch": [
+          {
+            "author": "17436829+GintV@users.noreply.github.com",
+            "package": "@szewtwin/electron-authorization",
+            "commit": "057e7e3b00c9126a9dbb9fc1f46fc488b7898d62",
+            "comment": "Handle decryptRefreshToken failure"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Thu, 08 Feb 2024 15:38:07 GMT",
+      "version": "0.18.3",
+      "tag": "@szewtwin/electron-authorization_v0.18.3",
+      "comments": {
+        "patch": [
+          {
+            "author": "17436829+GintV@users.noreply.github.com",
+            "package": "@szewtwin/electron-authorization",
+            "commit": "678d22010ddbad3f54d1728df74b062f093127b8",
+            "comment": "Anticipate safeStorage to be polyfilled with async functions"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Wed, 17 Jan 2024 15:40:23 GMT",
+      "version": "0.18.2",
+      "tag": "@szewtwin/electron-authorization_v0.18.2",
+      "comments": {
+        "patch": [
+          {
+            "author": "GytisCepk@users.noreply.github.com",
+            "package": "@szewtwin/electron-authorization",
+            "commit": "cd0b4076fe458ad78015fadbfd14cc9285a774f3",
+            "comment": "Add support for Electron 28"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Thu, 14 Dec 2023 15:21:31 GMT",
+      "version": "0.18.1",
+      "tag": "@szewtwin/electron-authorization_v0.18.1",
+      "comments": {
+        "patch": [
+          {
+            "author": "19596966+johnnyd710@users.noreply.github.com",
+            "package": "@szewtwin/electron-authorization",
+            "commit": "524a79ac4f59b99dff8c6486821951d0e6c2086a",
+            "comment": "Publish static HTML loopback files."
+          }
+        ]
+      }
+    },
+    {
+      "date": "Thu, 14 Dec 2023 00:10:26 GMT",
+      "version": "0.18.0",
+      "tag": "@szewtwin/electron-authorization_v0.18.0",
+      "comments": {
+        "minor": [
+          {
+            "author": "19596966+johnnyd710@users.noreply.github.com",
+            "package": "@szewtwin/electron-authorization",
+            "commit": "833e9d630a38bcfe85c9f6fa26831cd2ea961639",
+            "comment": "Resolve ElectronRendererAuthorization signIn when sign in has completed and reject if an error occurs."
+          }
+        ]
+      }
+    },
+    {
+      "date": "Mon, 13 Nov 2023 15:21:13 GMT",
+      "version": "0.17.0",
+      "tag": "@szewtwin/electron-authorization_v0.17.0",
+      "comments": {
+        "minor": [
+          {
+            "author": "GytisCepk@users.noreply.github.com",
+            "package": "@szewtwin/electron-authorization",
+            "commit": "022b04c78e5370a607641603be9391c04d0b238f",
+            "comment": "Add support for Electron 25 & 26"
+          },
+          {
+            "author": "AnDuong249@users.noreply.github.com",
+            "package": "@szewtwin/electron-authorization",
+            "commit": "022b04c78e5370a607641603be9391c04d0b238f",
+            "comment": "Added package.json export field and export ElectronMain cjs and ElectronRenderer esm subpath"
+          },
+          {
+            "author": "Jake-Screen@users.noreply.github.com",
+            "package": "@szewtwin/electron-authorization",
+            "commit": "022b04c78e5370a607641603be9391c04d0b238f",
+            "comment": ""
+          },
+          {
+            "author": "GytisCepk@users.noreply.github.com",
+            "package": "@szewtwin/electron-authorization",
+            "commit": "022b04c78e5370a607641603be9391c04d0b238f",
+            "comment": "Add support for Electron 27"
+          }
+        ],
+        "none": [
+          {
+            "author": "ben-polinsky@users.noreply.github.com",
+            "package": "@szewtwin/electron-authorization",
+            "commit": "022b04c78e5370a607641603be9391c04d0b238f",
+            "comment": "ensure electron package.json version in line with latest release"
+          },
+          {
+            "author": "50554904+hl662@users.noreply.github.com",
+            "package": "@szewtwin/electron-authorization",
+            "commit": "022b04c78e5370a607641603be9391c04d0b238f",
+            "comment": "fix test file build error"
+          }
+        ],
+        "patch": [
+          {
+            "author": "ben-polinsky@users.noreply.github.com",
+            "package": "@szewtwin/electron-authorization",
+            "commit": "022b04c78e5370a607641603be9391c04d0b238f",
+            "comment": "add styled html loopback pages"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.15.0",
+      "tag": "@szewtwin/electron-authorization_v0.15.0",
+      "date": "Wed, 16 Aug 2023 15:07:40 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "move away from node-keytar to SafeStorage"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.14.1",
+      "tag": "@szewtwin/electron-authorization_v0.14.1",
+      "date": "Tue, 25 Jul 2023 14:33:09 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Upgrade @playwright/test to 1.35.1 and remove playwright as dependency"
+          },
+          {
+            "comment": "fix dependency version ranges"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.14.0",
+      "tag": "@szewtwin/electron-authorization_v0.14.0",
+      "date": "Wed, 17 May 2023 20:26:35 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "add core-common as direct dep (types); 1.0 release"
+          },
+          {
+            "comment": "logout now triggers endsession url in system browser; switch to shell.openExternal to ensure urls open on macso; "
+          }
+        ],
+        "minor": [
+          {
+            "comment": "Add support for Electron 24."
+          },
+          {
+            "comment": "Add ability to initiate silentSignIn from ElectronRendererAuthorization"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.13.0",
+      "tag": "@szewtwin/electron-authorization_v0.13.0",
+      "date": "Wed, 29 Mar 2023 09:49:21 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "### Breaking changes:\n- Changes to `ElectronMainAuthorizationConfiguration`:\n  - Property `scope` renamed to `scopes`\n  - Property `redirectUri: string | undefined` changed to `redirectUris: string[]`\n- Parameter `prompt=consent` is no longer unconditionally added to all OIDC Authentication requests\n- Parameter `access_type=offline` is no longer added to OIDC Authentication requests (should have no effect on behavior)\n- `TokenStore` is no longer exposed from `ElectronMainAuthorization`\n- `ElectronRendererAuthorization` constructor now accepts `ElectronRendererAuthorizationConfiguration` with a required `clientId` parameter."
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.12.0",
+      "tag": "@szewtwin/electron-authorization_v0.12.0",
+      "date": "Tue, 14 Mar 2023 20:05:10 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Replace npm open package for electron.shell.openPath"
+          }
+        ],
+        "minor": [
+          {
+            "comment": "Drop support for Node 12, Node 14 and Node 16."
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.11.0",
+      "tag": "@szewtwin/electron-authorization_v0.11.0",
+      "date": "Thu, 23 Feb 2023 22:01:20 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Drop support for Electron 14, 15, 16, 17, 22. Start supporting Electron 23."
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.10.1",
+      "tag": "@szewtwin/electron-authorization_v0.10.1",
+      "date": "Tue, 10 Jan 2023 15:45:09 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Enabled linux usage for tokenstore"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.10.0",
+      "tag": "@szewtwin/electron-authorization_v0.10.0",
+      "date": "Tue, 03 Jan 2023 21:06:26 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Update minimum szewTwin.js version to 3.3.0"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.9.0",
+      "tag": "@szewtwin/electron-authorization_v0.9.0",
+      "date": "Fri, 23 Dec 2022 16:03:26 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "fix for minor documentation inconsistencies"
+          }
+        ],
+        "minor": [
+          {
+            "comment": "Add Electron 22 as supported Electron version."
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.8.5",
+      "tag": "@szewtwin/electron-authorization_v0.8.5",
+      "date": "Thu, 25 Aug 2022 13:58:56 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Add Electron as peer dependency."
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.8.4",
+      "tag": "@szewtwin/electron-authorization_v0.8.4",
+      "date": "Tue, 03 May 2022 00:43:48 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Include issuerUrl in Electron client TokenStore key"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.8.3",
+      "tag": "@szewtwin/electron-authorization_v0.8.3",
+      "date": "Wed, 02 Feb 2022 20:20:14 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "update keytar version"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.8.2",
+      "tag": "@szewtwin/electron-authorization_v0.8.2",
+      "date": "Tue, 01 Feb 2022 18:01:38 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Update invalid \"this\" reference"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.8.1",
+      "tag": "@szewtwin/electron-authorization_v0.8.1",
+      "date": "Tue, 25 Jan 2022 15:34:41 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "update core dependencies"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.8.0",
+      "tag": "@szewtwin/electron-authorization_v0.8.0",
+      "date": "Mon, 24 Jan 2022 19:35:01 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Update to use szewTwin.js 3.0 official release"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.7.0",
+      "tag": "@szewtwin/electron-authorization_v0.7.0",
+      "date": "Fri, 17 Dec 2021 19:52:59 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Replaced initialize with silent signin"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.6.0",
+      "tag": "@szewtwin/electron-authorization_v0.6.0",
+      "date": "Wed, 15 Dec 2021 20:20:04 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "pin deps to core rc"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.5.1",
+      "tag": "@szewtwin/electron-authorization_v0.5.1",
+      "date": "Thu, 02 Dec 2021 18:07:16 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Automatically adds offline_access scope if not already included"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.5.0",
+      "tag": "@szewtwin/electron-authorization_v0.5.0",
+      "date": "Mon, 29 Nov 2021 22:10:32 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Renaming barrel files to match electron naming scheme"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.4.0",
+      "tag": "@szewtwin/electron-authorization_v0.4.0",
+      "date": "Mon, 29 Nov 2021 15:30:19 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Changed ElectronAuthorizationBackend name to ElectronAuthorizationMain and ElectronAppAuthorization to ElectronAuthorizationRenderer"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "outDir": "lib",
+    "jsx": "preserve",
+    "skipLibCheck": true
+  },
+  "files": ["./codemod.ts"]
+}

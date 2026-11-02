@@ -1,0 +1,31 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+import { PropertyRecord } from "@szewtwin/appui-abstract";
+import { TreeImageLoader } from "../../components-react/tree/ImageLoader.js";
+
+describe("TreeImageLoader", () => {
+  const imageLoader = new TreeImageLoader();
+
+  describe("load", () => {
+    it("returns correct image", () => {
+      const image = imageLoader.load({
+        id: "test",
+        label: PropertyRecord.fromString("label"),
+        icon: "test-icon",
+      });
+      expect(image).toBeTruthy();
+      expect(image!.sourceType).to.equal("webfont-icon");
+      expect(image!.value).to.equal("test-icon");
+    });
+
+    it("returns undefined when node item has no icon", () => {
+      const image = imageLoader.load({
+        id: "test",
+        label: PropertyRecord.fromString("label"),
+      });
+      expect(image).toEqual(undefined);
+    });
+  });
+});

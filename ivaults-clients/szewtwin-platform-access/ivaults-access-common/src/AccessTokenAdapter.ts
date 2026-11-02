@@ -1,0 +1,55 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+import { AccessToken, SZEWTwinError } from "@szewtwin/core-szewec";
+import {
+  Authorization,
+  AuthorizationCallback,
+  IVaultsErrorCode,
+  IVaultsErrorScope,
+} from "@szewtwin/ivaults-client-management";
+
+export class AccessTokenAdapter {
+  public static toAuthorization(accessToken: AccessToken): Authorization {
+    const splitAccessToken = accessToken.split(" ");
+    if (splitAccessToken.length !== 2)
+      SZEWTwinError.throwError({
+        szewTwinErrorId: {
+          key: IVaultsErrorCode.InvalidIVaultsRequest,
+          scope: IVaultsErrorScope,
+        },
+        message: "Unsupported access token format",
+      });
+
+    return {
+      scheme: splitAccessToken[0],
+      token: splitAccessToken[1],
+    };
+  }
+
+  /** @deprecated in 5.2. Use {@link toAuthorizationCallback} with a callback parameter instead. */
+  public static toAuthorizationCallback(
+    accessToken: AccessToken
+  ): AuthorizationCallback;
+
+  // eslint-disable-next-line @typescript-eslint/unified-signatures
+  public static toAuthorizationCallback(
+    getAccessToken: () => Promise<AccessToken>
+  ): AuthorizationCallback;
+
+  public static toAuthorizationCallback(
+    accessToken: AccessToken | (() => Promise<AccessToken>)
+  ): AuthorizationCallback {
+    if (typeof accessToken === "function") {
+      return async () => {
+        const token = await accessToken();
+
+        return AccessTokenAdapter.toAuthorization(token);
+      };
+    } else {
+      return () =>
+        Promise.resolve(AccessTokenAdapter.toAuthorization(accessToken));
+    }
+  }
+}

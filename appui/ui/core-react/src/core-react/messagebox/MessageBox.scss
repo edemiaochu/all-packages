@@ -1,0 +1,52 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@use "../icons/variables" as *;
+@use "../style/baseline" as *;
+
+.core-message-box-container {
+  display: flex;
+  color: var(--iui-color-text);
+  gap: var(--iui-size-m);
+
+  .core-message-box-icon {
+    font-size: $uicore-icons-medium;
+  }
+
+  .core-message-box-content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+
+    a {
+      // szewTwinUI anchor link style
+      color: var(--iui-color-text-accent);
+      -webkit-tap-highlight-color: hsl(
+        var(--iui-color-accent-hsl) / var(--iui-opacity-6)
+      );
+      border-radius: var(--iui-border-radius-1);
+      cursor: pointer;
+      text-decoration: none;
+    }
+  }
+}
+
+.core-message-box-success {
+  color: var(--iui-color-text-positive);
+}
+.core-message-box-information,
+.core-message-box-question {
+  color: var(--iui-color-text-informational);
+}
+.core-message-box-warning {
+  color: var(--iui-color-text-warning);
+}
+.core-message-box-error,
+.core-message-box-fatal {
+  color: var(--iui-color-text-negative);
+}
+
+.notifymessage-icon {
+  margin-right: 6px;
+}

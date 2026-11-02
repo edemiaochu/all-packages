@@ -1,0 +1,195 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [ "main", "itwinjs-v5" ]
+  workflow_dispatch:
+
+jobs:
+  check-change-files:
+    if: github.base_ref == 'main'
+    runs-on: ubuntu-latest
+    name: Check change files 
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Install pnpm
+      uses: pnpm/action-setup@v4
+
+    - name: Use Node.js 24
+      uses: actions/setup-node@v3
+      with:
+        node-version: 24.18.0
+        cache: 'pnpm'
+
+    - name: Install dependencies
+      run: pnpm install -w
+
+    - name: Run check
+      run: pnpm check
+
+  build-supported-version-matrix:
+    name: Build supported version matrix
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Install pnpm
+      uses: pnpm/action-setup@v4
+
+    - name: Use Node.js 24
+      uses: actions/setup-node@v3
+      with:
+        node-version: 24.18.0
+        cache: 'pnpm'
+
+    - id: set-matrix
+      run: |
+        pnpm -s --package=semver@7.3.8 -c dlx node <<EOF
+        // HACK: probably better to set up a temp package in /tmp/\$RANDOM but sounds annoying, pnpm should have this feature
+        const semver = require(process.env.PATH.split(":").find(x => x.includes(".bin")) + "/../semver");
+        const ourPkgJson = require("./packages/transformer/package.json");
+        let json = "";
+        require("https").get("http://localhost:4873//@itwin/core-backend", r => r.setEncoding("utf8").on("data", d => json += d).on("end", () => {
+          const supportedMinors = Object.keys(JSON.parse(json).versions)
+            .filter(v => semver.satisfies(v, ourPkgJson.peerDependencies["@itwin/core-backend"]))
+            .sort(semver.compare)
+            // find max patch of each minor
+            .reduce((result, currVersion) => {
+                const firstDotIdx = currVersion.indexOf('.');
+                const secondDotIdx = currVersion.indexOf('.', firstDotIdx + 1);
+                const minorPrefix = currVersion.substring(0, secondDotIdx);
+                const currMax = result.maxes[minorPrefix];
+                if (!currMax)
+                  result.maxes[minorPrefix] = currVersion;
+                else {
+                  result.maxes[minorPrefix] = semver.gt(currVersion, currMax) ? currVersion : currMax;
+                }
+                return result;
+              }, {
+                maxes: {},
+                _getMaxes() { return Object.values(this.maxes); }
+              }
+            )
+            ._getMaxes()
+            .concat("USE_FROZEN_DEV_DEPS");
+          require("fs").writeFileSync("$GITHUB_OUTPUT", "matrix="+JSON.stringify({ version: supportedMinors }));
+        }));
+        EOF
+
+  build:
+    runs-on: ubuntu-latest
+    name: Lint Build and run Tests
+    needs: build-supported-version-matrix
+    strategy:
+      matrix: ${{ fromJSON(needs.build-supported-version-matrix.outputs.matrix) }}
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Install pnpm
+      uses: pnpm/action-setup@v4
+
+    - name: Use Node.js 24
+      uses: actions/setup-node@v3
+      with:
+        node-version: 24.18.0
+        cache: 'pnpm'
+
+    - name: Force dependency resolution
+      if: matrix.version != 'USE_FROZEN_DEV_DEPS'
+      run: |
+        node <<EOF
+        const fs = require("fs");
+        // pnpm 11 reads overrides from pnpm-workspace.yaml, not package.json#pnpm.overrides.
+        const wsPath = "./pnpm-workspace.yaml";
+        const corePkgs = [
+          // must be in sync with @itwin dependencies in packages/transformer/package.json#peerDependencies!
+          "@itwin/core-backend",
+          "@itwin/core-bentley",
+          "@itwin/core-common",
+          "@itwin/core-geometry",
+          "@itwin/core-quantity",
+          "@itwin/ecschema-metadata",
+        ];
+        const entries = corePkgs.map(p => "  '" + p + "': '$CORE_VERSION'").join("\n");
+        const lines = fs.readFileSync(wsPath, "utf8").split("\n");
+        const i = lines.findIndex(l => l === "overrides:");
+        if (i === -1) throw new Error("could not find 'overrides:' key in pnpm-workspace.yaml");
+        lines.splice(i + 1, 0, entries);
+        fs.writeFileSync(wsPath, lines.join("\n"));
+        EOF
+      env:
+        CORE_VERSION: ${{ matrix.version }}
+
+    - name: Install dependencies
+      run: pnpm install $ARGS
+      env:
+        ARGS: ${{ matrix.version == 'USE_FROZEN_DEV_DEPS' && '' || '--no-frozen-lockfile' }}
+
+    - name: Sanity test dependency resolution
+      if: matrix.version != 'USE_FROZEN_DEV_DEPS'
+      run: |
+        cd packages/transformer
+        node <<EOF
+        const coreVersion = require("@itwin/core-backend/package.json").version;
+        if (coreVersion !== "$CORE_VERSION")
+          throw Error('expected core version $CORE_VERSION but got ' + coreVersion)
+        EOF
+      env:
+        CORE_VERSION: ${{ matrix.version }}
+
+    - name: Lint
+      run: pnpm run lint
+
+    - name: Build
+      run: pnpm run build
+
+    - name: Test
+      run: pnpm run test
+
+  coverage:
+    runs-on: ubuntu-latest
+    name: Coverage
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Install pnpm
+      uses: pnpm/action-setup@v4
+
+    - name: Use Node.js 24
+      uses: actions/setup-node@v3
+      with:
+        node-version: 24.18.0
+        cache: 'pnpm'
+
+    # Plain `pnpm install` (matching the build job) installs the transformer's
+    # devDeps too; `-w` would scope the install to the workspace root only.
+    - name: Install dependencies
+      run: pnpm install
+
+    # `cover` runs mocha against the compiled lib/cjs output, so build first.
+    - name: Build transformer
+      run: pnpm --filter @itwin/imodel-transformer build
+
+    # Gate: `cover` runs nyc with check-coverage, failing on a threshold breach.
+    # pipefail (GitHub bash default) aborts before the summary line on failure.
+    - name: Check coverage thresholds
+      shell: bash
+      run: |
+        pnpm --filter @itwin/imodel-transformer cover 2>&1 | tee coverage.log
+        awk '/Statements/{s=$3} /Branches/{b=$3} /Functions/{f=$3} /Lines/{l=$3} \
+          END{printf "Coverage — Statements %s · Branches %s · Functions %s · Lines %s\n", s, b, f, l}' \
+          coverage.log >> "$GITHUB_STEP_SUMMARY"
+

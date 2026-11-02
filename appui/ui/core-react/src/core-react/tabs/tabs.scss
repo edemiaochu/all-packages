@@ -1,0 +1,99 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@use "../style/baseline";
+@use "../icons/variables";
+
+@forward "../style/index";
+@forward "../icons/variables";
+
+@mixin uicore-tabs {
+  display: block;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  border: none;
+  outline: none;
+
+  > li {
+    display: block;
+    position: relative;
+    padding: 0;
+    margin: 0;
+
+    &.core-tab-item-disabled {
+      pointer-events: none;
+    }
+
+    > a {
+      display: block;
+      position: relative;
+      padding: baseline.$uicore-bordered-padding
+        calc(var(--iui-font-size-1) - 1px) baseline.$uicore-unbordered-padding;
+      margin: 0;
+      line-height: var(--iui-size-l);
+      color: var(--iui-color-text);
+      cursor: pointer;
+
+      .uicore-tabs-inline-label {
+        &.core-tab-item-disabled {
+          color: var(--iui-color-text-disabled);
+
+          .uicore-tabs-subLabel {
+            color: var(--iui-color-text-disabled);
+          }
+        }
+
+        .uicore-tabs-icon {
+          width: (variables.$uicore-icons-small + 12px);
+          height: (variables.$uicore-icons-small + 12px);
+          display: flex;
+          align-items: center;
+        }
+      }
+
+      &::after {
+        content: "";
+        position: absolute;
+        z-index: 1;
+        transition: all var(--iui-duration-1);
+        top: 0;
+        right: 0;
+        background: var(--iui-color-border-accent);
+        opacity: 0;
+      }
+
+      &:hover {
+        text-decoration: none;
+        background-color: var(--iui-color-background-hover);
+        color: var(--iui-color-text-hover);
+      }
+    }
+
+    &.core-active a::after {
+      opacity: 1;
+    }
+
+    .uicore-tabs-label-subLabel-container {
+      display: flex;
+      flex-direction: column;
+      .uicore-tabs-subLabel {
+        font-size: var(--iui-font-size-0);
+      }
+    }
+    &:not(.core-active) {
+      .uicore-tabs-label-subLabel-container {
+        .uicore-tabs-subLabel {
+          color: var(--iui-color-text-muted);
+          font-weight: var(--iui-font-weight-light);
+        }
+      }
+    }
+  }
+
+  &.uicore-tabs-green > li > a::after {
+    background-color: var(--iui-color-text-positive);
+  }
+}

@@ -1,0 +1,282 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+
+import { ConcreteEntityTypes } from "@szewtwin/core-common";
+import { assert, expect } from "chai";
+import * as path from "path";
+import { DMReferenceTypesCache } from "../../DMReferenceTypesCache";
+import { Relationship, SnapshotDb } from "@szewtwin/core-backend";
+import { IVaultTestUtils } from "../TestUtils/IVaultTestUtils";
+import { KnownTestLocations as BackendTestsKnownLocations } from "../TestUtils/KnownTestLocations";
+import * as Semver from "semver";
+import {
+  DMClass,
+  Schema,
+  SchemaItemType,
+  SchemaLoader,
+} from "@szewtwin/dmschema-metadata";
+import * as sinon from "sinon";
+import { version as szewTwinCoreBackendVersion } from "@szewtwin/core-backend/package.json";
+
+describe("DMReferenceTypesCache", () => {
+  let testIVault: SnapshotDb;
+  const testSchemaPath = path.join(
+    BackendTestsKnownLocations.assetsDir,
+    "TestGeneratedClasses.dmschema.xml"
+  );
+  const testSchemaPathWithQueryView = path.join(
+    BackendTestsKnownLocations.assetsDir,
+    "TestQueryView.dmschema.xml"
+  );
+  const testFixtureRefCache = new DMReferenceTypesCache();
+  let pathForEmpty: string;
+  let emptyWithBrandNewBiscore: SnapshotDb;
+
+  before(async () => {
+    const seedFileName = IVaultTestUtils.resolveAssetFile("test.dtw");
+    const testFileName = IVaultTestUtils.prepareOutputFile(
+      "DMReferenceTypesCache",
+      "test.dtw"
+    );
+    testIVault = IVaultTestUtils.createSnapshotFromSeed(
+      testFileName,
+      seedFileName
+    );
+    assert.exists(testIVault);
+    await testIVault.importSchemas([testSchemaPath]); // will throw an exception if import fails
+    await testFixtureRefCache.initAllSchemasInIVault(testIVault);
+
+    pathForEmpty = IVaultTestUtils.prepareOutputFile(
+      "DMReferenceTypesCache",
+      "empty.dtw"
+    );
+    emptyWithBrandNewBiscore = SnapshotDb.createEmpty(pathForEmpty, {
+      rootSubject: { name: "empty " },
+    });
+  });
+
+  it("should be able to assume that all non-codespec classes in biscore have one of the known roots", async () => {
+    const schemaLoader = new SchemaLoader((name: string) =>
+      testIVault.getSchemaProps(name)
+    );
+    const schema = schemaLoader.getSchema("BisCore");
+    for (const dmclass of schema.getItems()) {
+      if (!DMClass.isDMClass(dmclass)) continue;
+      const unsupportedClassNames = [
+        "CodeSpec",
+        "ElementDrivesElement",
+        "SpatialIndex",
+      ];
+      if (unsupportedClassNames.includes(dmclass.name)) continue;
+      const isEntityClass =
+        dmclass.schemaItemType === SchemaItemType.EntityClass;
+      const isEntityRelationship = dmclass instanceof Relationship;
+      const isEntity = isEntityClass || isEntityRelationship;
+      if (!isEntity) continue;
+      const rootBisClass =
+        await testFixtureRefCache["getRootBisClass"](dmclass);
+      const type =
+        DMReferenceTypesCache["bisRootClassToRefType"][rootBisClass.name];
+      expect(
+        type,
+        `${dmclass.name} in BisCore did not derive from the assumed roots`
+      ).not.to.be.undefined;
+    }
+  });
+
+  it("should cache navprop types", async () => {
+    expect(
+      testFixtureRefCache.getNavPropRefType("BisCore", "Element", "CodeScope")
+    ).to.deep.equal(ConcreteEntityTypes.Element);
+
+    expect(
+      testFixtureRefCache.getNavPropRefType(
+        "TestGeneratedClasses",
+        "LinkTableRelWithNavProp",
+        "elemNavProp"
+      )
+    ).to.deep.equal(ConcreteEntityTypes.Element);
+
+    expect(
+      testFixtureRefCache.getNavPropRefType(
+        "TestGeneratedClasses",
+        "LinkTableRelWithNavProp",
+        "modelNavProp"
+      )
+    ).to.deep.equal(ConcreteEntityTypes.Model);
+
+    expect(
+      testFixtureRefCache.getNavPropRefType(
+        "TestGeneratedClasses",
+        "LinkTableRelWithNavProp",
+        "aspectNavProp"
+      )
+    ).to.deep.equal(ConcreteEntityTypes.ElementAspect);
+
+    /*
+    // NOTE: disabled due to a bug mapping navprops to link table relationship instances
+    expect(
+      testReferenceCache.getNavPropRefType("TestGeneratedClasses", "LinkTableRelWithNavProp", "relNavProp")
+    ).to.deep.equal(ConcreteEntityTypes.Element);
+    */
+  });
+
+  it("should cache relationship end types", async () => {
+    expect(
+      testFixtureRefCache.getRelationshipEndType("BisCore", "ElementScopesCode")
+    ).to.deep.equal({
+      source: ConcreteEntityTypes.Element,
+      target: ConcreteEntityTypes.Element,
+    });
+
+    expect(
+      testFixtureRefCache.getRelationshipEndType(
+        "BisCore",
+        "ModelSelectorRefersToModels"
+      )
+    ).to.deep.equal({
+      source: ConcreteEntityTypes.Element,
+      target: ConcreteEntityTypes.Model,
+    });
+
+    expect(
+      testFixtureRefCache.getRelationshipEndType(
+        "TestGeneratedClasses",
+        "LinkTableRelToModelNavRel"
+      )
+    ).to.deep.equal({
+      source: ConcreteEntityTypes.Relationship,
+      target: ConcreteEntityTypes.Model,
+    });
+
+    expect(
+      testFixtureRefCache.getRelationshipEndType(
+        "TestGeneratedClasses",
+        "ModelToAspectNavRel"
+      )
+    ).to.deep.equal({
+      source: ConcreteEntityTypes.Model,
+      target: ConcreteEntityTypes.ElementAspect,
+    });
+  });
+
+  it("should add new schema data when encountering a schema of a higher version", async () => {
+    const thisTestRefCache = new DMReferenceTypesCache();
+
+    const bisVersionInEmpty =
+      emptyWithBrandNewBiscore.querySchemaVersion("BisCore");
+    assert(bisVersionInEmpty !== undefined);
+
+    const bisVersionInSeed = testIVault.querySchemaVersion("BisCore");
+    assert(bisVersionInSeed !== undefined);
+
+    assert(Semver.gt(bisVersionInEmpty, bisVersionInSeed));
+    expect(() =>
+      testIVault.schemaContext.getSchemaItemSync("BisCore:RenderTimeline")
+    ).not.to.throw;
+    expect(() =>
+      emptyWithBrandNewBiscore.schemaContext.getSchemaItemSync(
+        "BisCore:RenderTimeline"
+      )
+    ).to.throw;
+
+    await thisTestRefCache.initAllSchemasInIVault(testIVault);
+    expect(
+      thisTestRefCache.getNavPropRefType(
+        "BisCore",
+        "PhysicalType",
+        "PhysicalMaterial"
+      )
+    ).to.be.undefined;
+
+    await thisTestRefCache.initAllSchemasInIVault(emptyWithBrandNewBiscore);
+    expect(
+      thisTestRefCache.getNavPropRefType(
+        "BisCore",
+        "PhysicalType",
+        "PhysicalMaterial"
+      )
+    ).to.equal(ConcreteEntityTypes.Element);
+  });
+
+  it("should handle QueryView", async () => {
+    if (!Semver.gte(szewTwinCoreBackendVersion, "4.6.0")) {
+      return; // Pre 4.6.0 does not have QueryView support. https://www.szewtwinjs.org/bis/domains/dmdbmap.dmschema/#queryview
+    }
+    const thisTestRefCache = new DMReferenceTypesCache();
+    const ecdbMapVersion =
+      emptyWithBrandNewBiscore.querySchemaVersion("ECdbMap");
+    assert(ecdbMapVersion !== undefined);
+    assert(Semver.gte(ecdbMapVersion, "2.0.4"));
+    await emptyWithBrandNewBiscore.importSchemas([testSchemaPathWithQueryView]);
+    await thisTestRefCache.initAllSchemasInIVault(emptyWithBrandNewBiscore);
+  });
+
+  it("should not init schemas of a lower or equal version", async () => {
+    const thisTestRefCache = new DMReferenceTypesCache();
+
+    const pathForEmpty2 = IVaultTestUtils.prepareOutputFile(
+      "DMReferenceTypesCache",
+      "empty2.dtw"
+    );
+    const emptyWithBrandNewBiscore2 = SnapshotDb.createEmpty(pathForEmpty2, {
+      rootSubject: { name: "empty " },
+    });
+
+    const bisVersionInEmpty1 =
+      emptyWithBrandNewBiscore.querySchemaVersion("BisCore");
+    assert(bisVersionInEmpty1 !== undefined);
+
+    const bisVersionInEmpty2 =
+      emptyWithBrandNewBiscore2.querySchemaVersion("BisCore");
+    assert(bisVersionInEmpty2 !== undefined);
+
+    const bisVersionInSeed = testIVault.querySchemaVersion("BisCore");
+    assert(bisVersionInSeed !== undefined);
+
+    assert(Semver.eq(bisVersionInEmpty1, bisVersionInEmpty2));
+    assert(Semver.gt(bisVersionInEmpty1, bisVersionInSeed));
+    expect(() =>
+      testIVault.schemaContext.getSchemaItemSync("BisCore:RenderTimeline")
+    ).not.to.throw;
+    expect(() =>
+      emptyWithBrandNewBiscore.schemaContext.getSchemaItemSync(
+        "BisCore:RenderTimeline"
+      )
+    ).to.throw;
+
+    const initSchemaSpy = sinon.spy(
+      thisTestRefCache,
+      "initSchema" as keyof DMReferenceTypesCache
+    );
+
+    await thisTestRefCache.initAllSchemasInIVault(emptyWithBrandNewBiscore);
+    expect(
+      initSchemaSpy
+        .getCalls()
+        .find((c) => (c.args[0] as Schema).name === "BisCore")
+    ).not.to.be.undefined;
+    initSchemaSpy.resetHistory();
+
+    // test load from iVault with equal biscore version
+    await thisTestRefCache.initAllSchemasInIVault(emptyWithBrandNewBiscore2);
+    expect(
+      initSchemaSpy
+        .getCalls()
+        .find((c) => (c.args[0] as Schema).name === "BisCore")
+    ).to.be.undefined;
+    initSchemaSpy.resetHistory();
+
+    // test load from iVault with older biscore version
+    await thisTestRefCache.initAllSchemasInIVault(testIVault);
+    expect(
+      initSchemaSpy
+        .getCalls()
+        .find((c) => (c.args[0] as Schema).name === "BisCore")
+    ).to.be.undefined;
+
+    sinon.restore();
+  });
+});

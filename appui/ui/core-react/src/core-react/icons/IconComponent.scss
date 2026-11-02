@@ -1,0 +1,19 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@use "./variables" as *;
+
+.core-svg-icon {
+  width: $uicore-icons-small;
+  height: $uicore-icons-small;
+  svg {
+    width: $uicore-icons-small;
+    height: $uicore-icons-small;
+    fill: currentColor;
+  }
+}
+
+.core-css-icon {
+  font-size: $uicore-icons-small;
+}

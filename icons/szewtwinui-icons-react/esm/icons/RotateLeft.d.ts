@@ -1,0 +1,5 @@
+import React, { type SVGProps } from 'react';
+declare const SvgRotateLeft: (props: SVGProps<SVGSVGElement>) => React.JSX.Element;
+export default SvgRotateLeft;
+export { SvgRotateLeft };
+//# sourceMappingURL=RotateLeft.d.ts.map

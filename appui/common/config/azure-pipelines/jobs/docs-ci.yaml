@@ -1,0 +1,119 @@
+trigger:
+  branches:
+    include:
+      - master
+
+pr:
+  drafts: false
+  branches:
+    include:
+      - master
+
+parameters:
+  - name: tagDocs
+    displayName: Tag Docs
+    type: boolean
+    default: false
+
+resources:
+  repositories:
+    - repository: itwinjs-core
+      type: github
+      endpoint: iModelJs
+      name: iTwin/itwinjs-core
+      ref: refs/heads/master
+
+stages:
+  - stage: Generate_Docs
+    jobs:
+      - job:
+        displayName: Generate Docs
+        workspace:
+          clean: all
+        pool:
+          name: imodelNative-Win11-VS2022
+
+        steps:
+          - checkout: self
+            clean: true
+
+          - task: NodeTool@0
+            displayName: Use Node
+            inputs:
+              versionSpec: 24
+              checkLatest: true
+
+          - script: corepack enable
+            displayName: "Enable corepack"
+
+          - script: pnpm install
+            displayName: Run 'pnpm install'
+
+          - script: pnpm build
+            displayName: Run 'pnpm build'
+
+          - script: pnpm run docs
+            displayName: Run 'pnpm docs'
+
+          - task: CopyFiles@2
+            displayName: "Copy generated docs to: $(Build.StagingDirectory)"
+            inputs:
+              SourceFolder: $(Build.SourcesDirectory)/generated-docs
+              TargetFolder: $(Build.StagingDirectory)/docs
+
+          - task: CopyFiles@2
+            displayName: "Copy learning docs to: $(Build.StagingDirectory)"
+            inputs:
+              SourceFolder: $(Build.SourcesDirectory)/docs/ui
+              TargetFolder: $(Build.StagingDirectory)/docs/ui
+
+          - task: PublishBuildArtifacts@1
+            displayName: "Publish Artifact: AppUI Docs"
+            inputs:
+              PathtoPublish: "$(Build.StagingDirectory)/docs/"
+              ArtifactName: "AppUI Docs"
+
+  - stage: Validate_Docs
+    dependsOn: Generate_Docs
+    condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'PullRequest', 'Manual'))
+    jobs:
+      - template: common/config/azure-pipelines/jobs/docs-build.yaml@itwinjs-core
+        parameters:
+          checkout: itwinjs-core
+          useCurrentAppUIDocsArtifact: true
+          ignoreAudit: true
+
+  - stage: Tag_Docs
+    dependsOn: Validate_Docs
+    condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'Manual'))
+    jobs:
+      - job:
+        displayName: Tag build
+        pool:
+          name: imodelNative-Win11-VS2022
+
+        steps:
+          - powershell: |
+              $commitMsg = @"
+              $(Build.SourceVersionMessage)
+              "@
+              if ($commitMsg.Contains("[publish docs]")) {
+                Write-Host `'$commitMsg`'` is a major/minor/patch version bump
+                Write-Host '##vso[task.setvariable variable=ShouldTag;]True'
+              } else {
+                Write-Host `'$commitMsg`'` is not a major/minor/patch version bump
+                Write-Host '##vso[task.setvariable variable=ShouldTag;]False'
+              }
+            displayName: Tag if major/minor/patch version bump
+
+          - powershell: |
+              Write-Host Tagging docs explicitly...
+              Write-Host '##vso[task.setvariable variable=ShouldTag;]True'
+            condition: and(succeeded(), eq('${{ parameters.tagDocs }}', true))
+            displayName: Tag if 'tagDocs' is true
+
+          - task: tagBuildOrRelease@0
+            inputs:
+              type: "Build"
+              tags: "hasDocs"
+            condition: and(succeeded(), eq(variables['ShouldTag'], 'True'))

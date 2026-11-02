@@ -1,0 +1,62 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+
+button.components-colorpicker-popup-button {
+  font-family: var(--iui-font-sans);
+  font-size: var(--iui-font-size-1);
+  color: var(--iui-color-text);
+  background-color: transparent;
+  box-sizing: border-box;
+  border-radius: var(--iui-border-radius-1);
+  border: none;
+  padding: 0;
+
+  &:not(.readonly) {
+    cursor: pointer;
+  }
+
+  > .components-colorpicker-button-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    > .components-colorpicker-button-color-swatch {
+      border: 1px solid var(--iui-color-border);
+      border-radius: var(--iui-border-radius-1);
+      width: 1.25em;
+      height: 1.25em;
+    }
+
+    > .components-caret {
+      margin-left: 0.25em;
+      margin-right: 0.25em;
+    }
+  }
+
+  &:disabled {
+    pointer-events: none;
+
+    > .components-colorpicker-button-container {
+      > .components-caret {
+        color: var(--iui-color-text-disabled);
+      }
+    }
+  }
+}
+
+.components-colorpicker-popup-panel-padding {
+  padding: 3px 6px 6px 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  button.core-dialog-close {
+    cursor: pointer;
+    margin-left: auto;
+    background: transparent;
+    border: none;
+    color: var(--iui-color-text);
+  }
+}

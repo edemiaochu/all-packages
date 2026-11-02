@@ -1,0 +1,18 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+/** @packageDocumentation
+ * @module Common
+ */
+
+/**
+ * Enumeration for sorting direction.
+ * @public
+ * @deprecated in 4.15.0. Not used by AppUI.
+ */
+export enum SortDirection {
+  NoSort,
+  Ascending,
+  Descending,
+}

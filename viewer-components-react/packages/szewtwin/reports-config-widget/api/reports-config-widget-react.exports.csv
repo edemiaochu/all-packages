@@ -1,0 +1,14 @@
+sep=;
+Release Tag;API Item Type;API Item Name
+public;class;BulkExtractor
+public;const;ReportAction
+public;interface;ReportActionProps
+public;const;ReportMappings
+public;interface;ReportMappingsProps
+public;const;Reports
+internal;const;REPORTS_CONFIG_BASE_URL
+public;const;ReportsConfigContext
+public;interface;ReportsConfigContextProps
+public;class;ReportsConfigProvider
+public;class;ReportsConfigWidget
+public;interface;ReportsProps

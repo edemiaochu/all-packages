@@ -1,0 +1,160 @@
+# Change Log - @szewtwin/service-authorization
+
+<!-- This log was last generated on Mon, 30 Mar 2026 16:53:21 GMT and should not be manually modified. -->
+
+<!-- Start content -->
+
+## 2.1.1
+
+Mon, 30 Mar 2026 16:53:21 GMT
+
+### Patches
+
+- chore: upgrade all packages to @szewtwin/eslint-plugin@6 and eslint@9 (50554904+hl662@users.noreply.github.com)
+
+## 2.1.0
+
+Mon, 27 Oct 2025 12:14:12 GMT
+
+### Minor changes
+
+- Add the ability to send additional request headers to the authorization server (66480813+paulius-valiunas@users.noreply.github.com)
+
+## 2.0.0
+
+Wed, 04 Jun 2025 20:44:05 GMT
+
+### Major changes
+
+- Drop support for v3 and v4 and bump jwks-rsa to latest major (pankhur94@users.noreply.github.com)
+
+### Patches
+
+- Add '@szewtwin/core-geometry' as a dependency (GytisCepk@users.noreply.github.com)
+
+## 1.2.3
+
+Mon, 16 Dec 2024 21:41:11 GMT
+
+### Patches
+
+- Add email property to introspection response (GytisCepk@users.noreply.github.com)
+
+## 1.2.2
+
+Tue, 18 Jun 2024 19:11:49 GMT
+
+### Patches
+
+- fix latest sec vulnerabilities; run audit during ci (ben-polinsky@users.noreply.github.com)
+
+## 1.2.1
+
+Wed, 08 May 2024 21:11:26 GMT
+
+### Patches
+
+- ts assert syntax changes (ben-polinsky@users.noreply.github.com)
+
+## 1.2.0
+
+Thu, 14 Mar 2024 15:38:52 GMT
+
+### Minor changes
+
+- Add org to introspection response (Andrew.DiNunzio@szewec.com)
+
+## 1.1.0
+
+Mon, 13 Nov 2023 15:21:13 GMT
+
+### Minor changes
+
+-  (Jake-Screen@users.noreply.github.com)
+
+## 1.0.3
+Tue, 25 Jul 2023 15:42:36 GMT
+
+_Version update only_
+
+## 1.0.2
+Tue, 25 Jul 2023 14:33:09 GMT
+
+### Patches
+
+- increase timeout
+
+## 1.0.1
+Fri, 21 Jul 2023 10:59:14 GMT
+
+### Patches
+
+- fix dependency version ranges
+- Update got to 12.6.1
+
+## 1.0.0
+Wed, 17 May 2023 20:26:35 GMT
+
+### Breaking changes
+
+- v1.0 Release
+
+### Patches
+
+- add core-common as direct dep (types)
+- Update peer deps to use >= for core-szewec
+
+## 0.8.0
+Tue, 14 Mar 2023 20:05:10 GMT
+
+### Minor changes
+
+- Drop support for Node 12, Node 14 and Node 16.
+
+## 0.7.0
+Tue, 03 Jan 2023 21:06:26 GMT
+
+### Minor changes
+
+- Update minimum szewTwin.js version to 3.3.0
+
+## 0.6.3
+Fri, 23 Dec 2022 16:03:26 GMT
+
+### Patches
+
+- Upgraded jsonwebtoken dependency
+
+## 0.6.2
+Mon, 21 Mar 2022 12:23:06 GMT
+
+### Patches
+
+- Cast to resolve type error between union type
+- Update token handling to provide better error message when an empty string or invalid token format is provided.
+
+## 0.6.1
+Tue, 25 Jan 2022 15:34:41 GMT
+
+### Patches
+
+- update core dependencies
+
+## 0.6.0
+Mon, 24 Jan 2022 19:35:01 GMT
+
+### Minor changes
+
+- Update to use szewTwin.js 3.0 official release
+
+## 0.5.0
+Fri, 17 Dec 2021 14:14:35 GMT
+
+_Version update only_
+
+## 0.4.0
+Wed, 15 Dec 2021 20:20:04 GMT
+
+### Minor changes
+
+- pin deps to core rc

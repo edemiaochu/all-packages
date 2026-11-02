@@ -1,0 +1,23 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+.uifw-statusFields-selectionCount {
+  gap: var(--iui-size-2xs);
+  display: flex;
+  align-items: center;
+  min-width: 3.75rem;
+  margin: 0 var(--iui-size-xs);
+
+  .icon {
+    color: var(--iui-color-icon);
+  }
+
+  &.uifw-left-corner {
+    margin-left: var(--iui-size-m);
+  }
+
+  &.uifw-right-corner {
+    margin-right: var(--iui-size-m);
+  }
+}

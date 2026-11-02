@@ -1,0 +1,10 @@
+import React, { type SVGProps } from 'react';
+
+const SvgInfoCircularHollow = (props: SVGProps<SVGSVGElement>) => (
+<svg viewBox="0 0 16 16" width="1rem" height="1rem" fill="var(--iui-color-icon-muted, currentColor)" {...props}>
+  <path d="M8 1.5A6.5 6.5 0 111.5 8 6.5 6.5 0 018 1.5M8 0a8 8 0 108 8 8 8 0 00-8-8zm1.2 3.2a.923.923 0 01.997.843l.003.057a1.31 1.31 0 01-1.3 1.2.945.945 0 01-1-1 1.228 1.228 0 011.3-1.1zm-2 9.6c-.5 0-.9-.3-.5-1.7l.6-2.4c.1-.4.1-.5 0-.5-.2-.1-.9.2-1.3.5l-.2-.5a6.497 6.497 0 013.3-1.6c.5 0 .6.6.3 1.6l-.7 2.6c-.1.5-.1.6.1.6a2.003 2.003 0 001.1-.6l.3.4a5.769 5.769 0 01-3 1.6z" />
+</svg>
+);
+
+export default SvgInfoCircularHollow;
+export { SvgInfoCircularHollow };

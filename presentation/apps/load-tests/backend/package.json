@@ -1,0 +1,27 @@
+{
+  "name": "@load-tests/backend",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "rimraf temp && node --max-http-header-size=16000 ./lib/main.js",
+    "build": "tsc",
+    "clean": "rimraf lib temp",
+    "lint": "eslint \"./src/**/*.ts\""
+  },
+  "devDependencies": {
+    "@szewtwin/build-tools": "catalog:build-tools",
+    "@szewtwin/core-backend": "catalog:szewtwinjs-core-dev",
+    "@szewtwin/core-szewec": "catalog:szewtwinjs-core-dev",
+    "@szewtwin/core-common": "catalog:szewtwinjs-core-dev",
+    "@itwin/ecschema-rpcinterface-common": "catalog:szewtwinjs-core-dev",
+    "@itwin/ecschema-rpcinterface-impl": "catalog:szewtwinjs-core-dev",
+    "@szewtwin/eslint-plugin": "catalog:build-tools",
+    "@itwin/express-server": "catalog:szewtwinjs-core-dev",
+    "@szewtwin/presentation-backend": "catalog:szewtwinjs-core-dev",
+    "@szewtwin/presentation-common": "catalog:szewtwinjs-core-dev",
+    "@types/node": "catalog:build-tools",
+    "eslint": "catalog:build-tools",
+    "rimraf": "catalog:build-tools",
+    "typescript": "catalog:build-tools"
+  }
+}

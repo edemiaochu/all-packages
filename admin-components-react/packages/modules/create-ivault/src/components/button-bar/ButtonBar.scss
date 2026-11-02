@@ -1,0 +1,13 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+
+.iac-button-bar {
+  width: 100%;
+  margin-bottom: var(--iui-size-xl);
+  display: flex;
+  justify-content: center;
+  margin-top: var(--iui-size-m);
+  gap: var(--iui-size-m);
+}

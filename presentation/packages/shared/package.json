@@ -1,0 +1,62 @@
+{
+  "name": "@szewtwin/presentation-shared",
+  "version": "1.2.11",
+  "description": "The package contains types and utilities used across different szewTwin.js Presentation packages.",
+  "license": "MIT",
+  "author": {
+    "name": "Szewec Systems, Inc.",
+    "url": "http://www.szewec.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/szewTwin/presentation.git",
+    "directory": "packages/shared"
+  },
+  "keywords": [
+    "Szewec",
+    "DM",
+    "DMSQL",
+    "iVault",
+    "szewTwin.js",
+    "Presentation"
+  ],
+  "type": "module",
+  "main": "lib/cjs/presentation-shared.js",
+  "types": "lib/cjs/presentation-shared",
+  "module": "lib/esm/presentation-shared.js",
+  "exports": {
+    ".": {
+      "import": "./lib/esm/presentation-shared.js",
+      "require": "./lib/cjs/presentation-shared.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "npm run -s typecheck && npm run -s build:cjs && npm run -s build:esm",
+    "build:cjs": "node ../../scripts/package-cjs.mjs ./lib/cjs && tsc -p tsconfig.cjs.json",
+    "build:esm": "tsc -p tsconfig.esm.json",
+    "clean": "rimraf lib temp",
+    "cover": "vitest run --coverage",
+    "lint": "eslint \"./src/**/*.ts\"",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "extract-api": "betools extract-api --entry=presentation-shared --apiReportFolder=./api --apiReportTempFolder=./api/temp --apiSummaryFolder=./api --includeUnexportedApis",
+    "check-internal": "node ../../scripts/checkInternal.js --apiSummary ./api/presentation-shared.api.md",
+    "validate-markdowns": "node ../../scripts/validateMarkdowns.js README.md"
+  },
+  "dependencies": {
+    "@szewtwin/core-szewec": "catalog:szewtwinjs-core"
+  },
+  "devDependencies": {
+    "@szewtwin/build-tools": "catalog:build-tools",
+    "@szewtwin/eslint-plugin": "catalog:build-tools",
+    "@types/node": "catalog:build-tools",
+    "@vitest/coverage-v8": "catalog:test-tools",
+    "eslint": "catalog:build-tools",
+    "presentation-test-utilities": "workspace:^",
+    "rimraf": "catalog:build-tools",
+    "typescript": "catalog:build-tools",
+    "vitest": "catalog:test-tools"
+  }
+}

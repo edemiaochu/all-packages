@@ -1,0 +1,81 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@use "~@szewtwin/core-react/lib/core-react/z-index" as *;
+@use "~@szewtwin/core-react/lib/core-react/geometry" as *;
+@use "variables" as *;
+
+.components-toolbar-expandable-button {
+  $triangle-width: 4px;
+  $triangle-height: $triangle-width;
+  $shadow-vertical-offset: 1px;
+  $margin-from-triangle-to-stroke: 3px;
+  $arrow-shadow: $icon-shadow;
+  position: relative;
+
+  > .components-triangle {
+    border-radius: 0;
+    position: absolute;
+    right: $margin-from-triangle-to-stroke;
+    bottom: $margin-from-triangle-to-stroke;
+    filter: $arrow-shadow;
+    pointer-events: none;
+
+    @include triangle-bottom-right(
+      $width: $triangle-width,
+      $height: $triangle-height,
+      $color: var(--iui-color-text)
+    );
+  }
+
+  &:active > .components-triangle {
+    filter: $no-shadow;
+
+    @include triangle-bottom-right-color($pressed-icon-color);
+  }
+
+  &.components-active {
+    &:not(:active):not(.components-disabled) {
+      > .components-triangle {
+        filter: $no-shadow;
+
+        @include triangle-bottom-right-color($active-icon-color);
+      }
+    }
+  }
+
+  &.components-disabled {
+    > .components-triangle {
+      @include triangle-bottom-right-color($disabled-icon-color);
+    }
+  }
+
+  &.components-disabled-drag {
+    > .components-icon {
+      color: $disabled-icon-color;
+    }
+
+    > .components-triangle {
+      @include triangle-bottom-right-color($disabled-icon-color);
+    }
+  }
+}
+
+.components-toolbar-popupItem_popupItemPopup {
+  @include uicore-z-index(toolbar-panels);
+  width: fit-content;
+  background: var(--iui-color-background);
+  border-color: var(--iui-color-background-disabled);
+  border-width: 1px;
+  border-style: solid;
+  border-radius: var(--iui-border-radius-1);
+
+  transition: visibility var(--iui-duration-2) ease,
+    opacity var(--iui-duration-2) ease;
+
+  &.nz-hidden {
+    opacity: 0;
+    visibility: hidden;
+  }
+}

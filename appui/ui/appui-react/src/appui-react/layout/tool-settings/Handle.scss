@@ -1,0 +1,17 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+
+.nz-toolSettings-handle {
+  height: var(--iui-component-height);
+  width: var(--iui-component-height);
+  display: grid;
+  place-items: center;
+  cursor: grab;
+  flex-shrink: 0;
+
+  &:active {
+    cursor: grabbing;
+  }
+}

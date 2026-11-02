@@ -1,0 +1,19 @@
+# dependencies
+node_modules
+package-lock.json
+pnpm-debug.log
+
+# config files
+.env
+
+# build output
+/**/lib
+
+# pack output
+*.tgz
+
+# coverage reports
+coverage
+
+# Mac specfic
+.DS_Store

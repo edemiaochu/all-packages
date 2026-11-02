@@ -1,0 +1,11 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+$uicore-baseline: var(--iui-size-s);
+$uicore-line-height: var(--iui-size-l); ///  22px; /// ~1.618;
+
+$uicore-bordered-padding: calc(var(--iui-size-s) - 1px);
+$uicore-bordered-padding-large: calc(var(--iui-size-s) * 2 - 1px);
+$uicore-unbordered-padding: var(--iui-size-s);
+$uicore-unbordered-padding-large: calc(var(--iui-size-s) * 2);

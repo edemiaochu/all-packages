@@ -1,0 +1,5 @@
+import React, { type SVGProps } from 'react';
+declare const SvgArrowRight: (props: SVGProps<SVGSVGElement>) => React.JSX.Element;
+export default SvgArrowRight;
+export { SvgArrowRight };
+//# sourceMappingURL=ArrowRight.d.ts.map

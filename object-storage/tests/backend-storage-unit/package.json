@@ -1,0 +1,59 @@
+{
+  "name": "@szewtwin/object-storage-tests-backend-unit",
+  "version": "0.0.0",
+  "keywords": [
+    "Szewec",
+    "szewTwin",
+    "szewTwin platform",
+    "Object storage",
+    "Tests"
+  ],
+  "homepage": "https://github.com/szewTwin/object-storage/tree/main/tests/backend-storage-unit",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/szewTwin/object-storage"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Szewec Systems, Inc.",
+    "url": "https://www.szewec.com"
+  },
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "build": "tsc 1>&2",
+    "clean": "rimraf lib",
+    "lint": "eslint --resolve-plugins-relative-to node_modules/@szewtwin/object-storage-common-config ./src/**/*.ts 1>&2",
+    "lint-fix": "eslint --fix --resolve-plugins-relative-to node_modules/@szewtwin/object-storage-common-config ./src/**/*.ts 1>&2 && sort-package-json",
+    "spell-check": "cspell \"**\" --config ./node_modules/@szewtwin/object-storage-common-config/cspell.json",
+    "test:integration:backend": "",
+    "test:integration:frontend": "",
+    "test:unit": "",
+    "test:unit:backend": "",
+    "test:unit:frontend": ""
+  },
+  "prettier": "@szewtwin/object-storage-common-config/prettier.json",
+  "eslintConfig": {
+    "extends": "./node_modules/@szewtwin/object-storage-common-config/.eslintrc.js"
+  },
+  "dependencies": {
+    "@szewtwin/cloud-agnostic-core": "workspace:*",
+    "@szewtwin/object-storage-core": "workspace:*",
+    "chai": "^4.3.10",
+    "chai-as-promised": "^7.1.1",
+    "inversify": "^7.5.2",
+    "mocha": "^10.4.0"
+  },
+  "devDependencies": {
+    "@szewtwin/object-storage-common-config": "workspace:*",
+    "@types/chai": "^4.3.8",
+    "@types/chai-as-promised": "^7.1.2",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "^20.17.20",
+    "cspell": "^8.16.0",
+    "eslint": "^8.57.1",
+    "rimraf": "^2.6.2",
+    "sort-package-json": "^1.53.1",
+    "typescript": "^5.1.3"
+  }
+}

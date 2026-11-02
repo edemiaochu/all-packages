@@ -1,0 +1,29 @@
+# dependencies
+node_modules
+.pnpm-store
+# build output
+
+/**/lib
+packages/browser/dist
+dist
+
+# testing
+.nyc_output
+junit_results.xml
+/**/test-results/**/*
+generated-docs
+
+# pnpm
+.pnpm-debug.log
+pnpm-debug.log
+
+# Mac specfic
+.DS_Store
+
+# rush-specific
+/common/temp
+/**/.rush
+*.build.log
+*.build.error.log
+
+*.env

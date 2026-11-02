@@ -1,0 +1,33 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+import { instanceOfUrlTransferInput } from "@szewtwin/object-storage-core/lib/common/internal";
+import { UrlTransferClient } from "@szewtwin/object-storage-core/lib/server/internal";
+
+import { UrlUploadInput } from "@szewtwin/object-storage-core";
+import {
+  S3ClientStorage,
+  S3ClientWrapperFactory,
+  S3ConfigUploadInput,
+} from "@szewtwin/object-storage-s3";
+
+import { handleMinioUrlUpload } from "./internal";
+
+export class MinioClientStorage extends S3ClientStorage {
+  constructor(
+    clientWrapperFactory: S3ClientWrapperFactory,
+    urlTransferClient?: UrlTransferClient
+  ) {
+    super(clientWrapperFactory, urlTransferClient);
+  }
+
+  public override async upload(
+    input: UrlUploadInput | S3ConfigUploadInput
+  ): Promise<void> {
+    if (instanceOfUrlTransferInput(input))
+      return handleMinioUrlUpload(input, this._urlTransferClient);
+
+    return super.upload(input);
+  }
+}

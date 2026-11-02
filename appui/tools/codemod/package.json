@@ -1,0 +1,41 @@
+{
+  "name": "@itwin/appui-codemod",
+  "version": "0.1.0",
+  "bin": "./lib/codemod.js",
+  "description": "Codemod scripts for AppUI.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iTwin/appui.git",
+    "directory": "tools/codemod"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest"
+  },
+  "keywords": [
+    "appui",
+    "codemod"
+  ],
+  "author": {
+    "name": "Bentley Systems, Inc.",
+    "url": "http://www.bentley.com"
+  },
+  "dependencies": {
+    "@types/jscodeshift": "^0.12.0",
+    "glob": "^10.5.0",
+    "jscodeshift": "^0.16.1",
+    "postcss": "~8.4.23",
+    "postcss-scss": "~4.0.6",
+    "postcss-value-parser": "~4.2.0",
+    "ts-node": "^10.8.2",
+    "typescript": "~5.6.2",
+    "vitest": "catalog:",
+    "yargs": "^17.6.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.26.0",
+    "@babel/preset-env": "^7.1.6",
+    "@types/yargs": "^17.0.22"
+  }
+}

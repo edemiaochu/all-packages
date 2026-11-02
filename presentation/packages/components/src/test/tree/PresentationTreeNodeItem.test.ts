@@ -1,0 +1,52 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+/* eslint-disable @typescript-eslint/no-deprecated */
+
+import { describe, expect, it } from "vitest";
+import { PropertyRecord } from "@szewtwin/appui-abstract";
+import { TreeNodeItem } from "@szewtwin/components-react";
+import {
+  InfoTreeNodeItemType,
+  isPresentationInfoTreeNodeItem,
+  isPresentationTreeNodeItem,
+  PresentationInfoTreeNodeItem,
+  PresentationTreeNodeItem,
+} from "../../presentation-components/tree/PresentationTreeNodeItem.js";
+import { createTestDMInstancesNodeKey } from "../_helpers/Hierarchy.js";
+
+describe("isPresentationTreeNodeItem", () => {
+  it("returns correct values", () => {
+    const presentationItem: PresentationTreeNodeItem = {
+      id: "presentation_item_id",
+      key: createTestDMInstancesNodeKey(),
+      label: PropertyRecord.fromString("Presentation Item"),
+    };
+    const simpleItem: TreeNodeItem = { id: "simple_item_id", label: PropertyRecord.fromString("Simple Item") };
+    expect(isPresentationTreeNodeItem(presentationItem)).toBe(true);
+    expect(isPresentationTreeNodeItem(simpleItem)).toBe(false);
+  });
+});
+
+describe("isPresentationInfoTreeNodeItem", () => {
+  it("returns correct values", () => {
+    const presentationInfoItem: PresentationInfoTreeNodeItem = {
+      id: "presentation_info_item_id",
+      label: PropertyRecord.fromString("Presentation Item"),
+      children: undefined,
+      isSelectionDisabled: true,
+      message: "Info message",
+      type: InfoTreeNodeItemType.Unset,
+    };
+    const presentationItem: PresentationTreeNodeItem = {
+      id: "presentation_item_id",
+      key: createTestDMInstancesNodeKey(),
+      label: PropertyRecord.fromString("Presentation Item"),
+    };
+    const simpleItem: TreeNodeItem = { id: "simple_item_id", label: PropertyRecord.fromString("Simple Item") };
+    expect(isPresentationInfoTreeNodeItem(presentationInfoItem)).toBe(true);
+    expect(isPresentationInfoTreeNodeItem(presentationItem)).toBe(false);
+    expect(isPresentationInfoTreeNodeItem(simpleItem)).toBe(false);
+  });
+});

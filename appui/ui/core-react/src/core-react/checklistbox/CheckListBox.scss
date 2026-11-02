@@ -1,0 +1,22 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+
+.core-chk-listbox {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  position: relative;
+
+  > li > .core-chk-listboxitem-checkbox {
+    margin: 4px 0;
+  }
+
+  > .core-chk-listbox-separator {
+    height: 1px;
+    background: var(--iui-color-border-foreground);
+    margin: 4px 0;
+    pointer-events: none;
+  }
+}

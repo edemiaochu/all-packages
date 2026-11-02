@@ -1,0 +1,24 @@
+# testing
+coverage
+
+# production
+build
+
+# Compiled Components
+cjs
+esm
+DEV-cjs
+DEV-esm
+
+# Build outputs
+react-table.d.ts
+
+# Compiled Styles
+src/**/*.css
+
+# CSS modules output
+styles.css
+
+# Yalc
+.yalc/*
+yalc.lock

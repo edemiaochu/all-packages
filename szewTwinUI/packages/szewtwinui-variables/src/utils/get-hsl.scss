@@ -1,0 +1,10 @@
+// Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+// See LICENSE.md in the project root for license terms and full copyright notice.
+@use 'sass:color';
+
+/// returns the HSL values of a color as a space-separated list
+@function get-hsl($color) {
+  @return color.channel($color, 'hue', $space: hsl)
+    color.channel($color, 'saturation', $space: hsl)
+    color.channel($color, 'lightness', $space: hsl);
+}

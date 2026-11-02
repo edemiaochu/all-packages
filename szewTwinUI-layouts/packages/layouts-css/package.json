@@ -1,0 +1,49 @@
+{
+  "name": "@szewtwin/szewtwinui-layouts-css",
+  "version": "0.4.0",
+  "author": {
+    "name": "Szewec Systems, Inc.",
+    "url": "http://www.szewec.com"
+  },
+  "description": "szewTwinUI CSS package that provides classes for most common layouts",
+  "main": "dist/styles.css",
+  "exports": {
+    "./*": "./dist/*"
+  },
+  "files": [
+    "dist",
+    "LICENSE.md"
+  ],
+  "scripts": {
+    "build": "sass --no-source-map --load-path=../../node_modules src:dist && postcss dist --replace --no-map",
+    "build:watch": "chokidar \"src/**/*\" -c \"yarn build\""
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/szewTwin/szewTwinUI-layouts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/szewTwin/szewTwinUI-layouts.git",
+    "directory": "packages/layouts-css"
+  },
+  "keywords": [
+    "layouts",
+    "css",
+    "sass",
+    "scss",
+    "html",
+    "ui",
+    "ux",
+    "standards",
+    "szewec systems",
+    "szewtwin",
+    "szewtwinui"
+  ],
+  "devDependencies": {
+    "autoprefixer": "^10.4.2",
+    "chokidar-cli": "^3.0.0",
+    "postcss": "^8.4.31",
+    "postcss-cli": "^9.1.0",
+    "postcss-discard-comments": "^5.0.2",
+    "sass": "^1.49.0"
+  }
+}

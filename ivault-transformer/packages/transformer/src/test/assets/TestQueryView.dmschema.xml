@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DMSchema schemaName="TestGeneratedClassesNew" alias="tgcn" version="1.0.0"
+    xmlns="http://www.szewec.com/schemas/Szewec.DMXML.3.2">
+    <DMSchemaReference name="CoreCustomAttributes" version="01.00.03" alias="CoreCA"/>
+    <DMSchemaReference name="BisCustomAttributes" version="01.00.00" alias="bisCA"/>
+    <DMSchemaReference name="ECdbMap" version="02.00.04" alias="dmdbmap"/>
+    <DMSchemaReference name="BisCore" version="01.00.16" alias="bis"/>
+
+    <DMEntityClass typeName="TestView" modifier="Abstract" displayLabel="Test View" description="a sample view">
+        <DMCustomAttributes>
+            <QueryView xmlns="DMDbMap.02.00.04">
+                <Query>
+                    SELECT
+                        pe.DMInstanceId,
+                        dm_classid('TestGeneratedClassesNew', 'TestView') [DMClassId],
+                        pe.Yaw as Yaw,
+                        NAVIGATION_VALUE(bis.PhysicalElement.Parent, pe.Parent.Id) as Parent
+                    FROM bis.PhysicalElement pe
+                </Query>
+            </QueryView>
+        </DMCustomAttributes>
+        <DMProperty propertyName="Yaw" typeName="double" description="Yaw of the PhysicalElement"/>
+        <DMNavigationProperty propertyName="Parent" relationshipName="PhysicalElementOwnsTestView" direction="backward" description="The parent Element that owns this element"/>
+    </DMEntityClass>
+
+    <DMRelationshipClass typeName="PhysicalElementOwnsTestView" strength="embedding" modifier="None" description="Relationship between an PhysicalElement and a TestView.">
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:PhysicalElement"/>
+        </Source>
+        <Target multiplicity="(1..*)" roleLabel="is owned by" polymorphic="true">
+            <Class class="TestView"/>
+        </Target>
+    </DMRelationshipClass>
+
+</DMSchema>

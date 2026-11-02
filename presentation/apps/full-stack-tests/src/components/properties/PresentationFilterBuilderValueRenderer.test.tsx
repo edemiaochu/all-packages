@@ -1,0 +1,241 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+
+import {
+  insertPhysicalElement,
+  insertPhysicalModelWithPartition,
+  insertSpatialCategory,
+  waitFor,
+} from "presentation-test-utilities";
+import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
+import { UiComponents } from "@itwin/components-react";
+import { IModelApp } from "@itwin/core-frontend";
+import { ClassInfo, DefaultContentDisplayTypes, KeySet } from "@itwin/presentation-common";
+import { PresentationFilterBuilderValueRenderer } from "@itwin/presentation-components";
+import { Presentation } from "@itwin/presentation-frontend";
+import { importSchema } from "../../IModelUtils.js";
+import { initialize, terminate } from "../../IntegrationTests.js";
+import { queryByText, render } from "../../RenderUtils.js";
+import { buildTestIModel } from "../../TestIModelSetup.js";
+import { stubVirtualization } from "../../Utils.js";
+
+describe("Presentation filter builder value renderer", () => {
+  stubVirtualization();
+  beforeAll(async () => {
+    await initialize();
+    await UiComponents.initialize(IModelApp.localization);
+  });
+
+  afterAll(async () => {
+    vi.restoreAllMocks();
+    UiComponents.terminate();
+    await terminate();
+  });
+
+  it("renders 'PresentationFilterBuilderValueRenderer' with correct property values when selected classes are provided", async () => {
+    let schemaAlias = "";
+    const imodel = await buildTestIModel(async (builder, testName) => {
+      const schema = await importSchema(
+        testName,
+        builder,
+        `
+          <ECSchemaReference name="BisCore" version="01.00.16" alias="bis" />
+          <ECEntityClass typeName="MyPhysicalObjectParent">
+            <BaseClass>bis:PhysicalElement</BaseClass>
+            <ECProperty propertyName="PropertyName" typeName="string" />
+          </ECEntityClass>
+          <ECEntityClass typeName="MyPhysicalObject1">
+            <BaseClass>MyPhysicalObjectParent</BaseClass>
+          </ECEntityClass>
+          <ECEntityClass typeName="MyPhysicalObject2">
+            <BaseClass>MyPhysicalObjectParent</BaseClass>
+          </ECEntityClass>
+        `,
+      );
+      schemaAlias = schema.schemaAlias;
+      const physicalModel = insertPhysicalModelWithPartition({ builder, codeValue: "TestPhysicalModel" });
+      const category = insertSpatialCategory({ builder, codeValue: "Test SpatialCategory" });
+      const parentElement = insertPhysicalElement({
+        builder,
+        modelId: physicalModel.id,
+        categoryId: category.id,
+        classFullName: schema.items.MyPhysicalObjectParent.fullName,
+        userLabel: "Parent Test Class",
+        ["PropertyName"]: "Parent",
+      });
+      const element1 = insertPhysicalElement({
+        builder,
+        modelId: physicalModel.id,
+        categoryId: category.id,
+        classFullName: schema.items.MyPhysicalObject1.fullName,
+        parentId: parentElement.id,
+        userLabel: "Test Class",
+        ["PropertyName"]: "Value1",
+      });
+      const element2 = insertPhysicalElement({
+        builder,
+        modelId: physicalModel.id,
+        categoryId: category.id,
+        classFullName: schema.items.MyPhysicalObject2.fullName,
+        parentId: parentElement.id,
+        userLabel: "Test Class 2",
+        ["PropertyName"]: "Value2",
+      });
+      return { parentElement, element1, element2, category };
+    });
+
+    const testProperty = {
+      name: `#pc_${schemaAlias}_MyPhysicalObjectParent_PropertyName`,
+      displayLabel: "PropertyName",
+      typename: "string",
+    };
+
+    const keys = new KeySet([
+      { id: imodel.element1.id, className: imodel.element1.className },
+      { id: imodel.element2.id, className: imodel.element2.className },
+    ]);
+
+    const testDescriptor = await Presentation.presentation.getContentDescriptor({
+      imodel: imodel.imodel,
+      rulesetOrId: {
+        id: `Test descriptor ruleset`,
+        rules: [{ ruleType: "Content", specifications: [{ specType: "SelectedNodeInstances" }] }],
+      },
+      displayType: DefaultContentDisplayTypes.PropertyPane,
+      keys,
+    });
+
+    if (testDescriptor === undefined) {
+      expect(false);
+      return;
+    }
+
+    const selectedClasses: ClassInfo[] = [
+      { id: imodel.element1.id, name: imodel.element1.className, label: "Test Class" },
+    ];
+
+    const { baseElement, findByRole, user } = render(
+      <PresentationFilterBuilderValueRenderer
+        property={testProperty}
+        onChange={() => {}}
+        imodel={imodel.imodel}
+        descriptor={testDescriptor}
+        descriptorInputKeys={keys}
+        selectedClasses={selectedClasses}
+        operator={"is-equal"}
+      />,
+    );
+
+    // trigger loadTargets function
+    const combobox = await findByRole("combobox");
+    await user.click(combobox);
+    await waitFor(async () => {
+      expect(queryByText(baseElement, "Value1")).not.toBeNull();
+      expect(queryByText(baseElement, "Value2")).toBeNull();
+    });
+  });
+
+  it("renders 'PresentationFilterBuilderValueRenderer' with correct property values when selected classes are provided without keys", async () => {
+    let schemaAlias = "";
+    const imodel = await buildTestIModel(async (builder, testName) => {
+      const schema = await importSchema(
+        testName,
+        builder,
+        `
+          <ECSchemaReference name="BisCore" version="01.00.16" alias="bis" />
+          <ECEntityClass typeName="MyPhysicalObjectParent">
+            <BaseClass>bis:PhysicalElement</BaseClass>
+            <ECProperty propertyName="PropertyName" typeName="string" />
+          </ECEntityClass>
+          <ECEntityClass typeName="MyPhysicalObject1">
+            <BaseClass>MyPhysicalObjectParent</BaseClass>
+          </ECEntityClass>
+          <ECEntityClass typeName="MyPhysicalObject2">
+            <BaseClass>MyPhysicalObjectParent</BaseClass>
+          </ECEntityClass>
+        `,
+      );
+      schemaAlias = schema.schemaAlias;
+      const physicalModel = insertPhysicalModelWithPartition({ builder, codeValue: "TestPhysicalModel" });
+      const category = insertSpatialCategory({ builder, codeValue: "Test SpatialCategory" });
+      const parentElement = insertPhysicalElement({
+        builder,
+        modelId: physicalModel.id,
+        categoryId: category.id,
+        classFullName: schema.items.MyPhysicalObjectParent.fullName,
+        userLabel: "Parent Test Class",
+        ["PropertyName"]: "Parent",
+      });
+      const element1 = insertPhysicalElement({
+        builder,
+        modelId: physicalModel.id,
+        categoryId: category.id,
+        classFullName: schema.items.MyPhysicalObject1.fullName,
+        parentId: parentElement.id,
+        userLabel: "Test Class",
+        ["PropertyName"]: "Value1",
+      });
+      const element2 = insertPhysicalElement({
+        builder,
+        modelId: physicalModel.id,
+        categoryId: category.id,
+        classFullName: schema.items.MyPhysicalObject2.fullName,
+        parentId: parentElement.id,
+        userLabel: "Test Class 2",
+        ["PropertyName"]: "Value2",
+      });
+      return { parentElement, element1, element2, category };
+    });
+
+    const testProperty = {
+      name: `#pc_${schemaAlias}_MyPhysicalObjectParent_PropertyName`,
+      displayLabel: "PropertyName",
+      typename: "string",
+    };
+
+    const keys = new KeySet([
+      { id: imodel.element1.id, className: imodel.element1.className },
+      { id: imodel.element2.id, className: imodel.element2.className },
+    ]);
+
+    const testDescriptor = await Presentation.presentation.getContentDescriptor({
+      imodel: imodel.imodel,
+      rulesetOrId: {
+        id: `Test descriptor ruleset`,
+        rules: [{ ruleType: "Content", specifications: [{ specType: "SelectedNodeInstances" }] }],
+      },
+      displayType: DefaultContentDisplayTypes.PropertyPane,
+      keys,
+    });
+
+    if (testDescriptor === undefined) {
+      expect(false);
+      return;
+    }
+
+    const selectedClasses: ClassInfo[] = [
+      { id: imodel.element1.id, name: imodel.element1.className, label: "Test Class" },
+    ];
+
+    const { baseElement, findByRole, user } = render(
+      <PresentationFilterBuilderValueRenderer
+        property={testProperty}
+        onChange={() => {}}
+        imodel={imodel.imodel}
+        descriptor={testDescriptor}
+        selectedClasses={selectedClasses}
+        operator={"is-equal"}
+      />,
+    );
+
+    // trigger loadTargets function
+    const combobox = await findByRole("combobox");
+    await user.click(combobox);
+    await waitFor(async () => {
+      expect(queryByText(baseElement, "Value1")).not.toBeNull();
+      expect(queryByText(baseElement, "Value2")).toBeNull();
+    });
+  });
+});

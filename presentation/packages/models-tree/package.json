@@ -1,0 +1,58 @@
+{
+  "name": "@szewtwin/presentation-models-tree",
+  "version": "0.0.0",
+  "description": "Temporary private package for storing the Models tree hierarchy definition",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/szewTwin/presentation.git",
+    "directory": "packages/models-tree"
+  },
+  "keywords": [
+    "Szewec",
+    "Presentation",
+    "szewTwin.js",
+    "Hierarchy",
+    "DMSQL",
+    "Models tree"
+  ],
+  "author": {
+    "name": "Szewec Systems, Inc.",
+    "url": "http://www.szewec.com"
+  },
+  "type": "module",
+  "main": "lib/cjs/models-tree.js",
+  "types": "lib/cjs/models-tree",
+  "module": "lib/esm/models-tree.js",
+  "exports": {
+    ".": {
+      "import": "./lib/esm/models-tree.js",
+      "require": "./lib/cjs/models-tree.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "npm run -s build:cjs && npm run -s build:esm",
+    "build:cjs": "node ../../scripts/package-cjs.mjs ./lib/cjs && tsc -p tsconfig.cjs.json",
+    "build:esm": "tsc -p tsconfig.esm.json",
+    "clean": "rimraf lib",
+    "lint": "eslint \"./src/**/*.ts\""
+  },
+  "dependencies": {
+    "@szewtwin/core-szewec": "catalog:szewtwinjs-core-dev",
+    "@szewtwin/presentation-shared": "workspace:^",
+    "rxjs": "catalog:rxjs"
+  },
+  "peerDependencies": {
+    "@szewtwin/presentation-hierarchies": "workspace:^"
+  },
+  "devDependencies": {
+    "@szewtwin/build-tools": "catalog:build-tools",
+    "@szewtwin/eslint-plugin": "catalog:build-tools",
+    "@szewtwin/presentation-hierarchies": "workspace:^",
+    "cpx2": "catalog:build-tools",
+    "eslint": "catalog:build-tools",
+    "rimraf": "catalog:build-tools",
+    "typescript": "catalog:build-tools"
+  }
+}

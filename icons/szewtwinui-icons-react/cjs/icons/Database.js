@@ -1,0 +1,11 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.SvgDatabase = void 0;
+const react_1 = __importDefault(require("react"));
+const SvgDatabase = (props) => (react_1.default.createElement("svg", { viewBox: "0 0 16 16", width: "1rem", height: "1rem", fill: "var(--iui-color-icon-muted, currentColor)", ...props },
+    react_1.default.createElement("path", { d: "M8 0C5 0 1.39.56 1 1.33V5c.05.2.38.39.89.58A1.63 1.63 0 001 6.1v3.61c.05.2.4.41.93.6a1.71 1.71 0 00-.93.56v3.62c.2.75 4.64 1.51 7 1.51s6.8-.76 7-1.52v-3.61c-.06-.17-.46-.36-1-.54.58-.2 1-.4 1-.62V6.1c-.06-.17-.45-.34-1-.52.57-.19 1-.4 1-.62V1.33C14.8.76 11 0 8 0zM2 1.44h.1A12.46 12.46 0 003.84 2a24.16 24.16 0 004.24.46A24.17 24.17 0 0012.32 2a12.12 12.12 0 001.77-.48l.28.12v.58a12.85 12.85 0 01-1.89.5 24.68 24.68 0 01-4.39.48 24.68 24.68 0 01-4.39-.48 13.16 13.16 0 01-1.91-.5l-.14-.06V1.6s.08-.06.35-.16zm0 4.75l.12.06a12.72 12.72 0 001.79.46 24.31 24.31 0 004.24.48 24.32 24.32 0 004.24-.48 12.36 12.36 0 001.77-.46l.28.12v.58a12.86 12.86 0 01-1.89.5 24.68 24.68 0 01-4.39.48 24.68 24.68 0 01-4.39-.48 13.18 13.18 0 01-1.91-.5l-.14-.06v-.54s.03-.06.21-.16zM2 11h.1a12.45 12.45 0 001.79.48 24.16 24.16 0 004.24.46 24.17 24.17 0 004.24-.46 12.11 12.11 0 001.72-.48l.28.12v.58a12.68 12.68 0 01-1.89.52 24.68 24.68 0 01-4.39.48 24.68 24.68 0 01-4.39-.48 13 13 0 01-1.91-.52l-.14-.06v-.52s.1-.06.35-.12z" })));
+exports.SvgDatabase = SvgDatabase;
+exports.default = SvgDatabase;

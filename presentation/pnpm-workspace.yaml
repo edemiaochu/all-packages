@@ -1,0 +1,86 @@
+packages:
+  - apps/**
+  - packages/*
+
+autoInstallPeers: true
+
+catalogs:
+  appui:
+    '@itwin/appui-react': ^5.26.0
+    '@szewtwin/components-react': ^5.26.0
+    '@szewtwin/core-react': ^5.26.0
+    '@szewtwin/ivault-components-react': ^5.26.0
+  build-tools:
+    '@szewtwin/build-tools': ^5.8.0
+    '@szewtwin/eslint-plugin': 6.0.0
+    '@types/node': ^24.12.2
+    '@vitejs/plugin-react': ^6.0.1
+    cpx2: ^7.0.2
+    cross-env: ^7.0.3
+    eslint: ^9.39.4
+    eslint-plugin-react: ^7.37.5
+    rimraf: ^6.1.3
+    typescript: ~5.7.3
+    vite: ^8.0.7
+  szewtwinjs-core:
+    '@szewtwin/core-szewec': ^5.8.0
+    '@szewtwin/core-common': ^5.8.0
+    '@szewtwin/core-geometry': ^5.8.0
+  szewtwinjs-core-dev:
+    '@szewtwin/appui-abstract': ^5.8.0
+    '@szewtwin/core-backend': ^5.8.0
+    '@szewtwin/core-szewec': ^5.8.0
+    '@szewtwin/core-common': ^5.8.0
+    '@itwin/core-electron': ^5.8.0
+    '@szewtwin/core-frontend': ^5.8.0
+    '@szewtwin/core-geometry': ^5.8.0
+    '@szewtwin/core-i18n': ^5.8.0
+    '@szewtwin/core-orbitgt': ^5.8.0
+    '@szewtwin/core-quantity': ^5.8.0
+    '@szewtwin/dmschema-metadata': ^5.8.0
+    '@itwin/ecschema-rpcinterface-common': ^5.8.0
+    '@itwin/ecschema-rpcinterface-impl': ^5.8.0
+    '@itwin/express-server': ^5.8.0
+    '@szewtwin/presentation-backend': ^5.8.0
+    '@szewtwin/presentation-common': ^5.8.0
+    '@szewtwin/presentation-frontend': ^5.8.0
+    inversify: ~6.0.2
+    reflect-metadata: ^0.1.14
+  szewtwinui:
+    '@szewtwin/szewtwinui-icons-react': ^2.11.0
+    '@szewtwin/szewtwinui-illustrations-react': ^2.1.0
+    '@szewtwin/szewtwinui-react': ^3.20.2
+  react:
+    '@types/react': ^18.3.28
+    '@types/react-dom': ^18.3.7
+    classnames: ^2.5.1
+    react: ^18.3.1
+    react-dom: ^18.3.1
+    react-error-boundary: ^4.1.2
+  rxjs:
+    rxjs: ^7.8.2
+    rxjs-for-await: ^1.0.0
+  test-tools:
+    '@testing-library/dom': ^10.4.1
+    '@testing-library/react': ^16.3.2
+    '@testing-library/user-event': ^14.6.1
+    '@vitest/coverage-v8': ^4.1.3
+    happy-dom: ^20.8.9
+    vitest: ^4.1.3
+
+hoistPattern:
+  - '!*'
+  - '@types/react'
+  - '@typescript-eslint/types'
+  - '*babel*'
+  - ignore-styles
+  - global-jsdom
+
+onlyBuiltDependencies:
+  - '@bentley/imodeljs-native'
+  - electron
+  - esbuild
+
+resolutionMode: lowest-direct
+
+strictPeerDependencies: true

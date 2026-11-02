@@ -1,0 +1,50 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+.components-weightpicker-button {
+  color: var(--iui-color-text);
+  background: var(--iui-color-background);
+  border: 1px solid var(--iui-color-border-foreground);
+  border-radius: var(--iui-border-radius-1);
+  min-width: 100px;
+
+  &:not(.readonly):not([disabled]) {
+    cursor: pointer;
+  }
+
+  &:active,
+  &:focus {
+    box-shadow: hsl(var(--iui-color-accent-hsl) / var(--iui-opacity-4)) 0px 0px
+      0px 2px;
+  }
+}
+
+.components-weightpicker-popup {
+  &.core-popup {
+    background: var(--iui-color-background);
+    border: 1px solid var(--iui-color-border-foreground);
+  }
+
+  .components-weightpicker-popup-container {
+    color: var(--iui-color-text);
+    background: var(--iui-color-background);
+    min-width: 60px;
+    padding: 0 4px;
+    border-radius: var(--iui-border-radius-1);
+
+    > ul {
+      padding: 4px 0;
+      list-style: none;
+      margin: 0.25rem 0;
+
+      > .components-weightpicker-swatch:hover {
+        background: var(--iui-color-background-hover);
+      }
+
+      > .components-weightpicker-swatch.active {
+        background: var(--iui-color-background-accent-muted);
+      }
+    }
+  }
+}

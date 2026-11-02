@@ -1,0 +1,91 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/rush/v5/rush.schema.json",
+  "rushVersion": "5.172.0",
+  "pnpmVersion": "9.1.0",
+  "nodeSupportedVersionRange": "^20.9.0 || ^22.11.0",
+  "ensureConsistentVersions": true,
+  "projectFolderMinDepth": 1,
+  "projectFolderMaxDepth": 2,
+  "repository": {
+    "url": "https://github.com/iTwin/imodels-clients",
+    "defaultBranch": "main",
+    "defaultRemote": "origin"
+  },
+  "projects": [
+    {
+      "packageName": "@szewtwin/ivaults-client-common-config",
+      "projectFolder": "utils/ivaults-client-common-config",
+      "shouldPublish": false,
+      "reviewCategory": "common"
+    },
+    {
+      "packageName": "@szewtwin/ivaults-client-management",
+      "projectFolder": "clients/ivaults-client-management",
+      "versionPolicyName": "clientPackagesLockStep",
+      "shouldPublish": true,
+      "reviewCategory": "common"
+    },
+    {
+      "packageName": "@szewtwin/ivaults-client-authoring",
+      "projectFolder": "clients/ivaults-client-authoring",
+      "versionPolicyName": "clientPackagesLockStep",
+      "shouldPublish": true,
+      "reviewCategory": "common"
+    },
+    {
+      "packageName": "@szewtwin/ivaults-access-common",
+      "projectFolder": "itwin-platform-access/ivaults-access-common",
+      "versionPolicyName": "interopPackagesLockStep",
+      "shouldPublish": true,
+      "reviewCategory": "common"
+    },
+    {
+      "packageName": "@szewtwin/ivaults-client-test-utils",
+      "projectFolder": "utils/ivaults-client-test-utils",
+      "shouldPublish": false,
+      "reviewCategory": "common"
+    },
+    {
+      "packageName": "@szewtwin/ivaults-access-common-tests",
+      "projectFolder": "tests/ivaults-access-common-tests",
+      "shouldPublish": false,
+      "reviewCategory": "common"
+    },
+    {
+      "packageName": "@szewtwin/ivaults-clients-tests",
+      "projectFolder": "tests/ivaults-clients-tests",
+      "shouldPublish": true,
+      "reviewCategory": "common"
+    },
+    {
+      "packageName": "@szewtwin/ivaults-clients-tests-browser",
+      "projectFolder": "tests/ivaults-clients-tests-browser",
+      "shouldPublish": true,
+      "reviewCategory": "common"
+    },
+    {
+      "packageName": "@szewtwin/ivaults-access-frontend",
+      "projectFolder": "itwin-platform-access/ivaults-access-frontend",
+      "shouldPublish": true,
+      "reviewCategory": "common"
+    },
+    {
+      "packageName": "@szewtwin/ivaults-access-backend",
+      "projectFolder": "itwin-platform-access/ivaults-access-backend",
+      "shouldPublish": true,
+      "reviewCategory": "common"
+    },
+    {
+      "packageName": "@szewtwin/ivaults-access-backend-tests",
+      "projectFolder": "tests/ivaults-access-backend-tests",
+      "shouldPublish": true,
+      "reviewCategory": "common"
+    },
+    {
+      "packageName": "@szewtwin/ivaults-access-frontend-tests",
+      "projectFolder": "tests/ivaults-access-frontend-tests",
+      "shouldPublish": true,
+      "reviewCategory": "common"
+    }
+  ]
+}

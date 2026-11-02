@@ -1,0 +1,11 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.SvgInfo = void 0;
+const react_1 = __importDefault(require("react"));
+const SvgInfo = (props) => (react_1.default.createElement("svg", { viewBox: "0 0 16 16", width: "1rem", height: "1rem", fill: "var(--iui-color-icon-muted, currentColor)", ...props },
+    react_1.default.createElement("path", { d: "M10 0a1.539 1.539 0 011.662 1.405q.004.048.005.095a2.182 2.182 0 01-2.167 2 1.575 1.575 0 01-1.667-1.667A2.047 2.047 0 0110 0M6.667 16c-.833 0-1.5-.5-.833-2.833l1-4C7 8.5 7 8.333 6.833 8.333c-.333-.167-1.5.333-2.167.833l-.333-.833c2-1.667 4.333-2.667 5.5-2.667.833 0 1 1 .5 2.667l-1.166 4.334c-.167.833-.167 1 .167 1a3.338 3.338 0 001.833-1l.5.667a9.615 9.615 0 01-5 2.666" })));
+exports.SvgInfo = SvgInfo;
+exports.default = SvgInfo;

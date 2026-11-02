@@ -1,0 +1,110 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+$text-font-size: var(--iui-font-size-1);
+$text-font-color: var(--iui-color-text);
+
+.components-property-record--horizontal {
+  height: 100%;
+  display: grid;
+  padding: 0 8px;
+
+  .components-property-record-label {
+    font-size: var(--iui-font-size-0);
+    color: var(--iui-color-text-muted);
+  }
+
+  .components-property-record-value {
+    min-height: 24px;
+    font-size: $text-font-size;
+    color: $text-font-color;
+    padding: 0px 5px;
+  }
+}
+
+.components-property-record--vertical {
+  height: 100%;
+  padding: 0 8px;
+  display: grid;
+  align-content: center;
+
+  .components-property-record-label {
+    font-size: var(--iui-font-size-0);
+    color: var(--iui-color-text-muted);
+  }
+
+  .components-property-record-value {
+    min-height: 22px;
+    font-size: $text-font-size;
+    color: $text-font-color;
+  }
+}
+
+@mixin record-cell {
+  display: flex;
+  align-items: center;
+}
+
+.components-property-record-label {
+  @include record-cell;
+  overflow: hidden;
+}
+
+.components-property-record-value {
+  @include record-cell;
+  overflow: hidden;
+
+  & > span {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .core-underlined-button {
+    // Offset by 2px, because value is centered vertically
+    // and the button has an underline which offsets it's content,
+    // which in turn makes it not in line with the rest of text
+    margin-top: 2px;
+  }
+
+  .multiline {
+    display: flex;
+    align-items: baseline;
+
+    .content {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .expanded {
+    white-space: pre-wrap;
+    margin-top: 4px;
+    margin-bottom: 4px;
+
+    .expand-toggle {
+      float: right;
+      margin-top: 2px;
+    }
+  }
+
+  .expand-toggle {
+    padding: 0;
+    white-space: nowrap;
+    border: none;
+    background: none;
+    color: var(--iui-color-icon-accent);
+    font-size: 12px;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+    &:active {
+      outline: none;
+    }
+  }
+}

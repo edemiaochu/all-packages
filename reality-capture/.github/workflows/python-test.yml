@@ -1,0 +1,78 @@
+name: (PyTest) Test Python SDK
+
+on:
+  workflow_call:
+    inputs:
+      python-version:
+        required: true
+        type: string
+      os:
+        required: true
+        type: string
+
+jobs:
+  test_sdk:
+    runs-on: ${{ inputs.os }}
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ inputs.python-version }}
+
+      - name: Download wheel artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: python-sdk-wheel
+          path: python_sdk/dist
+
+      - name: Find Wheel File
+        id: find_wheel
+        working-directory: ./python_sdk/dist
+        run: |
+          $wheel = Get-ChildItem -Filter "*.whl" | Select-Object -First 1
+          $wheel_abs_path = $wheel.FullName
+          Write-Output "Wheel found: $wheel_abs_path"
+          "wheel_abs_path=$wheel_abs_path" >> $env:GITHUB_OUTPUT
+        shell: pwsh
+
+      - name: Create virtual env for tests
+        working-directory: ./python_sdk
+        run: |
+          python -m venv venv_tests
+          if ($env:RUNNER_OS -eq "Windows") {
+            ./venv_tests/Scripts/Activate.ps1
+          } else {
+            . ./venv_tests/bin/Activate.ps1
+          }
+          python -m pip install ${{ steps.find_wheel.outputs.wheel_abs_path }}
+          python -m pip install pytest
+          python -m pip install pytest-cov
+          python -m pip install responses
+        shell: pwsh
+
+      - name: Run tests
+        working-directory: ./python_sdk
+        run: |
+          if ($env:RUNNER_OS -eq "Windows") {
+            ./venv_tests/Scripts/Activate.ps1
+          } else {
+            . ./venv_tests/bin/Activate.ps1
+          }
+          pytest --cov-report html --cov-fail-under=99.5 --cov --cov-report json
+        shell: pwsh
+
+      - name: Check uncovered lines threshold
+        working-directory: ./python_sdk
+        run: |
+          import json, sys
+          with open("coverage.json") as f:
+              data = json.load(f)
+          missing = data["totals"]["missing_lines"]
+          print(f"Uncovered lines: {missing}")
+          if missing >= 10:
+              print(f"Too many uncovered lines: {missing} (must be less than 10)", file=sys.stderr)
+              sys.exit(1)
+        shell: python

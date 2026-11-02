@@ -1,0 +1,217 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+import * as React from "react";
+import { Id64 } from "@szewtwin/core-szewec";
+import { fireEvent, render } from "@testing-library/react";
+import type { PropertyValueRendererContext } from "../../../../components-react/properties/ValueRendererManager.js";
+import TestUtils from "../../../TestUtils.js";
+import { UrlPropertyValueRenderer } from "../../../../components-react/properties/renderers/value/UrlPropertyValueRenderer.js";
+import type { PropertyRecord } from "@szewtwin/appui-abstract";
+import * as moq from "typemoq";
+
+describe("UrlPropertyValueRenderer", () => {
+  describe("render", () => {
+    it("renders URI property wrapped in an anchored tag from value", () => {
+      const renderer = new UrlPropertyValueRenderer();
+      const property = TestUtils.createURIProperty(
+        "Category",
+        "Test Uri Value: pw:\\wsp-aus-pw.szewec.com:wsp-aus-pw-10DocumentsSouthern Program Alliance"
+      );
+
+      const element = renderer.render(property);
+      const elementRender = render(<>{element}</>);
+
+      expect(
+        elementRender.container.getElementsByClassName(
+          "core-underlined-button"
+        )[0].textContent
+      ).toEqual(
+        "Test Uri Value: pw:\\wsp-aus-pw.szewec.com:wsp-aus-pw-10DocumentsSouthern Program Alliance"
+      );
+    });
+
+    it("renders URI property wrapped in an anchored tag if custom LinkElementsInfo is specified in the PropertyRecord", () => {
+      const renderer = new UrlPropertyValueRenderer();
+      const property: PropertyRecord = TestUtils.createURIProperty(
+        "Category",
+        "Test www.test.com"
+      );
+
+      property.links = {
+        onClick: vi.fn(),
+        matcher: () => [{ start: 0, end: 4 }],
+      };
+
+      const element = renderer.render(property);
+      const elementRender = render(<>{element}</>);
+
+      expect(
+        elementRender.container.getElementsByClassName(
+          "core-underlined-button"
+        )[0].textContent
+      ).toEqual("Test");
+    });
+
+    it("renders URI property with highlighting and in anchored tag", () => {
+      const renderer = new UrlPropertyValueRenderer();
+      const stringProperty = TestUtils.createURIProperty(
+        "Label",
+        "Test property"
+      );
+
+      const highlightNode = (text: string) => (
+        <span>{`${text} Highlighted`}</span>
+      );
+      const renderContext: PropertyValueRendererContext = {
+        textHighlighter: highlightNode,
+      };
+
+      const element = renderer.render(stringProperty, renderContext);
+      const renderedElement = render(<>{element}</>);
+
+      renderedElement.getByText("Test property Highlighted");
+      expect(
+        renderedElement.container.getElementsByClassName(
+          "core-underlined-button"
+        )
+      ).to.not.be.empty;
+    });
+
+    it("throws when trying to render array property", () => {
+      const renderer = new UrlPropertyValueRenderer();
+      const arrayProperty = TestUtils.createArrayProperty("LabelArray");
+      expect(() => renderer.render(arrayProperty)).to.throw;
+    });
+
+    describe("onClick", () => {
+      const originalLocation = location;
+      const locationMockRef: moq.IMock<Location> =
+        moq.Mock.ofInstance(location);
+
+      beforeEach(() => {
+        location = locationMockRef.object;
+      });
+
+      afterEach(() => {
+        location = originalLocation;
+        locationMockRef.reset();
+      });
+
+      it("opens window using the whole URI value, when link which doesn't start with pw: or mailto: is clicked", () => {
+        const renderer = new UrlPropertyValueRenderer();
+        const stringProperty = TestUtils.createURIProperty(
+          "Label",
+          "Random Test property"
+        );
+        const spy = vi.spyOn(window, "open");
+        spy.mockReturnValue(null);
+
+        const element = renderer.render(stringProperty);
+        const renderedElement = render(<>{element}</>);
+
+        const linkElement = renderedElement.container.getElementsByClassName(
+          "core-underlined-button"
+        )[0];
+
+        expect(linkElement.textContent).toEqual("Random Test property");
+
+        fireEvent.click(linkElement);
+        expect(spy).toHaveBeenCalledWith("Random Test property", "_blank");
+      });
+
+      it("sets location.href to the whole URI value, when link starting with pw: is clicked", () => {
+        const renderer = new UrlPropertyValueRenderer();
+        const stringProperty = TestUtils.createURIProperty(
+          "Label",
+          "pw:Test property"
+        );
+
+        const element = renderer.render(stringProperty);
+        const renderedElement = render(<>{element}</>);
+
+        const linkElement = renderedElement.container.getElementsByClassName(
+          "core-underlined-button"
+        )[0];
+        expect(linkElement.textContent).toEqual("pw:Test property");
+
+        const spy = vi.spyOn(window, "open");
+        fireEvent.click(linkElement);
+        expect(spy).toHaveBeenCalledWith("pw:Test property", "_blank");
+      });
+
+      it("sets location.href to the whole URI value, when link starting with mailto: is clicked", () => {
+        const renderer = new UrlPropertyValueRenderer();
+        const stringProperty = TestUtils.createURIProperty(
+          "Label",
+          "mailto:Test property"
+        );
+
+        const element = renderer.render(stringProperty);
+        const renderedElement = render(<>{element}</>);
+
+        const linkElement = renderedElement.container.getElementsByClassName(
+          "core-underlined-button"
+        )[0];
+
+        expect(linkElement.textContent).toEqual("mailto:Test property");
+
+        fireEvent.click(linkElement);
+        expect(locationMockRef.object.href).toEqual("mailto:Test property");
+      });
+
+      it("calls window.open.focus if window.open returns not null", () => {
+        const renderer = new UrlPropertyValueRenderer();
+        const stringProperty = TestUtils.createURIProperty(
+          "Label",
+          "Random Test property"
+        );
+        const windowMock = moq.Mock.ofType<Window>();
+        windowMock.setup((x) => x.focus());
+
+        const spy = vi.spyOn(window, "open");
+        spy.mockReturnValue(windowMock.object);
+
+        const element = renderer.render(stringProperty);
+        const renderedElement = render(<>{element}</>);
+
+        const linkElement = renderedElement.container.getElementsByClassName(
+          "core-underlined-button"
+        )[0];
+
+        expect(linkElement.textContent).toEqual("Random Test property");
+
+        fireEvent.click(linkElement);
+        expect(spy).toHaveBeenCalledWith("Random Test property", "_blank");
+        windowMock.verify((x) => x.focus(), moq.Times.once());
+      });
+    });
+  });
+
+  describe("canRender", () => {
+    it("returns true for a URI property", () => {
+      const renderer = new UrlPropertyValueRenderer();
+      const property = TestUtils.createURIProperty("Category", "Value");
+      expect(renderer.canRender(property)).toEqual(true);
+    });
+
+    it("returns false for properties that are not URI or string", () => {
+      const renderer = new UrlPropertyValueRenderer();
+      const arrayProperty = TestUtils.createArrayProperty("LabelArray");
+      const structProperty = TestUtils.createStructProperty("NameStruct");
+      const doubleProperty = TestUtils.createPrimitiveDoubleProperty(
+        "Label",
+        123.456
+      );
+      const navigationProperty = TestUtils.createNavigationProperty(
+        "Category",
+        { className: "", id: Id64.fromUint32Pair(1, 0) }
+      );
+      expect(renderer.canRender(arrayProperty)).toEqual(false);
+      expect(renderer.canRender(structProperty)).toEqual(false);
+      expect(renderer.canRender(doubleProperty)).toEqual(false);
+      expect(renderer.canRender(navigationProperty)).toEqual(false);
+    });
+  });
+});

@@ -1,0 +1,36 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@use "~@szewtwin/core-react/lib/core-react/z-index" as *;
+
+@layer appui.preview.enable-maximized-widget {
+  .uifw-preview-enableMaximizedWidget_panel-layout {
+    grid-row: 1 / -1;
+    grid-column: 1 / -1;
+
+    z-index: uicore-get-z-index(dragged-widget) + 1;
+  }
+
+  .uifw-preview-enableMaximizedWidget_panel {
+    height: 100%;
+  }
+
+  .uifw-preview-enableMaximizedWidget_section {
+    flex: 1;
+  }
+
+  .uifw-preview-enableMaximizedWidget_section-sibling {
+    display: none;
+  }
+
+  .uifw-preview-enableMaximizedWidget_floatingWidget {
+    opacity: 1;
+    border-radius: unset;
+    inset: 0;
+  }
+
+  .uifw-preview-enableMaximizedWidget_widget-tabBar {
+    pointer-events: none;
+  }
+}

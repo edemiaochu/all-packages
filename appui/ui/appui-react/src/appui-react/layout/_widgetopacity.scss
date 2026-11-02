@@ -1,0 +1,15 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@forward "~@szewtwin/core-react/lib/core-react/style/themecolors";
+
+@mixin nz-widget-opacity {
+  opacity: var(--buic-widget-opacity, 0.9);
+  transition: opacity var(--iui-duration-1) ease;
+
+  &:hover,
+  &:focus-within {
+    opacity: 1;
+  }
+}

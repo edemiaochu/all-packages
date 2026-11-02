@@ -1,0 +1,18 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@use "~@szewtwin/core-react/lib/core-react/inputs/variables" as *;
+
+.uifw-menu-button {
+  position: absolute;
+  pointer-events: auto;
+
+  .icon {
+    line-height: 2;
+  }
+
+  > .context-menu {
+    top: $uicore-inputs-padding-bordered;
+  }
+}

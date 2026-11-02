@@ -1,0 +1,5 @@
+import React, { type SVGProps } from 'react';
+declare const SvgCrop: (props: SVGProps<SVGSVGElement>) => React.JSX.Element;
+export default SvgCrop;
+export { SvgCrop };
+//# sourceMappingURL=Crop.d.ts.map

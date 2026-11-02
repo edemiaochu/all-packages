@@ -1,0 +1,24 @@
+# Built Files
+**/dist
+**/tsconfig.tsbuildinfo
+
+# Cypress
+**/.snapshot-report
+demo/cypress-visual-screenshots/comparison
+demo/cypress-visual-screenshots/diff
+demo/cypress-visual-report
+
+# Node
+**/node_modules
+yarn-error.log
+
+# MacOS
+**/.DS_Store
+
+# Yarn Modern
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions

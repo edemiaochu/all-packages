@@ -1,0 +1,131 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+
+import { beforeEach, describe, expect, it, Mocked, MockInstance, vi } from "vitest";
+import { PropertyRecord, PropertyValueFormat } from "@szewtwin/appui-abstract";
+import { PropertyData } from "@szewtwin/components-react";
+import { EmptyLocalization } from "@szewtwin/core-common";
+import { IVaultConnection } from "@szewtwin/core-frontend";
+import { Ruleset } from "@szewtwin/presentation-common";
+import { FavoritePropertiesManager, Presentation, PresentationManager } from "@szewtwin/presentation-frontend";
+import { FavoritePropertiesDataProvider } from "../../presentation-components/favorite-properties/DataProvider.js";
+import { getFavoritesCategory } from "../../presentation-components/favorite-properties/Utils.js";
+import { PresentationPropertyDataProvider } from "../../presentation-components/propertygrid/DataProvider.js";
+import { createMocked } from "../TestUtils.js";
+
+describe("FavoritePropertiesDataProvider", () => {
+  let provider: FavoritePropertiesDataProvider;
+  const elementId = "0x11";
+  const ivault = {
+    async *createQueryReader() {
+      yield { toRow: () => ({ DMInstanceId: elementId, ClassName: "BisCore.Element" }) };
+    },
+  } as unknown as IVaultConnection;
+  let presentationManager: Mocked<PresentationManager>;
+  let presentationPropertyDataProvider: {
+    getData: MockInstance<() => PropertyData>;
+    [Symbol.dispose]: MockInstance<() => void>;
+  };
+  let favoritePropertiesManager: Mocked<FavoritePropertiesManager>;
+
+  beforeEach(() => {
+    presentationManager = createMocked(PresentationManager);
+    presentationPropertyDataProvider = { getData: vi.fn<() => PropertyData>(), [Symbol.dispose]: vi.fn<() => void>() };
+    favoritePropertiesManager = createMocked(FavoritePropertiesManager);
+
+    const localization = new EmptyLocalization();
+    vi.spyOn(Presentation, "presentation", "get").mockReturnValue(presentationManager);
+    vi.spyOn(Presentation, "favoriteProperties", "get").mockReturnValue(favoritePropertiesManager);
+    vi.spyOn(Presentation, "localization", "get").mockReturnValue(localization);
+
+    provider = new FavoritePropertiesDataProvider({ activeScopeProvider: () => ({ id: "element" }) });
+    (provider as any).createPropertyDataProvider = () => presentationPropertyDataProvider;
+  });
+
+  describe("constructor", () => {
+    it("sets `includeFieldsWithNoValues` to true", () => {
+      expect(provider.includeFieldsWithNoValues).toBe(true);
+    });
+
+    it("sets `includeFieldsWithCompositeValues` to true", () => {
+      expect(provider.includeFieldsWithCompositeValues).toBe(true);
+    });
+  });
+
+  describe("getData", () => {
+    it("passes `customRulesetId` to PropertyDataProvider if set", async () => {
+      presentationPropertyDataProvider.getData.mockResolvedValue({
+        label: PropertyRecord.fromString("Test Item"),
+        categories: [],
+        records: {},
+      });
+      const factorySpy = vi
+        .fn<(ivault: IVaultConnection, ruleset: Ruleset | string | undefined) => PresentationPropertyDataProvider>()
+        .mockReturnValue(presentationPropertyDataProvider as unknown as PresentationPropertyDataProvider);
+
+      const customRulesetId = "custom_ruleset_id";
+      provider = new FavoritePropertiesDataProvider({
+        ruleset: customRulesetId,
+        activeScopeProvider: () => ({ id: "element" }),
+      });
+      (provider as any).createPropertyDataProvider = factorySpy;
+
+      await provider.getData(ivault, elementId);
+      expect(factorySpy).toHaveBeenCalledWith(ivault, customRulesetId);
+    });
+
+    it("returns empty property data when there is no favorite category", async () => {
+      const dataToReturn: PropertyData = {
+        label: PropertyRecord.fromString("Test Item"),
+        categories: [{ label: "Test Category", name: "test", expand: true }],
+        records: {
+          test: [
+            new PropertyRecord(
+              { valueFormat: PropertyValueFormat.Primitive, displayValue: "Test Value" },
+              { typename: "string", name: "test_prop", displayLabel: "Test Property" },
+            ),
+          ],
+        },
+      };
+      presentationPropertyDataProvider.getData.mockResolvedValue(dataToReturn);
+
+      const data = await provider.getData(ivault, elementId);
+      expect(data.categories).toHaveLength(0);
+      expect(Object.keys(data.records)).toHaveLength(0);
+    });
+
+    it("filters out only favorite category", async () => {
+      const favoritesCategory = getFavoritesCategory();
+      const favoritePropertyName = "favoriteProp";
+      const regularPropertyName = "regularProp";
+
+      const dataToReturn: PropertyData = {
+        label: PropertyRecord.fromString("Test Item"),
+        categories: [favoritesCategory, { label: "Test Category", name: "test", expand: true }],
+        records: {
+          [favoritesCategory.name]: [
+            new PropertyRecord(
+              { valueFormat: PropertyValueFormat.Primitive, displayValue: "SomeString" },
+              { typename: "string", name: favoritePropertyName, displayLabel: "Favorite Property" },
+            ),
+          ],
+          test: [
+            new PropertyRecord(
+              { valueFormat: PropertyValueFormat.Primitive, displayValue: "1" },
+              { typename: "int", name: regularPropertyName, displayLabel: "Regular Property" },
+            ),
+          ],
+        },
+      };
+      presentationPropertyDataProvider.getData.mockResolvedValue(dataToReturn);
+
+      const data = await provider.getData(ivault, elementId);
+      expect(data.categories).toHaveLength(1);
+      expect(data.records[favoritesCategory.name]).toBeDefined();
+      expect(data.records[favoritesCategory.name]).toHaveLength(1);
+      expect(data.records[favoritesCategory.name][0].property.name).toBe(favoritePropertyName);
+    });
+  });
+});

@@ -1,0 +1,17 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+import { ErrorAdapter, OperationNameForErrorMapping } from "./ErrorAdapter";
+
+export async function handleAPIErrors<TResult>(
+  func: () => Promise<TResult>,
+  operationName?: OperationNameForErrorMapping
+): Promise<TResult> {
+  try {
+    const result = await func();
+    return result;
+  } catch (error: unknown) {
+    throw ErrorAdapter.toSZEWTwinError(error, operationName);
+  }
+}

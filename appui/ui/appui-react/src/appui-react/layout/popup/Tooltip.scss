@@ -1,0 +1,22 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@use "~@szewtwin/core-react/lib/core-react/z-index" as *;
+
+.nz-popup-tooltip {
+  position: absolute;
+  background-color: hsl(var(--iui-color-background-hsl) / 0.9);
+  color: var(--iui-color-text);
+  display: grid;
+  grid-auto-flow: column;
+  grid-gap: 5px;
+  align-items: center;
+  padding: 5px 10px;
+
+  @include uicore-z-index(tooltip);
+
+  > .nz-content {
+    white-space: nowrap;
+  }
+}

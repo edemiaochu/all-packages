@@ -1,0 +1,12 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.SvgGesturePinch = void 0;
+const react_1 = __importDefault(require("react"));
+const SvgGesturePinch = (props) => (react_1.default.createElement("svg", { viewBox: "0 0 16 16", width: "1rem", height: "1rem", fill: "var(--iui-color-icon-muted, currentColor)", ...props },
+    react_1.default.createElement("path", { d: "M16 9.16a1.05 1.05 0 00-1.087-1.016 1.03 1.03 0 00-.908.491v-.034a1.065 1.065 0 00-1.087-1.032 1.054 1.054 0 00-.908.474v-.017a1.064 1.064 0 00-1.087-1.032 1.053 1.053 0 00-.908.473l-.013.019V5c0-.024-.012-.044-.013-.067a.98.98 0 00-.035-.17.973.973 0 00-.071-.212c-.008-.017-.008-.035-.017-.05a.933.933 0 00-.073-.083.972.972 0 00-.148-.168 1.352 1.352 0 00-.325-.186.972.972 0 00-.195-.04A.941.941 0 009 4c-.021 0-.039.01-.06.012a1.588 1.588 0 00-.382.102c-.02.01-.04.01-.06.02l-2.597 1.5A1 1 0 005.536 7a1 1 0 001.366.366L8 6.732v3.55a.121.121 0 01-.128-.036l-1.07-1a1.088 1.088 0 00-1.346-.115.998.998 0 00-.449.689.95.95 0 00.242.787l2.64 3.032A3.953 3.953 0 0010.91 15h1.639a3.483 3.483 0 002.433-.967A3.172 3.172 0 0016 11.72z", fillRule: "evenodd" }),
+    react_1.default.createElement("path", { d: "M7.354 1.354l-1.5 1.5L7 4H4V1l1.146 1.146 1.5-1.5a.5.5 0 01.707.707zM2.147 5.147l-1.5 1.5a.5.5 0 00.707.707l1.5-1.5L4 7V4H1z", opacity: "0.55" })));
+exports.SvgGesturePinch = SvgGesturePinch;
+exports.default = SvgGesturePinch;

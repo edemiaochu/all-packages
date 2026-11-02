@@ -1,0 +1,103 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+
+.uifw-default-center-across-width {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-content: center;
+  grid-column: 1 / span 2;
+}
+
+.uifw-default-inline-editor-group {
+  display: flex;
+  gap: var(--iui-size-xs);
+
+  .uifw-default-label {
+    margin-right: var(--iui-size-xs);
+  }
+}
+
+.uifw-default-lock-and-label {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.uifw-default-property-lock {
+  margin-right: var(--iui-size-s);
+}
+
+.uifw-default-inline-label-and-editor {
+  display: flex;
+  align-items: center;
+}
+
+.uifw-default-label {
+  white-space: nowrap;
+}
+
+.uifw-dockedBar .uifw-default-label {
+  margin-right: var(--iui-size-xs);
+}
+
+.uifw-default-narrow-only-display {
+  display: none;
+}
+
+.uifw-default-container {
+  min-width: 200px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-row-gap: 0px;
+  row-gap: 0px;
+  grid-column-gap: 8px;
+  column-gap: 8px;
+  font-family: var(--iui-font-sans);
+  font-size: 14px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  align-items: center;
+  margin: var(--iui-size-2xs);
+}
+
+.uifw-default-container.uifw-tool-settings-grid-container {
+  row-gap: var(--iui-size-xs);
+}
+
+.uifw-default-container.uifw-default-narrow {
+  grid-template-columns: 1fr;
+  row-gap: var(--iui-size-2xs);
+
+  .uifw-default-label {
+    margin-left: var(--iui-size-2xs);
+  }
+
+  .uifw-default-lock-and-label {
+    justify-content: flex-start;
+  }
+
+  .uifw-default-inline-label-and-editor {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .uifw-default-narrow-only-display {
+    display: block;
+  }
+
+  .uifw-default-wide-only-display {
+    display: none;
+  }
+
+  .uifw-default-center-across-width {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-content: center;
+    grid-column: 1 / span 1;
+  }
+}

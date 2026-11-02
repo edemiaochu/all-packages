@@ -1,0 +1,11 @@
+{
+  "extends": "./node_modules/@szewtwin/build-tools/tsconfig-base.json",
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "outDir": "./lib"
+  },
+  "include": ["./**/*.ts", "./**/*.tsx"],
+  "exclude": ["lib", "node_modules", "test"]
+}

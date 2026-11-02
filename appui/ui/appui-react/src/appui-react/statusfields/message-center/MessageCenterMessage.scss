@@ -1,0 +1,28 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+.uifw-statusFields-messageCenter-messageCenterMessage {
+  min-height: 48px;
+  box-sizing: border-box;
+  padding-left: var(--iui-size-xs);
+  padding-right: var(--iui-size-xs);
+  padding-bottom: var(--iui-size-xs);
+  display: grid;
+  grid-gap: 12px;
+  grid-auto-flow: column;
+  align-items: center;
+  grid-template-columns: auto 1fr;
+  line-height: 16px;
+  color: var(--iui-color-text);
+
+  &:not(:first-child) {
+    padding-top: var(--iui-size-xs);
+    border-top: 1px solid lightgrey;
+  }
+
+  > .uifw-content {
+    overflow: hidden;
+    overflow-wrap: break-word;
+  }
+}

@@ -1,0 +1,62 @@
+name: Publish to npm
+
+on:
+  workflow_dispatch:
+    inputs:
+      package:
+        description: 'Which package to publish?'
+        required: true
+        type: choice
+        default: itwinui-css
+        options:
+          - itwinui-css
+          - itwinui-variables
+          - itwinui-react
+      tag:
+        description: 'Which npm tag to publish to?'
+        required: true
+        type: choice
+        default: latest
+        options:
+          - latest
+          - dev
+
+  workflow_call:
+    inputs:
+      package:
+        required: true
+        type: string
+        default: itwinui-css
+      tag:
+        required: true
+        type: string
+        default: latest
+    secrets:
+      NPMJS_PUBLISH_ITWIN:
+        required: true
+
+jobs:
+  publish:
+    name: Build and publish output to npm
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Use Node 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          registry-url: http://localhost:4873/
+
+      - run: pnpm install
+      - run: pnpm run build --filter={./packages/*}...
+
+      - run: npm publish --access public --tag ${{ inputs.tag }}
+        working-directory: './packages/${{ inputs.package }}/'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPMJS_PUBLISH_ITWIN }}

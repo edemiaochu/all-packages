@@ -1,0 +1,12 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.SvgUnlink = void 0;
+const react_1 = __importDefault(require("react"));
+const SvgUnlink = (props) => (react_1.default.createElement("svg", { viewBox: "0 0 16 16", width: "1rem", height: "1rem", fill: "var(--iui-color-icon-muted, currentColor)", ...props },
+    react_1.default.createElement("path", { d: "M7.388 8.395a1.842 1.842 0 002.428.927l3.238-1.545a1.904 1.904 0 00.911-2.474 1.842 1.842 0 00-2.429-.927l-1.112.515L8.4 3.861l2.53-1.134a3.49 3.49 0 014.756 1.855 3.688 3.688 0 01-1.821 4.843l-3.238 1.546c-3.947 1.855-5.06-2.37-5.06-2.679l1.518-.72.304.823" }),
+    react_1.default.createElement("path", { d: "M3.947 8.601l-1.113 1.752a3.56 3.56 0 001.214 5.05 3.428 3.428 0 004.96-1.237l1.416-2.37a3.764 3.764 0 01-2.327.412l-.708 1.133a1.782 1.782 0 01-2.43.618 1.853 1.853 0 01-.606-2.473l1.113-1.752M0 6.614l.226-1 4.538 1.059-.227 1.01L0 6.623M6.238.155l1-.155.702 4.686-1 .155L6.237.155M.569.971l.716-.729L6.01 5.05l-.718.73z" })));
+exports.SvgUnlink = SvgUnlink;
+exports.default = SvgUnlink;

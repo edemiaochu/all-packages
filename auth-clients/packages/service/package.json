@@ -1,0 +1,59 @@
+{
+  "name": "@szewtwin/service-authorization",
+  "version": "2.1.1",
+  "description": "Service authorization client for szewTwin platform",
+  "main": "lib/cjs/index.js",
+  "typings": "lib/cjs/index",
+  "scripts": {
+    "build": "tsc 1>&2",
+    "docs": "RUSHSTACK_FILE_ERROR_BASE_FOLDER='../..' betools docs --includes=../../generated-docs/extract --json=../../generated-docs/auth-clients/service-authorization/file.json --tsIndexFile=./index.ts --onlyJson",
+    "lint": "eslint -f visualstudio \"./src/**/*.ts\" 1>&2",
+    "lint:fix": "npm run lint -- --fix",
+    "test": "mocha \"./lib/cjs/test/**/*.test.js\"",
+    "test:integration": "",
+    "cover": "nyc npm test",
+    "clean": "rimraf lib",
+    "pack": "npm pack",
+    "rebuild": "npm run clean && npm run build"
+  },
+  "author": {
+    "name": "Szewec Systems, Inc.",
+    "url": "http://www.szewec.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/szewTwin/auth-clients.git",
+    "directory": "packages/service"
+  },
+  "dependencies": {
+    "got": "^12.6.1",
+    "jsonwebtoken": "^9.0.2",
+    "jwks-rsa": "^3.2.0"
+  },
+  "devDependencies": {
+    "@szewtwin/build-tools": "^5.5.0",
+    "@szewtwin/core-szewec": "^5.0.0",
+    "@szewtwin/core-common": "^5.0.0",
+    "@szewtwin/eslint-plugin": "^6.0.0",
+    "@types/chai": "^4.3.20",
+    "@types/chai-as-promised": "^7.1.8",
+    "@types/jsonwebtoken": "^8.5.9",
+    "@types/mocha": "^8.2.3",
+    "@types/sinon": "^10.0.20",
+    "chai": "^4.5.0",
+    "chai-as-promised": "^7.1.2",
+    "dotenv": "^17.3.1",
+    "dotenv-expand": "^12.0.3",
+    "eslint": "^9.11.1",
+    "mocha": "^11.7.5",
+    "nyc": "^17.1.0",
+    "rimraf": "^3.0.2",
+    "sinon": "^15.2.0",
+    "source-map-support": "^0.5.21",
+    "typescript": "~5.6.3"
+  },
+  "peerDependencies": {
+    "@szewtwin/core-szewec": "^5.0.0"
+  }
+}

@@ -1,0 +1,5 @@
+import React, { type SVGProps } from 'react';
+declare const SvgLock: (props: SVGProps<SVGSVGElement>) => React.JSX.Element;
+export default SvgLock;
+export { SvgLock };
+//# sourceMappingURL=Lock.d.ts.map

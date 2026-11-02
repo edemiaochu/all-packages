@@ -1,0 +1,238 @@
+{
+  "EC": {
+    "baseName": "dm",
+    "overrides": {
+      "EC": "DM",
+      "eC": "dM"
+    },
+    "fused": false
+  },
+  "itwin": {
+    "baseName": "szewtwin",
+    "overrides": {
+      "iTwin": "szewTwin",
+      "ITwin": "SZEWTwin",
+      "Itwin": "SZEWtwin",
+      "itWin": "szewtWin",
+      "iTWin": "szewTWin"
+    },
+    "fused": false
+  },
+  "imodel": {
+    "baseName": "ivault",
+    "overrides": {
+      "IModel": "IVault",
+      "iModel": "iVault"
+    },
+    "fused": false
+  },
+  "imjs": {
+    "baseName": "ivjs",
+    "overrides": {},
+    "fused": false
+  },
+  "bentley": {
+    "baseName": "szewec",
+    "overrides": {
+      "beNTlEY": "szewEC"
+    },
+    "fused": false
+  },
+  "dgn": {
+    "baseName": "bld",
+    "overrides": {
+      "DGN": "BLD",
+      "dGn": "bLd",
+      "DGn": "BLd",
+      "dGN": "bLD",
+      "dgN": "blD"
+    },
+    "fused": true
+  },
+  "ecschema": {
+    "baseName": "dmschema",
+    "overrides": {
+      "ECSchema": "DMSchema",
+      "ecSchema": "dmSchema",
+      "EcSchema": "DmSchema"
+    },
+    "fused": false
+  },
+  "OpenPlant": {
+    "baseName": "Product1",
+    "overrides": {},
+    "fused": false
+  },
+  "OpenBridge": {
+    "baseName": "Product2",
+    "overrides": {},
+    "fused": false
+  },
+  "MicroStation": {
+    "baseName": "Product3",
+    "overrides": {},
+    "fused": false
+  },
+  "OpenRoads": {
+    "baseName": "Product4",
+    "overrides": {},
+    "fused": false
+  },
+  "OpenBuildings": {
+    "baseName": "Product5",
+    "overrides": {},
+    "fused": false
+  },
+  "AutoPLANT": {
+    "baseName": "Product6",
+    "overrides": {},
+    "fused": false
+  },
+  "ProStructures": {
+    "baseName": "Product7",
+    "overrides": {},
+    "fused": false
+  },
+  "ProjectWise": {
+    "baseName": "Product8",
+    "overrides": {},
+    "fused": false
+  },
+  "AECOsim": {
+    "baseName": "Product9",
+    "overrides": {},
+    "fused": false
+  },
+  "Speedikon": {
+    "baseName": "Product10",
+    "overrides": {},
+    "fused": false
+  },
+  "AutoPIPE": {
+    "baseName": "Product11",
+    "overrides": {},
+    "fused": false
+  },
+  "RAM": {
+    "baseName": "Product12",
+    "overrides": {},
+    "fused": false
+  },
+  "STAAD": {
+    "baseName": "Product13",
+    "overrides": {},
+    "fused": false
+  },
+  "SPPM": {
+    "baseName": "Product14",
+    "overrides": {},
+    "fused": false
+  },
+  "ecsql": {
+    "baseName": "DMSql",
+    "overrides": {
+      "ecSql": "dmSql",
+      "EcSql": "DmSql"
+    },
+    "fused": false
+  },
+  "ecdb": {
+    "baseName": "dmdb",
+    "overrides": {
+      "ECDb": "DMDb"
+    },
+    "fused": false
+  },
+  "imdl": {
+    "baseName": "ivul",
+    "overrides": {
+      "iMdl": "iVul"
+    },
+    "fused": false
+  },
+  "_manual": {
+    "Bentley3ECXML4352": "Szewec3DMXML4352"
+  },
+  "_manualTokens": {
+    "ecdbf": "dmdbf",
+    "ecdbchange": "dmdbchange",
+    "ecdbmap": "dmdbmap",
+    "ecdbmeta": "dmdbmeta",
+    "ecdbpol": "dmdbpol",
+    "ecdbsys": "dmdbsys",
+    "ecdbtest": "dmdbtest",
+    "ecclassid": "dmclassid",
+    "ecexpression": "dmexpression",
+    "ECXML": "DMXML",
+    "ecc": "dmc",
+    "ecchange": "dmchange",
+    "ecchanges": "dmchanges",
+    "ecchemas": "dmchemas",
+    "ecclass": "dmclass",
+    "ecclassdef": "dmclassdef",
+    "ecclasses": "dmclasses",
+    "ecclassfilter": "dmclassfilter",
+    "ecclasshierarchyinspector": "dmclasshierarchyinspector",
+    "ecclasstype": "dmclasstype",
+    "eccustomattributeclass": "dmcustomattributeclass",
+    "ecentityclass": "dmentityclass",
+    "ecenumeration": "dmenumeration",
+    "ecenumerationdef": "dmenumerationdef",
+    "ecenumerator": "dmenumerator",
+    "ecenums": "dmenums",
+    "ecexpressions": "dmexpressions",
+    "ecinstance": "dminstance",
+    "ecinstanceid": "dminstanceid",
+    "ECINSTANCEID": "DMINSTANCEID",
+    "ecjson": "dmjson",
+    "ECN": "DMN",
+    "ecname": "dmname",
+    "ecnavigationproperty": "dmnavigationproperty",
+    "ecprimitivearrayproperty": "dmprimitivearrayproperty",
+    "ecprimitiveproperty": "dmprimitiveproperty",
+    "ecproperties": "dmproperties",
+    "ecproperty": "dmproperty",
+    "ecpropertydef": "dmpropertydef",
+    "ecpropertykind": "dmpropertykind",
+    "ecrelationship": "dmrelationship",
+    "ecrelationshipclass": "dmrelationshipclass",
+    "ecrelationshipclasses": "dmrelationshipclasses",
+    "ecrelationshipconstraintdef": "dmrelationshipconstraintdef",
+    "ecs": "dms",
+    "ecstruct": "dmstruct",
+    "ecstructarrayproperty": "dmstructarrayproperty",
+    "ecstructclass": "dmstructclass",
+    "ecstructproperty": "dmstructproperty",
+    "ecxml": "dmxml",
+    "ECJSON": "DMJSON",
+    "imjsversions": "ivjsversions"
+  },
+  "_manualSkip": [
+    "eccentic",
+    "ecef",
+    "ECEF",
+    "eceflocation",
+    "ECGC",
+    "ecge",
+    "ecmascript",
+    "ECJSON",
+    "eco",
+    "economies",
+    "ECONNRESET",
+    "ECR",
+    "ecrs",
+    "ect",
+    "ection",
+    "ECM",
+    "ecma",
+    "ECCENTRIC",
+    "eccentricities",
+    "eccentricity",
+    "echo",
+    "echos",
+    "economic",
+    "economy",
+    "ecosystem",
+    "ecosystems"
+  ]
+}

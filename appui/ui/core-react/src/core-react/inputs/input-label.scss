@@ -1,0 +1,95 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@use "../style/baseline";
+
+@forward "../style/index";
+
+@mixin uicore-inputs-labeled-input {
+  display: block;
+  padding: 0;
+  margin: 0 0 baseline.$uicore-unbordered-padding;
+  text-align: left;
+  font-size: var(--iui-font-size-1);
+  font-weight: var(--iui-font-weight-normal);
+  cursor: pointer;
+
+  > .uicore-label {
+    padding: 0;
+    margin: 0;
+    border: 0 none transparent;
+    display: block;
+    font-size: var(--iui-font-size-1);
+    font-weight: var(--iui-font-weight-semibold);
+    line-height: var(--iui-size-l);
+    text-align: left;
+    color: var(--iui-color-text);
+  }
+
+  > .input {
+    position: relative;
+    /// Needed to vertically align the icon:
+    display: inline-block;
+    width: 100%;
+
+    &.with-icon {
+      > input {
+        padding-right: calc(
+          #{baseline.$uicore-bordered-padding} + var(--iui-size-l)
+        );
+        margin-right: calc(
+          #{baseline.$uicore-bordered-padding} + var(--iui-size-l)
+        );
+      }
+    }
+
+    > .icon {
+      display: flex;
+      align-items: center;
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      padding: baseline.$uicore-bordered-padding;
+
+      font-size: var(--iui-font-size-1);
+      font-weight: normal;
+    }
+  }
+
+  > .uicore-message {
+    display: block;
+    font-size: var(--iui-font-size-0);
+    line-height: var(--iui-size-l);
+    color: var(--iui-color-text-muted);
+  }
+
+  /// Status colors ----------------------------------------------------------
+
+  $status-colors: (
+    success: var(--iui-color-positive-hsl),
+    warning: var(--iui-color-warning-hsl),
+    error: var(--iui-color-negative-hsl),
+  );
+
+  @each $status, $color in $status-colors {
+    &.#{$status},
+    &.#{$status} > .uicore-message {
+      color: rgb($color);
+    }
+
+    &.#{$status} > .input {
+      > input,
+      > .uicore-inputs-input {
+        border-color: rgb($color);
+        box-shadow: var(--iui-focus-box-shadow) 0px 1px 1px inset;
+
+        &:focus {
+          border-color: rgb($color);
+          box-shadow: rgba($color, var(--iui-opacity-4)) 0px 0px 0px 2px;
+        }
+      }
+    }
+  }
+}

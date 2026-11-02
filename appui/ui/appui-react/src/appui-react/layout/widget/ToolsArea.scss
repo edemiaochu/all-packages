@@ -1,0 +1,57 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@use "../widgetopacity" as *;
+
+.nz-tools-widget {
+  transition: visibility var(--iui-duration-2) ease,
+    opacity var(--iui-duration-2) ease;
+  box-sizing: border-box;
+  height: 100%;
+  grid-column: 1;
+
+  display: grid;
+  grid-gap: 6px;
+  grid-template-areas:
+    "button htools"
+    "vtools .";
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto 1fr;
+  align-items: start;
+  justify-items: start;
+
+  &.nz-hidden {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  > .nz-app-button {
+    grid-area: button;
+
+    pointer-events: auto;
+    @include nz-widget-opacity;
+  }
+
+  > .nz-vertical-toolbar-container {
+    grid-area: vtools;
+
+    height: calc(100% - 60px);
+    display: inline-flex;
+    flex-direction: column;
+    @include nz-widget-opacity;
+
+    &.nz-span {
+      grid-row: button / vtools;
+    }
+  }
+
+  > .nz-horizontal-toolbar-container {
+    grid-area: htools;
+
+    width: 100%;
+    min-width: 0;
+
+    @include nz-widget-opacity;
+  }
+}

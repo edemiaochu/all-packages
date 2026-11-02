@@ -1,0 +1,44 @@
+{
+  "name": "@szewtwin/object-storage-common-config",
+  "version": "0.0.0",
+  "description": "Common configuration for object storage packages",
+  "homepage": "https://github.com/szewTwin/object-storage/tree/main/utils/common-config",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/szewTwin/object-storage"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Szewec Systems, Inc.",
+    "url": "http://www.szewec.com"
+  },
+  "scripts": {
+    "build": "",
+    "clean": "",
+    "lint": "",
+    "lint-fix": "sort-package-json",
+    "spell-check": "cspell ** --config ./cspell.json",
+    "test:integration:backend": "",
+    "test:integration:frontend": "",
+    "test:unit": "",
+    "test:unit:backend": "",
+    "test:unit:frontend": ""
+  },
+  "devDependencies": {
+    "@rushstack/eslint-patch": "^1.2.0",
+    "@typescript-eslint/eslint-plugin": "^5.59.9",
+    "@typescript-eslint/parser": "^5.59.9",
+    "cspell": "^8.16.0",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-import-resolver-node": "^0.3.7",
+    "eslint-plugin-deprecation": "^3.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-mocha": "^10.1.0",
+    "eslint-plugin-prefer-arrow": "^1.2.3",
+    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "^2.8.8",
+    "sort-package-json": "^1.53.1",
+    "typescript": "^5.1.3"
+  }
+}

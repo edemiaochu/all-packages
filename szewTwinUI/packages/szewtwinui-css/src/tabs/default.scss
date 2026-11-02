@@ -1,0 +1,90 @@
+// Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+// See LICENSE.md in the project root for license terms and full copyright notice.
+@use 'base';
+
+@mixin iui-tabs-default {
+  --_iui-tab-bg-color: var(--iui-color-background-backdrop);
+  --_iui-tab-bg-color-hover: var(--iui-color-background-backdrop-hover);
+  --_iui-tab-bg-color-selected: var(--iui-color-background);
+  --_iui-tab-bg-color-selected-hover: var(--iui-color-background);
+  --_iui-tab-bg-color-disabled: var(--iui-color-background-backdrop);
+
+  .iui-tab {
+    padding-block: var(--iui-size-2xs);
+    padding-inline: var(--iui-size-m);
+    border: 1px solid var(--iui-color-border);
+
+    &::after {
+      inset-block-start: 0;
+      inset-inline-start: 0;
+    }
+
+    &:focus {
+      outline-width: 2px;
+      outline-offset: -6px;
+    }
+  }
+
+  .iui-tab:is([aria-selected='true'], [aria-current]) {
+    &:where([data-iui-orientation='horizontal']) {
+      border-block-end-color: transparent;
+    }
+
+    &:where([data-iui-orientation='vertical']) {
+      border-inline-end-color: transparent;
+    }
+  }
+
+  .iui-tab:not(:first-child) {
+    &:where([data-iui-orientation='horizontal']) {
+      border-inline-start: none;
+    }
+
+    &:where([data-iui-orientation='vertical']) {
+      border-block-start: none;
+    }
+  }
+
+  ~ .iui-tabs-content {
+    &:where([data-iui-orientation='horizontal']) {
+      margin-block-start: -1px;
+    }
+
+    &:where([data-iui-orientation='vertical']) {
+      margin-inline-start: -1px;
+    }
+  }
+
+  &:where([data-iui-orientation='horizontal']) {
+    :where(.iui-button) {
+      block-size: 100%;
+    }
+  }
+
+  &:where([data-iui-orientation='vertical']) {
+    :where(.iui-button) {
+      inline-size: 100%;
+    }
+  }
+
+  &.iui-large {
+    .iui-tab {
+      min-block-size: calc(var(--iui-size-m) * 3.5);
+    }
+
+    .iui-tab-description {
+      display: -webkit-box; /* stylelint-disable-line */
+    }
+  }
+
+  &.iui-green .iui-tab::after {
+    --_iui-tab-color-stripe: var(--_iui-tab-color-stripe-green);
+  }
+
+  ~ .iui-tabs-content {
+    padding-inline: var(--iui-size-m);
+    padding-inline-end: var(--iui-size-m);
+    background-color: var(--iui-color-background);
+    border: 1px solid var(--iui-color-border);
+  }
+}

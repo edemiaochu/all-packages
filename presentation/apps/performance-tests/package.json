@@ -1,0 +1,41 @@
+{
+  "name": "presentation-performance-tests",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "benchmark:hierarchies": "cross-env BENCHMARK_OUTPUT_PATH=./hierarchies-benchmark.json pnpm test:hierarchies",
+    "benchmark:unified-selection": "cross-env BENCHMARK_OUTPUT_PATH=./unified-selection-benchmark.json pnpm test:unified-selection",
+    "build": "tsc -b",
+    "clean": "rimraf lib temp",
+    "docs": "betools extract --fileExt=ts --extractFrom=./src --recursive --out=./build/docs/extract",
+    "lint": "eslint \"./src/**/*.ts\"",
+    "test": "vitest run",
+    "test:hierarchies": "vitest run src/hierarchies",
+    "test:unified-selection": "vitest run src/unified-selection",
+    "test:recreate": "cross-env RECREATE=true pnpm test"
+  },
+  "devDependencies": {
+    "@bentley/functional-schema": "^1.0.4",
+    "@szewtwin/build-tools": "catalog:build-tools",
+    "@szewtwin/core-backend": "catalog:szewtwinjs-core-dev",
+    "@szewtwin/core-szewec": "catalog:szewtwinjs-core-dev",
+    "@szewtwin/core-common": "catalog:szewtwinjs-core-dev",
+    "@szewtwin/dmschema-metadata": "catalog:szewtwinjs-core-dev",
+    "@szewtwin/eslint-plugin": "catalog:build-tools",
+    "@szewtwin/presentation-core-interop": "workspace:*",
+    "@szewtwin/presentation-hierarchies": "workspace:*",
+    "@szewtwin/presentation-models-tree": "workspace:*",
+    "@szewtwin/presentation-shared": "workspace:*",
+    "@szewtwin/unified-selection": "workspace:*",
+    "@types/node": "catalog:build-tools",
+    "as-table": "^1.0.55",
+    "cross-env": "catalog:build-tools",
+    "eslint": "catalog:build-tools",
+    "presentation-test-utilities": "workspace:^",
+    "rimraf": "catalog:build-tools",
+    "rxjs": "catalog:rxjs",
+    "typescript": "catalog:build-tools",
+    "vitest": "catalog:test-tools"
+  }
+}

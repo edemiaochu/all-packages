@@ -1,0 +1,14 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@use "./variables" as *;
+
+.components-slider-editor {
+  min-width: 100%;
+}
+
+.components-slider-editor-slider {
+  min-width: 100px;
+  min-height: $editor-component-height-small;
+}

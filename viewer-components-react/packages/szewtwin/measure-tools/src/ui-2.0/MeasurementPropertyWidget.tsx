@@ -1,0 +1,232 @@
+/*---------------------------------------------------------------------------------------------
+* Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
+import "./MeasurementPropertyWidget.scss";
+import * as React from "react";
+import type { Id64String } from "@szewtwin/core-szewec";
+import { IVaultApp, SelectionSetEventType } from "@szewtwin/core-frontend";
+import type { PropertyDescription, PropertyValue } from "@szewtwin/appui-abstract";
+import { PropertyRecord, PropertyValueFormat } from "@szewtwin/appui-abstract";
+import { useActiveFrontstageDef, useActiveIVaultConnection, WidgetState } from "@szewtwin/appui-react";
+import { SimplePropertyDataProvider, VirtualizedPropertyGridWithDataProvider } from "@szewtwin/components-react";
+import { Orientation, ResizableContainerObserver } from "@szewtwin/core-react";
+import type { AggregatableValue, Measurement, MeasurementWidgetData } from "../api/Measurement.js";
+import type { MeasurementSelectionSetEvent } from "../api/MeasurementSelectionSet.js";
+import { MeasurementSelectionSet } from "../api/MeasurementSelectionSet.js";
+import { MeasurementUIEvents } from "../api/MeasurementUIEvents.js";
+import { MeasureTools } from "../MeasureTools.js";
+import { useCallback, useState } from "react";
+import type { ActionButtonRendererProps } from "@szewtwin/components-react";
+import { SvgCopy } from "@szewtwin/szewtwinui-icons-react";
+import { IconButton } from "@szewtwin/szewtwinui-react";
+import type { PrimitiveValue } from "@szewtwin/appui-abstract";
+
+export function useSpecificWidgetDef(id: string) {
+  const frontstageDef = useActiveFrontstageDef();
+  return frontstageDef?.findWidgetDef(id);
+}
+
+export const MeasurementPropertyWidgetId = "measure-tools-property-widget";
+
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const MeasurementPropertyWidget = () => {
+  const activeIVaultConnection = useActiveIVaultConnection();
+  const [dataProvider] = React.useState(new SimplePropertyDataProvider());
+  const [lastSelectedCount, setLastSelectedCount] = React.useState(MeasurementSelectionSet.global.measurements.length);
+  const [{ width, height }, setSize] = useState({ width: 0, height: 0 });
+
+  const createPropertyRecord = (displayLabel: string, value: string): PropertyRecord => {
+    const propValue: PropertyValue = { valueFormat: PropertyValueFormat.Primitive, displayValue: value, value };
+    const propDescription: PropertyDescription = { displayLabel, name: displayLabel, typename: "string" };
+
+    const record = new PropertyRecord(propValue, propDescription);
+    record.isDisabled = false;
+    record.isReadonly = true;
+    return record;
+  };
+
+  const addAggregateProperties = (data: MeasurementWidgetData[]): boolean => {
+    const orderedAggrPropEntries = new Array<{ label: string, prop: AggregatableValue }>();
+    const aggregateIndices = new Map<string, number>();
+    let hasAtLeastTwoInstances = false;
+
+    // Scan through all the measurement data, collect any properties that we can aggregate
+    for (const dataEntry of data) {
+      for (const prop of dataEntry.properties) {
+        if (!prop.aggregatableValue) {
+          continue;
+        }
+
+        const aggrIndex = aggregateIndices.get(prop.name);
+        if (aggrIndex === undefined) {
+          aggregateIndices.set(prop.name, orderedAggrPropEntries.length);
+          orderedAggrPropEntries.push({ label: prop.label, prop: { ...prop.aggregatableValue } });
+        } else {
+          const aggrProp = orderedAggrPropEntries[aggrIndex];
+          if (aggrProp.prop.formatSpec === prop.aggregatableValue.formatSpec) {
+            aggrProp.prop.value += prop.aggregatableValue.value;
+            hasAtLeastTwoInstances = true;
+          }
+        }
+      }
+    }
+
+    // Want to show if either: two types or one type with at least two instances
+    if (
+      data.length > 1 &&
+      (orderedAggrPropEntries.length >= 2 || (orderedAggrPropEntries.length === 1 && hasAtLeastTwoInstances))
+    ) {
+      const catIndex = dataProvider.addCategory({
+        expand: true,
+        label: MeasureTools.localization.getLocalizedString("MeasureTools:Generic.cumulativeTotals"),
+        name: "cumulativeTotals",
+      });
+      for (const entry of orderedAggrPropEntries) {
+        const label = entry.label;
+        const aggrProp = entry.prop;
+        const formattedValue = IVaultApp.quantityFormatter.formatQuantity(aggrProp.value, aggrProp.formatSpec);
+        dataProvider.addProperty(createPropertyRecord(label, formattedValue), catIndex);
+      }
+
+      return true;
+    }
+
+    return false;
+  };
+
+  const getData = async (collapseAll = false) => {
+    dataProvider.categories = [];
+    dataProvider.records = {};
+
+    const widgetDataEntries = await Promise.all(
+      [...MeasurementSelectionSet.global].map(async (measurement) => ({
+        measurement,
+        data: await measurement.getDataForMeasurementWidget(),
+      })),
+    );
+
+    let data: MeasurementWidgetData[] = [];
+    let transientIds: Id64String[] = [];
+
+    for (const entry of widgetDataEntries) {
+      if (entry.data?.properties.length && entry.measurement.transientId) {
+        data.push(entry.data);
+        transientIds.push(entry.measurement.transientId);
+      }
+    }
+
+    // addProperty will raise onDataChanged. If we have no data, raise it ourselves.
+    if (!data.length) {
+      dataProvider.onDataChanged.raiseEvent();
+      return;
+    }
+
+    // Reverse the order. Last selected measurement should display up top.
+    data = data.reverse();
+    transientIds = transientIds.reverse();
+
+    addAggregateProperties(data);
+
+    for (let i = 0; i < data.length; ++i) {
+      const isExpanded = collapseAll ? false : i === 0;
+      const catIndex = dataProvider.addCategory({ expand: isExpanded, label: data[i].title, name: transientIds[i] });
+      data[i].properties.map((kv) => dataProvider.addProperty(createPropertyRecord(kv.label, kv.value), catIndex));
+    }
+  };
+
+  const onSelectionChanged = async (args: MeasurementSelectionSetEvent | Measurement[]) => {
+    // Only collapse if we are adding/removing more than one at once
+    let collapseAll: boolean;
+    if (Array.isArray(args)) {
+      // Property value update only
+      collapseAll = false;
+    } else {
+      // Selection event
+      switch (args.type) {
+        case SelectionSetEventType.Add:
+        case SelectionSetEventType.Replace:
+          collapseAll = args.added.length !== 1;
+          break;
+        case SelectionSetEventType.Remove:
+          collapseAll = args.removed.length !== 1;
+          break;
+        default:
+          collapseAll = true;
+      }
+    }
+
+    const selectCount = MeasurementSelectionSet.global.measurements.length;
+    setLastSelectedCount(selectCount);
+    await getData(collapseAll);
+  };
+
+  React.useLayoutEffect(() => {
+    const remover1 = MeasurementSelectionSet.global.onChanged.addListener(onSelectionChanged);
+    const remover2 = MeasurementUIEvents.onMeasurementPropertiesChanged.addListener(onSelectionChanged);
+
+    getData(lastSelectedCount >= 2).catch(() => {
+      /* no op */
+    });
+
+    return () => {
+      remover1();
+      remover2();
+    };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  React.useEffect(() => {
+    if (!activeIVaultConnection)
+      return;
+
+    return activeIVaultConnection.onGlobalOriginChanged.addListener(async () => {
+      await getData(false);
+    });
+  }, [activeIVaultConnection]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const widgetDef = useSpecificWidgetDef(MeasurementPropertyWidgetId);
+
+  React.useEffect(() => {
+    if (lastSelectedCount) {
+      widgetDef?.setWidgetState(WidgetState.Open);
+    } else {
+      widgetDef?.setWidgetState(WidgetState.Hidden);
+    }
+  }, [widgetDef, lastSelectedCount]);
+
+  const handleResize = useCallback((w: number, h: number) => {
+    setSize({ width: w, height: h });
+  }, []);
+
+  const copyButton = React.useCallback(
+    (props: ActionButtonRendererProps) =>
+      props.isPropertyHovered && (
+        <IconButton
+          styleType="borderless"
+          onClick={() => {
+            const value = props.property.value;
+            if (value !== undefined && value.hasOwnProperty("displayValue"))
+              navigator.clipboard.writeText((value as PrimitiveValue).displayValue ?? "").catch((_) => {});
+          }}
+        >
+          <SvgCopy />
+        </IconButton>
+      ),
+    [],
+  );
+
+  return (
+    <div className={"measure-tools-property-widget-container"}>
+      <ResizableContainerObserver onResize={handleResize}>
+        <VirtualizedPropertyGridWithDataProvider
+          dataProvider={dataProvider}
+          orientation={Orientation.Vertical}
+          height={height}
+          width={width}
+          isPropertyHoverEnabled
+          actionButtonRenderers={[copyButton]}
+        />
+      </ResizableContainerObserver>
+    </div>
+  );
+};

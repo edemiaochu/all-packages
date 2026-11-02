@@ -1,0 +1,1208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ==================================================================================
+|  * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+|  * See LICENSE.md in the project root for license terms and full copyright notice.
+======================================================================================= -->
+<DMSchema schemaName="CifSubsurfaceConflictAnalysis" alias="cifsscfan" version="01.00.03" description="iVault Connector schema containing aspect classes with properties from the Subsurface Utilities Engineering module as part of Civil Designer applications." xmlns="http://www.szewec.com/schemas/Szewec.DMXML.3.2">
+    <DMSchemaReference name="BisCore" version="01.00.14" alias="bis"/>
+    <DMSchemaReference name="CifCommon" version="01.00.03" alias="cifcmn"/>
+    <DMSchemaReference name="CifUnits" version="01.00.01" alias="cifu"/>
+    <DMSchemaReference name="CoreCustomAttributes" version="01.00.03" alias="CoreCA"/>
+    <DMCustomAttributes>
+        <ProductionStatus xmlns="CoreCustomAttributes.01.00.03">
+            <SupportedUse>Production</SupportedUse>
+        </ProductionStatus>
+    </DMCustomAttributes>
+    <DMEnumeration typeName="BaseLink_HmiDataSetGeometryAspect_Authority_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Certified" value="0" displayLabel="Certified"/>
+        <DMEnumerator name="Non_Certified" value="1" displayLabel="Non-Certified"/>
+        <DMEnumerator name="Unknown" value="2" displayLabel="Unknown"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="BaseLink_HmiDataSetGeometryAspect_InvestigationLevel_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Land_Survey" value="0" displayLabel="Land Survey"/>
+        <DMEnumerator name="Engineering_Survey" value="1" displayLabel="Engineering Survey"/>
+        <DMEnumerator name="Informational_Survey" value="2" displayLabel="Informational Survey"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="BaseLink_HmiDataSetGeometryAspect_QualityLevel_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Quality_Level_A" value="0" displayLabel="Quality Level A"/>
+        <DMEnumerator name="Quality_Level_B" value="1" displayLabel="Quality Level B"/>
+        <DMEnumerator name="Quality_Level_C" value="2" displayLabel="Quality Level C"/>
+        <DMEnumerator name="Quality_Level_D" value="3" displayLabel="Quality Level D"/>
+        <DMEnumerator name="Undetermined" value="4" displayLabel="Undetermined"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="BaseLink_NetworkDataAspect_UtiltityOperationalStatus_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Abandoned" value="0" displayLabel="Abandoned"/>
+        <DMEnumerator name="In_Service" value="1" displayLabel="In Service"/>
+        <DMEnumerator name="Proposed" value="2" displayLabel="Proposed"/>
+        <DMEnumerator name="Removed" value="3" displayLabel="Removed"/>
+        <DMEnumerator name="Temporary" value="4" displayLabel="Temporary"/>
+        <DMEnumerator name="Under_Construction" value="5" displayLabel="Under Construction"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="BaseLink_Physical_SegmentShapeTypeAspect_SegmentShapeType_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Circle" value="2" displayLabel="Circle"/>
+        <DMEnumerator name="Box" value="3" displayLabel="Box"/>
+        <DMEnumerator name="Basket_Handle" value="4" displayLabel="Basket-Handle"/>
+        <DMEnumerator name="Ellipse" value="5" displayLabel="Ellipse"/>
+        <DMEnumerator name="Horseshoe" value="6" displayLabel="Horseshoe"/>
+        <DMEnumerator name="Egg" value="7" displayLabel="Egg"/>
+        <DMEnumerator name="Semi_Ellipse" value="8" displayLabel="Semi-Ellipse"/>
+        <DMEnumerator name="Pipe_Arch" value="10" displayLabel="Pipe-Arch"/>
+        <DMEnumerator name="Semi_Circle" value="12" displayLabel="Semi-Circle"/>
+        <DMEnumerator name="Catenary" value="13" displayLabel="Catenary"/>
+        <DMEnumerator name="Gothic" value="14" displayLabel="Gothic"/>
+        <DMEnumerator name="Modified_Basket_Handle" value="15" displayLabel="Modified Basket-Handle"/>
+        <DMEnumerator name="Arch" value="30" displayLabel="Arch"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="BaseNode_HmiDataSetGeometryAspect_Authority_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Certified" value="0" displayLabel="Certified"/>
+        <DMEnumerator name="Non_Certified" value="1" displayLabel="Non-Certified"/>
+        <DMEnumerator name="Unknown" value="2" displayLabel="Unknown"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="BaseNode_HmiDataSetGeometryAspect_InvestigationLevel_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Land_Survey" value="0" displayLabel="Land Survey"/>
+        <DMEnumerator name="Engineering_Survey" value="1" displayLabel="Engineering Survey"/>
+        <DMEnumerator name="Informational_Survey" value="2" displayLabel="Informational Survey"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="BaseNode_HmiDataSetGeometryAspect_QualityLevel_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Quality_Level_A" value="0" displayLabel="Quality Level A"/>
+        <DMEnumerator name="Quality_Level_B" value="1" displayLabel="Quality Level B"/>
+        <DMEnumerator name="Quality_Level_C" value="2" displayLabel="Quality Level C"/>
+        <DMEnumerator name="Quality_Level_D" value="3" displayLabel="Quality Level D"/>
+        <DMEnumerator name="Undetermined" value="4" displayLabel="Undetermined"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="BaseNode_NetworkDataAspect_UtiltityOperationalStatus_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Abandoned" value="0" displayLabel="Abandoned"/>
+        <DMEnumerator name="In_Service" value="1" displayLabel="In Service"/>
+        <DMEnumerator name="Proposed" value="2" displayLabel="Proposed"/>
+        <DMEnumerator name="Removed" value="3" displayLabel="Removed"/>
+        <DMEnumerator name="Temporary" value="4" displayLabel="Temporary"/>
+        <DMEnumerator name="Under_Construction" value="5" displayLabel="Under Construction"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="CommunicationNode_NetworkDataAspect_CommNodeType_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Access_Point" value="0" displayLabel="Access Point"/>
+        <DMEnumerator name="Amplifier" value="1" displayLabel="Amplifier"/>
+        <DMEnumerator name="Antenna" value="2" displayLabel="Antenna"/>
+        <DMEnumerator name="DB_Splice" value="3" displayLabel="DB Splice"/>
+        <DMEnumerator name="Device" value="4" displayLabel="Device"/>
+        <DMEnumerator name="Distribution_Panel" value="5" displayLabel="Distribution Panel"/>
+        <DMEnumerator name="Ground" value="6" displayLabel="Ground"/>
+        <DMEnumerator name="ImpedanceMatching" value="7" displayLabel="ImpedanceMatching"/>
+        <DMEnumerator name="Load_Capacitor" value="8" displayLabel="Load Capacitor"/>
+        <DMEnumerator name="Load_Coil" value="9" displayLabel="Load Coil"/>
+        <DMEnumerator name="Media_Converter" value="10" displayLabel="Media Converter"/>
+        <DMEnumerator name="Repeater" value="11" displayLabel="Repeater"/>
+        <DMEnumerator name="Sensor" value="12" displayLabel="Sensor"/>
+        <DMEnumerator name="Speaker" value="13" displayLabel="Speaker"/>
+        <DMEnumerator name="Splice" value="14" displayLabel="Splice"/>
+        <DMEnumerator name="Splitter" value="15" displayLabel="Splitter"/>
+        <DMEnumerator name="Terminal" value="16" displayLabel="Terminal"/>
+        <DMEnumerator name="Terminator" value="17" displayLabel="Terminator"/>
+        <DMEnumerator name="User_Defined" value="100" displayLabel="User Defined"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="CommunicationNode_NetworkDataAspect_CommunicationNetworkType_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Telephone" value="0" displayLabel="Telephone"/>
+        <DMEnumerator name="CATV" value="1" displayLabel="CATV"/>
+        <DMEnumerator name="Fiber_Optic" value="2" displayLabel="Fiber Optic"/>
+        <DMEnumerator name="User_Defined" value="100" displayLabel="User Defined"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="CommunicationSegment_NetworkDataAspect_ComConduitType_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Cable" value="0" displayLabel="Cable"/>
+        <DMEnumerator name="Duct" value="1" displayLabel="Duct"/>
+        <DMEnumerator name="User_Defined" value="100" displayLabel="User Defined"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="CommunicationSegment_NetworkDataAspect_CommSegmentType_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Segmented_Cable" value="0" displayLabel="Segmented Cable"/>
+        <DMEnumerator name="Service_Loop" value="1" displayLabel="Service Loop"/>
+        <DMEnumerator name="User_Defined" value="100" displayLabel="User Defined"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="CommunicationSegment_NetworkDataAspect_CommunicationNetworkType_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Telephone" value="0" displayLabel="Telephone"/>
+        <DMEnumerator name="CATV" value="1" displayLabel="CATV"/>
+        <DMEnumerator name="Fiber_Optic" value="2" displayLabel="Fiber Optic"/>
+        <DMEnumerator name="User_Defined" value="100" displayLabel="User Defined"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="ConflictNode_ConflictAspect_ConflictType_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Hard" value="0" displayLabel="Hard"/>
+        <DMEnumerator name="Soft" value="1" displayLabel="Soft"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="ConflictNode_ConflictAspect_CurrentStatus_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Created" value="0" displayLabel="Created"/>
+        <DMEnumerator name="Owner_Informed" value="1" displayLabel="Owner Informed"/>
+        <DMEnumerator name="Resolution_Strategy_Selected" value="2" displayLabel="Resolution Strategy Selected"/>
+        <DMEnumerator name="Resolved" value="3" displayLabel="Resolved"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="ConflictNode_ConflictAspect_RecommendedResolution_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Relocation_Before_Construction" value="0" displayLabel="Relocation Before Construction"/>
+        <DMEnumerator name="Design_Change" value="1" displayLabel="Design Change"/>
+        <DMEnumerator name="Protect_in_place" value="2" displayLabel="Protect in-place"/>
+        <DMEnumerator name="Ignore" value="3" displayLabel="Ignore"/>
+        <DMEnumerator name="Other" value="4" displayLabel="Other"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="ConflictNode_HmiDataSetGeometryAspect_FeatureA_QualityLevel_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Quality_Level_A" value="0" displayLabel="Quality Level A"/>
+        <DMEnumerator name="Quality_Level_B" value="1" displayLabel="Quality Level B"/>
+        <DMEnumerator name="Quality_Level_C" value="2" displayLabel="Quality Level C"/>
+        <DMEnumerator name="Quality_Level_D" value="3" displayLabel="Quality Level D"/>
+        <DMEnumerator name="Undetermined" value="4" displayLabel="Undetermined"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="ConflictNode_HmiDataSetGeometryAspect_FeatureB_QualityLevel_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Quality_Level_A" value="0" displayLabel="Quality Level A"/>
+        <DMEnumerator name="Quality_Level_B" value="1" displayLabel="Quality Level B"/>
+        <DMEnumerator name="Quality_Level_C" value="2" displayLabel="Quality Level C"/>
+        <DMEnumerator name="Quality_Level_D" value="3" displayLabel="Quality Level D"/>
+        <DMEnumerator name="Undetermined" value="4" displayLabel="Undetermined"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="ElectricalNode_NetworkDataAspect_ElectricNetworkType_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Power" value="0" displayLabel="Power"/>
+        <DMEnumerator name="Lighting" value="-1" displayLabel="Lighting"/>
+        <DMEnumerator name="Service" value="2" displayLabel="Service"/>
+        <DMEnumerator name="User_Defined" value="100" displayLabel="User Defined"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="ElectricalNode_NetworkDataAspect_ElectricNodeDataType_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Capacitor_Bank" value="0" displayLabel="Capacitor Bank"/>
+        <DMEnumerator name="Device_Protective_Device" value="1" displayLabel="Device Protective Device"/>
+        <DMEnumerator name="Exterior_Light" value="2" displayLabel="Exterior Light"/>
+        <DMEnumerator name="Fuse" value="4" displayLabel="Fuse"/>
+        <DMEnumerator name="Generator" value="5" displayLabel="Generator"/>
+        <DMEnumerator name="Grounding_Point" value="6" displayLabel="Grounding Point"/>
+        <DMEnumerator name="Meter_Point" value="7" displayLabel="Meter Point"/>
+        <DMEnumerator name="Open_Point" value="8" displayLabel="Open Point"/>
+        <DMEnumerator name="Switch" value="9" displayLabel="Switch"/>
+        <DMEnumerator name="Transformer" value="10" displayLabel="Transformer"/>
+        <DMEnumerator name="Voltage_Regulator" value="11" displayLabel="Voltage Regulator"/>
+        <DMEnumerator name="User_Defined" value="100" displayLabel="User Defined"/>
+        <DMEnumerator name="Fitting" value="3" displayLabel="Fitting"/>
+        <DMEnumerator name="Access_Point" value="12" displayLabel="Access Point"/>
+        <DMEnumerator name="Control_Node" value="13" displayLabel="Control Node"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="ElectricalSegment_NetworkDataAspect_ElectricConduitType_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Cable" value="0" displayLabel="Cable"/>
+        <DMEnumerator name="Duct" value="1" displayLabel="Duct"/>
+        <DMEnumerator name="User_Defined" value="100" displayLabel="User Defined"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="ElectricalSegment_NetworkDataAspect_ElectricNetworkType_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Power" value="0" displayLabel="Power"/>
+        <DMEnumerator name="Lighting" value="-1" displayLabel="Lighting"/>
+        <DMEnumerator name="Service" value="2" displayLabel="Service"/>
+        <DMEnumerator name="User_Defined" value="100" displayLabel="User Defined"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="ElectricalSegment_NetworkDataAspect_ElectricSegmentType_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Bus_Bar" value="0" displayLabel="Bus Bar"/>
+        <DMEnumerator name="Primary_Overhead_Line" value="1" displayLabel="Primary Overhead Line"/>
+        <DMEnumerator name="Primary_Underground_Line" value="2" displayLabel="Primary Underground Line"/>
+        <DMEnumerator name="Secondary_Overhead_Line" value="3" displayLabel="Secondary Overhead Line"/>
+        <DMEnumerator name="Secondary_Underground_Line" value="4" displayLabel="Secondary Underground Line"/>
+        <DMEnumerator name="Overhead_Transmission_Line" value="5" displayLabel="Overhead Transmission Line"/>
+        <DMEnumerator name="Transmission_Underground_Line" value="6" displayLabel="Transmission Underground Line"/>
+        <DMEnumerator name="User_Defined" value="100" displayLabel="User Defined"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="GasNode_NetworkDataAspect_GasNetworkType_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="High_Pressure" value="0" displayLabel="High Pressure"/>
+        <DMEnumerator name="Low_Pressure" value="1" displayLabel="Low Pressure"/>
+        <DMEnumerator name="User_Defined" value="100" displayLabel="User Defined"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="GasNode_NetworkDataAspect_GasNodeType_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Controllable_Fitting" value="0" displayLabel="Controllable Fitting"/>
+        <DMEnumerator name="Drip" value="1" displayLabel="Drip"/>
+        <DMEnumerator name="Gas_Lamp" value="2" displayLabel="Gas Lamp"/>
+        <DMEnumerator name="Meter_Point" value="3" displayLabel="Meter Point"/>
+        <DMEnumerator name="Non_Controllable_Fitting" value="4" displayLabel="Non Controllable Fitting"/>
+        <DMEnumerator name="Odorizer" value="5" displayLabel="Odorizer"/>
+        <DMEnumerator name="Pressure_Monitoring_Device" value="6" displayLabel="Pressure Monitoring Device"/>
+        <DMEnumerator name="Regulator" value="7" displayLabel="Regulator"/>
+        <DMEnumerator name="Regulator_Station" value="8" displayLabel="Regulator Station"/>
+        <DMEnumerator name="ReliefValve" value="9" displayLabel="ReliefValve"/>
+        <DMEnumerator name="Rural_Tap" value="10" displayLabel="Rural Tap"/>
+        <DMEnumerator name="TownBorderStation" value="11" displayLabel="TownBorderStation"/>
+        <DMEnumerator name="User_Defined" value="100" displayLabel="User Defined"/>
+        <DMEnumerator name="Valve_Isolation" value="12" displayLabel="Valve Isolation"/>
+        <DMEnumerator name="Valve_Regulating" value="13" displayLabel="Valve Regulating"/>
+        <DMEnumerator name="Fitting" value="14" displayLabel="Fitting"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="GasSegment_NetworkDataAspect_GasConduitType_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Pressure_Pipe" value="0" displayLabel="Pressure Pipe"/>
+        <DMEnumerator name="User_Defined" value="100" displayLabel="User Defined"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="GasSegment_NetworkDataAspect_GasNetworkType_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="High_Pressure" value="0" displayLabel="High Pressure"/>
+        <DMEnumerator name="Low_Pressure" value="1" displayLabel="Low Pressure"/>
+        <DMEnumerator name="User_Defined" value="100" displayLabel="User Defined"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="GasSegment_NetworkDataAspect_GasSegmentType_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Main_Line" value="0" displayLabel="Main Line"/>
+        <DMEnumerator name="Service_Line" value="1" displayLabel="Service Line"/>
+        <DMEnumerator name="User_Defined" value="100" displayLabel="User Defined"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="POLNode_NetworkDataAspect_POLNetworkType_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Automotive_Diesel_DF_2" value="0" displayLabel="Automotive Diesel (DF-2)"/>
+        <DMEnumerator name="Bio_Diesel_B20" value="1" displayLabel="Bio-Diesel (B20)"/>
+        <DMEnumerator name="Burner_Fuel_No__1" value="2" displayLabel="Burner Fuel No. 1"/>
+        <DMEnumerator name="Burner_Fuel_No__2" value="3" displayLabel="Burner Fuel No. 2"/>
+        <DMEnumerator name="Burner_Fuel_No__3" value="4" displayLabel="Burner Fuel No. 3"/>
+        <DMEnumerator name="Burner_Fuel_No__4" value="5" displayLabel="Burner Fuel No. 4"/>
+        <DMEnumerator name="Burner_Fuel_No__5_Heavy" value="6" displayLabel="Burner Fuel No. 5 (Heavy)"/>
+        <DMEnumerator name="Burner_Fuel_No__5_Light" value="7" displayLabel="Burner Fuel No. 5 (Light)"/>
+        <DMEnumerator name="Burner_Fuel_No__6" value="8" displayLabel="Burner Fuel No. 6"/>
+        <DMEnumerator name="Compressed_Natural_Gas_CNG" value="9" displayLabel="Compressed Natural Gas (CNG)"/>
+        <DMEnumerator name="E85" value="10" displayLabel="E85"/>
+        <DMEnumerator name="Hydrazine_Water_H_70" value="11" displayLabel="Hydrazine-Water (H-70)"/>
+        <DMEnumerator name="Jet_A" value="12" displayLabel="Jet A"/>
+        <DMEnumerator name="Jet_A_1" value="13" displayLabel="Jet A-1"/>
+        <DMEnumerator name="JP_10" value="14" displayLabel="JP-10"/>
+        <DMEnumerator name="JP_4" value="15" displayLabel="JP-4"/>
+        <DMEnumerator name="JP_5" value="16" displayLabel="JP-5"/>
+        <DMEnumerator name="JP_7" value="17" displayLabel="JP-7"/>
+        <DMEnumerator name="JP_8" value="18" displayLabel="JP-8"/>
+        <DMEnumerator name="JP_Thermally_Stable" value="19" displayLabel="JP (Thermally Stable)"/>
+        <DMEnumerator name="Kerosene" value="20" displayLabel="Kerosene"/>
+        <DMEnumerator name="Liquified_Petroleum_Gas_LPG" value="21" displayLabel="Liquified Petroleum Gas (LPG)"/>
+        <DMEnumerator name="Marine_Diesel" value="22" displayLabel="Marine Diesel"/>
+        <DMEnumerator name="Motor_Gasoline_MOGAS" value="23" displayLabel="Motor Gasoline (MOGAS)"/>
+        <DMEnumerator name="O_250" value="24" displayLabel="O-250"/>
+        <DMEnumerator name="O_278" value="250" displayLabel="O-278"/>
+        <DMEnumerator name="OTTO" value="251" displayLabel="OTTO"/>
+        <DMEnumerator name="User_Defined" value="100" displayLabel="User Defined"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="POLNode_NetworkDataAspect_POLNodeType_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Dispenser" value="0" displayLabel="Dispenser"/>
+        <DMEnumerator name="FillStand" value="1" displayLabel="FillStand"/>
+        <DMEnumerator name="Filter_Separator" value="2" displayLabel="Filter Separator"/>
+        <DMEnumerator name="Hydrant_Outlet" value="3" displayLabel="Hydrant Outlet"/>
+        <DMEnumerator name="Injector" value="4" displayLabel="Injector"/>
+        <DMEnumerator name="Loading_Arm" value="5" displayLabel="Loading Arm"/>
+        <DMEnumerator name="Meter" value="6" displayLabel="Meter"/>
+        <DMEnumerator name="Pump" value="7" displayLabel="Pump"/>
+        <DMEnumerator name="Relaxation_Tank" value="8" displayLabel="Relaxation Tank"/>
+        <DMEnumerator name="Strainer" value="9" displayLabel="Strainer"/>
+        <DMEnumerator name="Tank" value="10" displayLabel="Tank"/>
+        <DMEnumerator name="Valve" value="11" displayLabel="Valve"/>
+        <DMEnumerator name="User_Defined" value="100" displayLabel="User Defined"/>
+        <DMEnumerator name="Access_Point" value="12" displayLabel="Access Point"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="POLSegment_NetworkDataAspect_POLConduitType_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Conduit" value="0" displayLabel="Conduit"/>
+        <DMEnumerator name="Pressure_Pipe" value="1" displayLabel="Pressure Pipe"/>
+        <DMEnumerator name="User_Defined" value="100" displayLabel="User Defined"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="POLSegment_NetworkDataAspect_POLNetworkType_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Automotive_Diesel_DF_2" value="0" displayLabel="Automotive Diesel (DF-2)"/>
+        <DMEnumerator name="Bio_Diesel_B20" value="1" displayLabel="Bio-Diesel (B20)"/>
+        <DMEnumerator name="Burner_Fuel_No__1" value="2" displayLabel="Burner Fuel No. 1"/>
+        <DMEnumerator name="Burner_Fuel_No__2" value="3" displayLabel="Burner Fuel No. 2"/>
+        <DMEnumerator name="Burner_Fuel_No__3" value="4" displayLabel="Burner Fuel No. 3"/>
+        <DMEnumerator name="Burner_Fuel_No__4" value="5" displayLabel="Burner Fuel No. 4"/>
+        <DMEnumerator name="Burner_Fuel_No__5_Heavy" value="6" displayLabel="Burner Fuel No. 5 (Heavy)"/>
+        <DMEnumerator name="Burner_Fuel_No__5_Light" value="7" displayLabel="Burner Fuel No. 5 (Light)"/>
+        <DMEnumerator name="Burner_Fuel_No__6" value="8" displayLabel="Burner Fuel No. 6"/>
+        <DMEnumerator name="Compressed_Natural_Gas_CNG" value="9" displayLabel="Compressed Natural Gas (CNG)"/>
+        <DMEnumerator name="E85" value="10" displayLabel="E85"/>
+        <DMEnumerator name="Hydrazine_Water_H_70" value="11" displayLabel="Hydrazine-Water (H-70)"/>
+        <DMEnumerator name="Jet_A" value="12" displayLabel="Jet A"/>
+        <DMEnumerator name="Jet_A_1" value="13" displayLabel="Jet A-1"/>
+        <DMEnumerator name="JP_10" value="14" displayLabel="JP-10"/>
+        <DMEnumerator name="JP_4" value="15" displayLabel="JP-4"/>
+        <DMEnumerator name="JP_5" value="16" displayLabel="JP-5"/>
+        <DMEnumerator name="JP_7" value="17" displayLabel="JP-7"/>
+        <DMEnumerator name="JP_8" value="18" displayLabel="JP-8"/>
+        <DMEnumerator name="JP_Thermally_Stable" value="19" displayLabel="JP (Thermally Stable)"/>
+        <DMEnumerator name="Kerosene" value="20" displayLabel="Kerosene"/>
+        <DMEnumerator name="Liquified_Petroleum_Gas_LPG" value="21" displayLabel="Liquified Petroleum Gas (LPG)"/>
+        <DMEnumerator name="Marine_Diesel" value="22" displayLabel="Marine Diesel"/>
+        <DMEnumerator name="Motor_Gasoline_MOGAS" value="23" displayLabel="Motor Gasoline (MOGAS)"/>
+        <DMEnumerator name="O_250" value="24" displayLabel="O-250"/>
+        <DMEnumerator name="O_278" value="250" displayLabel="O-278"/>
+        <DMEnumerator name="OTTO" value="251" displayLabel="OTTO"/>
+        <DMEnumerator name="User_Defined" value="100" displayLabel="User Defined"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="POLSegment_NetworkDataAspect_POLSegmentType_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Installation_Pipeline" value="0" displayLabel="Installation Pipeline"/>
+        <DMEnumerator name="Interterminal_Pipeline" value="1" displayLabel="Interterminal Pipeline"/>
+        <DMEnumerator name="User_Defined" value="100" displayLabel="User Defined"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="ReferenceDomainElementAspect_DataSourceType_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Utility_Project" value="0" displayLabel="Utility Project"/>
+        <DMEnumerator name="Product3_External_Element" value="1" displayLabel="Product3 External Element"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="StormWaterNode_NetworkDataAspect_StormNetworkType_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Storm_Water_Only" value="0" displayLabel="Storm Water Only"/>
+        <DMEnumerator name="Combined" value="1" displayLabel="Combined"/>
+        <DMEnumerator name="User_Defined" value="100" displayLabel="User Defined"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="StormWaterNode_NetworkDataAspect_StormWaterNodeType_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Inlet_Grate" value="0" displayLabel="Inlet Grate"/>
+        <DMEnumerator name="Inlet_Curb_Opening" value="1" displayLabel="Inlet Curb Opening"/>
+        <DMEnumerator name="Inlet_Combined" value="2" displayLabel="Inlet Combined"/>
+        <DMEnumerator name="Inlet_Slotted_Drain" value="3" displayLabel="Inlet Slotted Drain"/>
+        <DMEnumerator name="Manhole" value="4" displayLabel="Manhole"/>
+        <DMEnumerator name="Headwall" value="5" displayLabel="Headwall"/>
+        <DMEnumerator name="Pump" value="6" displayLabel="Pump"/>
+        <DMEnumerator name="Fitting" value="7" displayLabel="Fitting"/>
+        <DMEnumerator name="User_Defined" value="100" displayLabel="User Defined"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="StormWaterSegment_NetworkDataAspect_StormNetworkType_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Storm_Water_Only" value="0" displayLabel="Storm Water Only"/>
+        <DMEnumerator name="Combined" value="1" displayLabel="Combined"/>
+        <DMEnumerator name="User_Defined" value="100" displayLabel="User Defined"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="StormWaterSegment_NetworkDataAspect_StormWaterConduitType_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Conduit" value="0" displayLabel="Conduit"/>
+        <DMEnumerator name="Filter_Conduit" value="1" displayLabel="Filter Conduit"/>
+        <DMEnumerator name="Channel" value="2" displayLabel="Channel"/>
+        <DMEnumerator name="Gutter" value="4" displayLabel="Gutter"/>
+        <DMEnumerator name="User_Defined" value="100" displayLabel="User Defined"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="StormWaterSegment_NetworkDataAspect_StormWaterSegmentType_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Trunk_Line" value="0" displayLabel="Trunk Line"/>
+        <DMEnumerator name="Lateral" value="1" displayLabel="Lateral"/>
+        <DMEnumerator name="User_Defined" value="100" displayLabel="User Defined"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="ThermalNode_NetworkDataAspect_ThermalNetworkType_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Chilled_Water_Return" value="0" displayLabel="Chilled Water Return"/>
+        <DMEnumerator name="Chilled_Water_Supply" value="1" displayLabel="Chilled Water Supply"/>
+        <DMEnumerator name="Dual_Temperature_Water_Return" value="2" displayLabel="Dual Temperature Water Return"/>
+        <DMEnumerator name="Dual_Temperature_Water_Supply" value="3" displayLabel="Dual Temperature Water Supply"/>
+        <DMEnumerator name="High_Temperature_Hot_Water_Return" value="4" displayLabel="High Temperature Hot Water Return"/>
+        <DMEnumerator name="High_Temperature_Hot_Water_Supply" value="5" displayLabel="High Temperature Hot Water Supply"/>
+        <DMEnumerator name="Low_Temperature_Hot_Water_Return" value="6" displayLabel="Low Temperature Hot Water Return"/>
+        <DMEnumerator name="Low_Temperature_Hot_Water_Supply" value="7" displayLabel="Low Temperature Hot Water Supply"/>
+        <DMEnumerator name="Steam_Return" value="8" displayLabel="Steam Return"/>
+        <DMEnumerator name="Steam_Supply" value="9" displayLabel="Steam Supply"/>
+        <DMEnumerator name="User_Defined" value="100" displayLabel="User Defined"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="ThermalNode_NetworkDataAspect_ThermalNodeType_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Aquastat" value="0" displayLabel="Aquastat"/>
+        <DMEnumerator name="Condensate_Collector" value="1" displayLabel="Condensate Collector"/>
+        <DMEnumerator name="Control_Valve" value="2" displayLabel="Control Valve"/>
+        <DMEnumerator name="Expansion_Joint" value="3" displayLabel="Expansion Joint"/>
+        <DMEnumerator name="Expansion_Loop" value="4" displayLabel="Expansion Loop"/>
+        <DMEnumerator name="Expansion_Tank" value="5" displayLabel="Expansion Tank"/>
+        <DMEnumerator name="Fitting" value="6" displayLabel="Fitting"/>
+        <DMEnumerator name="Meter_Point" value="7" displayLabel="Meter Point"/>
+        <DMEnumerator name="Production_Structure" value="8" displayLabel="Production Structure"/>
+        <DMEnumerator name="Pump" value="9" displayLabel="Pump"/>
+        <DMEnumerator name="Relief_Valve" value="10" displayLabel="Relief Valve"/>
+        <DMEnumerator name="Strainer" value="11" displayLabel="Strainer"/>
+        <DMEnumerator name="System_Valve" value="12" displayLabel="System Valve"/>
+        <DMEnumerator name="Trap" value="13" displayLabel="Trap"/>
+        <DMEnumerator name="User_Defined" value="100" displayLabel="User Defined"/>
+        <DMEnumerator name="DisplayLabel" value="14" displayLabel="DisplayLabel"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="ThermalSegment_NetworkDataAspect_ThermalConduitType_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Conduit" value="0" displayLabel="Conduit"/>
+        <DMEnumerator name="Pressure_Pipe" value="1" displayLabel="Pressure Pipe"/>
+        <DMEnumerator name="User_Defined" value="100" displayLabel="User Defined"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="ThermalSegment_NetworkDataAspect_ThermalNetworkType_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Chilled_Water_Return" value="0" displayLabel="Chilled Water Return"/>
+        <DMEnumerator name="Chilled_Water_Supply" value="1" displayLabel="Chilled Water Supply"/>
+        <DMEnumerator name="Dual_Temperature_Water_Return" value="2" displayLabel="Dual Temperature Water Return"/>
+        <DMEnumerator name="Dual_Temperature_Water_Supply" value="3" displayLabel="Dual Temperature Water Supply"/>
+        <DMEnumerator name="High_Temperature_Hot_Water_Return" value="4" displayLabel="High Temperature Hot Water Return"/>
+        <DMEnumerator name="High_Temperature_Hot_Water_Supply" value="5" displayLabel="High Temperature Hot Water Supply"/>
+        <DMEnumerator name="Low_Temperature_Hot_Water_Return" value="6" displayLabel="Low Temperature Hot Water Return"/>
+        <DMEnumerator name="Low_Temperature_Hot_Water_Supply" value="7" displayLabel="Low Temperature Hot Water Supply"/>
+        <DMEnumerator name="Steam_Return" value="8" displayLabel="Steam Return"/>
+        <DMEnumerator name="Steam_Supply" value="9" displayLabel="Steam Supply"/>
+        <DMEnumerator name="User_Defined" value="100" displayLabel="User Defined"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="ThermalSegment_NetworkDataAspect_ThermalSegmentType_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Main_Line" value="0" displayLabel="Main Line"/>
+        <DMEnumerator name="Service_Line" value="1" displayLabel="Service Line"/>
+        <DMEnumerator name="User_Defined" value="100" displayLabel="User Defined"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="WasteWaterNode_NetworkDataAspect_WasteWaterNetworkType_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Domestic" value="0" displayLabel="Domestic"/>
+        <DMEnumerator name="Industrial" value="1" displayLabel="Industrial"/>
+        <DMEnumerator name="Oily_Waste" value="2" displayLabel="Oily Waste"/>
+        <DMEnumerator name="Ships_Waste" value="3" displayLabel="Ships Waste"/>
+        <DMEnumerator name="User_Defined" value="100" displayLabel="User Defined"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="WasteWaterNode_NetworkDataAspect_WasteWaterNodeType_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Clean_Out" value="0" displayLabel="Clean Out"/>
+        <DMEnumerator name="Fitting" value="1" displayLabel="Fitting"/>
+        <DMEnumerator name="Manhole" value="2" displayLabel="Manhole"/>
+        <DMEnumerator name="Meter_Point" value="3" displayLabel="Meter Point"/>
+        <DMEnumerator name="Pump" value="4" displayLabel="Pump"/>
+        <DMEnumerator name="Release_Valve" value="5" displayLabel="Release Valve"/>
+        <DMEnumerator name="System_Valve" value="6" displayLabel="System Valve"/>
+        <DMEnumerator name="Treatment_Plant" value="7" displayLabel="Treatment Plant"/>
+        <DMEnumerator name="User_Defined" value="100" displayLabel="User Defined"/>
+        <DMEnumerator name="Access_Point" value="8" displayLabel="Access Point"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="WasteWaterSegment_NetworkDataAspect_WasteWaterConduitType_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Conduit" value="0" displayLabel="Conduit"/>
+        <DMEnumerator name="Filter_Conduit" value="1" displayLabel="Filter Conduit"/>
+        <DMEnumerator name="Pressure_Pipe" value="2" displayLabel="Pressure Pipe"/>
+        <DMEnumerator name="User_Defined" value="100" displayLabel="User Defined"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="WasteWaterSegment_NetworkDataAspect_WasteWaterNetworkType_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Domestic" value="0" displayLabel="Domestic"/>
+        <DMEnumerator name="Industrial" value="1" displayLabel="Industrial"/>
+        <DMEnumerator name="Oily_Waste" value="2" displayLabel="Oily Waste"/>
+        <DMEnumerator name="Ships_Waste" value="3" displayLabel="Ships Waste"/>
+        <DMEnumerator name="User_Defined" value="100" displayLabel="User Defined"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="WasteWaterSegment_NetworkDataAspect_WasteWaterSegmentType_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Force_Main" value="0" displayLabel="Force Main"/>
+        <DMEnumerator name="Gravity_Main" value="1" displayLabel="Gravity Main"/>
+        <DMEnumerator name="Lateral_Line" value="2" displayLabel="Lateral Line"/>
+        <DMEnumerator name="User_Defined" value="100" displayLabel="User Defined"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="WaterNode_NetworkDataAspect_WaterNetworkType_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Fire_Protection" value="0" displayLabel="Fire Protection"/>
+        <DMEnumerator name="NonPotable" value="1" displayLabel="NonPotable"/>
+        <DMEnumerator name="Potable" value="2" displayLabel="Potable"/>
+        <DMEnumerator name="Raw_Water" value="3" displayLabel="Raw Water"/>
+        <DMEnumerator name="Salt_Water" value="4" displayLabel="Salt Water"/>
+        <DMEnumerator name="Treated_Water" value="5" displayLabel="Treated Water"/>
+        <DMEnumerator name="User_Defined" value="100" displayLabel="User Defined"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="WaterNode_NetworkDataAspect_WaterNodeType_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Back_Flow_Prevention_Device" value="0" displayLabel="Back Flow Prevention Device"/>
+        <DMEnumerator name="Control_Valve" value="1" displayLabel="Control Valve"/>
+        <DMEnumerator name="Fitting" value="2" displayLabel="Fitting"/>
+        <DMEnumerator name="Hydrant" value="3" displayLabel="Hydrant"/>
+        <DMEnumerator name="Meter_Point" value="4" displayLabel="Meter Point"/>
+        <DMEnumerator name="Pressure_Reducing_Station" value="5" displayLabel="Pressure Reducing Station"/>
+        <DMEnumerator name="Production_Structure" value="6" displayLabel="Production Structure"/>
+        <DMEnumerator name="Pump" value="7" displayLabel="Pump"/>
+        <DMEnumerator name="Relief_Valve" value="8" displayLabel="Relief Valve"/>
+        <DMEnumerator name="Storage_Structure" value="9" displayLabel="Storage Structure"/>
+        <DMEnumerator name="System_Valve" value="10" displayLabel="System Valve"/>
+        <DMEnumerator name="User_Defined" value="100" displayLabel="User Defined"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="WaterSegment_NetworkDataAspect_WaterConduitType_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Pressure_Pipe" value="0" displayLabel="Pressure Pipe"/>
+        <DMEnumerator name="User_Defined" value="100" displayLabel="User Defined"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="WaterSegment_NetworkDataAspect_WaterNetworkType_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Fire_Protection" value="0" displayLabel="Fire Protection"/>
+        <DMEnumerator name="NonPotable" value="1" displayLabel="NonPotable"/>
+        <DMEnumerator name="Potable" value="2" displayLabel="Potable"/>
+        <DMEnumerator name="Raw_Water" value="3" displayLabel="Raw Water"/>
+        <DMEnumerator name="Salt_Water" value="4" displayLabel="Salt Water"/>
+        <DMEnumerator name="Treated_Water" value="5" displayLabel="Treated Water"/>
+        <DMEnumerator name="User_Defined" value="100" displayLabel="User Defined"/>
+    </DMEnumeration>
+    <DMEnumeration typeName="WaterSegment_NetworkDataAspect_WaterSegmentType_Enum" backingTypeName="int" isStrict="true">
+        <DMEnumerator name="Main_Line" value="0" displayLabel="Main Line"/>
+        <DMEnumerator name="Service_Line" value="1" displayLabel="Service Line"/>
+        <DMEnumerator name="User_Defined" value="100" displayLabel="User Defined"/>
+    </DMEnumeration>
+    <DMEntityClass typeName="BaseLink_HmiDataSetGeometryAspect">
+        <BaseClass>cifcmn:CivilPresentation</BaseClass>
+        <DMProperty propertyName="HMIGeometryScaledLength" typeName="double" displayLabel="Length (Scaled)" category="Geometry_Utilities_Geometry_Utilities" priority="0" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="HmiDataSetGeometry_AuthorityDescription" typeName="string" displayLabel="Authority Description" category="Utility_Quality_Utilities_Utility_Quality_Utilities" priority="0"/>
+        <DMProperty propertyName="QualityLevel" typeName="BaseLink_HmiDataSetGeometryAspect_QualityLevel_Enum" displayLabel="Quality Level" category="Utility_Quality_Utilities_Utility_Quality_Utilities" priority="0"/>
+        <DMProperty propertyName="InvestigationLevel" typeName="BaseLink_HmiDataSetGeometryAspect_InvestigationLevel_Enum" displayLabel="Investigation Level" category="Utility_Quality_Utilities_Utility_Quality_Utilities" priority="0"/>
+        <DMProperty propertyName="Authority" typeName="BaseLink_HmiDataSetGeometryAspect_Authority_Enum" displayLabel="Authority" category="Utility_Quality_Utilities_Utility_Quality_Utilities" priority="0"/>
+        <DMProperty propertyName="HmiDataSetGeometry_StartX" typeName="double" displayLabel="X (Start)" category="Geometry_Utilities_Geometry_Utilities" priority="0" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="HmiDataSetGeometry_StartY" typeName="double" displayLabel="Y (Start)" category="Geometry_Utilities_Geometry_Utilities" priority="0" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="HmiDataSetGeometry_EndX" typeName="double" displayLabel="X (End)" category="Geometry_Utilities_Geometry_Utilities" priority="0" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="HmiDataSetGeometry_EndY" typeName="double" displayLabel="Y (End)" category="Geometry_Utilities_Geometry_Utilities" priority="0" kindOfQuantity="cifu:LENGTH"/>
+    </DMEntityClass>
+    <DMEntityClass typeName="BaseLink_NetworkDataAspect">
+        <BaseClass>cifcmn:CivilPresentation</BaseClass>
+        <DMProperty propertyName="NetworkData_UtilityOwner" typeName="string" displayLabel="Owner" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+        <DMProperty propertyName="NetworkData_UserDefinedElementType" typeName="string" displayLabel="Element Type (User Defined)" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+        <DMProperty propertyName="NetworkData_UserDefinedNetworkType" typeName="string" displayLabel="Network Type (User Defined)" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+        <DMProperty propertyName="UtiltityOperationalStatus" typeName="BaseLink_NetworkDataAspect_UtiltityOperationalStatus_Enum" displayLabel="Operational Status" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+        <DMProperty propertyName="NetworkData_UserDefinedConduitType" typeName="string" displayLabel="Conduit Type (User Defined)" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+    </DMEntityClass>
+    <DMEntityClass typeName="BaseLink_Physical_SegmentShapeTypeAspect" modifier="Abstract">
+        <BaseClass>cifcmn:CivilPresentation</BaseClass>
+        <DMProperty propertyName="SegmentShapeType" typeName="BaseLink_Physical_SegmentShapeTypeAspect_SegmentShapeType_Enum" displayLabel="Shape" category="Utility_Footprint_Utilities_Utility_Footprint_Utilities" priority="0"/>
+    </DMEntityClass>
+    <DMEntityClass typeName="BaseLink_Physical_SegmentShapeType_CircularAspect">
+        <BaseClass>BaseLink_Physical_SegmentShapeTypeAspect</BaseClass>
+        <DMProperty propertyName="SegmentDiameter" typeName="double" displayLabel="Diameter" category="Utility_Footprint_Utilities_Utility_Footprint_Utilities" priority="0" kindOfQuantity="cifu:LENGTH_DIAMETER"/>
+    </DMEntityClass>
+    <DMEntityClass typeName="BaseLink_Physical_SegmentShapeType_NonCircularAspect">
+        <BaseClass>BaseLink_Physical_SegmentShapeTypeAspect</BaseClass>
+        <DMProperty propertyName="SegmentRise" typeName="double" displayLabel="Rise" category="Utility_Footprint_Utilities_Utility_Footprint_Utilities" priority="0" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="SegmentSpan" typeName="double" displayLabel="Span" category="Utility_Footprint_Utilities_Utility_Footprint_Utilities" priority="0" kindOfQuantity="cifu:LENGTH"/>
+    </DMEntityClass>
+    <DMEntityClass typeName="BaseLink_PhysicalAspect">
+        <BaseClass>cifcmn:CivilPresentation</BaseClass>
+        <DMProperty propertyName="Physical_UpstreamInvert" typeName="double" displayLabel="Invert (Start)" category="Physical_Utilities_Physical_Utilities" priority="0" kindOfQuantity="cifu:ELEVATION"/>
+        <DMProperty propertyName="Physical_DownstreamInvert" typeName="double" displayLabel="Invert (Stop)" category="Physical_Utilities_Physical_Utilities" priority="0" kindOfQuantity="cifu:ELEVATION"/>
+        <DMProperty propertyName="Physical_CalculatedSlope" typeName="double" displayLabel="Slope (Calculated)" category="Physical_Utilities_Physical_Utilities" priority="0" kindOfQuantity="cifu:SLOPE"/>
+        <DMProperty propertyName="Physical_ConduitUnitLength" typeName="double" displayLabel="Unit Length" category="Physical_Utilities_Physical_Utilities" priority="0" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="LinkProduct3ID" typeName="string" displayLabel="Product3 3D ID" category="General_Utilities_General_Utilities" priority="0"/>
+        <DMProperty propertyName="LinkWallThickness" typeName="double" displayLabel="Wall Thickness" category="Physical_Utilities_Physical_Utilities" priority="0" kindOfQuantity="cifu:LENGTH"/>
+    </DMEntityClass>
+    <DMEntityClass typeName="GlobalBase_SUE_Aspect">
+        <BaseClass>cifcmn:CivilPresentation</BaseClass>
+        <DMProperty propertyName="ElementID" typeName="int" displayLabel="ID" category="General_Utilities_General_Utilities" priority="0"/>
+        <DMProperty propertyName="Label" typeName="string" displayLabel="Label" category="General_Utilities_General_Utilities" priority="0"/>
+        <DMProperty propertyName="Notes" typeName="string" displayLabel="Notes" category="General_Utilities_General_Utilities" priority="0"/>
+    </DMEntityClass>
+    <DMEntityClass typeName="BaseLinkAspect">
+        <BaseClass>GlobalBase_SUE_Aspect</BaseClass>
+        <DMProperty propertyName="ElevationReference" typeName="string" displayLabel="Elevation Reference" category="References_Utilities_References_Utilities" priority="0"/>
+    </DMEntityClass>
+    <DMEntityClass typeName="BaseNode_HmiDataSetGeometryAspect">
+        <BaseClass>cifcmn:CivilPresentation</BaseClass>
+        <DMProperty propertyName="HmiDataSetGeometry_AuthorityDescription" typeName="string" displayLabel="Authority Description" category="Utility_Quality_Utilities_Utility_Quality_Utilities" priority="0"/>
+        <DMProperty propertyName="QualityLevel" typeName="BaseNode_HmiDataSetGeometryAspect_QualityLevel_Enum" displayLabel="Quality Level" category="Utility_Quality_Utilities_Utility_Quality_Utilities" priority="0"/>
+        <DMProperty propertyName="InvestigationLevel" typeName="BaseNode_HmiDataSetGeometryAspect_InvestigationLevel_Enum" displayLabel="Investigation Level" category="Utility_Quality_Utilities_Utility_Quality_Utilities" priority="0"/>
+        <DMProperty propertyName="Authority" typeName="BaseNode_HmiDataSetGeometryAspect_Authority_Enum" displayLabel="Authority" category="Utility_Quality_Utilities_Utility_Quality_Utilities" priority="0"/>
+        <DMProperty propertyName="HmiDataSetGeometry_NodeRotation" typeName="double" displayLabel="Node Rotation" category="Physical_Utilities_Physical_Utilities" priority="0" kindOfQuantity="cifu:ANGLE"/>
+    </DMEntityClass>
+    <DMEntityClass typeName="BaseNode_NetworkDataAspect">
+        <BaseClass>cifcmn:CivilPresentation</BaseClass>
+        <DMProperty propertyName="NetworkData_UtilityOwner" typeName="string" displayLabel="Owner" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+        <DMProperty propertyName="NetworkData_UserDefinedElementType" typeName="string" displayLabel="Element Type (User Defined)" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+        <DMProperty propertyName="NetworkData_UserDefinedNetworkType" typeName="string" displayLabel="Network Type (User Defined)" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+        <DMProperty propertyName="UtiltityOperationalStatus" typeName="BaseNode_NetworkDataAspect_UtiltityOperationalStatus_Enum" displayLabel="Operational Status" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+    </DMEntityClass>
+    <DMEntityClass typeName="BaseNode_PhysicalAspect">
+        <BaseClass>cifcmn:CivilPresentation</BaseClass>
+        <DMProperty propertyName="NodeLength" typeName="double" displayLabel="Length" category="Utility_Footprint_Utilities_Utility_Footprint_Utilities" priority="0" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="NodeWidth" typeName="double" displayLabel="Width" category="Utility_Footprint_Utilities_Utility_Footprint_Utilities" priority="0" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="Physical_Elevation" typeName="double" displayLabel="Elevation (Invert)" category="Physical_Utilities_Physical_Utilities" priority="0" kindOfQuantity="cifu:ELEVATION"/>
+        <DMProperty propertyName="Physical_TopElevation" typeName="double" displayLabel="Elevation (Top)" category="Physical_Utilities_Physical_Utilities" priority="0" kindOfQuantity="cifu:ELEVATION"/>
+        <DMProperty propertyName="NodeProduct3ID" typeName="string" displayLabel="Product3 3D ID" category="General_Utilities_General_Utilities" priority="0"/>
+        <DMProperty propertyName="NodeProduct32dID" typeName="string" displayLabel="Product3 2D ID" category="General_Utilities_General_Utilities" priority="0"/>
+    </DMEntityClass>
+    <DMEntityClass typeName="BaseNodeAspect">
+        <BaseClass>GlobalBase_SUE_Aspect</BaseClass>
+        <DMProperty propertyName="BaselineFeature" typeName="string" displayLabel="Baseline Feature" category="References_Utilities_References_Utilities" priority="0"/>
+        <DMProperty propertyName="BaselineOffset" typeName="double" displayLabel="Baseline Offset" category="References_Utilities_References_Utilities" priority="0" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="BaselineStation" typeName="double" displayLabel="Baseline Station" category="References_Utilities_References_Utilities" priority="0" kindOfQuantity="cifu:STATION"/>
+        <DMProperty propertyName="ElevationReference" typeName="string" displayLabel="Elevation Reference" category="References_Utilities_References_Utilities" priority="0"/>
+    </DMEntityClass>
+    <DMEntityClass typeName="CommunicationNode_NetworkDataAspect">
+        <BaseClass>cifcmn:CivilPresentation</BaseClass>
+        <DMProperty propertyName="CommunicationNetworkType" typeName="CommunicationNode_NetworkDataAspect_CommunicationNetworkType_Enum" displayLabel="Network Type" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+        <DMProperty propertyName="CommNodeType" typeName="CommunicationNode_NetworkDataAspect_CommNodeType_Enum" displayLabel="Node Type" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+    </DMEntityClass>
+    <DMEntityClass typeName="CommunicationNodeAspect">
+        <BaseClass>BaseNodeAspect</BaseClass>
+    </DMEntityClass>
+    <DMEntityClass typeName="CommunicationSegment_NetworkDataAspect">
+        <BaseClass>cifcmn:CivilPresentation</BaseClass>
+        <DMProperty propertyName="CommunicationNetworkType" typeName="CommunicationSegment_NetworkDataAspect_CommunicationNetworkType_Enum" displayLabel="Network Type" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+        <DMProperty propertyName="CommSegmentType" typeName="CommunicationSegment_NetworkDataAspect_CommSegmentType_Enum" displayLabel="Function" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+        <DMProperty propertyName="ComConduitType" typeName="CommunicationSegment_NetworkDataAspect_ComConduitType_Enum" displayLabel="Conduit Type" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+    </DMEntityClass>
+    <DMEntityClass typeName="CommunicationSegmentAspect">
+        <BaseClass>BaseLinkAspect</BaseClass>
+    </DMEntityClass>
+    <DMEntityClass typeName="ConflictNode_ConflictAspect">
+        <BaseClass>cifcmn:CivilPresentation</BaseClass>
+        <DMProperty propertyName="Conflict_StartStation" typeName="double" displayLabel="Station (Start)" category="Geometry_Utilities_Geometry_Utilities" priority="0" kindOfQuantity="cifu:STATION"/>
+        <DMProperty propertyName="Conflict_StopStation" typeName="double" displayLabel="Station (Stop)" category="Geometry_Utilities_Geometry_Utilities" priority="0" kindOfQuantity="cifu:STATION"/>
+        <DMProperty propertyName="Conflict_LeftOffset" typeName="double" displayLabel="Offset (Left)" category="Geometry_Utilities_Geometry_Utilities" priority="0" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="Conflict_RightOffset" typeName="double" displayLabel="Offset (Right)" category="Geometry_Utilities_Geometry_Utilities" priority="0" kindOfQuantity="cifu:LENGTH"/>
+        <DMProperty propertyName="Conflict_ResponsibleParty" typeName="string" displayLabel="Responsible Party" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+        <DMProperty propertyName="Conflict_Conflicter" typeName="int" displayLabel="Feature A" category="Utility_Data_Subsurface_Utilities_Utility_Data_Subsurface_Utilities" priority="0"/>
+        <DMProperty propertyName="Conflict_Conflictee" typeName="int" displayLabel="Feature B" category="Utility_Data_Subsurface_Utilities_Utility_Data_Subsurface_Utilities" priority="0"/>
+        <DMProperty propertyName="Conflict_Elevation" typeName="double" displayLabel="Elevation" category="Geometry_Utilities_Geometry_Utilities" priority="0" kindOfQuantity="cifu:ELEVATION"/>
+        <DMProperty propertyName="CurrentStatus" typeName="ConflictNode_ConflictAspect_CurrentStatus_Enum" displayLabel="Current Status" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+        <DMProperty propertyName="RecommendedResolution" typeName="ConflictNode_ConflictAspect_RecommendedResolution_Enum" displayLabel="Recommended Resolution" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+        <DMProperty propertyName="OtherResolutionDescription" typeName="string" displayLabel="Other Resolution Description" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+        <DMProperty propertyName="ConflictType" typeName="ConflictNode_ConflictAspect_ConflictType_Enum" displayLabel="Conflict Type" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+        <DMProperty propertyName="RequiresTestHole" typeName="boolean" displayLabel="Requires Test Hole?" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+    </DMEntityClass>
+    <DMEntityClass typeName="ConflictNode_HmiDataSetGeometryAspect">
+        <BaseClass>cifcmn:CivilPresentation</BaseClass>
+        <DMProperty propertyName="FeatureA_QualityLevel" typeName="ConflictNode_HmiDataSetGeometryAspect_FeatureA_QualityLevel_Enum" displayLabel="Quality Level (Feature A)" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+        <DMProperty propertyName="FeatureB_QualityLevel" typeName="ConflictNode_HmiDataSetGeometryAspect_FeatureB_QualityLevel_Enum" displayLabel="Quality Level (Feature B)" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+    </DMEntityClass>
+    <DMEntityClass typeName="ConflictNodeAspect">
+        <BaseClass>GlobalBase_SUE_Aspect</BaseClass>
+        <DMProperty propertyName="BaselineFeature" typeName="string" displayLabel="Baseline Feature" category="References_Utilities_References_Utilities" priority="0"/>
+        <DMProperty propertyName="BaselineOffset" typeName="double" displayLabel="Baseline Offset" category="References_Utilities_References_Utilities" priority="0" kindOfQuantity="cifu:ELEVATION"/>
+        <DMProperty propertyName="BaselineStation" typeName="double" displayLabel="Baseline Station" category="References_Utilities_References_Utilities" priority="0" kindOfQuantity="cifu:ELEVATION"/>
+        <DMProperty propertyName="ElevationReference" typeName="string" displayLabel="Elevation Reference" category="References_Utilities_References_Utilities" priority="0"/>
+        <DMProperty propertyName="FeatureDefinitionA" typeName="string" displayLabel="Feature Definition (A)" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+        <DMProperty propertyName="FeatureDefinitionB" typeName="string" displayLabel="Feature Definition (B)" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+    </DMEntityClass>
+    <DMEntityClass typeName="ElectricalNode_NetworkDataAspect">
+        <BaseClass>cifcmn:CivilPresentation</BaseClass>
+        <DMProperty propertyName="ElectricNetworkType" typeName="ElectricalNode_NetworkDataAspect_ElectricNetworkType_Enum" displayLabel="Network Type" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+        <DMProperty propertyName="ElectricNodeDataType" typeName="ElectricalNode_NetworkDataAspect_ElectricNodeDataType_Enum" displayLabel="Node Type" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+    </DMEntityClass>
+    <DMEntityClass typeName="ElectricalNodeAspect">
+        <BaseClass>BaseNodeAspect</BaseClass>
+    </DMEntityClass>
+    <DMEntityClass typeName="ElectricalSegment_NetworkDataAspect">
+        <BaseClass>cifcmn:CivilPresentation</BaseClass>
+        <DMProperty propertyName="ElectricNetworkType" typeName="ElectricalSegment_NetworkDataAspect_ElectricNetworkType_Enum" displayLabel="Network Type" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+        <DMProperty propertyName="ElectricSegmentType" typeName="ElectricalSegment_NetworkDataAspect_ElectricSegmentType_Enum" displayLabel="Function" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+        <DMProperty propertyName="ElectricConduitType" typeName="ElectricalSegment_NetworkDataAspect_ElectricConduitType_Enum" displayLabel="Conduit Type" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+    </DMEntityClass>
+    <DMEntityClass typeName="ElectricalSegmentAspect">
+        <BaseClass>BaseLinkAspect</BaseClass>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsBaseLink_HmiDataSetGeometryAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="BaseLink_HmiDataSetGeometryAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="ElementOwnsBaseLink_NetworkDataAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="BaseLink_NetworkDataAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="ElementOwnsBaseLink_Physical_SegmentShapeType_CircularAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="BaseLink_Physical_SegmentShapeType_CircularAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="ElementOwnsBaseLink_Physical_SegmentShapeType_NonCircularAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="BaseLink_Physical_SegmentShapeType_NonCircularAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="ElementOwnsBaseLink_PhysicalAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="BaseLink_PhysicalAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="ElementOwnsBaseLinkAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="BaseLinkAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="ElementOwnsBaseNode_HmiDataSetGeometryAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="BaseNode_HmiDataSetGeometryAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="ElementOwnsBaseNode_NetworkDataAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="BaseNode_NetworkDataAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="ElementOwnsBaseNode_PhysicalAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="BaseNode_PhysicalAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="ElementOwnsBaseNodeAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="BaseNodeAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="ElementOwnsCommunicationNode_NetworkDataAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="CommunicationNode_NetworkDataAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="ElementOwnsCommunicationNodeAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="CommunicationNodeAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="ElementOwnsCommunicationSegment_NetworkDataAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="CommunicationSegment_NetworkDataAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="ElementOwnsCommunicationSegmentAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="CommunicationSegmentAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="ElementOwnsConflictNode_ConflictAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="ConflictNode_ConflictAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="ElementOwnsConflictNode_HmiDataSetGeometryAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="ConflictNode_HmiDataSetGeometryAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="ElementOwnsConflictNodeAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="ConflictNodeAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="ElementOwnsElectricalNode_NetworkDataAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="ElectricalNode_NetworkDataAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="ElementOwnsElectricalNodeAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="ElectricalNodeAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="ElementOwnsElectricalSegment_NetworkDataAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="ElectricalSegment_NetworkDataAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="ElementOwnsElectricalSegmentAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="ElectricalSegmentAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="GasNode_NetworkDataAspect">
+        <BaseClass>cifcmn:CivilPresentation</BaseClass>
+        <DMProperty propertyName="GasNetworkType" typeName="GasNode_NetworkDataAspect_GasNetworkType_Enum" displayLabel="Network Type" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+        <DMProperty propertyName="GasNodeType" typeName="GasNode_NetworkDataAspect_GasNodeType_Enum" displayLabel="Gas Node Type" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsGasNode_NetworkDataAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="GasNode_NetworkDataAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="GasNodeAspect">
+        <BaseClass>BaseNodeAspect</BaseClass>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsGasNodeAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="GasNodeAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="GasSegment_NetworkDataAspect">
+        <BaseClass>cifcmn:CivilPresentation</BaseClass>
+        <DMProperty propertyName="GasNetworkType" typeName="GasSegment_NetworkDataAspect_GasNetworkType_Enum" displayLabel="Network Type" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+        <DMProperty propertyName="GasSegmentType" typeName="GasSegment_NetworkDataAspect_GasSegmentType_Enum" displayLabel="Function" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+        <DMProperty propertyName="GasConduitType" typeName="GasSegment_NetworkDataAspect_GasConduitType_Enum" displayLabel="Conduit Type" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsGasSegment_NetworkDataAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="GasSegment_NetworkDataAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="GasSegmentAspect">
+        <BaseClass>BaseLinkAspect</BaseClass>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsGasSegmentAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="GasSegmentAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="GenericNodeAssetAspect">
+        <BaseClass>BaseNodeAspect</BaseClass>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsGenericNodeAssetAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="GenericNodeAssetAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="GenericSegmentAssetAspect">
+        <BaseClass>BaseLinkAspect</BaseClass>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsGenericSegmentAssetAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="GenericSegmentAssetAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="ElementOwnsGlobalBase_SUE_Aspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="GlobalBase_SUE_Aspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="POLNode_NetworkDataAspect">
+        <BaseClass>cifcmn:CivilPresentation</BaseClass>
+        <DMProperty propertyName="POLNetworkType" typeName="POLNode_NetworkDataAspect_POLNetworkType_Enum" displayLabel="Network Type" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+        <DMProperty propertyName="POLNodeType" typeName="POLNode_NetworkDataAspect_POLNodeType_Enum" displayLabel="Node Type" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsPOLNode_NetworkDataAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="POLNode_NetworkDataAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="POLNodeAspect">
+        <BaseClass>BaseNodeAspect</BaseClass>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsPOLNodeAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="POLNodeAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="POLSegment_NetworkDataAspect">
+        <BaseClass>cifcmn:CivilPresentation</BaseClass>
+        <DMProperty propertyName="POLNetworkType" typeName="POLSegment_NetworkDataAspect_POLNetworkType_Enum" displayLabel="Network Type" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+        <DMProperty propertyName="POLSegmentType" typeName="POLSegment_NetworkDataAspect_POLSegmentType_Enum" displayLabel="Function" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+        <DMProperty propertyName="POLConduitType" typeName="POLSegment_NetworkDataAspect_POLConduitType_Enum" displayLabel="Conduit Type" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsPOLSegment_NetworkDataAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="POLSegment_NetworkDataAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="POLSegmentAspect">
+        <BaseClass>BaseLinkAspect</BaseClass>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsPOLSegmentAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="POLSegmentAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="ReferenceDomainElementAspect">
+        <BaseClass>GlobalBase_SUE_Aspect</BaseClass>
+        <DMProperty propertyName="DataSourceType" typeName="ReferenceDomainElementAspect_DataSourceType_Enum" displayLabel="Data Source Type" category="General_Utilities_General_Utilities" priority="0"/>
+        <DMProperty propertyName="ReferenceDomainElement_DataSource" typeName="string" displayLabel=" Data Source" category="General_Utilities_General_Utilities" priority="0"/>
+        <DMProperty propertyName="ReferenceDomainElement_DataSourceID" typeName="string" displayLabel="Data Source ID" category="General_Utilities_General_Utilities" priority="0"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsReferenceDomainElementAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="ReferenceDomainElementAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="StormWaterNode_NetworkDataAspect">
+        <BaseClass>cifcmn:CivilPresentation</BaseClass>
+        <DMProperty propertyName="StormNetworkType" typeName="StormWaterNode_NetworkDataAspect_StormNetworkType_Enum" displayLabel="Network Type" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+        <DMProperty propertyName="StormWaterNodeType" typeName="StormWaterNode_NetworkDataAspect_StormWaterNodeType_Enum" displayLabel="Node Type" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsStormWaterNode_NetworkDataAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="StormWaterNode_NetworkDataAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="StormWaterNodeAspect">
+        <BaseClass>BaseNodeAspect</BaseClass>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsStormWaterNodeAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="StormWaterNodeAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="StormWaterSegment_NetworkDataAspect">
+        <BaseClass>cifcmn:CivilPresentation</BaseClass>
+        <DMProperty propertyName="StormNetworkType" typeName="StormWaterSegment_NetworkDataAspect_StormNetworkType_Enum" displayLabel="Network Type" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+        <DMProperty propertyName="StormWaterSegmentType" typeName="StormWaterSegment_NetworkDataAspect_StormWaterSegmentType_Enum" displayLabel="Function" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+        <DMProperty propertyName="StormWaterConduitType" typeName="StormWaterSegment_NetworkDataAspect_StormWaterConduitType_Enum" displayLabel="Conduit Type" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsStormWaterSegment_NetworkDataAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="StormWaterSegment_NetworkDataAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="StormWaterSegmentAspect">
+        <BaseClass>BaseLinkAspect</BaseClass>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsStormWaterSegmentAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="StormWaterSegmentAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="ThermalNode_NetworkDataAspect">
+        <BaseClass>cifcmn:CivilPresentation</BaseClass>
+        <DMProperty propertyName="ThermalNetworkType" typeName="ThermalNode_NetworkDataAspect_ThermalNetworkType_Enum" displayLabel="Network Type" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+        <DMProperty propertyName="ThermalNodeType" typeName="ThermalNode_NetworkDataAspect_ThermalNodeType_Enum" displayLabel="Node Type" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsThermalNode_NetworkDataAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="ThermalNode_NetworkDataAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="ThermalNodeAspect">
+        <BaseClass>BaseNodeAspect</BaseClass>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsThermalNodeAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="ThermalNodeAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="ThermalSegment_NetworkDataAspect">
+        <BaseClass>cifcmn:CivilPresentation</BaseClass>
+        <DMProperty propertyName="ThermalNetworkType" typeName="ThermalSegment_NetworkDataAspect_ThermalNetworkType_Enum" displayLabel="Network Type" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+        <DMProperty propertyName="ThermalSegmentType" typeName="ThermalSegment_NetworkDataAspect_ThermalSegmentType_Enum" displayLabel="Function" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+        <DMProperty propertyName="ThermalConduitType" typeName="ThermalSegment_NetworkDataAspect_ThermalConduitType_Enum" displayLabel="Conduit Type" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsThermalSegment_NetworkDataAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="ThermalSegment_NetworkDataAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="ThermalSegmentAspect">
+        <BaseClass>BaseLinkAspect</BaseClass>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsThermalSegmentAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="ThermalSegmentAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="WasteWaterNode_NetworkDataAspect">
+        <BaseClass>cifcmn:CivilPresentation</BaseClass>
+        <DMProperty propertyName="WasteWaterNetworkType" typeName="WasteWaterNode_NetworkDataAspect_WasteWaterNetworkType_Enum" displayLabel="Waste Water Network Type" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+        <DMProperty propertyName="WasteWaterNodeType" typeName="WasteWaterNode_NetworkDataAspect_WasteWaterNodeType_Enum" displayLabel="Node Type" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsWasteWaterNode_NetworkDataAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="WasteWaterNode_NetworkDataAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="WasteWaterNodeAspect">
+        <BaseClass>BaseNodeAspect</BaseClass>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsWasteWaterNodeAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="WasteWaterNodeAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="WasteWaterSegment_NetworkDataAspect">
+        <BaseClass>cifcmn:CivilPresentation</BaseClass>
+        <DMProperty propertyName="WasteWaterNetworkType" typeName="WasteWaterSegment_NetworkDataAspect_WasteWaterNetworkType_Enum" displayLabel="Waste Water Network Type" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+        <DMProperty propertyName="WasteWaterSegmentType" typeName="WasteWaterSegment_NetworkDataAspect_WasteWaterSegmentType_Enum" displayLabel="Function" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+        <DMProperty propertyName="WasteWaterConduitType" typeName="WasteWaterSegment_NetworkDataAspect_WasteWaterConduitType_Enum" displayLabel="Conduit Type" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsWasteWaterSegment_NetworkDataAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="WasteWaterSegment_NetworkDataAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="WasteWaterSegmentAspect">
+        <BaseClass>BaseLinkAspect</BaseClass>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsWasteWaterSegmentAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="WasteWaterSegmentAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="WaterNode_NetworkDataAspect">
+        <BaseClass>cifcmn:CivilPresentation</BaseClass>
+        <DMProperty propertyName="WaterNetworkType" typeName="WaterNode_NetworkDataAspect_WaterNetworkType_Enum" displayLabel="Network Type" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+        <DMProperty propertyName="WaterNodeType" typeName="WaterNode_NetworkDataAspect_WaterNodeType_Enum" displayLabel="Node Type" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsWaterNode_NetworkDataAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="WaterNode_NetworkDataAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="WaterNodeAspect">
+        <BaseClass>BaseNodeAspect</BaseClass>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsWaterNodeAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="WaterNodeAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="WaterSegment_NetworkDataAspect">
+        <BaseClass>cifcmn:CivilPresentation</BaseClass>
+        <DMProperty propertyName="WaterNetworkType" typeName="WaterSegment_NetworkDataAspect_WaterNetworkType_Enum" displayLabel="Network Type" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+        <DMProperty propertyName="WaterSegmentType" typeName="WaterSegment_NetworkDataAspect_WaterSegmentType_Enum" displayLabel="Function" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+        <DMProperty propertyName="WaterConduitType" typeName="WaterSegment_NetworkDataAspect_WaterConduitType_Enum" displayLabel="Conduit Type" category="Utility_Data_Utilities_Utility_Data_Utilities" priority="0"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsWaterSegment_NetworkDataAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="WaterSegment_NetworkDataAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="WaterSegmentAspect">
+        <BaseClass>BaseLinkAspect</BaseClass>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ElementOwnsWaterSegmentAspect" modifier="None" strength="embedding">
+        <BaseClass>bis:ElementOwnsUniqueAspect</BaseClass>
+        <Source multiplicity="(1..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:GeometricElement3d"/>
+        </Source>
+        <Target multiplicity="(0..1)" roleLabel="is owned by" polymorphic="false">
+            <Class class="WaterSegmentAspect"/>
+        </Target>
+    </DMRelationshipClass>
+    <PropertyCategory typeName="General_Subsurface_Utilities_General_Subsurface_Utilities" description="&lt;General&gt; [Subsurface Utilities]" displayLabel="&lt;General&gt; [Subsurface Utilities]" priority="4294899186"/>
+    <PropertyCategory typeName="General_Utilities_General_Utilities" description="&lt;General&gt; [Utilities]" displayLabel="&lt;General&gt; [Utilities]" priority="4294899186"/>
+    <PropertyCategory typeName="Geometry_Subsurface_Utilities_Geometry_Subsurface_Utilities" description="&lt;Geometry&gt; [Subsurface Utilities]" displayLabel="&lt;Geometry&gt; [Subsurface Utilities]" priority="4294899186"/>
+    <PropertyCategory typeName="Geometry_Utilities_Geometry_Utilities" description="&lt;Geometry&gt; [Utilities]" displayLabel="&lt;Geometry&gt; [Utilities]" priority="4294899186"/>
+    <PropertyCategory typeName="Physical_Subsurface_Utilities_Physical_Subsurface_Utilities" description="Physical [Subsurface Utilities]" displayLabel="Physical [Subsurface Utilities]" priority="4294875686"/>
+    <PropertyCategory typeName="Physical_Utilities_Physical_Utilities" description="Physical [Utilities]" displayLabel="Physical [Utilities]" priority="4294875686"/>
+    <PropertyCategory typeName="References_Subsurface_Utilities_References_Subsurface_Utilities" description="References [Subsurface Utilities]" displayLabel="References [Subsurface Utilities]" priority="4294874176"/>
+    <PropertyCategory typeName="References_Utilities_References_Utilities" description="References [Utilities]" displayLabel="References [Utilities]" priority="4294874176"/>
+    <PropertyCategory typeName="Utility_Data_Subsurface_Utilities_Utility_Data_Subsurface_Utilities" description="Utility Data [Subsurface Utilities]" displayLabel="Utility Data [Subsurface Utilities]" priority="4294869646"/>
+    <PropertyCategory typeName="Utility_Data_Utilities_Utility_Data_Utilities" description="Utility Data [Utilities]" displayLabel="Utility Data [Utilities]" priority="4294869646"/>
+    <PropertyCategory typeName="Utility_Footprint_Subsurface_Utilities_Utility_Footprint_Subsurface_Utilities" description="Utility Footprint [Subsurface Utilities]" displayLabel="Utility Footprint [Subsurface Utilities]" priority="4294869646"/>
+    <PropertyCategory typeName="Utility_Footprint_Utilities_Utility_Footprint_Utilities" description="Utility Footprint [Utilities]" displayLabel="Utility Footprint [Utilities]" priority="4294869646"/>
+    <PropertyCategory typeName="Utility_Quality_Subsurface_Utilities_Utility_Quality_Subsurface_Utilities" description="Utility Quality [Subsurface Utilities]" displayLabel="Utility Quality [Subsurface Utilities]" priority="4294869646"/>
+    <PropertyCategory typeName="Utility_Quality_Utilities_Utility_Quality_Utilities" description="Utility Quality [Utilities]" displayLabel="Utility Quality [Utilities]" priority="4294869646"/>
+</DMSchema>

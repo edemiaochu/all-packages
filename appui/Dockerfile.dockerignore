@@ -1,0 +1,37 @@
+# Start off ignoring everything
+*
+
+# Add back only the files that we want
+!common/scripts
+!docs/storybook
+!e2e-tests/tests
+!e2e-tests/playwright.config.ts
+!e2e-tests/package.json
+!apps
+!patches
+!ui
+!tools
+!package.json
+!pnpm-lock.yaml
+!pnpm-workspace.yaml
+
+# Dependency directories
+**/node_modules
+
+# Playwright specific
+**/playwright-report
+**/test-results
+
+# Logs
+**/*.log
+
+# Build specific
+**/lib
+**/build
+
+# Environment variables
+**/.env
+**/.env.*
+
+# Include specific files
+!apps/test-app/README.md

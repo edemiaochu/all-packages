@@ -1,0 +1,54 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+
+import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { render, screen, waitFor } from "@testing-library/react";
+// __PUBLISH_EXTRACT_START__ QuantityFormat.FormatSelectorExampleImports
+import { FormatSelector } from "@itwin/quantity-formatting-react";
+import type { FormatDefinition } from "@itwin/core-quantity";
+import type { FormatSet } from "@itwin/ecschema-metadata";
+// __PUBLISH_EXTRACT_END__
+import { QuantityFormattingTestUtils } from "../../utils/QuantityFormattingTestUtils.js";
+
+describe("Quantity formatting", () => {
+  describe("Learning snippets", () => {
+    describe("FormatSelector", () => {
+      beforeAll(async () => {
+        await QuantityFormattingTestUtils.initialize();
+      });
+
+      afterAll(async () => {
+        await QuantityFormattingTestUtils.terminate();
+      });
+
+      it("renders FormatSelector", async () => {
+        // __PUBLISH_EXTRACT_START__ QuantityFormat.FormatSelectorExample
+        const formatSet: FormatSet = {
+          name: "TestSet",
+          label: "Test Format Set",
+          unitSystem: "metric",
+          formats: {
+            "test-format": {
+              name: "test-format",
+              label: "Test Format",
+              type: "Decimal",
+              precision: 2,
+              composite: { units: [{ name: "Units.M", label: "m" }] },
+            },
+          },
+        };
+
+        const handleFormatSelection = (_formatDef: FormatDefinition, _key: string) => {
+          // Handle format selection
+        };
+
+        render(<FormatSelector activeFormatSet={formatSet} activeFormatDefinitionKey={undefined} onListItemChange={handleFormatSelection} />);
+        // __PUBLISH_EXTRACT_END__
+
+        await waitFor(() => expect(screen.getByPlaceholderText("labels.searchFormats")).toBeDefined());
+      });
+    });
+  });
+});

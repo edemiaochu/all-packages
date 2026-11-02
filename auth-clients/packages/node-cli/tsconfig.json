@@ -1,0 +1,16 @@
+{
+  "extends": "./node_modules/@szewtwin/build-tools/tsconfig-base.json",
+  "compilerOptions": {
+    "target": "es2021",
+    "moduleResolution": "node16",
+    "module": "node16",
+    "outDir": "./lib"
+  },
+  "include": [
+    "./src/**/*.ts"
+  ],
+  "exclude": [
+    "lib",
+    "node_modules"
+  ]
+}

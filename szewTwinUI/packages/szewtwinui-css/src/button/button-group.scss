@@ -1,0 +1,108 @@
+// Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+// See LICENSE.md in the project root for license terms and full copyright notice.
+
+/// Mixin for button group or input+button combo group.
+/// @arg $orientation must be one of: horizontal, vertical
+/// Note: Vertical button-group should be used for icon buttons only.
+@mixin iui-button-group($orientation: horizontal) {
+  --_iui-button-group-item-offset: -1px; // To prevent double adjacent borders
+
+  display: inline-flex;
+  align-items: center;
+  isolation: isolate;
+  pointer-events: none;
+
+  @if $orientation != 'horizontal' {
+    flex-direction: column;
+    max-block-size: 100%;
+  }
+
+  // specificity hack
+  > [class] {
+    pointer-events: all;
+    position: relative;
+
+    &:where(.iui-field, .iui-input-flex-container) {
+      // Adds stripe to active button
+      @if $orientation == 'horizontal' {
+        --_iui-button-active-stripe-inset-block: #{var(--iui-size-3xs)} calc(100% - #{var(--iui-size-2xs)});
+        --_iui-button-active-stripe-inset-inline: #{var(--iui-size-3xs)};
+      } @else {
+        --_iui-button-active-stripe-inset-block: #{var(--iui-size-3xs)};
+        --_iui-button-active-stripe-inset-inline: #{var(--iui-size-3xs)} calc(100% - #{var(--iui-size-2xs)});
+      }
+
+      &:hover {
+        z-index: 1;
+      }
+
+      &:is(:disabled, [aria-disabled='true']) {
+        z-index: -1;
+      }
+
+      &:focus,
+      &:focus-within {
+        &,
+        &:where([aria-disabled='true']) {
+          z-index: 2;
+        }
+      }
+    }
+
+    &:where(.iui-field:not([data-iui-variant='borderless']), .iui-input-flex-container) {
+      // Reset border radius
+      border-radius: 0;
+
+      transition-duration: 0ms; // disable exit animation to avoid border flicker
+
+      &:hover,
+      &:focus {
+        transition-duration: var(--iui-duration-1); // re-enable enter animation
+      }
+    }
+
+    // Add rounded corners to first item
+    &:where(:nth-child(1 of :where(.iui-field, .iui-input-flex-container))) {
+      border-start-start-radius: var(--iui-border-radius-1);
+
+      @if $orientation == 'horizontal' {
+        border-end-start-radius: var(--iui-border-radius-1);
+      } @else {
+        border-start-end-radius: var(--iui-border-radius-1);
+      }
+    }
+
+    // Add rounded corners to last item
+    &:where(:nth-last-child(1 of :where(.iui-field, .iui-input-flex-container))) {
+      border-end-end-radius: var(--iui-border-radius-1);
+
+      @if $orientation == 'horizontal' {
+        border-start-end-radius: var(--iui-border-radius-1);
+      } @else {
+        border-end-start-radius: var(--iui-border-radius-1);
+      }
+    }
+
+    // Use negative margin to make adjacent borders overlap
+    ~ :where(.iui-field, .iui-input-flex-container) {
+      @if $orientation == 'horizontal' {
+        margin-inline-start: var(--_iui-button-group-item-offset);
+      } @else {
+        margin-block-start: var(--_iui-button-group-item-offset);
+      }
+
+      // Add slight border between disabled items
+      &:where(:disabled, [aria-disabled='true']):where(:not([data-iui-variant='borderless'])) {
+        @if $orientation == 'horizontal' {
+          border-inline-start-color: var(--iui-color-border-subtle);
+        } @else {
+          border-block-start-color: var(--iui-color-border-subtle);
+        }
+      }
+    }
+  }
+}
+
+@mixin iui-button-group-overflow-x {
+  inline-size: 100%;
+}

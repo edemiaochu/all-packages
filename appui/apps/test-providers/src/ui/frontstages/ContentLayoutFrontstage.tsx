@@ -1,0 +1,104 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+import * as React from "react";
+import {
+  BackstageAppButton,
+  ContentGroup,
+  ContentGroupProvider,
+  Frontstage,
+  FrontstageUtilities,
+  StageContentLayout,
+  StageUsage,
+  StandardContentLayouts,
+  UiFramework,
+} from "@szewtwin/appui-react";
+import { getSavedViewLayoutProps } from "../../tools/ContentLayoutTools.js";
+import { ViewportContent } from "../ViewportContent.js";
+
+/** The ContentLayoutStageContentGroupProvider provides a class with the primary method `provideContentGroup` to provide a ContentGroup
+ * to a stage when the stage is activated. This provider will look to see if the user saved out a ContentGroup to use when a stage and
+ * specific iVault is opened. See `SaveContentLayoutTool` in `ContentLayoutTools.tsx` to see tool that saved the layout and ViewStates.
+ * If no saved state was found `UiFramework.getDefaultViewState` is used to specify the ViewState and `StandardContentLayouts.singleView`
+ * is used to specify the layout. The `prepareToSaveProps` prepare the JSON to be saved to local storage when saving ContentGroup data. The
+ * method `applyUpdatesToSavedProps` is used to make any updates to the saved JSON before it is applied to the stage.
+ */
+class ContentLayoutStageContentGroupProvider extends ContentGroupProvider {
+  public override async contentGroup(
+    config: Frontstage
+  ): Promise<ContentGroup> {
+    const primaryViewState = UiFramework.getDefaultViewState()?.clone();
+    if (primaryViewState) {
+      primaryViewState.description = "ivault-view-primary";
+    }
+    const id = "primaryContent";
+    const defaultContent = new ContentGroup({
+      id: "content-layout-stage-frontstage-main-content-group",
+      layout: StandardContentLayouts.singleView,
+      contents: [
+        {
+          id,
+          classId: "",
+          content: (
+            <ViewportContent
+              contentId={id}
+              renderViewOverlay={() => undefined}
+              viewState={primaryViewState}
+            />
+          ),
+        },
+      ],
+    });
+
+    const iVaultConnection = UiFramework.getIVaultConnection();
+    if (!iVaultConnection) return defaultContent;
+
+    const savedViewLayoutProps = await getSavedViewLayoutProps(
+      config.id,
+      iVaultConnection
+    );
+    if (!savedViewLayoutProps) return defaultContent;
+
+    const viewStates = await StageContentLayout.viewStatesFromProps(
+      iVaultConnection,
+      savedViewLayoutProps
+    );
+    if (viewStates.length > 0) {
+      const defaultViewState = viewStates[0];
+      if (defaultViewState) {
+        UiFramework.setDefaultViewState(defaultViewState);
+      }
+    }
+
+    return new ContentGroup({
+      ...savedViewLayoutProps.contentGroupProps,
+      contents: savedViewLayoutProps.contentGroupProps.contents.map(
+        (content, index) => {
+          const viewState = viewStates[index];
+          return {
+            ...content,
+            content: (
+              <ViewportContent
+                viewState={viewState}
+                renderViewOverlay={() => undefined}
+              />
+            ),
+          };
+        }
+      ),
+    });
+  }
+}
+
+const contentGroupProvider = new ContentLayoutStageContentGroupProvider();
+export function createContentLayoutFrontstage() {
+  return FrontstageUtilities.createStandardFrontstage({
+    id: createContentLayoutFrontstage.stageId,
+    contentGroupProps: contentGroupProvider,
+    // eslint-disable-next-line @typescript-eslint/no-deprecated
+    cornerButton: <BackstageAppButton icon="icon-szewec-systems" />,
+    usage: StageUsage.General,
+  });
+}
+createContentLayoutFrontstage.stageId = "content-layout";

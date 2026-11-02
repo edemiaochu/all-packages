@@ -1,0 +1,44 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@forward "./style/opacity";
+
+$title-weight: var(--iui-font-weight-normal);
+$title-size: var(--iui-font-size-2);
+$title-opacity: var(--iui-opacity-1);
+
+$body-weight: var(--iui-font-weight-light);
+$body-size: var(--iui-font-size-1);
+$body-opacity: var(--iui-opacity-2);
+
+$body1-weight: var(--iui-font-weight-normal);
+$body1-size: var(--iui-font-size-1);
+$body1-opacity: var(--iui-opacity-2);
+
+@mixin title($rgb: unset) {
+  font-weight: $title-weight;
+  font-size: $title-size;
+
+  @if $rgb != unset {
+    color: rgba($rgb, $title-opacity);
+  }
+}
+
+@mixin body($rgb: unset) {
+  font-weight: $body-weight;
+  font-size: $body-size;
+
+  @if $rgb != unset {
+    color: rgba($rgb, $body-opacity);
+  }
+}
+
+@mixin body1($rgb: unset) {
+  font-weight: $body1-weight;
+  font-size: $body1-size;
+
+  @if $rgb != unset {
+    color: rgba($rgb, $body1-opacity);
+  }
+}

@@ -1,0 +1,5 @@
+import React, { type SVGProps } from 'react';
+declare const SvgRecords: (props: SVGProps<SVGSVGElement>) => React.JSX.Element;
+export default SvgRecords;
+export { SvgRecords };
+//# sourceMappingURL=Records.d.ts.map

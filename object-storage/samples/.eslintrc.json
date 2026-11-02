@@ -1,0 +1,17 @@
+{
+  "extends": "./node_modules/@szewtwin/object-storage-common-config/.eslintrc.js",
+  "rules": {
+    "no-console": "off",
+    "@typescript-eslint/naming-convention": [
+      "error",
+      {
+        "selector": "property", 
+        "format": null,
+        "filter": {
+          "regex": "ClientStorage",
+          "match": false
+        }
+      }
+    ]
+  }
+}

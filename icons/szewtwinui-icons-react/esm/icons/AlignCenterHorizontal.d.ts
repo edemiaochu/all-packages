@@ -1,0 +1,5 @@
+import React, { type SVGProps } from 'react';
+declare const SvgAlignCenterHorizontal: (props: SVGProps<SVGSVGElement>) => React.JSX.Element;
+export default SvgAlignCenterHorizontal;
+export { SvgAlignCenterHorizontal };
+//# sourceMappingURL=AlignCenterHorizontal.d.ts.map

@@ -1,0 +1,44 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@use "sass:math";
+@use "../../target" as *;
+@use "variables" as *;
+
+.components-toolbar-item-expandable-group-backArrow {
+  $border: solid $back-arrow-thickness currentColor;
+  $size: math.sqrt($back-arrow-size-val * $back-arrow-size-val * 8) * 0.5 + px;
+
+  width: 15px;
+  height: 20px;
+
+  @include components-internal-targeted {
+    cursor: pointer;
+
+    &:after {
+      color: var(--iui-color-text-accent);
+    }
+  }
+
+  &:after {
+    content: "";
+    display: block;
+    position: relative;
+    left: 3px;
+    top: 3px;
+    color: var(--iui-color-text);
+    width: $size;
+    height: $size;
+    border-top: $border;
+    border-left: $border;
+    margin-left: $back-arrow-thickness;
+    margin-top: $back-arrow-thickness;
+    box-sizing: border-box;
+    transform: rotate(-45deg);
+  }
+
+  &:focus {
+    outline: none;
+  }
+}

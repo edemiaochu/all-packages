@@ -1,0 +1,43 @@
+// Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+// See LICENSE.md in the project root for license terms and full copyright notice.
+@use 'base';
+
+@mixin iui-tabs-borderless {
+  --_iui-tab-bg-color: transparent;
+  --_iui-tab-bg-color-hover: var(--iui-color-background-transparent-hover);
+  --_iui-tab-bg-color-selected: transparent;
+  --_iui-tab-bg-color-selected-hover: var(--iui-color-background-transparent-hover);
+  --_iui-tab-bg-color-disabled: transparent;
+
+  .iui-tab {
+    padding-block: var(--iui-size-2xs);
+    padding-inline: calc(var(--iui-size-s) * 2);
+
+    &::after {
+      inset-block-end: 0;
+      inset-inline-end: 0;
+    }
+  }
+
+  ~ .iui-tabs-content:where([data-iui-orientation='horizontal']) {
+    margin-block-start: -1px;
+    border-block-start: 1px solid var(--iui-color-border);
+  }
+
+  ~ .iui-tabs-content:where([data-iui-orientation='vertical']) {
+    margin-inline-start: -1px;
+    padding-inline-start: var(--iui-size-s);
+    padding-inline-end: var(--iui-size-s);
+    border-inline-start: 1px solid var(--iui-color-border);
+  }
+
+  &.iui-large {
+    .iui-tab {
+      min-block-size: calc(var(--iui-size-m) * 3.5);
+    }
+
+    .iui-tab-description {
+      display: -webkit-box; /* stylelint-disable-line */
+    }
+  }
+}

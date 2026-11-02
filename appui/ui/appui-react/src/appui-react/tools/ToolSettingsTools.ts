@@ -1,0 +1,47 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+/** @packageDocumentation
+ * @module Tools
+ */
+import { IVaultApp, Tool } from "@szewtwin/core-frontend";
+import { UiFramework } from "../UiFramework.js";
+
+/**
+ * Immediate tool that will focus into the Tool Settings widget.
+ * @alpha
+ */
+export class FocusToolSettings extends Tool {
+  public static override toolId = "FocusToolSettings";
+
+  public override async run(): Promise<boolean> {
+    return UiFramework.toolSettings.focusIntoToolSettings();
+  }
+}
+
+/**
+ * Immediate tool that will bump a Tool Settings value.
+ * @alpha
+ */
+export class BumpToolSetting extends Tool {
+  public static override toolId = "BumpToolSetting";
+
+  public static override get maxArgs() {
+    return 1;
+  }
+
+  public override async run(settingIndexStr?: string): Promise<boolean> {
+    let settingIndex: number | undefined;
+    if (settingIndexStr) {
+      settingIndex = parseInt(settingIndexStr, 10);
+      if (isNaN(settingIndex)) return false;
+    }
+    IVaultApp.toolAdmin.bumpToolSetting(settingIndex); // eslint-disable-line @typescript-eslint/no-floating-promises
+    return true;
+  }
+
+  public override async parseAndRun(...args: string[]): Promise<boolean> {
+    return this.run(args[0]);
+  }
+}

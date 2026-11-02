@@ -1,0 +1,17 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "strictNullChecks": true,
+    "paths": {
+      "@itwin/imodel-browser-react/mui": [
+        "../../modules/imodel-browser/src/mui/index.ts"
+      ]
+    }
+  },
+  "include": [
+    "**/*.ts*",
+    "**/*.js*",
+    "**/.*.js*",
+    "../../modules/imodel-browser/src/typings/declarations.d.ts"
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "name": "@szewtwin/ivaults-access-common",
+  "version": "6.1.2",
+  "description": "Common code package for @szewtwin/ivaults-access-frontend and @szewtwin/ivaults-access-backend.",
+  "keywords": [
+    "Szewec",
+    "iVault",
+    "szewTwin",
+    "szewTwin platform",
+    "szewTwin.js"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/szewTwin/ivaults-clients"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Szewec Systems, Inc.",
+    "url": "http://www.szewec.com"
+  },
+  "main": "lib/cjs/index.js",
+  "module": "lib/esm/index.js",
+  "typings": "lib/cjs/index",
+  "scripts": {
+    "build": "npm run -s build:cjs && npm run -s build:esm",
+    "build:cjs": "tsc 1>&2 --outDir lib/cjs",
+    "build:esm": "tsc 1>&2 --module esnext --outDir lib/esm",
+    "clean": "rimraf lib",
+    "lint": "eslint --resolve-plugins-relative-to node_modules/@szewtwin/ivaults-client-common-config ./src/**/*.ts 1>&2",
+    "lint-fix": "eslint --resolve-plugins-relative-to node_modules/@szewtwin/ivaults-client-common-config --fix ./src/**/*.ts 1>&2 && sort-package-json",
+    "spell-check": "cspell \"**\" --config ./node_modules/@szewtwin/ivaults-client-common-config/cspell.json"
+  },
+  "prettier": "./node_modules/@szewtwin/ivaults-client-common-config/prettier.json",
+  "eslintConfig": {
+    "extends": "./node_modules/@szewtwin/ivaults-client-common-config/.eslintrc.js"
+  },
+  "devDependencies": {
+    "@szewtwin/core-szewec": "^5.0.0",
+    "@szewtwin/eslint-plugin": "^6.0.0",
+    "@szewtwin/ivaults-client-authoring": "workspace:*",
+    "@szewtwin/ivaults-client-common-config": "workspace:*",
+    "@szewtwin/ivaults-client-management": "workspace:*",
+    "@typescript-eslint/eslint-plugin": "~6.14.0",
+    "cspell": "~5.21.0",
+    "eslint": "~8.55.0",
+    "eslint-plugin-deprecation": "~1.5.0",
+    "eslint-plugin-import": "~2.29.0",
+    "eslint-plugin-mocha": "~10.2.0",
+    "eslint-plugin-prefer-arrow": "~1.2.3",
+    "rimraf": "~3.0.2",
+    "sort-package-json": "~1.53.1",
+    "typescript": "^5.8.3"
+  },
+  "peerDependencies": {
+    "@szewtwin/core-szewec": "^5.0.0",
+    "@szewtwin/ivaults-client-management": "workspace:*"
+  }
+}

@@ -1,0 +1,251 @@
+{
+  "name": "@szewtwin/ivaults-client-authoring",
+  "entries": [
+    {
+      "version": "6.2.1",
+      "tag": "@szewtwin/ivaults-client-authoring_v6.2.1",
+      "date": "Wed, 10 Jun 2026 10:51:55 GMT",
+      "comments": {}
+    },
+    {
+      "version": "6.2.0",
+      "tag": "@szewtwin/ivaults-client-authoring_v6.2.0",
+      "date": "Thu, 23 Apr 2026 08:41:43 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Move LockOperations.getList and BriefcaseOperations.release to @szewtwin/ivaults-client-management; both are re-exported from authoring as deprecated for backward compatibility"
+          }
+        ]
+      }
+    },
+    {
+      "version": "6.1.0",
+      "tag": "@szewtwin/ivaults-client-authoring_v6.1.0",
+      "date": "Thu, 15 Jan 2026 01:26:06 GMT",
+      "comments": {}
+    },
+    {
+      "version": "6.0.2",
+      "tag": "@szewtwin/ivaults-client-authoring_v6.0.2",
+      "date": "Mon, 29 Sep 2025 09:21:51 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "Fix AbortSignal and retries for changeset downloads"
+          }
+        ]
+      }
+    },
+    {
+      "version": "6.0.1",
+      "tag": "@szewtwin/ivaults-client-authoring_v6.0.1",
+      "date": "Thu, 26 Jun 2025 10:42:19 GMT",
+      "comments": {}
+    },
+    {
+      "version": "6.0.0",
+      "tag": "@szewtwin/ivaults-client-authoring_v6.0.0",
+      "date": "Wed, 28 May 2025 07:15:31 GMT",
+      "comments": {
+        "major": [
+          {
+            "comment": "Support google storage"
+          },
+          {
+            "comment": "Export ESM modules"
+          },
+          {
+            "comment": "Remove dependencies on object storage implementations"
+          },
+          {
+            "comment": "Remove reexports from @szewtwin/ivaults-client-management"
+          },
+          {
+            "comment": "Change @szewtwin/ivaults-client-management to be a peer dependency"
+          }
+        ],
+        "minor": [
+          {
+            "comment": "Moved error parsing to OperationsBase"
+          },
+          {
+            "comment": "Update object-storage to 3.0.0"
+          },
+          {
+            "comment": "Drop support for Node.js versions older than 20.9.0."
+          }
+        ]
+      }
+    },
+    {
+      "version": "5.10.0",
+      "tag": "@szewtwin/ivaults-client-authoring_v5.10.0",
+      "date": "Wed, 26 Mar 2025 11:41:32 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Update documentation"
+          }
+        ]
+      }
+    },
+    {
+      "version": "5.9.0",
+      "tag": "@szewtwin/ivaults-client-authoring_v5.9.0",
+      "date": "Wed, 25 Sep 2024 14:09:09 GMT",
+      "comments": {}
+    },
+    {
+      "version": "5.8.2",
+      "tag": "@szewtwin/ivaults-client-authoring_v5.8.2",
+      "date": "Mon, 19 Aug 2024 06:58:46 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "Add a documentation comment to inform users to not throw errors inside progress callback functions passed to operations that download files."
+          }
+        ]
+      }
+    },
+    {
+      "version": "5.8.1",
+      "tag": "@szewtwin/ivaults-client-authoring_v5.8.1",
+      "date": "Wed, 14 Aug 2024 14:41:07 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "Update dependency to @szewtwin/object-storage-* and axios packages."
+          }
+        ]
+      }
+    },
+    {
+      "version": "5.8.0",
+      "tag": "@szewtwin/ivaults-client-authoring_v5.8.0",
+      "date": "Mon, 01 Jul 2024 14:05:44 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Add failed HTTP request retry policy."
+          }
+        ],
+        "none": [
+          {
+            "comment": "Add `originalError` property to `IVaultsError`"
+          }
+        ]
+      }
+    },
+    {
+      "version": "5.7.0",
+      "tag": "@szewtwin/ivaults-client-authoring_v5.7.0",
+      "date": "Tue, 18 Jun 2024 11:18:40 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Add `forkedFrom` response property in `CreateIVaultOperationDetails`."
+          },
+          {
+            "comment": "Add fork iVault operation."
+          },
+          {
+            "comment": "Add `containersEnabled` property."
+          },
+          {
+            "comment": "Fix consumer provided `timeOutInMs` not being respected in iVault operations."
+          },
+          {
+            "comment": "Add Named Version `$search` query parameter."
+          },
+          {
+            "comment": "Add iVault `$search` query parameter."
+          },
+          {
+            "comment": "Add HTTP status code to iVaultsError."
+          },
+          {
+            "comment": "Add Changeset Extended Data operations."
+          },
+          {
+            "comment": "Add ordering by `createdDateTime` for Named Versions."
+          },
+          {
+            "comment": "Add ordering by `acquiredDateTime` for Briefcases."
+          },
+          {
+            "comment": "Add latest checkpoint link to Briefcase entity"
+          },
+          {
+            "comment": "Add Get Briefcase Checkpoint operation"
+          }
+        ]
+      }
+    },
+    {
+      "version": "5.0.0",
+      "tag": "",
+      "date": "Thu, 4 Apr 2024 13:39:29 GMT",
+      "comments": {
+        "major": [
+          {
+            "comment": "Update `RestClient` interface. Classes implementing `RestClient` interface must now return HTTP response headers in addition to the response body."
+          },
+          {
+            "comment": "Update `createFromTemplate` iVault operation error handling. If iVault initialization times out, the error code of the thrown error will now be `IVaultFromTemplateInitializationTimedOut` instead of `IVaultFromTemplateInitializationFailed`."
+          }
+        ]
+      }
+    },
+    {
+      "version": "4.0.0",
+      "tag": "",
+      "date": "Tue, 23 May 2023 15:57:54 GMT",
+      "comments": {
+        "major": [
+          {
+            "comment": "Drop support for Node.js versions older than 18.12.0."
+          }
+        ]
+      }
+    },
+    {
+      "version": "3.0.0",
+      "tag": "",
+      "date": "Thu, 23 Feb 2023 16:27:30 GMT",
+      "comments": {
+        "major": [
+          {
+            "comment": "Update client to use [iVaults API V2](https://developer.szewec.com/apis/ivaults-v2/overview/) by default. All references to the term 'Project' were updated to use 'szewTwin' (`projectId` -> `szewTwinId`, ...)."
+          }
+        ]
+      }
+    },
+    {
+      "version": "2.0.0",
+      "tag": "",
+      "date": "Fri, 22 July 2022 14:42:36 GMT",
+      "comments": {
+        "major": [
+          {
+            "comment": "Remove internal code exports from the main `index.ts` file that should not be used directly by package users. The following components are no longer part of the public package API: \n  - Operation classes (`IVaultOperations`, `ChangesetOperations`, etc.) \n  - Utility types (raw API response interfaces, etc.) \n  - Default IVaultsClient option implementations (`AxiosRestClient`) \n  - Default iVaults API parser class"
+          },
+          {
+            "comment": "Change `_links` property type in entity interfaces from `Link` to `Link | null` as per iVaults API definition."
+          }
+        ],
+        "minor": [
+          {
+            "comment": "Surface more iVaults API operations. Please see the package documentation for an updated list of supported operations and entities: [link to docs](https://github.com/szewTwin/ivaults-clients/blob/main/docs/IVaultsClientAuthoring.md)."
+          }
+        ]
+      }
+    },
+    {
+      "version": "1.0.0",
+      "tag": "",
+      "date": "Tue, 18 Jan 2022 14:43:04 GMT",
+      "comments": {}
+    }
+  ]
+}

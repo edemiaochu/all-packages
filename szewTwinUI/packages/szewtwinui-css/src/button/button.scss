@@ -1,0 +1,86 @@
+// Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+// See LICENSE.md in the project root for license terms and full copyright notice.
+@use 'base';
+@use 'borderless';
+@use 'variant';
+@use 'idea';
+@use 'button-group';
+@use 'split-button';
+
+.iui-button {
+  @include base.iui-button;
+
+  // Reusing hover styling when an associated popover/dropdown is open.
+  &:is([data-iui-has-popover='open'], :has(+ :popover-open)) {
+    --_iui-field-state: var(--_iui-field-state--hover);
+  }
+
+  &[data-iui-size='small'] {
+    @include base.iui-button-size(small);
+  }
+
+  &[data-iui-size='large'] {
+    @include base.iui-button-size(large);
+  }
+
+  &[data-iui-variant='borderless'] {
+    @include borderless.iui-button-borderless;
+    @include base.iui-button-size(medium, borderless);
+
+    &[data-iui-size='small'] {
+      @include base.iui-button-size(small, borderless);
+    }
+
+    &[data-iui-size='large'] {
+      @include base.iui-button-size(large, borderless);
+    }
+  }
+
+  &[data-iui-active='true'] {
+    @include base.iui-button-active;
+
+    &[data-iui-variant='borderless'] {
+      @include borderless.iui-button-borderless-active;
+    }
+  }
+
+  @include variant.iui-button-variant;
+}
+
+.iui-button-dropdown {
+  @include base.iui-button-dropdown;
+
+  &[data-iui-size='small'] {
+    @include base.iui-button-dropdown(small);
+  }
+
+  &[data-iui-size='large'] {
+    @include base.iui-button-dropdown(large);
+  }
+}
+
+.iui-button-idea {
+  @include idea.iui-button-idea;
+}
+
+.iui-button-icon {
+  @include base.iui-button-icon;
+}
+
+.iui-button-split {
+  @include split-button.iui-button-split;
+}
+
+.iui-button-group {
+  &:where(:not([data-iui-orientation='vertical'])) {
+    @include button-group.iui-button-group(horizontal);
+  }
+
+  &:where([data-iui-orientation='vertical']) {
+    @include button-group.iui-button-group(vertical);
+  }
+}
+
+.iui-button-group-overflow-x {
+  @include button-group.iui-button-group-overflow-x;
+}

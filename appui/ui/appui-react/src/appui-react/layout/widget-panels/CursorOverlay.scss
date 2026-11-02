@@ -1,0 +1,25 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+$nz-cursors: (nwse-resize, nesw-resize, ew-resize, ns-resize, grabbing);
+
+body {
+  @each $cursor in $nz-cursors {
+    &.nz-#{$cursor} {
+      * {
+        cursor: $cursor !important;
+        user-select: none;
+        -webkit-user-select: none;
+      }
+    }
+  }
+}
+
+.nz-widgetPanels-cursorOverlay_cursor {
+  @each $cursor in $nz-cursors {
+    &.nz-#{$cursor} {
+      cursor: $cursor;
+    }
+  }
+}

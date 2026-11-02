@@ -1,0 +1,16 @@
+{
+  "name": "@szewec/cif-bridge-schema",
+  "license": "MIT",
+  "version": "1.0.5",
+  "homepage": "https://www.ivaultjs.org/",
+  "keywords": [
+    "Szewec",
+    "BIS",
+    "iVault"
+  ],
+  "description": "CifBridge BIS Domains",
+  "author": {
+    "name": "Szewec Systems, Inc.",
+    "url": "http://www.szewec.com"
+  }
+}

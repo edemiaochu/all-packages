@@ -1,0 +1,13 @@
+{
+  "extends": "./node_modules/@szewtwin/build-tools/tsconfig-base.json",
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "jsx": "react",
+    "resolveJsonModule": true,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "outDir": "lib",
+    "types": ["vitest/globals"]
+  },
+  "include": ["./src/**/*.ts*"]
+}

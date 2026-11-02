@@ -1,0 +1,120 @@
+// Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+// See LICENSE.md in the project root for license terms and full copyright notice.
+@use '../mixins';
+
+@mixin iui-input {
+  inline-size: 100%;
+  line-height: var(--_iui-input-line-height, var(--iui-size-l));
+  appearance: none;
+  padding-block: var(--_iui-input-padding-block);
+  padding-inline: var(--iui-size-s);
+  @include iui-input-size;
+
+  &::placeholder {
+    color: var(--iui-color-text-placeholder);
+    font-weight: var(--iui-font-weight-light);
+    opacity: 1;
+    user-select: none;
+  }
+
+  &:autofill {
+    background-color: var(--iui-color-background-accent-muted);
+    border-color: var(--iui-color-border-accent);
+    color: var(--iui-color-text-accent);
+  }
+
+  &:where(textarea) {
+    @include textarea;
+  }
+}
+
+/// Mixin for applying padding and font size to various input sizes.
+/// @arg size - must be one of: small, medium, large
+@mixin iui-input-size($size: medium) {
+  @if $size == small {
+    --_iui-input-padding-block: 0;
+    --_iui-input-line-height: var(--iui-size-m);
+  }
+
+  @if $size == medium {
+    --_iui-input-padding-block: var(--iui-size-2xs);
+  }
+
+  @if $size == large {
+    --_iui-input-padding-block: var(--iui-size-xs);
+    font-size: var(--iui-font-size-2);
+  }
+}
+
+@mixin textarea {
+  line-height: inherit;
+  resize: vertical;
+
+  &[disabled],
+  &[readonly] {
+    resize: none;
+  }
+}
+
+// ----------------------------------------------------------------------------
+
+.iui-input {
+  @include iui-input;
+
+  &[data-iui-size='small'] {
+    @include iui-input-size(small);
+  }
+
+  &[data-iui-size='large'] {
+    @include iui-input-size(large);
+  }
+}
+
+// Class to have inputs combined with icon (eg. select with arrow icon)
+.iui-input-with-icon {
+  display: grid;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+
+  > :first-child {
+    grid-area: 1 / -1;
+
+    // Selects the first-child but only when there is an end-icon button
+    &:has(+ .iui-end-icon) {
+      padding-inline-end: var(--iui-component-height);
+    }
+
+    @supports not selector(:has(+ *)) {
+      &:not(:only-child) {
+        padding-inline-end: var(--iui-component-height); // Width of the end-icon button
+      }
+    }
+  }
+
+  > .iui-select-tag-container {
+    max-inline-size: 70%;
+    inset-inline-end: unset;
+  }
+}
+
+.iui-end-icon {
+  grid-area: 1 / -1;
+
+  justify-self: end;
+  margin-inline-end: calc(var(--iui-size-xs) + 1px);
+  position: relative; // Needed to show it on top of the input
+  pointer-events: none;
+
+  --_iui-svg-fill: var(--iui-color-icon);
+  transition: transform var(--iui-duration-1) ease-out;
+
+  &.iui-disabled {
+    cursor: not-allowed;
+    --_iui-svg-fill: var(--iui-color-icon-disabled);
+  }
+
+  &.iui-open {
+    transform: rotate(180deg); // transform for arrow icon (e.g. svg-caret-down), used in combobox
+  }
+}

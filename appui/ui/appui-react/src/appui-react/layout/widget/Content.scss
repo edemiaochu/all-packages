@@ -1,0 +1,13 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@use "../scrollbar" as *;
+
+.nz-widget-content {
+  overflow: auto;
+  height: 100%;
+  width: 100%;
+
+  @include nz-scrollbar;
+}

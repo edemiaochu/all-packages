@@ -1,0 +1,24 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+
+import { ClientStorage } from "@szewtwin/object-storage-core";
+
+/**
+ * Simple file downloader that depends on {@link ClientStorage}. Any specific
+ * implementation of {@link ClientStorage} can be passed to the constructor
+ * making this class cloud agnostic.
+ */
+export class FileDownloader {
+  constructor(private _storage: ClientStorage) {}
+
+  public async downloadFile(): Promise<void> {
+    await this._storage.download({
+      transferType: "local",
+      url: "FILE_URL_PLACEHOLDER",
+      localPath: "downloadedFile.txt",
+      storageType: "azure",
+    });
+  }
+}

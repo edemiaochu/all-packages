@@ -1,0 +1,20 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+import { ClientStorage, ServerStorage } from "@szewtwin/object-storage-core";
+
+interface StorageUnitTestsConfig {
+  serverStorage: ServerStorage;
+  clientStorage: ClientStorage;
+  storageType: string;
+}
+
+export let config: StorageUnitTestsConfig;
+
+export function setOptions(options: StorageUnitTestsConfig): void {
+  config = {
+    ...config,
+    ...options,
+  };
+}

@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  pull_request:
+    branches: ["master", "stable"]
+    types: [opened, synchronize, reopened, ready_for_review]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Lint Build and run Tests
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v5
+
+      - name: Use Node.js 24
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run oxfmt
+        run: pnpm format
+
+      - name: Run cspell
+        run: pnpm cspell
+
+      - name: Build, Lint, Test
+        env:
+          NODE_ENV: "development"
+        run: pnpm lage build lint cover
+
+  docs:
+    runs-on: ubuntu-latest
+    name: Validate docs
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v5
+
+      - name: Use Node.js 24
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Check code snippets
+        run: pnpm check-extractions
+
+      - name: Validate markdowns
+        run: pnpm validate-markdowns

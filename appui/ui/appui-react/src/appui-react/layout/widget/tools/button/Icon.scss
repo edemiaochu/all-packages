@@ -1,0 +1,54 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@use "variables" as *;
+
+.nz-toolbar-button-icon {
+  font-size: $mls-icon-size;
+
+  > .nz-icon {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--iui-color-icon);
+
+    svg {
+      fill: var(--iui-color-icon);
+    }
+
+    > * {
+      width: $mls-icon-size;
+      height: $mls-icon-size;
+      color: var(--iui-color-icon);
+      filter: $icon-shadow;
+      display: inline-block;
+    }
+    > .icon.core-svg-icon {
+      & svg {
+        width: $mls-icon-size;
+        height: $mls-icon-size;
+      }
+    }
+  }
+
+  &.nz-toolbar-button-icon-small {
+    font-size: $mls-small-button-icon-size;
+    > .nz-icon {
+      > * {
+        width: $mls-small-button-icon-size;
+        height: $mls-small-button-icon-size;
+      }
+    }
+  }
+
+  &:hover {
+    > .nz-icon {
+      > * {
+        color: var(--iui-color-icon-hover);
+      }
+    }
+  }
+}

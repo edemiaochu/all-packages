@@ -1,0 +1,13 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@layer szewtwinui;
+
+@layer appui {
+  @layer layout, component, preview;
+
+  @layer preview {
+    @layer horizontal-panel-alignment, enable-maximized-widget;
+  }
+}

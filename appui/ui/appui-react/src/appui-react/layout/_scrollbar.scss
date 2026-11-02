@@ -1,0 +1,22 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@use "~@szewtwin/core-react/lib/core-react/scrollbar";
+
+@forward "~@szewtwin/core-react/lib/core-react/scrollbar";
+
+$nz-scrollbar-width: 12px;
+$nz-scrollbar-padding: 2px;
+
+@mixin nz-scrollbar(
+  $color: hsl(var(--iui-color-foreground-hsl) / var(--iui-opacity-4)),
+  $width: $nz-scrollbar-width,
+  $padding: $nz-scrollbar-padding
+) {
+  @include scrollbar.uicore-scrollbar($color, $width, $padding);
+}
+
+@mixin nz-hidden-scrollbar {
+  @include scrollbar.uicore-hidden-scrollbar;
+}

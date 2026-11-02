@@ -1,0 +1,41 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@use "~@szewtwin/core-react/lib/core-react/base/base" as *;
+@use "~@szewtwin/core-react/lib/core-react/inputs/variables" as *;
+
+.uifw-accudraw-input-label {
+  min-width: 16px;
+  margin-right: 4px;
+
+  display: flex;
+  align-items: center;
+
+  font-size: var(--iui-font-size-2);
+  font-weight: var(--iui-font-weight-bold);
+  line-height: var(--iui-size-l);
+  color: var(--iui-color-text);
+
+  &.uifw-label-centered {
+    justify-content: center;
+  }
+
+  .icon {
+    width: 16px;
+    height: 16px;
+
+    margin-top: 2px;
+    @include uicore-centered;
+  }
+}
+
+.uifw-accudraw-input-field {
+  padding: $uicore-iui-input-padding;
+  flex: 1;
+}
+
+.uifw-accudraw-lock {
+  width: 22px;
+  @include uicore-centered;
+}

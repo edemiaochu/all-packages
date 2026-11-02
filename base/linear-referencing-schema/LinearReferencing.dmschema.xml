@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ==================================================================================
+|  * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+|  * See LICENSE.md in the project root for license terms and full copyright notice.
+======================================================================================= -->
+<DMSchema schemaName="LinearReferencing" alias="lr" version="02.00.03" description="Base schema for Linear Referencing." xmlns="http://www.szewec.com/schemas/Szewec.DMXML.3.2">
+    <DMSchemaReference name="CoreCustomAttributes" version="01.00.03" alias="CoreCA"/>
+    <DMSchemaReference name="BisCore" version="01.00.14" alias="bis"/>
+    <DMSchemaReference name="Formats" version="01.00.00" alias="f"/>
+    <DMSchemaReference name="Units" version="01.00.07" alias="u"/>
+
+    <DMCustomAttributes>
+        <ProductionStatus xmlns="CoreCustomAttributes.01.00.03">
+            <SupportedUse>Production</SupportedUse>
+        </ProductionStatus>
+    </DMCustomAttributes>
+
+    <KindOfQuantity typeName="LENGTH" displayLabel="Linear Referencing Length" persistenceUnit="u:M" presentationUnits="f:DefaultRealU(2)[u:M];f:DefaultRealU(2)[u:FT]" relativeError="0.0001"/>
+
+    <DMEntityClass typeName="ILinearElement" displayLabel="Linear-Element" description="Mix-in to be supported by Element-subclasses meant to play the role of Linear-Elements." modifier="Abstract">
+        <DMCustomAttributes>
+            <IsMixin xmlns='CoreCustomAttributes.01.00.00'>
+                <AppliesToEntityClass>bis:Element</AppliesToEntityClass>
+            </IsMixin>
+        </DMCustomAttributes>
+        <DMProperty propertyName="StartValue" typeName="double" kindOfQuantity="LENGTH" displayLabel="Start Value" description="Distance along value at the start of the Linear-Element, measured from an absolute zero."/>
+        <DMProperty propertyName="LengthValue" typeName="double" kindOfQuantity="LENGTH" displayLabel="Length" description="Length measure value for the Linear-Element."/>
+        <DMNavigationProperty propertyName="LinearElementSource" relationshipName="ILinearElementProvidedBySource" direction="Forward" displayLabel="Source" description="Source element providing this Linear-Element."/>
+    </DMEntityClass>
+    <DMEntityClass typeName="ILinearElementSource" displayLabel="Linear-Element Source" description="Mix-in to be supported by Element-subclasses meant to provide Linear-Elements." modifier="Abstract">
+        <DMCustomAttributes>
+            <IsMixin xmlns='CoreCustomAttributes.01.00.00'>
+                <AppliesToEntityClass>bis:Element</AppliesToEntityClass>
+            </IsMixin>
+        </DMCustomAttributes>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ILinearElementProvidedBySource" strength="referencing" modifier="None" description="Relationship associating Linear-Elements with the elements they came from.">
+        <Source multiplicity="(0..*)" polymorphic="true" roleLabel="provided by">
+            <Class class="ILinearElement"/>
+        </Source>
+        <Target multiplicity="(0..1)" polymorphic="true" roleLabel="provides">
+            <Class class="ILinearElementSource"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="ILinearlyLocated" modifier="Abstract" displayLabel="Linearly-Located Element" description="Base mix-in for Elements to be linearly-referenced along Linear-Elements.">
+        <DMCustomAttributes>
+            <IsMixin xmlns='CoreCustomAttributes.01.00.00'>
+                <AppliesToEntityClass>bis:Element</AppliesToEntityClass>
+            </IsMixin>
+        </DMCustomAttributes>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ILinearlyLocatedAlongILinearElement" strength="referencing" modifier="None" description="Relationship indicating the Linear-Element along which concrete instances mixing-in ILinearlyLocated are located.">
+        <BaseClass>bis:ElementRefersToElements</BaseClass>
+        <Source multiplicity="(0..*)" polymorphic="true" roleLabel="along">
+            <Class class="ILinearlyLocated"/>
+        </Source>
+        <Target multiplicity="(0..1)" polymorphic="true" roleLabel="is linear axis for">
+            <Class class="ILinearElement"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="ILinearlyLocatedAttribution" displayLabel="Linearly-Located Attribution" description="Mix-in to be supported by Element-subclasses representing properties whose value is located along a Linear-Element and only applies to a portion of a Linear-Element-Source." modifier="Abstract">
+        <BaseClass>ILinearlyLocated</BaseClass>
+        <DMCustomAttributes>
+            <IsMixin xmlns='CoreCustomAttributes.01.00.00'>
+                <AppliesToEntityClass>bis:Element</AppliesToEntityClass>
+            </IsMixin>
+        </DMCustomAttributes>
+        <DMNavigationProperty propertyName="AttributedElement" relationshipName="ILinearlyLocatedAttributesElement" direction="Forward" displayLabel="Attributed Element" description="Element being attributed."/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ILinearlyLocatedAttributesElement" strength="referencing" modifier="None" description="Relationship indicating the bis:Element being attributed by a concrete instance mixing-in ILinearlyLocatedAttribution.">
+        <Source multiplicity="(0..*)" polymorphic="true" roleLabel="attributes">
+            <Class class="ILinearlyLocatedAttribution"/>
+        </Source>
+        <Target multiplicity="(0..1)" polymorphic="true" roleLabel="is attributed by">
+            <Class class="bis:Element"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="LinearlyLocatedAttribution" displayLabel="Linearly-Located Spatial Attribution" description="Base class for ILinearlyLocatedAttribution-implementations that are Spatial Location Elements." modifier="Abstract">
+        <BaseClass>bis:SpatialLocationElement</BaseClass>
+        <BaseClass>ILinearlyLocatedAttribution</BaseClass>
+    </DMEntityClass>
+    <DMEntityClass typeName="ILinearLocationElement" displayLabel="Linear-Location Element" description="Mix-in to be supported by Element-subclasses located along a Linear-Element provided by a Linear-Element-Source." modifier="Abstract">
+        <BaseClass>ILinearlyLocated</BaseClass>
+        <DMCustomAttributes>
+            <IsMixin xmlns='CoreCustomAttributes.01.00.00'>
+                <AppliesToEntityClass>bis:Element</AppliesToEntityClass>
+            </IsMixin>
+        </DMCustomAttributes>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ILinearLocationLocatesElement" strength="referencing" modifier="None" description="Relationship indicating the bis:Element being linearly-located by a concrete instance mixing-in ILinearLocationElement.">
+        <BaseClass>bis:ElementRefersToElements</BaseClass>
+        <Source multiplicity="(0..*)" polymorphic="true" roleLabel="linearly-locates">
+            <Class class="ILinearLocationElement"/>
+        </Source>
+        <Target multiplicity="(0..1)" polymorphic="true" roleLabel="linearly-located by">
+            <Class class="bis:Element"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="LocatedElementOwnsLocatingElements" strength="embedding" modifier="None" description="Relates a bis:Element that is not inherently linearly-located to child lr:ILinearLocationElements carrying Linear Referencing Locations for it.">
+        <BaseClass>bis:ElementOwnsChildElements</BaseClass>
+        <Source multiplicity="(0..1)" roleLabel="owns" polymorphic="true">
+            <Class class="bis:Element"/>
+        </Source>
+        <Target multiplicity="(0..*)" roleLabel="is owned by" polymorphic="true">
+            <Class class="ILinearLocationElement"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="LinearLocationElement" displayLabel="Linear Location Element" description="Base class for ILinearLocationElement-implementations that are subclasses of bis:SpatialLocationElement." modifier="Abstract">
+        <BaseClass>bis:SpatialLocationElement</BaseClass>
+        <BaseClass>ILinearLocationElement</BaseClass>
+    </DMEntityClass>
+    <DMEntityClass typeName="LinearLocation" displayLabel="Linear Location" description="ILinearLocationElement-implementation attaching Linear Referencing Location to a bis:Element not inherently Linearly-Referenced." modifier="Sealed">
+        <BaseClass>LinearLocationElement</BaseClass>
+    </DMEntityClass>
+    <DMEntityClass typeName="LinearPhysicalElement" displayLabel="Linearly-Located Physical Element" description="Base class for ILinearLocationElement-implementations that are subclasses of bis:PhysicalElement." modifier="Abstract">
+        <BaseClass>bis:PhysicalElement</BaseClass>
+        <BaseClass>ILinearLocationElement</BaseClass>
+    </DMEntityClass>
+    <DMEntityClass typeName="LinearLocationRecordElement" displayLabel="Linear Location Record Element" description="Base class for ILinearLocationElement-implementations that are subclasses of bis:InformationRecordElement." modifier="Abstract">
+        <BaseClass>bis:InformationRecordElement</BaseClass>
+        <BaseClass>ILinearLocationElement</BaseClass>
+    </DMEntityClass>
+    <DMEntityClass typeName="LinearLocationRecord" displayLabel="Linear Location Record" description="ILinearLocationElement-implementation attaching Linear Referencing Location to a bis:Element not inherently Linearly-Referenced." modifier="Sealed">
+        <BaseClass>LinearLocationRecordElement</BaseClass>
+    </DMEntityClass>
+    <DMEntityClass typeName="IReferent" display="Referent-Element" description="Mix-in to be supported by Element-subclasses that can play the role of a Referent (known location along a Linear-Element)." modifier="Abstract">
+        <BaseClass>ILinearlyLocated</BaseClass>
+        <DMCustomAttributes>
+            <IsMixin xmlns='CoreCustomAttributes.01.00.00'>
+                <AppliesToEntityClass>bis:Element</AppliesToEntityClass>
+            </IsMixin>
+        </DMCustomAttributes>
+        <DMNavigationProperty propertyName="ReferencedElement" displayLabel="Referenced Element" relationshipName="IReferentReferencesElement" direction="Forward"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="IReferentReferencesElement" strength="referencing" modifier="None" description="Relationship indicating the bis:Element being used as Referent for Linear Referencing purposes.">
+        <Source multiplicity="(0..*)" polymorphic="true" roleLabel="references">
+            <Class class="IReferent"/>
+        </Source>
+        <Target multiplicity="(0..1)" polymorphic="true" roleLabel="is referenced by">
+            <Class class="bis:Element"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMEntityClass typeName="ReferentElement" displayLabel="Referent Element" description="Base class for IReferent-implementations that are Spatial Location Elements." modifier="Abstract">
+        <BaseClass>bis:SpatialLocationElement</BaseClass>
+        <BaseClass>IReferent</BaseClass>
+    </DMEntityClass>
+    <DMEntityClass typeName="Referent" displayLabel="Referent" description="IReferent-implementation turning any bis:Element not inherently Linearly-Referenced into a Referent for Linear-Referencing purposes." modifier="Sealed">
+        <BaseClass>ReferentElement</BaseClass>
+    </DMEntityClass>
+    <DMEntityClass typeName="LinearlyReferencedLocation" displayLabel="Linearly-Referenced Location" modifier="Abstract" description="Base class for multi-aspects carrying linearly-referenced locations.">
+        <BaseClass>bis:ElementMultiAspect</BaseClass>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="ILinearlyLocatedOwnsAtLocations" strength="embedding" modifier="None" description="Relationship documenting multi-aspect ownership by concrete instances of ILinearlyLocated.">
+        <BaseClass>bis:ElementOwnsMultiAspects</BaseClass>
+        <Source multiplicity="(1..1)" polymorphic="true" roleLabel="owns">
+            <Class class="ILinearlyLocated"/>
+        </Source>
+        <Target multiplicity="(0..*)" polymorphic="false" roleLabel="is owned by">
+            <Class class="LinearlyReferencedAtLocation"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="ILinearlyLocatedOwnsFromToLocations" strength="embedding" modifier="None" description="Relationship documenting multi-aspect ownership by concrete instances of ILinearlyLocated.">
+        <BaseClass>bis:ElementOwnsMultiAspects</BaseClass>
+        <Source multiplicity="(1..1)" polymorphic="true" roleLabel="owns">
+            <Class class="ILinearlyLocated"/>
+        </Source>
+        <Target multiplicity="(0..*)" polymorphic="false" roleLabel="is owned by">
+            <Class class="LinearlyReferencedFromToLocation"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMStructClass typeName="DistanceExpression" description="Core structure carrying linearly-referenced information.">
+        <DMProperty propertyName="DistanceAlongFromStart" typeName="double" displayLabel="Distance-along" kindOfQuantity="LENGTH"/>
+        <DMProperty propertyName="LateralOffsetFromILinearElement" typeName="double" displayLabel="Lateral offset" kindOfQuantity="LENGTH"/>
+        <DMProperty propertyName="VerticalOffsetFromILinearElement" typeName="double" displayLabel="Vertical offset" kindOfQuantity="LENGTH"/>
+        <DMProperty propertyName="DistanceAlongFromReferent" typeName="double" displayLabel="Distance-along from Referent" kindOfQuantity="LENGTH"/>
+    </DMStructClass>
+    <DMEntityClass typeName="LinearlyReferencedAtLocation" displayLabel="Linearly-Referenced At-Location" modifier="Sealed" description="Concrete multi-aspect class carrying 'at' linearly-referenced positions along a Linear-Element.">
+        <BaseClass>LinearlyReferencedLocation</BaseClass>
+        <DMStructProperty propertyName="AtPosition" typeName="DistanceExpression" displayLabel="At-Position"/>
+        <DMNavigationProperty propertyName="FromReferent" displayLabel="Referent" relationshipName="LinearlyReferencedAtPositionRefersToReferent" direction="Forward"/>
+    </DMEntityClass>
+    <DMEntityClass typeName="LinearlyReferencedFromToLocation" displayLabel="Linearly-Referenced From/To-Location" modifier="Sealed" description="Concrete multi-aspect class carrying 'from/to' linearly-referenced positions along a Linear-Element.">
+        <BaseClass>LinearlyReferencedLocation</BaseClass>
+        <DMStructProperty propertyName="FromPosition" typeName="DistanceExpression" displayLabel="From-Position"/>
+        <DMNavigationProperty propertyName="FromPositionFromReferent" displayLabel="From-Referent" relationshipName="LinearlyReferencedFromPositionRefersToReferent" direction="Forward"/>
+        <DMStructProperty propertyName="ToPosition" typeName="DistanceExpression" displayLabel="To-Position"/>
+        <DMNavigationProperty propertyName="ToPositionFromReferent" displayLabel="To-Referent" relationshipName="LinearlyReferencedToPositionRefersToReferent" direction="Forward"/>
+    </DMEntityClass>
+    <DMRelationshipClass typeName="LinearlyReferencedAtPositionRefersToReferent" strength="referencing" modifier="None" description="Relationship indicating the referent used by a particular linearly-referenced At position.">
+        <Source multiplicity="(0..*)" polymorphic="true" roleLabel="refers to">
+            <Class class="LinearlyReferencedAtLocation"/>
+        </Source>
+        <Target multiplicity="(0..1)" polymorphic="true" roleLabel="is referenced by">
+            <Class class="IReferent"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="LinearlyReferencedFromPositionRefersToReferent" strength="referencing" modifier="None" description="Relationship indicating the referent used by a particular linearly-referenced From position.">
+        <Source multiplicity="(0..*)" polymorphic="true" roleLabel="refers to">
+            <Class class="LinearlyReferencedFromToLocation"/>
+        </Source>
+        <Target multiplicity="(0..1)" polymorphic="true" roleLabel="is referenced by">
+            <Class class="IReferent"/>
+        </Target>
+    </DMRelationshipClass>
+    <DMRelationshipClass typeName="LinearlyReferencedToPositionRefersToReferent" strength="referencing" modifier="None" description="Relationship indicating the referent used by a particular linearly-referenced To position.">
+        <Source multiplicity="(0..*)" polymorphic="true" roleLabel="refers to">
+            <Class class="LinearlyReferencedFromToLocation"/>
+        </Source>
+        <Target multiplicity="(0..1)" polymorphic="true" roleLabel="is referenced by">
+            <Class class="IReferent"/>
+        </Target>
+    </DMRelationshipClass>
+</DMSchema>

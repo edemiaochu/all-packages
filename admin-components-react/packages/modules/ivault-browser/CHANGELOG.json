@@ -1,0 +1,1021 @@
+{
+  "name": "@szewtwin/ivault-browser-react",
+  "entries": [
+    {
+      "version": "4.3.3",
+      "tag": "@szewtwin/ivault-browser-react_v4.3.3",
+      "date": "Thu, 18 Jun 2026 17:36:51 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Prevent concurrent szewTwin API fetches"
+          }
+        ]
+      }
+    },
+    {
+      "version": "4.3.2",
+      "tag": "@szewtwin/ivault-browser-react_v4.3.2",
+      "date": "Wed, 17 Jun 2026 17:52:45 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Prevent Stratakit grid-level props from being passed to cards"
+          }
+        ]
+      }
+    },
+    {
+      "version": "4.3.1",
+      "tag": "@szewtwin/ivault-browser-react_v4.3.1",
+      "date": "Tue, 16 Jun 2026 18:38:57 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "Reorganize internal paths of Stratakit MUI components"
+          }
+        ],
+        "patch": [
+          {
+            "comment": "Update Stratakit card aspect ratio and title style"
+          }
+        ]
+      }
+    },
+    {
+      "version": "4.3.0",
+      "tag": "@szewtwin/ivault-browser-react_v4.3.0",
+      "date": "Fri, 12 Jun 2026 14:00:59 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Add Stratakit MUI components"
+          }
+        ]
+      }
+    },
+    {
+      "version": "4.2.0",
+      "tag": "@szewtwin/ivault-browser-react_v4.2.0",
+      "date": "Wed, 29 Apr 2026 20:47:51 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Display last modified date in iVault table instead of created date"
+          }
+        ]
+      }
+    },
+    {
+      "version": "4.1.0",
+      "tag": "@szewtwin/ivault-browser-react_v4.1.0",
+      "date": "Wed, 04 Feb 2026 22:37:11 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Add option to provide callback function to iVault action disable prop"
+          }
+        ]
+      }
+    },
+    {
+      "version": "4.0.0",
+      "tag": "@szewtwin/ivault-browser-react_v4.0.0",
+      "date": "Tue, 20 Jan 2026 13:43:21 GMT",
+      "comments": {
+        "major": [
+          {
+            "comment": "Fix sort in iVault/szewTwin grid tables"
+          }
+        ]
+      }
+    },
+    {
+      "version": "3.8.0",
+      "tag": "@szewtwin/ivault-browser-react_v3.8.0",
+      "date": "Thu, 04 Dec 2025 12:32:04 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Added callback to fetch the data while providing the data from consumer's end"
+          }
+        ]
+      }
+    },
+    {
+      "version": "3.7.0",
+      "tag": "@szewtwin/ivault-browser-react_v3.7.0",
+      "date": "Fri, 21 Nov 2025 15:41:38 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "use `hideFavoriteIcon` option to disable fetching favorite iVaults"
+          }
+        ]
+      }
+    },
+    {
+      "version": "3.6.0",
+      "tag": "@szewtwin/ivault-browser-react_v3.6.0",
+      "date": "Wed, 12 Nov 2025 15:33:21 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Added hide columns option for szewTwinGrid and iVaultGrid while in cells view."
+          }
+        ]
+      }
+    },
+    {
+      "version": "3.5.1",
+      "tag": "@szewtwin/ivault-browser-react_v3.5.1",
+      "date": "Thu, 06 Nov 2025 14:59:15 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Fix: favorite icon shift on hover"
+          }
+        ]
+      }
+    },
+    {
+      "version": "3.5.0",
+      "tag": "@szewtwin/ivault-browser-react_v3.5.0",
+      "date": "Tue, 04 Nov 2025 17:20:33 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Feat: Add iVault recents and favorites functionality"
+          }
+        ]
+      }
+    },
+    {
+      "version": "3.4.3",
+      "tag": "@szewtwin/ivault-browser-react_v3.4.3",
+      "date": "Fri, 10 Oct 2025 18:56:16 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Fixed bug where fetching never happens when access token has not yet loaded"
+          }
+        ]
+      }
+    },
+    {
+      "version": "3.4.2",
+      "tag": "@szewtwin/ivault-browser-react_v3.4.2",
+      "date": "Thu, 09 Oct 2025 13:32:32 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Fix: Cursor pointer on clickable rows in table"
+          }
+        ]
+      }
+    },
+    {
+      "version": "3.4.1",
+      "tag": "@szewtwin/ivault-browser-react_v3.4.1",
+      "date": "Wed, 08 Oct 2025 16:14:50 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Add `fullWidth` prop to tiles"
+          }
+        ]
+      }
+    },
+    {
+      "version": "3.4.0",
+      "tag": "@szewtwin/ivault-browser-react_v3.4.0",
+      "date": "Wed, 08 Oct 2025 14:40:05 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Updated szewtwinui to 3.19.4 and prevent clicks on row menu items from propagating up to the row"
+          }
+        ]
+      }
+    },
+    {
+      "version": "3.3.1",
+      "tag": "@szewtwin/ivault-browser-react_v3.3.1",
+      "date": "Fri, 19 Sep 2025 15:25:03 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Fix iVaultGrid Filtering via postProcessCallback to Show Complete Results Across All Data"
+          }
+        ]
+      }
+    },
+    {
+      "version": "3.3.0",
+      "tag": "@szewtwin/ivault-browser-react_v3.3.0",
+      "date": "Thu, 11 Sep 2025 13:34:59 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Add option to pass $orderby API query param"
+          }
+        ]
+      }
+    },
+    {
+      "version": "3.2.2",
+      "tag": "@szewtwin/ivault-browser-react_v3.2.2",
+      "date": "Tue, 09 Sep 2025 16:36:14 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Update szewTwinFull type definition"
+          }
+        ]
+      }
+    },
+    {
+      "version": "3.2.1",
+      "tag": "@szewtwin/ivault-browser-react_v3.2.1",
+      "date": "Wed, 23 Jul 2025 11:03:45 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Show Tile Metadata if provided"
+          }
+        ]
+      }
+    },
+    {
+      "version": "3.2.0",
+      "tag": "@szewtwin/ivault-browser-react_v3.2.0",
+      "date": "Tue, 15 Jul 2025 19:19:08 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Add cellOverrides option to iVaultGrid and szewTwinGrid"
+          }
+        ]
+      }
+    },
+    {
+      "version": "3.1.2",
+      "tag": "@szewtwin/ivault-browser-react_v3.1.2",
+      "date": "Thu, 10 Jul 2025 23:35:54 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Fix iVault opening when opening action dropdown"
+          }
+        ]
+      }
+    },
+    {
+      "version": "3.1.1",
+      "tag": "@szewtwin/ivault-browser-react_v3.1.1",
+      "date": "Thu, 10 Jul 2025 16:59:48 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Refactor IVaultTile component to allow hovering over name label"
+          }
+        ]
+      }
+    },
+    {
+      "version": "3.1.0",
+      "tag": "@szewtwin/ivault-browser-react_v3.1.0",
+      "date": "Fri, 27 Jun 2025 06:46:50 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Add getBadge property on iVaultTile in order to set badge based on iVault props"
+          }
+        ]
+      }
+    },
+    {
+      "version": "3.0.7",
+      "tag": "@szewtwin/ivault-browser-react_v3.0.7",
+      "date": "Fri, 06 Jun 2025 18:58:31 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Integrated the pageSize property to the iVaultGrid to allow developer to select the size of the models for each request"
+          }
+        ]
+      }
+    },
+    {
+      "version": "3.0.6",
+      "tag": "@szewtwin/ivault-browser-react_v3.0.6",
+      "date": "Mon, 19 May 2025 12:15:34 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Added data-testid's to tiles"
+          }
+        ]
+      }
+    },
+    {
+      "version": "3.0.5",
+      "tag": "@szewtwin/ivault-browser-react_v3.0.5",
+      "date": "Thu, 24 Apr 2025 20:04:45 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "fix ivault search"
+          }
+        ]
+      }
+    },
+    {
+      "version": "3.0.4",
+      "tag": "@szewtwin/ivault-browser-react_v3.0.4",
+      "date": "Tue, 22 Apr 2025 16:41:13 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "fix favorite opening szewtwin on click"
+          }
+        ]
+      }
+    },
+    {
+      "version": "3.0.3",
+      "tag": "@szewtwin/ivault-browser-react_v3.0.3",
+      "date": "Thu, 17 Apr 2025 16:41:30 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "fix error when searching szewtwin"
+          }
+        ]
+      }
+    },
+    {
+      "version": "3.0.2",
+      "tag": "@szewtwin/ivault-browser-react_v3.0.2",
+      "date": "Thu, 17 Apr 2025 14:42:55 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Fix iVaultBrowser menu items opening the iVault in table view"
+          }
+        ]
+      }
+    },
+    {
+      "version": "3.0.1",
+      "tag": "@szewtwin/ivault-browser-react_v3.0.1",
+      "date": "Mon, 14 Apr 2025 18:32:24 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Fixed ivault descriptions not visible in iVaultGrid"
+          }
+        ]
+      }
+    },
+    {
+      "version": "3.0.0",
+      "tag": "@szewtwin/ivault-browser-react_v3.0.0",
+      "date": "Wed, 09 Apr 2025 20:07:16 GMT",
+      "comments": {
+        "major": [
+          {
+            "comment": "Updated ivault-browser-react to szewtwinui-react 3.17.3\n Removed support for react 17.x"
+          }
+        ]
+      }
+    },
+    {
+      "version": "2.3.2",
+      "tag": "@szewtwin/ivault-browser-react_v2.3.2",
+      "date": "Wed, 05 Feb 2025 12:32:34 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Fix iVault browser skipping pages"
+          }
+        ]
+      }
+    },
+    {
+      "version": "2.3.1",
+      "tag": "@szewtwin/ivault-browser-react_v2.3.1",
+      "date": "Thu, 16 Jan 2025 14:25:11 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "added accessibility to grid tiles"
+          }
+        ]
+      }
+    },
+    {
+      "version": "2.3.0",
+      "tag": "@szewtwin/ivault-browser-react_v2.3.0",
+      "date": "Wed, 15 Jan 2025 16:32:32 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "add SZEWTwinSubClass \"All\" option to fetch all szewtwins regardless of subclass"
+          }
+        ]
+      }
+    },
+    {
+      "version": "2.2.2",
+      "tag": "@szewtwin/ivault-browser-react_v2.2.2",
+      "date": "Fri, 10 Jan 2025 14:12:35 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "added accessibility to grid tiles"
+          }
+        ]
+      }
+    },
+    {
+      "version": "2.2.1",
+      "tag": "@szewtwin/ivault-browser-react_v2.2.1",
+      "date": "Thu, 09 Jan 2025 03:49:28 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Fixed race conditions in useIVaultData"
+          }
+        ]
+      }
+    },
+    {
+      "version": "2.2.0",
+      "tag": "@szewtwin/ivault-browser-react_v2.2.0",
+      "date": "Tue, 07 Jan 2025 19:47:55 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "Update access token docs for szewTwinGrid and iVaultGrid"
+          }
+        ],
+        "minor": [
+          {
+            "comment": "provide option to refresh the grid after an szewtwin/ivault action"
+          }
+        ]
+      }
+    },
+    {
+      "version": "2.1.2",
+      "tag": "@szewtwin/ivault-browser-react_v2.1.2",
+      "date": "Mon, 09 Dec 2024 19:40:38 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Avoid unnecessary refetchs to API"
+          }
+        ]
+      }
+    },
+    {
+      "version": "2.1.1",
+      "tag": "@szewtwin/ivault-browser-react_v2.1.1",
+      "date": "Wed, 04 Dec 2024 19:08:30 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Fix szewTwin favorites and hide actions dropdown in szewTwin/iVault browser when no actions defined"
+          }
+        ],
+        "none": [
+          {
+            "comment": "Fix bug in szewtwin favorites and add favorites to szewTwinGrid table view"
+          },
+          {
+            "comment": "Hide szewtwin/ivault actions dropdown when there are no actions defined"
+          }
+        ]
+      }
+    },
+    {
+      "version": "2.1.0",
+      "tag": "@szewtwin/ivault-browser-react_v2.1.0",
+      "date": "Thu, 21 Nov 2024 22:19:39 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Add favorites functionality to SZEWTwinGrid and SZEWTwinTile components"
+          }
+        ]
+      }
+    },
+    {
+      "version": "2.0.3",
+      "tag": "@szewtwin/ivault-browser-react_v2.0.3",
+      "date": "Fri, 15 Nov 2024 16:36:26 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Fix sorting in iVault grid"
+          }
+        ]
+      }
+    },
+    {
+      "version": "2.0.2",
+      "tag": "@szewtwin/ivault-browser-react_v2.0.2",
+      "date": "Mon, 04 Nov 2024 21:47:34 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "fix list not loading extra content when reaching the bottom"
+          }
+        ]
+      }
+    },
+    {
+      "version": "2.0.1",
+      "tag": "@szewtwin/ivault-browser-react_v2.0.1",
+      "date": "Mon, 16 Sep 2024 18:48:30 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "SZEWTwinGrid and IVaultGrid 'accessToken' prop accepts a function so the token can renew."
+          }
+        ]
+      }
+    },
+    {
+      "version": "2.0.0",
+      "tag": "@szewtwin/ivault-browser-react_v2.0.0",
+      "date": "Wed, 11 Sep 2024 12:52:00 GMT",
+      "comments": {
+        "major": [
+          {
+            "comment": "Added support for react 18 and removed support for react 16"
+          }
+        ]
+      }
+    },
+    {
+      "version": "1.3.1",
+      "tag": "@szewtwin/ivault-browser-react_v1.3.1",
+      "date": "Thu, 27 Jun 2024 13:24:37 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Added a check to ensure that no search result UI is not prematurely shown while data is still being fetched."
+          }
+        ]
+      }
+    },
+    {
+      "version": "1.3.0",
+      "tag": "@szewtwin/ivault-browser-react_v1.3.0",
+      "date": "Wed, 19 Jun 2024 14:36:27 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Updated no search results UI for IVaultGrid component"
+          }
+        ],
+        "patch": [
+          {
+            "comment": "Adding `Search` parameter to get iVaults instead of `Name`. `Search` allows user to search without need to put the exact iVault name."
+          }
+        ]
+      }
+    },
+    {
+      "version": "1.2.2",
+      "tag": "@szewtwin/ivault-browser-react_v1.2.2",
+      "date": "Thu, 14 Dec 2023 17:57:25 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Revert szewTwinUI v3"
+          }
+        ]
+      }
+    },
+    {
+      "version": "1.2.1",
+      "tag": "@szewtwin/ivault-browser-react_v1.2.1",
+      "date": "Fri, 08 Dec 2023 15:10:09 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Implement menu option close functionality"
+          }
+        ]
+      }
+    },
+    {
+      "version": "1.2.0",
+      "tag": "@szewtwin/ivault-browser-react_v1.2.0",
+      "date": "Wed, 06 Dec 2023 19:34:14 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Updated szewtwinui-react to 3.x"
+          }
+        ],
+        "none": [
+          {
+            "comment": "Update postcss dev dependency"
+          }
+        ]
+      }
+    },
+    {
+      "version": "1.1.1",
+      "tag": "@szewtwin/ivault-browser-react_v1.1.1",
+      "date": "Thu, 14 Sep 2023 16:51:06 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Adding default iVault thumbnail for iVault grids in case API fails."
+          }
+        ]
+      }
+    },
+    {
+      "version": "1.1.0",
+      "tag": "@szewtwin/ivault-browser-react_v1.1.0",
+      "date": "Thu, 07 Sep 2023 20:13:33 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Ability to limit iVault tiles"
+          },
+          {
+            "comment": "Added table view for szewtwin grid"
+          }
+        ]
+      }
+    },
+    {
+      "version": "1.0.1",
+      "tag": "@szewtwin/ivault-browser-react_v1.0.1",
+      "date": "Wed, 02 Aug 2023 21:41:58 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "ThemeProvider fix for Table view"
+          }
+        ]
+      }
+    },
+    {
+      "version": "1.0.0",
+      "tag": "@szewtwin/ivault-browser-react_v1.0.0",
+      "date": "Wed, 21 Jun 2023 16:43:17 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "Upgraded iVaultsApi to v2, replaced projectId prop with szewTwinId. IVaultFull interface supports szewTwinId instead of projectId"
+          },
+          {
+            "comment": "szewTwinui-react update to 2.x"
+          }
+        ],
+        "major": [
+          {
+            "comment": "Upgraded projects api to szewTwins api"
+          }
+        ],
+        "minor": [
+          {
+            "comment": "Added cells view for iVault grid."
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.13.3",
+      "tag": "@szewtwin/ivault-browser-react_v0.13.3",
+      "date": "Thu, 30 Mar 2023 16:02:00 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "ProjectGrid - Bug fix for loading skeleton when passing data as props"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.13.2",
+      "tag": "@szewtwin/ivault-browser-react_v0.13.2",
+      "date": "Tue, 21 Feb 2023 20:11:46 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Update @szewtwin/szewtwinui-react version"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.13.1",
+      "tag": "@szewtwin/ivault-browser-react_v0.13.1",
+      "date": "Wed, 15 Feb 2023 17:36:15 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Added registeredBy to ProjectFull"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.13.0",
+      "tag": "@szewtwin/ivault-browser-react_v0.13.0",
+      "date": "Fri, 23 Dec 2022 09:19:54 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Added new optional property in iVaultGrid props to override default no state component"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.12.3",
+      "tag": "@szewtwin/ivault-browser-react_v0.12.3",
+      "date": "Fri, 03 Jun 2022 16:33:25 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Fix trailing ghost cards when using `apiOverrides.data` prop."
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.12.2",
+      "tag": "@szewtwin/ivault-browser-react_v0.12.2",
+      "date": "Fri, 28 Jan 2022 10:41:27 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Upgrade to React 17"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.12.1",
+      "tag": "@szewtwin/ivault-browser-react_v0.12.1",
+      "date": "Wed, 11 Aug 2021 20:01:30 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Use @szewtwin/szewtwinui-icons-react instead of @szewec/icons-generic-webfont"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.12.0",
+      "tag": "@szewtwin/ivault-browser-react_v0.12.0",
+      "date": "Tue, 10 Aug 2021 13:28:56 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Add `postProcessingCallback` property to `*Grid` components"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.11.0",
+      "tag": "@szewtwin/ivault-browser-react_v0.11.0",
+      "date": "Fri, 06 Aug 2021 13:03:18 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "iVaults API change: property `state` replaces `initialized`\n"
+          },
+          {
+            "comment": "BREAKING: IVaultGrid only support rest API features to reduce complexity; Now only supports `sortOptions` with `sortType: 'name'` (function or other types no longer available), removed `assetId`, `filterOptions`, `iVaultOptions` (previously replaced by `iVaultActions`)"
+          },
+          {
+            "comment": "IVaultGrid will now fetch all iVaults with infinite scrolling (previously only top 100)"
+          },
+          {
+            "comment": "BREAKING: ProjectGrid only support rest API features to reduce complexity; Now only supports `filterOptions` with a string (function no longer available), removed `sortOptions`, `projectOptions` (previously replaced by `projectActions`)"
+          },
+          {
+            "comment": "ProjectGrid will now fetch all projects with infinite scrolling (previously only top 100)"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.10.4",
+      "tag": "@szewtwin/ivault-browser-react_v0.10.4",
+      "date": "Wed, 04 Aug 2021 15:08:37 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Disable iVault thumbnail caching and leave it to the network"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.10.3",
+      "tag": "@szewtwin/ivault-browser_v0.10.3",
+      "date": "Tue, 08 Jun 2021 16:27:51 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Update serverEnvironmentPrefix to not require the \"-\""
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.10.2",
+      "tag": "@szewtwin/ivault-browser_v0.10.2",
+      "date": "Thu, 27 May 2021 18:16:45 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Add `IVaultThumbnail` `classname` prop, remove default `iui-picture` class."
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.10.1",
+      "tag": "@szewtwin/ivault-browser-react_v0.10.1",
+      "date": "Thu, 20 May 2021 18:18:30 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Support progressive Project status API changes"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.10.0",
+      "tag": "@szewtwin/ivault-browser-react_v0.10.0",
+      "date": "Tue, 18 May 2021 20:16:18 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Rename iVaultOptions and projectOptions to iVaultActions and projectActions"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.9.0",
+      "tag": "@szewtwin/ivault-browser-react_v0.9.0",
+      "date": "Fri, 30 Apr 2021 00:07:09 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Fix `ProjectGrid`.`onThumbnailClick` argument type."
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.8.1",
+      "tag": "@szewtwin/ivault-browser-react_v0.8.1",
+      "date": "Wed, 21 Apr 2021 19:27:23 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Only download thumbnails if tile is in view"
+          },
+          {
+            "comment": "Abort `fetch` request when unmounting components"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.8.0",
+      "tag": "@szewtwin/ivault-browser-react_v0.8.0",
+      "date": "Tue, 20 Apr 2021 16:34:50 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Updated dependency to use @szewtwin/szewTwinUi-* packages"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.7.0",
+      "tag": "@szewtwin/ivault-browser-react_v0.7.0",
+      "date": "Tue, 20 Apr 2021 13:30:06 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Add `ProjectGrid` (same features as IVaultGrid)"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.6.0",
+      "tag": "@szewtwin/ivault-browser-react_v0.6.0",
+      "date": "Fri, 16 Apr 2021 13:59:05 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Add `IVaultGrid` filter options"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.5.0",
+      "tag": "@szewtwin/ivault-browser-react_v0.5.0",
+      "date": "Wed, 14 Apr 2021 17:50:21 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Add `IVaultGrid` sort options"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.4.0",
+      "tag": "@szewtwin/ivault-browser-react_v0.4.0",
+      "date": "Tue, 13 Apr 2021 19:09:57 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Add possibility to configure each Tiles in the `IVaultGrid`"
+          },
+          {
+            "comment": "Add possibility to configure `Tile` used by `IVaultTile` with `tileProps` new prop"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.3.0",
+      "tag": "@szewtwin/ivault-browser-react_v0.3.0",
+      "date": "Fri, 09 Apr 2021 15:38:33 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Made `IVaultGrid` props `accessToken`, `projectId` and `assetId` not required"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.2.1",
+      "tag": "@szewtwin/ivault-browser-react_v0.2.1",
+      "date": "Thu, 08 Apr 2021 18:18:13 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Add comment"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.2.0",
+      "tag": "@szewtwin/ivault-browser-react_v0.2.0",
+      "date": "Wed, 07 Apr 2021 20:49:45 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Add empty state messages to `IVaultGrid`"
+          },
+          {
+            "comment": "Add `NoResults` component"
+          },
+          {
+            "comment": "Add `IVaultGhostTile` component"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.1.1",
+      "tag": "@szewtwin/ivault-browser-react_v0.1.1",
+      "date": "Wed, 07 Apr 2021 17:37:55 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Initial publish"
+          }
+        ]
+      }
+    }
+  ]
+}

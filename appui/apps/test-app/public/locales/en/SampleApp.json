@@ -1,0 +1,13 @@
+{
+  "settingsStage": {
+    "accuDrawNotificationsTitle": "Display AccuDraw Notifications",
+    "accuDrawNotificationsDescription": "Display toast notifications when AccuDraw status changes"
+  },
+  "buttons": {
+    "showShortcutsMenu": "Show Shortcuts Menu",
+    "accuDrawSubMenu": "AccuDraw Tests",
+    "sampleModelessDialog": "Sample Modeless Dialog",
+    "sampleNonModalDialog": "Sample Non-modal Dialog",
+    "bumpToolSettingToggle": "Bump Tool Setting Toggle"
+  }
+}

@@ -1,0 +1,29 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+$color: var(--iui-color-icon-accent);
+$hoverColor: var(--iui-color-text-accent-hover);
+
+.core-underlined-button {
+  background: transparent;
+  color: $color;
+  border: 0px solid $color;
+  border-bottom-width: 1px;
+
+  width: fit-content;
+
+  cursor: pointer;
+
+  &:hover {
+    color: $hoverColor;
+    border-color: $hoverColor;
+  }
+
+  &:focus {
+    color: $hoverColor;
+    border-color: $hoverColor;
+    background-color: hsl(var(--iui-opacity-6));
+    outline: none;
+  }
+}

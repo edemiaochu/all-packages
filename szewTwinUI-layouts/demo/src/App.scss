@@ -1,0 +1,27 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+
+.app {
+  padding: var(--iui-size-l) unquote('max(var(--iui-size-l), var(--iui-size-l) + env(safe-area-inset-right))') var(--iui-size-l) unquote('max(var(--iui-size-l), var(--iui-size-l) + env(safe-area-inset-left))');
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--iui-color-border-subtle);
+  margin-block: var(--iui-size-s);
+}
+
+.tile-wrapper {
+  display: flex;
+  cursor: pointer;
+
+  .iui-tile {
+    width: 100%;
+  }
+}
+
+.demo-layouts-list {
+  margin: var(--iui-size-m) 0;
+}

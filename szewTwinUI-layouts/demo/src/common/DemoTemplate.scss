@@ -1,0 +1,68 @@
+// Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+// See LICENSE.md in the project root for license terms and full copyright notice.
+
+.demo-template-container {
+  display: flex;
+  height: 100vh;
+}
+
+.demo-template-code-header {
+  &-back {
+    font-size: var(--iui-size-l);
+    font-weight: var(--iui-font-weight-light);
+    user-select: none;
+  }
+
+  &-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    user-select: all;
+
+    &::before {
+      content: '/';
+      color: var(--iui-text-color-muted);
+      margin-inline: var(--iui-size-2xs);
+    }
+  }
+
+  &-actions {
+    display: flex;
+    gap: var(--iui-size-xs);
+  }
+}
+
+.demo-template-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.demo-template-button-overlay {
+  position: absolute;
+  z-index: 99;
+  bottom: var(--iui-size-s);
+  right: var(--iui-size-s);
+  box-shadow: var(--iui-shadow-3);
+}
+
+.demo-transparent-background {
+  background-position: 0 0, 4px 4px;
+  background-size: 8px 8px;
+  background-image: repeating-linear-gradient(
+    45deg,
+    var(--iui-color-background-disabled) 25%,
+    transparent 25%,
+    transparent 75%,
+    var(--iui-color-background-disabled) 75%,
+    var(--iui-color-background-disabled)
+  ),
+    repeating-linear-gradient(
+    45deg,
+    var(--iui-color-background-disabled) 25%,
+    var(--iui-color-border) 25%,
+    var(--iui-color-border) 75%,
+    var(--iui-color-background-disabled) 75%,
+    var(--iui-color-background-disabled)
+  );
+}

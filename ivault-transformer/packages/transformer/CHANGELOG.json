@@ -1,0 +1,579 @@
+{
+  "name": "@szewtwin/ivault-transformer",
+  "entries": [
+    {
+      "date": "Mon, 30 Jun 2025 18:36:23 GMT",
+      "version": "1.2.0",
+      "tag": "@szewtwin/ivault-transformer_v1.2.0",
+      "comments": {
+        "minor": [
+          {
+            "author": "'DanRod1999@users.noreply.github.com'",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "7971863b75b604e9d5b090d69938d17ef40a2d44",
+            "comment": "allow option to transform spatial elements of linearly located ivaults"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Tue, 29 Apr 2025 14:01:13 GMT",
+      "version": "1.1.3",
+      "tag": "@szewtwin/ivault-transformer_v1.1.3",
+      "comments": {
+        "patch": [
+          {
+            "author": "28706674+JulijaRamoskiene@users.noreply.github.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "1779d9e3a5b5c9654fb44ae59d2918042a07b57f",
+            "comment": "Fix for exporting custom changes when iVault has no changesets."
+          }
+        ]
+      }
+    },
+    {
+      "date": "Tue, 22 Apr 2025 15:14:03 GMT",
+      "version": "1.1.2",
+      "tag": "@szewtwin/ivault-transformer_v1.1.2",
+      "comments": {
+        "patch": [
+          {
+            "author": "'DanRod1999@users.noreply.github.com'",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "e638acd91b8f1cdf6682e828aa1cd078f98ea317",
+            "comment": "update szewtwin packages and add tests"
+          },
+          {
+            "author": "28706674+JulijaRamoskiene@users.noreply.github.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "e638acd91b8f1cdf6682e828aa1cd078f98ea317",
+            "comment": "Disabled lint errors for deprecated withPreparedStatement(), withStatement() and DMSqlStatement apis"
+          },
+          {
+            "author": "28706674+JulijaRamoskiene@users.noreply.github.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "e638acd91b8f1cdf6682e828aa1cd078f98ea317",
+            "comment": "Fix for custom changes API to create a deep copy of set before modifying it."
+          }
+        ]
+      }
+    },
+    {
+      "date": "Tue, 04 Mar 2025 15:01:06 GMT",
+      "version": "1.1.1",
+      "tag": "@szewtwin/ivault-transformer_v1.1.1",
+      "comments": {
+        "patch": [
+          {
+            "author": "36619139+ViliusRuskys@users.noreply.github.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "e55e3e0c82c82ced3a515af301284be18d86646b",
+            "comment": "Ignore navigational properties that point to an DMView"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Mon, 03 Mar 2025 17:50:09 GMT",
+      "version": "1.1.0",
+      "tag": "@szewtwin/ivault-transformer_v1.1.0",
+      "comments": {
+        "none": [
+          {
+            "author": "'DanRod1999@users.noreply.github.com'",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "6f122f59a084f58b976a314f781e7fda90e0a8b1",
+            "comment": ""
+          }
+        ],
+        "minor": [
+          {
+            "author": "JulijaRamoskiene@users.noreply.github.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "6f122f59a084f58b976a314f781e7fda90e0a8b1",
+            "comment": "Removed changed element cache from iVaultTransformer as iVaultExporter stores same data in `sourceDbChanges`."
+          }
+        ],
+        "prerelease": [
+          {
+            "author": "22119573+nick4598@users.noreply.github.com, JulijaRamoskiene@users.noreply.github.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "6f122f59a084f58b976a314f781e7fda90e0a8b1",
+            "comment": "Add new APIs to support providing custom changes ( not found in a changeset ) to the transformer"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Mon, 04 Nov 2024 14:45:46 GMT",
+      "version": "1.0.0",
+      "tag": "@szewtwin/ivault-transformer_v1.0.0",
+      "comments": {
+        "prerelease": [
+          {
+            "author": "Daniel.Erbynn@szewec.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "f91dcaa8e6d560b288a7ea3ed9203182bb870740",
+            "comment": "save reverse sync version for process all transformations"
+          },
+          {
+            "author": "Daniel.Erbynn@szewec.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "f91dcaa8e6d560b288a7ea3ed9203182bb870740",
+            "comment": "remove deprecated for 3.x, 0.1.x, 0.1.0"
+          },
+          {
+            "author": "22119573+nick4598@users.noreply.github.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "f91dcaa8e6d560b288a7ea3ed9203182bb870740",
+            "comment": "1.0.0-dev.0"
+          },
+          {
+            "author": "22119573+nick4598@users.noreply.github.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "f91dcaa8e6d560b288a7ea3ed9203182bb870740",
+            "comment": "move to one getter for synchronizationVersion, bust a potential cached synchronizationVersion whenever we make changes to targetscopeprovenance, and only save changes if handleUnsafeMigrate makes changes not just if unsafe migrate is enabled"
+          },
+          {
+            "author": "22119573+nick4598@users.noreply.github.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "f91dcaa8e6d560b288a7ea3ed9203182bb870740",
+            "comment": "Revert \"save and push changes after transformer is complete (#153)\""
+          },
+          {
+            "author": "Daniel.Erbynn@szewec.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "f91dcaa8e6d560b288a7ea3ed9203182bb870740",
+            "comment": "add more cases to support preserveElementIdsForFiltering options"
+          },
+          {
+            "author": "22119573+nick4598@users.noreply.github.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "f91dcaa8e6d560b288a7ea3ed9203182bb870740",
+            "comment": "In szewtwinjs versions 4.6.0 and greater DefinitionContainers are now deleted as if they were DefinitionPartitions. Made a change to onDeleteModel to treat definitinocontainers as if they were definitionpartitions"
+          },
+          {
+            "author": "22119573+nick4598@users.noreply.github.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "f91dcaa8e6d560b288a7ea3ed9203182bb870740",
+            "comment": "Support setting the reversesync and sync version when unsafe-migrate is set. Also fix bug with haselementchangedcache"
+          },
+          {
+            "author": "Daniel.Erbynn@szewec.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "f91dcaa8e6d560b288a7ea3ed9203182bb870740",
+            "comment": "add alternative schemaToXmlString"
+          },
+          {
+            "author": "36619139+ViliusRuskys@users.noreply.github.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "f91dcaa8e6d560b288a7ea3ed9203182bb870740",
+            "comment": "no longer track partially commited element references"
+          },
+          {
+            "author": "22119573+nick4598@users.noreply.github.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "f91dcaa8e6d560b288a7ea3ed9203182bb870740",
+            "comment": "only store deleted ESAS of kind 'Element' in processChangesets"
+          },
+          {
+            "author": "Daniel.Erbynn@szewec.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "f91dcaa8e6d560b288a7ea3ed9203182bb870740",
+            "comment": "improve error messages for mismatching peer dependencies"
+          },
+          {
+            "author": "22119573+nick4598@users.noreply.github.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "f91dcaa8e6d560b288a7ea3ed9203182bb870740",
+            "comment": "Make processAll and processChanges private, expose a public process function and let people pass isSync to constructor of ivaulttransformer"
+          },
+          {
+            "author": "22119573+nick4598@users.noreply.github.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "f91dcaa8e6d560b288a7ea3ed9203182bb870740",
+            "comment": ""
+          },
+          {
+            "author": "22119573+nick4598@users.noreply.github.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "f91dcaa8e6d560b288a7ea3ed9203182bb870740",
+            "comment": "in findTargetEntityId, special case the repositoryModel such that we ignore any remappings and just set the target to the repositoryModelId"
+          },
+          {
+            "author": "'DanRod1999@users.noreply.github.com'",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "f91dcaa8e6d560b288a7ea3ed9203182bb870740",
+            "comment": "add extract-api.yaml"
+          }
+        ],
+        "patch": [
+          {
+            "author": "91682445+jiaruiz717@users.noreply.github.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "f91dcaa8e6d560b288a7ea3ed9203182bb870740",
+            "comment": "skipPropagateChangesToRootElements should be default true"
+          },
+          {
+            "author": "Julija.Ramoskiene@szewec.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "f91dcaa8e6d560b288a7ea3ed9203182bb870740",
+            "comment": "Fixed BigMap class to implement Map (instead of extending it). Added missing method implementations."
+          }
+        ],
+        "none": [
+          {
+            "author": "ben-polinsky@users.noreply.github.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "f91dcaa8e6d560b288a7ea3ed9203182bb870740",
+            "comment": "upgrade docs build tools; typescript"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Wed, 06 Dec 2023 15:24:30 GMT",
+      "tag": "@szewtwin/ivault-transformer_v0.4.3",
+      "version": "0.4.3",
+      "comments": {
+        "patch": [
+          {
+            "author": "25615181+mindaugasdirg@users.noreply.github.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "30ca2d43bdfbbfe1f7713fb82ecaaa4ea95f7b4c",
+            "comment": "Handle max path limit on windows for schema names"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Tue, 26 Sep 2023 16:19:57 GMT",
+      "tag": "@szewtwin/ivault-transformer_v0.4.2",
+      "version": "0.4.2",
+      "comments": {
+        "patch": [
+          {
+            "author": "Mindaugas.Dirgincius@szewec.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "dc462020a152694640355f06d6263aae464c52f6",
+            "comment": "Fix aspect queries when class name is reserved SQLite keyword"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Wed, 20 Sep 2023 15:35:21 GMT",
+      "tag": "@szewtwin/ivault-transformer_v0.4.1",
+      "version": "0.4.1",
+      "comments": {
+        "patch": [
+          {
+            "author": "mike.belousov@szewec.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "46373c33920c763ba3eb866fc415e433aa0952e6",
+            "comment": "revert to original behavior of provenance ExternalSourceAspect version behavior"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Mon, 11 Sep 2023 12:37:44 GMT",
+      "tag": "@szewtwin/ivault-transformer_v0.4.0",
+      "version": "0.4.0",
+      "comments": {
+        "minor": [
+          {
+            "author": "Mindaugas.Dirgincius@szewec.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "4c404f3980ec7f4e6a3f3a0b746701e4c6f77d92",
+            "comment": "Add detached ElementAspect exporting"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Fri, 18 Aug 2023 23:12:28 GMT",
+      "tag": "@szewtwin/ivault-transformer_v0.3.2",
+      "version": "0.3.2",
+      "comments": {
+        "patch": [
+          {
+            "author": "deividas.davidavicius@szewec.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "8cda406d158b46f57acfc97d7f4be03a4143414f",
+            "comment": "Added a fix for \"Missing id\" and \"ForeignKey constraint\" errors while using onDeleteModel"
+          },
+          {
+            "author": "mike.belousov@szewec.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "8cda406d158b46f57acfc97d7f4be03a4143414f",
+            "comment": "bump dependencies to allow all szewtwin.js 4.x"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Thu, 27 Jul 2023 13:07:39 GMT",
+      "tag": "@szewtwin/ivault-transformer_v0.3.1",
+      "version": "0.3.1",
+      "comments": {
+        "patch": [
+          {
+            "author": "51540204+simsta6@users.noreply.github.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "88fd8d15b82bc45e962eedd6fe16323498aa732f",
+            "comment": "Changed shouldDetectDeletes from private to protected"
+          }
+        ],
+        "none": [
+          {
+            "author": "ben-polinsky@users.noreply.github.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "88fd8d15b82bc45e962eedd6fe16323498aa732f",
+            "comment": "fix ElementGeometryBuilderParams core package link"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Tue, 11 Jul 2023 18:59:25 GMT",
+      "tag": "@szewtwin/ivault-transformer_v0.3.0",
+      "version": "0.3.0",
+      "comments": {
+        "minor": [
+          {
+            "author": "51540204+simsta6@users.noreply.github.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "c9e2ecdd80df3fd155111313f2abdc82963775fd",
+            "comment": "Add pending reference resolution when referenced element is not exported"
+          }
+        ],
+        "patch": [
+          {
+            "author": "51540204+simsta6@users.noreply.github.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "c9e2ecdd80df3fd155111313f2abdc82963775fd",
+            "comment": "Start using in BigMap instead of Map to overcome size limits"
+          },
+          {
+            "author": "'DanRod1999@users.noreply.github.com'",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "c9e2ecdd80df3fd155111313f2abdc82963775fd",
+            "comment": "add BranchProvenanceInitializer functions"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Mon, 26 Jun 2023 13:40:00 GMT",
+      "tag": "@szewtwin/ivault-transformer_v0.2.1",
+      "version": "0.2.1",
+      "comments": {
+        "patch": [
+          {
+            "author": "deividas.davidavicius@szewec.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "c82f3b93754787392bff3f1e66023058e65d219f",
+            "comment": "Added ElementCascadingDeleter to fix FK errors while deleting element which is referenced in code scopes of other elements"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Sat, 24 Jun 2023 03:30:05 GMT",
+      "tag": "@szewtwin/ivault-transformer_v0.2.0",
+      "version": "0.2.0",
+      "comments": {
+        "prerelease": [
+          {
+            "author": "51540204+simsta6@users.noreply.github.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "085590025bddffbf95dbfb6092f6b14c99fb8bcf",
+            "comment": "Started using provenanceSourceDb instead of sourceDb in initElementProvenance"
+          }
+        ],
+        "none": [
+          {
+            "author": "mike.belousov@szewec.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "085590025bddffbf95dbfb6092f6b14c99fb8bcf",
+            "comment": "turn on docs validation on main and fix broken doc ref"
+          }
+        ],
+        "minor": [
+          {
+            "author": "51540204+simsta6@users.noreply.github.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "085590025bddffbf95dbfb6092f6b14c99fb8bcf",
+            "comment": "Added new functions overloads for IVaultTransformer.processChanges and IVaultExporter.exportChanges. Deprecated old overloads, they still work."
+          }
+        ],
+        "patch": [
+          {
+            "author": "51540204+simsta6@users.noreply.github.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "085590025bddffbf95dbfb6092f6b14c99fb8bcf",
+            "comment": "Changed sourceDb to targetDb in IVaultCloneContext.findTargetEntityId"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Fri, 09 Jun 2023 13:24:23 GMT",
+      "tag": "@szewtwin/ivault-transformer_v0.1.16",
+      "version": "0.1.16",
+      "comments": {
+        "patch": [
+          {
+            "author": "51540204+simsta6@users.noreply.github.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "d27dc1f156b72a10acfb1fc717606364f651f662",
+            "comment": "fixed findTargetEntityId when searching for relationship that points to non-existing element in targetIVault"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Thu, 01 Jun 2023 22:51:33 GMT",
+      "tag": "@szewtwin/ivault-transformer_v0.1.14",
+      "version": "0.1.14",
+      "comments": {
+        "patch": [
+          {
+            "author": "mike.belousov@szewec.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "5a175aa5b15fb48e747cccd18be5886727fecb6a",
+            "comment": "update deps to support 3.6-4.0"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Wed, 31 May 2023 13:40:07 GMT",
+      "tag": "@szewtwin/ivault-transformer_v0.1.12",
+      "version": "0.1.12",
+      "comments": {
+        "patch": [
+          {
+            "author": "michael.belousov98@gmail.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "e7528fea595d9d1668154c0245abe6458789e5f1",
+            "comment": "add checks in EntityUnifier.exists for id validity"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Tue, 30 May 2023 13:03:51 GMT",
+      "tag": "@szewtwin/ivault-transformer_v0.1.10",
+      "version": "0.1.10",
+      "comments": {
+        "none": [
+          {
+            "author": "mike.belousov@szewec.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "b248d238de2da7dae5ebc5b2609d0d79890811d6",
+            "comment": "none"
+          }
+        ],
+        "patch": [
+          {
+            "author": "mike.belousov@szewec.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "b248d238de2da7dae5ebc5b2609d0d79890811d6",
+            "comment": "fix detectElementDeletes since importer.deleteElement change"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Tue, 02 May 2023 18:28:36 GMT",
+      "tag": "@szewtwin/ivault-transformer_v0.1.8",
+      "version": "0.1.8",
+      "comments": {
+        "patch": [
+          {
+            "author": "mike.belousov@szewec.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "3b6ad3fbf7bfe36dfe63da7f8d6f9e5572793f05",
+            "comment": "rerelease again"
+          }
+        ],
+        "none": [
+          {
+            "author": "ben-polinsky@users.noreply.github.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "3b6ad3fbf7bfe36dfe63da7f8d6f9e5572793f05",
+            "comment": "docs: ts 5 compatibility"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Thu, 20 Apr 2023 12:20:33 GMT",
+      "tag": "@szewtwin/ivault-transformer_v0.1.3",
+      "version": "0.1.3",
+      "comments": {
+        "patch": [
+          {
+            "author": "Kyrylo.Volotovskyi@szewec.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "db9ba2c5d706506210a6eae49229dc3d031d4567",
+            "comment": "Fixed the change of code scope when the code spec is of type Repository and code scope is not root subject"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Tue, 18 Apr 2023 14:12:45 GMT",
+      "tag": "@szewtwin/ivault-transformer_v0.1.2",
+      "version": "0.1.2",
+      "comments": {
+        "patch": [
+          {
+            "author": "51540204+simsta6@users.noreply.github.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "18c92c334e312b9c5b8f254dec66941c23ee3c0b",
+            "comment": "Modified query for getting all relationships"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Tue, 04 Apr 2023 15:43:37 GMT",
+      "tag": "@szewtwin/ivault-transformer_v0.1.1",
+      "version": "0.1.1",
+      "comments": {
+        "patch": [
+          {
+            "author": "mike.belousov@szewec.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "35c2188ee72beaab88c26d68bd6b2f03336e63bf",
+            "comment": "rename docs artifact"
+          },
+          {
+            "author": "mike.belousov@szewec.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "35c2188ee72beaab88c26d68bd6b2f03336e63bf",
+            "comment": "add option to disable strict version dep checking"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Fri, 31 Mar 2023 20:21:28 GMT",
+      "tag": "@szewtwin/ivault-transformer_v0.1.0",
+      "version": "0.1.0",
+      "comments": {
+        "minor": [
+          {
+            "author": "mike.belousov@szewec.com",
+            "package": "@szewtwin/ivault-transformer",
+            "commit": "f88a868c8dfbbf6bae42840d9210eb2c0f00359d",
+            "comment": "version reset"
+          }
+        ]
+      }
+    }
+  ]
+}

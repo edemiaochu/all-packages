@@ -1,0 +1,16 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+/** @packageDocumentation
+ * @module Utilities
+ */
+
+/** Describes 2d dimensions.
+ * @public
+ * @deprecated in 4.16.0. Use {@link @szewtwin/appui-react#SizeProps} instead.
+ */
+export interface SizeProps {
+  readonly width: number;
+  readonly height: number;
+}

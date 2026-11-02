@@ -1,0 +1,142 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+
+import { describe, expect, it } from "vitest";
+import { PageOptions } from "@szewtwin/components-react";
+import { LabelDefinition, Node } from "@szewtwin/presentation-common";
+import {
+  createPartialTreeNodeItem,
+  createTreeNodeItem,
+  createTreeNodeItems,
+  pageOptionsUiToPresentation,
+} from "../../presentation-components/tree/Utils.js";
+import { createTestDMClassGroupingNodeKey, createTestDMInstancesNode } from "../_helpers/Hierarchy.js";
+
+describe("Utils", () => {
+  describe("createTreeNodeItem", () => {
+    it("creates tree node", () => {
+      const node = createTestDMInstancesNode();
+      const treeNode = createTreeNodeItem(node);
+      expect(treeNode).toMatchSnapshot();
+    });
+
+    it("creates tree node with extended data", () => {
+      const node = { ...createTestDMInstancesNode(), extendedData: { test: "value" } };
+      const treeNode = createTreeNodeItem(node);
+      expect(treeNode.extendedData!.test).toBe("value");
+    });
+
+    it("creates tree node with parent id", () => {
+      const node = createTestDMInstancesNode();
+      const parentId = "test_parent_id";
+      const treeNode = createTreeNodeItem(node, parentId);
+      expect(treeNode).toMatchSnapshot();
+    });
+
+    it("creates tree node with custom label styles", () => {
+      const node = { ...createTestDMInstancesNode(), fontStyle: "Bold Italic" };
+      const treeNode = createTreeNodeItem(node);
+      expect(treeNode).toMatchSnapshot();
+    });
+
+    it("creates auto expanded tree node", () => {
+      const node = createTestDMInstancesNode({ isExpanded: true });
+      const treeNode = createTreeNodeItem(node);
+      expect(treeNode).toMatchSnapshot();
+    });
+
+    it("creates tree node with children", () => {
+      const node = createTestDMInstancesNode({ hasChildren: true });
+      const treeNode = createTreeNodeItem(node);
+      expect(treeNode.hasChildren).toBe(true);
+    });
+
+    it("appends grouped nodes count if requested", () => {
+      // eslint-disable-next-line @typescript-eslint/no-deprecated
+      const node: Node = {
+        key: createTestDMClassGroupingNodeKey({ groupedInstancesCount: 999 }),
+        label: LabelDefinition.fromLabelString("test"),
+      };
+      const treeNode = createTreeNodeItem(node, undefined, { appendChildrenCountForGroupingNodes: true });
+      expect(treeNode).toMatchSnapshot();
+    });
+
+    it("uses provided callback to customize tree node", () => {
+      const node = createTestDMInstancesNode();
+      const treeNode = createTreeNodeItem(node, undefined, {
+        customizeTreeNodeItem: (item) => {
+          item.icon = "custom-icon";
+          item.description = "custom-description";
+        },
+      });
+      expect(treeNode).toMatchSnapshot();
+    });
+  });
+
+  describe("createPartialTreeNodeItem", () => {
+    it("assigns item id and label from loaded node", () => {
+      const node = createPartialTreeNodeItem(
+        { key: { type: "", version: 0, pathFromRoot: [] }, label: LabelDefinition.fromLabelString("test") },
+        undefined,
+        {},
+      );
+      expect(node.id).not.toBeUndefined();
+      expect(node.label).not.toBeUndefined();
+      expect(node.key).not.toBeUndefined();
+    });
+
+    it("does not set a presentation tree node key when input does not have a key", () => {
+      const node = createPartialTreeNodeItem({}, undefined, {});
+      expect(node.key).toBeUndefined();
+    });
+
+    it("uses provided callback to customize tree node", () => {
+      const treeNode = createPartialTreeNodeItem(
+        { key: { type: "", version: 0, pathFromRoot: [] }, label: LabelDefinition.fromLabelString("test") },
+        undefined,
+        {
+          customizeTreeNodeItem: (item) => {
+            item.icon = "custom-icon";
+            item.description = "custom-description";
+          },
+        },
+      );
+      expect(treeNode).toMatchSnapshot();
+    });
+  });
+
+  describe("createTreeNodeItems", () => {
+    it("creates tree nodes", () => {
+      const nodes = [createTestDMInstancesNode(), createTestDMInstancesNode()];
+      const treeNode = createTreeNodeItems(nodes);
+      expect(treeNode).toMatchSnapshot();
+    });
+
+    it("creates tree nodes with parentId", () => {
+      const nodes = [createTestDMInstancesNode(), createTestDMInstancesNode()];
+      const parentId = "test_parent_id";
+      const treeNode = createTreeNodeItems(nodes, parentId);
+      expect(treeNode).toMatchSnapshot();
+    });
+  });
+
+  describe("pageOptionsUiToPresentation", () => {
+    it("returns undefined if passed undefined parameter", () => {
+      const result = pageOptionsUiToPresentation(undefined);
+      expect(result).toEqual(undefined);
+    });
+
+    it("converts ui page options to presentation page options", () => {
+      const size = 10;
+      const start = 2;
+      const pageOptions: PageOptions = { size, start };
+      const result = pageOptionsUiToPresentation(pageOptions);
+
+      expect(result).toBeDefined();
+      expect(result!.size).toEqual(size);
+      expect(result!.start).toEqual(start);
+    });
+  });
+});

@@ -1,0 +1,15 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@use "variables" as *;
+
+.components-toolbar-item-expandable-group-panel {
+  line-height: normal;
+  background: var(--iui-color-background);
+  padding: 8px;
+  border-radius: var(--iui-border-radius-1);
+  pointer-events: auto;
+  border: 1px solid var(--iui-color-border);
+  font-size: $font-size;
+}

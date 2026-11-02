@@ -1,0 +1,193 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+
+import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { PropertyFilterRuleGroupOperator, PropertyFilterRuleOperator, UiComponents } from "@szewtwin/components-react";
+import { BeEvent } from "@szewtwin/core-szewec";
+import { EmptyLocalization } from "@szewtwin/core-common";
+import { IVaultApp, IVaultConnection } from "@szewtwin/core-frontend";
+import { Presentation } from "@szewtwin/presentation-frontend";
+import {
+  DMClassInfo,
+  getIVaultMetadataProvider,
+} from "../../presentation-components/instance-filter-builder/DMMetadataProvider.js";
+import {
+  PresentationInstanceFilterBuilder,
+  PresentationInstanceFilterInfo,
+} from "../../presentation-components/instance-filter-builder/PresentationFilterBuilder.js";
+import { createTestDMClassInfo, stubVirtualization } from "../_helpers/Common.js";
+import {
+  createTestCategoryDescription,
+  createTestContentDescriptor,
+  createTestPropertiesContentField,
+} from "../_helpers/Content.js";
+import { render, waitFor, waitForElement, within } from "../TestUtils.js";
+
+describe("PresentationInstanceFilter", () => {
+  stubVirtualization();
+
+  const category = createTestCategoryDescription({ name: "root", label: "Root" });
+  const classInfo = createTestDMClassInfo({ id: "0x123", name: "class1", label: "Class 1" });
+  const classInfo2 = createTestDMClassInfo({ id: "0x456", name: "class2", label: "Class 2" });
+  const propertiesField = createTestPropertiesContentField({
+    properties: [{ property: { classInfo, name: "prop1", type: "string" } }],
+    name: "prop1Field",
+    label: "propertiesField",
+    category,
+  });
+  const propertiesField2 = createTestPropertiesContentField({
+    properties: [{ property: { classInfo, name: "prop2", type: "string" } }],
+    name: "prop2Field",
+    label: "propertiesField2",
+    category,
+  });
+  const propertiesField3 = createTestPropertiesContentField({
+    properties: [{ property: { classInfo, name: "prop3", type: "string" } }],
+    name: "prop3Field",
+    label: "propertiesField3",
+    category,
+  });
+  const descriptor = createTestContentDescriptor({
+    selectClasses: [
+      { selectClassInfo: classInfo, isSelectPolymorphic: false },
+      { selectClassInfo: classInfo2, isSelectPolymorphic: false },
+    ],
+    categories: [category],
+    fields: [propertiesField, propertiesField2, propertiesField3],
+  });
+
+  const onCloseEvent = new BeEvent<() => void>();
+  const ivault = { key: "test_ivault", onClose: onCloseEvent } as IVaultConnection;
+
+  beforeAll(async () => {
+    await UiComponents.initialize(new EmptyLocalization());
+  });
+
+  beforeEach(() => {
+    const localization = new EmptyLocalization();
+    vi.spyOn(IVaultApp, "initialized", "get").mockReturnValue(true);
+    vi.spyOn(IVaultApp, "localization", "get").mockReturnValue(localization);
+    vi.spyOn(Presentation, "localization", "get").mockReturnValue(localization);
+
+    const metadataProvider = getIVaultMetadataProvider(ivault);
+    vi.spyOn(metadataProvider, "getDMClassInfo").mockImplementation(async () => {
+      return new DMClassInfo(classInfo.id, classInfo.name, classInfo.label, new Set(), new Set());
+    });
+  });
+
+  afterAll(() => {
+    onCloseEvent.raiseEvent();
+    UiComponents.terminate();
+  });
+
+  it("invokes 'onInstanceFilterChanged' with filter", async () => {
+    const spy = vi.fn();
+    const { container, getByText, getByTitle, getByDisplayValue, user } = render(
+      <PresentationInstanceFilterBuilder ivault={ivault} descriptor={descriptor} onInstanceFilterChanged={spy} />,
+    );
+
+    // open property selector
+    const propertySelector = await getRulePropertySelector(container);
+    await user.click(propertySelector);
+
+    // select property
+    await user.click(getByTitle(propertiesField.label));
+
+    // wait until property is selected
+    await waitFor(() => getByDisplayValue(propertiesField.label));
+
+    // open operator selector
+    const operatorSelector = await getRuleOperatorSelector(container);
+    expect(operatorSelector).not.toBeNull();
+    await user.click(operatorSelector);
+
+    // select operator
+    await user.click(getByText("filterBuilder.operators.isNotNull"));
+
+    // wait until operator is selected
+    await waitFor(() => getByText("filterBuilder.operators.isNotNull"));
+
+    await waitFor(() =>
+      expect(spy).toHaveBeenCalledWith({
+        filter: { field: propertiesField, operator: PropertyFilterRuleOperator.IsNotNull, value: undefined },
+        usedClasses: [classInfo],
+      }),
+    );
+  });
+
+  it("renders with initial filter", async () => {
+    const initialFilter: PresentationInstanceFilterInfo = {
+      filter: {
+        operator: PropertyFilterRuleGroupOperator.And,
+        conditions: [
+          { field: propertiesField, operator: PropertyFilterRuleOperator.IsNull, value: undefined },
+          { field: propertiesField2, operator: PropertyFilterRuleOperator.IsNull, value: undefined },
+        ],
+      },
+      usedClasses: [classInfo],
+    };
+
+    const spy = vi.fn();
+    const { queryByDisplayValue } = render(
+      <PresentationInstanceFilterBuilder
+        ivault={ivault}
+        descriptor={descriptor}
+        onInstanceFilterChanged={spy}
+        initialFilter={initialFilter}
+      />,
+    );
+
+    await waitFor(() => {
+      expect(queryByDisplayValue(propertiesField.label)).not.toBeNull();
+    });
+
+    await waitFor(() => {
+      expect(queryByDisplayValue(propertiesField2.label)).not.toBeNull();
+    });
+  });
+
+  it("clears property filters upon class selector change", async () => {
+    const initialFilter: PresentationInstanceFilterInfo = {
+      filter: {
+        operator: PropertyFilterRuleGroupOperator.And,
+        conditions: [{ field: propertiesField, operator: PropertyFilterRuleOperator.IsNull, value: undefined }],
+      },
+      usedClasses: [classInfo, classInfo2],
+    };
+
+    const spy = vi.fn();
+    const { queryByDisplayValue, user, getByPlaceholderText, getByRole } = render(
+      <PresentationInstanceFilterBuilder
+        ivault={ivault}
+        descriptor={descriptor}
+        onInstanceFilterChanged={spy}
+        initialFilter={initialFilter}
+      />,
+      { addThemeProvider: true },
+    );
+
+    // ensure there's a property filter
+    await waitFor(() => expect(queryByDisplayValue(propertiesField.label)).not.toBeNull());
+
+    // expand class selector
+    const expander = getByPlaceholderText("instance-filter-builder.selected-classes");
+    await user.click(expander);
+
+    // deselect class item from dropdown
+    const classItem = within(getByRole("listbox", { hidden: true })).getByText(classInfo2.label);
+    await user.click(classItem);
+
+    // assert that filtering rule was cleared
+    await waitFor(() => expect(queryByDisplayValue(propertiesField.label)).toBeNull());
+  });
+});
+
+async function getRulePropertySelector(container: HTMLElement) {
+  return waitForElement<HTMLInputElement>(container, ".fb-property-name input");
+}
+
+async function getRuleOperatorSelector(container: HTMLElement) {
+  return waitForElement<HTMLDivElement>(container, `.fb-row-condition [role="combobox"]`);
+}

@@ -1,0 +1,5 @@
+# validate email
+node ./scripts/validateEmail.js
+
+# lint staged files
+pnpm lint-staged

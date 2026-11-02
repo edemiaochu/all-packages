@@ -1,0 +1,216 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+/** @packageDocumentation
+ * @module Widget
+ */
+
+import "./Widget.scss";
+import classnames from "classnames";
+import * as React from "react";
+import { assert } from "@szewtwin/core-szewec";
+import type { CommonProps } from "@szewtwin/core-react";
+import { Rectangle, useRefs } from "@szewtwin/core-react/internal";
+import type { UseDragWidgetArgs } from "../base/DragManager.js";
+import { useDragWidget } from "../base/DragManager.js";
+import {
+  getUniqueId,
+  MeasureContext,
+  NineZoneDispatchContext,
+} from "../base/NineZone.js";
+import type { WidgetState } from "../state/WidgetState.js";
+import { PanelSideContext } from "../widget-panels/Panel.js";
+import { useLayout } from "../base/LayoutStore.js";
+import { getWidgetState } from "../state/internal/WidgetStateHelpers.js";
+import { useFloatingWidgetId } from "./FloatingWidget.js";
+import type { SizeProps } from "../../utils/SizeProps.js";
+import { useSafeContext } from "../../hooks/useSafeContext.js";
+
+/** @internal */
+export interface WidgetProviderProps {
+  id: WidgetState["id"];
+  children?: React.ReactNode;
+}
+
+/** @internal */
+export function WidgetProvider(props: WidgetProviderProps) {
+  return (
+    <WidgetIdContext.Provider value={props.id}>
+      {props.children}
+    </WidgetIdContext.Provider>
+  );
+}
+
+// eslint-disable-next-line @typescript-eslint/no-deprecated
+interface WidgetProps extends CommonProps {
+  children?: React.ReactNode;
+  onMouseEnter?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+  onMouseLeave?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+  onTransitionEnd?(): void;
+}
+
+/** @internal */
+export const Widget = React.forwardRef<HTMLDivElement, WidgetProps>(
+  function Widget(props, forwardedRef) {
+    const id = React.useContext(WidgetIdContext);
+    const [widgetRef, value] = useWidgetContextValue();
+    const dockedWidgetRef = useDragPanelWidget();
+    const ref = useRefs(forwardedRef, widgetRef, dockedWidgetRef);
+    const className = classnames("nz-widget-widget", props.className);
+    return (
+      <WidgetContext.Provider value={value}>
+        <div
+          className={className}
+          onMouseEnter={props.onMouseEnter}
+          onMouseLeave={props.onMouseLeave}
+          onTransitionEnd={props.onTransitionEnd}
+          ref={ref}
+          style={props.style}
+          data-widget-id={id}
+        >
+          {props.children}
+        </div>
+      </WidgetContext.Provider>
+    );
+  }
+);
+
+/** @internal */
+export function useDragPanelWidget() {
+  const id = useSafeContext(WidgetIdContext);
+  const side = React.useContext(PanelSideContext);
+  const measureNz = React.useContext(MeasureContext);
+  const dispatch = React.useContext(NineZoneDispatchContext);
+  const floatingWidgetId = useFloatingWidgetId();
+  const widgetId = floatingWidgetId === undefined ? id : floatingWidgetId;
+  const { preferredFloatingWidgetSize, userSized } = useLayout((state) => {
+    const widget = getWidgetState(state, id);
+    const tab = state.tabs[widget.activeTabId];
+    return {
+      preferredFloatingWidgetSize: tab.preferredFloatingWidgetSize,
+      userSized:
+        tab.userSized ||
+        (tab.isFloatingWidgetResizable && !!tab.preferredFloatingWidgetSize),
+    };
+  }, true);
+
+  const ref = React.useRef<HTMLDivElement>(null);
+
+  const onDragStart = React.useCallback<
+    NonNullable<UseDragWidgetArgs["onDragStart"]>
+  >(
+    (updateId, initialPointerPosition, pointerPosition) => {
+      if (!ref.current) return;
+      if (floatingWidgetId !== undefined) return;
+      const nzBounds = measureNz();
+      let bounds = Rectangle.create(ref.current.getBoundingClientRect());
+
+      const size = restrainInitialWidgetSize(
+        bounds.getSize(),
+        nzBounds.getSize()
+      );
+      bounds = bounds.setSize(size);
+
+      if (preferredFloatingWidgetSize) {
+        bounds = bounds.setSize(preferredFloatingWidgetSize);
+      }
+
+      // Pointer is outside of tab area. Need to re-adjust widget bounds so that tab is behind pointer
+      if (initialPointerPosition.x > bounds.right) {
+        const offset = initialPointerPosition.x - bounds.right + 20;
+        bounds = bounds.offsetX(offset);
+      }
+
+      const dragOffset = initialPointerPosition.getOffsetTo(pointerPosition);
+      bounds = bounds.offset(dragOffset);
+
+      // Adjust bounds to be relative to 9z origin
+      bounds = bounds.offset({ x: -nzBounds.left, y: -nzBounds.top });
+
+      const newFloatingWidgetId = getUniqueId();
+      updateId(newFloatingWidgetId);
+
+      assert(!!side);
+      dispatch({
+        type: "PANEL_WIDGET_DRAG_START",
+        newFloatingWidgetId,
+        id,
+        bounds,
+        side,
+        userSized,
+      });
+    },
+    [
+      dispatch,
+      floatingWidgetId,
+      id,
+      side,
+      measureNz,
+      preferredFloatingWidgetSize,
+      userSized,
+    ]
+  );
+  useDragWidget({
+    widgetId,
+    onDragStart,
+  });
+  return ref;
+}
+
+/** @internal */
+export function useWidgetContextValue() {
+  const ref = React.useRef<HTMLDivElement>(null);
+  const measure = React.useCallback<WidgetContextArgs["measure"]>(() => {
+    if (!ref.current) return new Rectangle();
+    const bounds = ref.current.getBoundingClientRect();
+    return Rectangle.create(bounds);
+  }, []);
+  const value = React.useMemo<WidgetContextArgs>(
+    () => ({
+      measure,
+    }),
+    [measure]
+  );
+  return [ref, value] as const;
+}
+
+/** @internal */
+export const WidgetIdContext = React.createContext<
+  WidgetState["id"] | undefined
+>(undefined);
+WidgetIdContext.displayName = "nz:WidgetIdContext";
+
+/** @internal */
+export interface WidgetContextArgs {
+  measure: () => Rectangle;
+}
+
+/** @internal */
+export const WidgetContext = React.createContext<WidgetContextArgs>(null!);
+WidgetContext.displayName = "nz:WidgetContext";
+
+const minWidth = 200;
+const minHeight = 200;
+
+/** @internal */
+export function restrainInitialWidgetSize(
+  size: SizeProps,
+  nzSize: SizeProps
+): SizeProps {
+  const width = Math.max(Math.min(nzSize.width / 3, size.width), minWidth);
+  const height = Math.max(Math.min(nzSize.height / 3, size.height), minHeight);
+  return {
+    width,
+    height,
+  };
+}
+
+/** @internal */
+export function useActiveTabId() {
+  const id = useSafeContext(WidgetIdContext);
+  return useLayout((state) => {
+    const widget = getWidgetState(state, id);
+    return widget.activeTabId;
+  });
+}

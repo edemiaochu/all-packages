@@ -1,0 +1,22 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+
+.components-color-swatch {
+  font-size: var(--iui-font-size-1);
+  height: 1em * 1.2;
+  width: 1em * 1.2;
+  border-width: 1px;
+  border-radius: var(--iui-border-radius-1);
+  border-style: solid;
+  border-color: var(--iui-color-border-subtle);
+
+  &.round {
+    border-radius: 50%;
+  }
+
+  &[disabled] {
+    opacity: 0.2;
+  }
+}

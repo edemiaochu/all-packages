@@ -1,0 +1,21 @@
+/*---------------------------------------------------------------------------------------------
+* Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
+
+.presentation-instance-filter {
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  overflow: hidden;
+
+  .presentation-property-filter-builder {
+    padding-top: var(--iui-size-3xs);
+    overflow: auto;
+  }
+}
+
+.class-selection-warning {
+  min-width: 100%;
+  margin-bottom: var(--iui-size-s);
+}

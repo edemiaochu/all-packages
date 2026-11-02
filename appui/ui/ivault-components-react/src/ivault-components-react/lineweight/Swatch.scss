@@ -1,0 +1,46 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+.components-lineweight-swatch {
+  font-size: var(--iui-font-size-1);
+  color: var(--iui-color-text);
+  border: none;
+  background: inherit;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 3px 15px 3px 0;
+  min-height: 22px;
+  box-sizing: border-box;
+
+  // remove inner focus ring that is specific to Firefox.
+  &::-moz-focus-inner {
+    border: 0px;
+  }
+
+  &:focus {
+    outline: 1px solid var(--iui-color-background-accent-muted);
+  }
+
+  &[disabled] {
+    opacity: 0.2;
+    cursor: default;
+  }
+
+  > span {
+    width: 1.5em;
+    text-align: right;
+  }
+
+  > div {
+    flex: 1;
+    background: var(--iui-color-text);
+    margin-left: 15px;
+  }
+}
+
+.components-lineweight-swatch.hide-label > span {
+  display: none;
+}

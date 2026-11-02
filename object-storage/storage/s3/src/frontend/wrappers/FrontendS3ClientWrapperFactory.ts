@@ -1,0 +1,35 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+import {
+  RetryOptions,
+  TransferConfig,
+} from "@szewtwin/object-storage-core/lib/frontend";
+
+import { assertS3TransferConfig, createS3Client } from "../../common/internal";
+
+import { FrontendS3ClientWrapper } from "./FrontendS3ClientWrapper";
+
+export class FrontendS3ClientWrapperFactory {
+  public constructor(protected readonly _retryOptions: RetryOptions = {}) {}
+
+  public create(transferConfig: TransferConfig): FrontendS3ClientWrapper {
+    assertS3TransferConfig(transferConfig);
+
+    const { authentication, baseUrl, region, bucket } = transferConfig;
+    const { accessKey, secretKey, sessionToken } = authentication;
+
+    return new FrontendS3ClientWrapper(
+      createS3Client({
+        baseUrl,
+        region,
+        accessKey,
+        secretKey,
+        sessionToken,
+        retryOptions: this._retryOptions,
+      }),
+      bucket
+    );
+  }
+}

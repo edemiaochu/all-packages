@@ -1,0 +1,16 @@
+{
+  "name": "@szewec/dmdb-schema-policies-schema",
+  "license": "MIT",
+  "version": "1.0.1",
+  "homepage": "https://www.szewtwinjs.org/",
+  "keywords": [
+    "Szewec",
+    "BIS",
+    "iVault"
+  ],
+  "description": "DMDbSchemaPolicies BIS Domains",
+  "author": {
+    "name": "Szewec Systems, Inc.",
+    "url": "http://www.szewec.com"
+  }
+}

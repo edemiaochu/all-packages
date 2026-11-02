@@ -1,0 +1,105 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+
+import { defer, filter, map, merge, mergeMap, Observable } from "rxjs";
+import {
+  createNodeIdentifierForLogging,
+  createOperatorLoggingNamespace,
+  hasChildren,
+  LOGGING_NAMESPACE_INTERNAL,
+} from "../../internal/Common.js";
+import { doLog, log } from "../../internal/LoggingUtils.js";
+import { partition } from "../../internal/operators/Partition.js";
+import {
+  ProcessedGenericHierarchyNode,
+  ProcessedHierarchyNode,
+  ProcessedInstanceHierarchyNode,
+} from "../IVaultHierarchyNode.js";
+
+// cspell:words doesnt
+
+const OPERATOR_NAME = "HideIfNoChildren";
+/** @internal */
+export const LOGGING_NAMESPACE = createOperatorLoggingNamespace(OPERATOR_NAME, LOGGING_NAMESPACE_INTERNAL);
+
+/**
+ * Creates an operator that hides nodes with no children if they have a `hideIfNoChildren` handling param.
+ *
+ * @internal
+ */
+export function createHideIfNoChildrenOperator(hasNodes: (node: ProcessedHierarchyNode) => Observable<boolean>) {
+  return function (nodes: Observable<ProcessedHierarchyNode>): Observable<ProcessedHierarchyNode> {
+    const inputNodes = nodes.pipe(
+      /* v8 ignore next -- @preserve */
+      log({ category: LOGGING_NAMESPACE, message: (n) => `in: ${createNodeIdentifierForLogging(n)}` }),
+    );
+    // split input into 3 pieces:
+    // - `doesntNeedHide` - nodes without the flag (return no matter if they have children or not)
+    // - `determinedChildren` - nodes with the flag and known children
+    // - `undeterminedChildren` - nodes with the flag and unknown children
+    const [needsHide, doesntNeedHide] = partition(
+      inputNodes,
+      (n): n is ProcessedGenericHierarchyNode | ProcessedInstanceHierarchyNode =>
+        (ProcessedHierarchyNode.isGeneric(n) || ProcessedHierarchyNode.isInstancesNode(n)) &&
+        !!n.processingParams?.hideIfNoChildren,
+    );
+    const [determinedChildren, undeterminedChildren] = partition(needsHide, (n) => n.children !== undefined);
+    return merge(
+      doesntNeedHide.pipe(
+        /* v8 ignore next -- @preserve */
+        log({ category: LOGGING_NAMESPACE, message: (n) => `${createNodeIdentifierForLogging(n)}: doesn't need hide` }),
+      ),
+      merge(
+        determinedChildren.pipe(
+          /* v8 ignore next -- @preserve */
+          log({
+            category: LOGGING_NAMESPACE,
+            message: (n) => `${createNodeIdentifierForLogging(n)}: needs hide, has children`,
+          }),
+        ),
+        undeterminedChildren.pipe(
+          /* v8 ignore next -- @preserve */
+          log({
+            category: LOGGING_NAMESPACE,
+            message: (n) => `${createNodeIdentifierForLogging(n)}: needs hide, needs children`,
+          }),
+          mergeMap(
+            (n) =>
+              defer(() => {
+                /* v8 ignore next -- @preserve */
+                doLog({
+                  category: LOGGING_NAMESPACE,
+                  message: () => `${createNodeIdentifierForLogging(n)}: requesting children flag`,
+                });
+                return hasNodes(n).pipe(
+                  /* v8 ignore next -- @preserve */
+                  log({
+                    category: LOGGING_NAMESPACE,
+                    message: (childrenFlag) =>
+                      `${createNodeIdentifierForLogging(n)}: determined children: ${childrenFlag}`,
+                  }),
+                  map((children) => Object.assign(n, { children })),
+                );
+              }),
+            // Sending child check requests for all nodes without any limit greatly slows down
+            // the following case:
+            // - NodeX (determining children) -> ... lots of children with "hide if no children" -> ...
+            // We check the nodes with "hide if no children" at most 2 at a time to prefer going deep into
+            // the hierarchy, where we're more likely to find an answer, rather than going wide.
+            2,
+          ),
+          /* v8 ignore next -- @preserve */
+          log({
+            category: LOGGING_NAMESPACE,
+            message: (n) => `${createNodeIdentifierForLogging(n)}: needs hide, determined children: ${hasChildren(n)}`,
+          }),
+        ),
+      ).pipe(filter(hasChildren)),
+    ).pipe(
+      /* v8 ignore next -- @preserve */
+      log({ category: LOGGING_NAMESPACE, message: (n) => `out: ${createNodeIdentifierForLogging(n)}` }),
+    );
+  };
+}

@@ -1,0 +1,32 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+
+.nz-footer-toolAssistance-instruction {
+  display: grid;
+  align-items: center;
+  grid-gap: 6px;
+  grid-auto-flow: column;
+  grid-template-columns: 48px 1fr;
+  line-height: 16px;
+  position: relative;
+
+  > .nz-image {
+    margin: auto;
+
+    > .nz-footer-toolAssistance-newDot {
+      position: absolute;
+      top: 12px;
+      left: -2px;
+    }
+
+    svg {
+      fill: currentColor;
+    }
+  }
+
+  > .nz-text-new {
+    font-weight: bold;
+  }
+}

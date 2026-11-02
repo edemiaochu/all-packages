@@ -1,0 +1,67 @@
+{
+  "generatedAt": "2026-10-29T08:30:52.319Z",
+  "searchDir": "C:\\lk\\01_work\\word_change\\test\\base",
+  "summary": {
+    "totalFilesScanned": 192,
+    "totalUniqueIdentifiers": 6,
+    "filesWithMatches": 9,
+    "byWord": {
+      "dgn": 1,
+      "bentley": 0,
+      "itwin": 0,
+      "imodel": 0,
+      "imjs": 0,
+      "imdl": 0,
+      "OpenPlant": 1,
+      "OpenBridge": 0,
+      "MicroStation": 4,
+      "OpenRoads": 0,
+      "OpenBuildings": 0,
+      "AutoPLANT": 0,
+      "ProStructures": 0,
+      "ProjectWise": 0,
+      "AECOsim": 0,
+      "Speedikon": 0,
+      "AutoPIPE": 0,
+      "STAAD": 0,
+      "SPPM": 0,
+      "Structural Synchronizer": 0
+    }
+  },
+  "identifiers": {
+    "dgn": [
+      "DGN_VTABLE_SpatialIndex"
+    ],
+    "bentley": [],
+    "itwin": [],
+    "imodel": [],
+    "imjs": [],
+    "imdl": [],
+    "OpenPlant": [
+      "OpenPlantTypeName"
+    ],
+    "OpenBridge": [],
+    "MicroStation": [
+      "LinkMicroStationID",
+      "Microstation_External_Element",
+      "NodeMicroStation2dID",
+      "NodeMicroStationID"
+    ],
+    "OpenRoads": [],
+    "OpenBuildings": [],
+    "AutoPLANT": [],
+    "ProStructures": [],
+    "ProjectWise": [],
+    "AECOsim": [],
+    "Speedikon": [],
+    "AutoPIPE": [],
+    "STAAD": [],
+    "SPPM": [],
+    "Structural Synchronizer": []
+  },
+  "pathMatches": {
+    "total": 0,
+    "directories": [],
+    "fileNames": []
+  }
+}

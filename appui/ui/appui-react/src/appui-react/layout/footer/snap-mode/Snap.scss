@@ -1,0 +1,50 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+.nz-footer-snapMode-snap {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-gap: 8px;
+  padding: 4px 8px;
+  align-items: center;
+  cursor: pointer;
+  color: var(--iui-color-text);
+  position: relative;
+
+  svg {
+    fill: currentColor;
+  }
+
+  > .nz-icon {
+    grid-row: 1;
+    color: var(--iui-color-icon);
+  }
+
+  > .nz-label {
+    grid-row: 1;
+  }
+
+  &.nz-active {
+    color: var(--iui-color-text-accent);
+
+    &:before {
+      content: "";
+      display: block;
+      position: absolute;
+      background-color: currentColor;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+    }
+  }
+
+  &:hover {
+    color: var(--iui-color-text-accent-hover);
+  }
+
+  &:focus {
+    outline: none;
+  }
+}

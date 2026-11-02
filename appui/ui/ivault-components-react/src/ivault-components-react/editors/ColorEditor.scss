@@ -1,0 +1,16 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+$components-color-editor-item-height: 100%;
+
+.components-color-editor {
+  font-family: var(--iui-font-sans);
+  font-size: var(--iui-font-size-1);
+  color: var(--iui-color-text);
+  border: none;
+  box-sizing: border-box;
+  height: $components-color-editor-item-height;
+  display: flex;
+  align-items: center;
+}

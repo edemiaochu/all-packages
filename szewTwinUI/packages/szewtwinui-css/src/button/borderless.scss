@@ -1,0 +1,20 @@
+// Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+// See LICENSE.md in the project root for license terms and full copyright notice.
+@use 'base';
+
+@mixin iui-button-borderless {
+  --_iui-button-group-item-offset: 0; // To prevent border overlap between adjacent borderless buttons
+
+  &[data-iui-shift='left'] {
+    margin-inline-start: calc(-1 * var(--_iui-button-padding-inline));
+  }
+
+  &[data-iui-shift='right'] {
+    margin-inline-end: calc(-1 * var(--_iui-button-padding-inline));
+  }
+}
+
+@mixin iui-button-borderless-active {
+  --_iui-field-color-background: hsl(var(--iui-color-accent-hsl) / var(--iui-opacity-6));
+  --_iui-field-color-background-hover: hsl(var(--iui-color-accent-hsl) / var(--iui-opacity-6));
+}

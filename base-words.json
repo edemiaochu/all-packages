@@ -1,0 +1,22 @@
+[
+    "dgn",
+    "bentley",
+    "itwin",
+    "imodel",
+    "imjs",
+    "imdl",
+    {"word": "OpenPlant", "exact": true},
+    {"word": "OpenBridge", "exact": true},
+    {"word": "MicroStation", "exact": true},
+    {"word": "OpenRoads", "exact": true},
+    {"word": "OpenBuildings", "exact": true},
+    {"word": "AutoPLANT", "exact": true},
+    {"word": "ProStructures", "exact": true},
+    {"word": "ProjectWise", "exact": true},
+    {"word": "AECOsim", "exact": true},
+    {"word": "Speedikon", "exact": true},
+    {"word": "AutoPIPE", "exact": true},
+    {"word": "STAAD", "exact": true},
+    {"word": "SPPM", "exact": true},
+    {"word": "Structural Synchronizer", "exact": true}
+]

@@ -1,0 +1,1 @@
+CorEcA 本身是被 EC 规则命中的原始文本（camel 分词拆出Ec），而它其实是测试里 CoreCA 的随机大小写写法。这个只能靠把 CorEcA 加进 exclude-list.json（现在还是[]）来保护，或者让测试换一个不会被短词命中的写法

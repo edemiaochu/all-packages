@@ -1,0 +1,17 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+import * as React from "react";
+import { renderHook } from "@testing-library/react";
+import { useAllowedWidgetTarget } from "../../../appui-react/layout/target/useAllowedWidgetTarget.js";
+import { TestNineZoneProvider } from "../Providers.js";
+
+describe("useAllowedWidgetTarget", () => {
+  it("should return `false` for popout widget", () => {
+    const { result } = renderHook(() => useAllowedWidgetTarget("w1"), {
+      wrapper: (props: any) => <TestNineZoneProvider {...props} />,
+    });
+    expect(result.current).toEqual(false);
+  });
+});

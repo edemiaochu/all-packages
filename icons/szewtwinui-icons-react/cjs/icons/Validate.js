@@ -1,0 +1,11 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.SvgValidate = void 0;
+const react_1 = __importDefault(require("react"));
+const SvgValidate = (props) => (react_1.default.createElement("svg", { viewBox: "0 0 16 16", width: "1rem", height: "1rem", fill: "var(--iui-color-icon-muted, currentColor)", ...props },
+    react_1.default.createElement("path", { d: "M7.055 10.997l4.83-4.684-1.357-1.316L7.06 8.36 5.472 6.82 4.114 8.136zM8 1.707l1.446.901 1.7-.059.8 1.506 1.505.799-.06 1.7L14.294 8l-.901 1.446.059 1.7-1.506.8-.799 1.505-1.7-.06L8 14.294l-1.446-.901-1.7.059-.8-1.506-1.505-.799.06-1.7L1.706 8l.901-1.446-.059-1.7 1.506-.8.799-1.505 1.7.06zM8 .049L6.174 1.188l-2.15-.075-1.01 1.901-1.9 1.01.074 2.15L.049 8l1.139 1.826-.075 2.15 1.901 1.01 1.01 1.9 2.15-.074L8 15.951l1.826-1.139 2.15.075 1.01-1.901 1.9-1.01-.074-2.15L15.951 8l-1.139-1.826.075-2.15-1.901-1.01-1.01-1.9-2.15.074z" })));
+exports.SvgValidate = SvgValidate;
+exports.default = SvgValidate;

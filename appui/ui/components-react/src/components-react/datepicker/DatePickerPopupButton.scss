@@ -1,0 +1,56 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+.components-date-picker-calendar-popup-button {
+  color: var(--iui-color-text);
+  font-size: var(--iui-font-size-1);
+  background-color: transparent;
+  height: 2.2em;
+  border: none;
+  margin-right: 2px;
+
+  .datepicker-button {
+    width: 16px;
+    height: 16px;
+  }
+
+  svg {
+    fill: var(--iui-color-icon);
+  }
+
+  &:hover {
+    color: var(--iui-color-text-accent-hover);
+    cursor: auto;
+
+    svg {
+      fill: var(--iui-color-text-accent-hover);
+    }
+  }
+
+  &:focus {
+    box-shadow: hsl(var(--iui-color-accent-hsl) / var(--iui-opacity-4)) 0px 0px
+      0px 2px;
+    outline: none;
+  }
+}
+
+.components-date-picker-calendar-popup-panel {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--iui-color-background);
+
+  .time-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    border-top: 2px solid var(--iui-color-border-foreground);
+    padding-top: 8px;
+    padding-bottom: 8px;
+
+    .time-label {
+      margin-right: 4px;
+    }
+  }
+}

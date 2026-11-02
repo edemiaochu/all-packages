@@ -1,0 +1,16 @@
+packages:
+  - .
+
+allowBuilds:
+  "@szewtwin/certa": true
+  "@szewtwin/oidc-signin-tool": true
+
+minimumReleaseAgeExclude:
+  - "@szewtwin/build-tools@5.9.1"
+  - "@szewtwin/certa@5.9.1"
+  - "@szewtwin/core-common@5.9.1"
+  - "@szewtwin/core-geometry@5.9.1"
+  - "@szewtwin/core-szewec@5.9.1"
+  - "@szewtwin/eslint-plugin@6.0.0"
+  - "@szewtwin/oidc-signin-tool@5.1.2"
+  - "@szewtwin/service-authorization@2.1.1"

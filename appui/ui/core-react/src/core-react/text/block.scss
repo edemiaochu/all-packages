@@ -1,0 +1,15 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@mixin uicore-text-block {
+  margin: 0;
+  padding: 0;
+  border: none;
+  vertical-align: baseline;
+  font-size: var(--iui-font-size-1);
+  font-weight: var(--iui-font-weight-normal);
+  line-height: var(--iui-size-l);
+
+  margin: 0 0 var(--iui-size-l);
+}

@@ -1,0 +1,50 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+.uifw-sheet-navigation {
+  height: 96px;
+  width: 96px;
+  box-sizing: border-box;
+  border-color: var(--iui-color-background-disabled);
+  border-width: 1px;
+  border-radius: var(--iui-border-radius-1);
+  border-style: solid;
+  color: var(--iui-color-text);
+  background: var(--iui-color-background-hover);
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+
+  > .sheet-title {
+    font-size: 12px;
+    font-weight: bold;
+  }
+
+  > .sheet-name {
+    cursor: pointer;
+    font-size: 11px;
+    z-index: 1;
+    height: 46px;
+    overflow: hidden;
+    margin: 0 2px;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  > .sheet-container {
+    flex: 1 1 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 11px;
+
+    > * {
+      text-align: center;
+    }
+  }
+}

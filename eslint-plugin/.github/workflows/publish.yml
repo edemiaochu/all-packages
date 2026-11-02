@@ -1,0 +1,40 @@
+name: Publish szewtwin/eslint-plugin to NPM
+
+on: workflow_dispatch
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.IVJS_ADMIN_GH_TOKEN }}
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          registry-url: http://localhost:4873/
+
+      - name: Configure git
+        run: |
+          git config --local user.email ivaultjs-admin@users.noreply.github.com
+          git config --local user.name ivaultjs-admin 
+
+      - name: Enable corepack
+        run: corepack enable
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile=true
+
+      - name: Run Tests
+        run: pnpm run cover
+
+      - name: Publish packages
+        run: |
+          pnpm publish-packages -y --branch ${{ github.ref_name }} --message "Version bump [skip actions]"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPMJS_PUBLISH_SZEWTWIN }}
+
+

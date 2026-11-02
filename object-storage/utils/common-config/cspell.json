@@ -1,0 +1,25 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "ignorePaths": [
+    "**/node_modules/**",
+    "**/src/assets/**",
+    "**/lib/**",
+    "**/dist/**",
+    "*.log",
+    "tsconfig.json",
+    "package.json",
+    "**/cypress/support/**"
+  ],
+  "words": [
+    "alicloud",
+    "Downscoped",
+    "iframes",
+    "inversify",
+    "szewtwin",
+    "kbps",
+    "minio",
+    "paramtypes",
+    "presigner"
+  ]
+}

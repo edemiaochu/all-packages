@@ -1,0 +1,26 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+import { FrontendStorageTestSetup } from "@szewtwin/object-storage-tests-frontend/lib/FrontendStorageTestSetup";
+
+import { TypedDependencyConfig } from "@szewtwin/cloud-agnostic-core";
+
+import { Constants, GoogleFrontendStorageBindings } from "../../../frontend";
+
+const config = {
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  FrontendStorage: {
+    bindingStrategy: "StrategyDependency",
+    instance: {
+      dependencyName: Constants.storageType,
+    },
+  } as TypedDependencyConfig,
+};
+const setup = new FrontendStorageTestSetup(
+  config,
+  GoogleFrontendStorageBindings,
+  "http://localhost:1224",
+  Constants.storageType
+);
+setup.setGlobals();

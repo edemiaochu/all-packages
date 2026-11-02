@@ -1,0 +1,11 @@
+name: (PyRelease) Publish Python SDK Release
+
+on: workflow_dispatch
+
+# Creates a release in Github repo. Does not publish package to Pypi
+# Delegates all logic to python-publish.yml
+jobs:
+  publish:
+    uses: ./.github/workflows/python-publish.yml
+    with:
+      prerelease: false

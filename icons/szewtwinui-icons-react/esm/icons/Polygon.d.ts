@@ -1,0 +1,5 @@
+import React, { type SVGProps } from 'react';
+declare const SvgPolygon: (props: SVGProps<SVGSVGElement>) => React.JSX.Element;
+export default SvgPolygon;
+export { SvgPolygon };
+//# sourceMappingURL=Polygon.d.ts.map

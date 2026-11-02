@@ -1,0 +1,318 @@
+// Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+// See LICENSE.md in the project root for license terms and full copyright notice.
+@use '../mixins';
+
+$iui-side-navigation-icon-margins: calc(1.5 * var(--iui-size-m));
+
+@mixin iui-header-brand {
+  block-size: 100%;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  white-space: nowrap;
+  background-color: transparent;
+  box-sizing: border-box;
+
+  &:is(a, button, [role='button']) {
+    @include mixins.iui-focus($thickness: 2px, $offset: -2px);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: background-color var(--iui-duration-1) ease-out;
+    @media (forced-colors: active) {
+      border: 1px solid CanvasText;
+      border-block-start-width: 0;
+      border-block-end-width: 0;
+    }
+
+    // #region resets for button
+    @include mixins.iui-reset;
+    font-family: inherit;
+    background-color: unset;
+    color: unset;
+    // #endregion
+
+    &:hover {
+      background-color: var(--iui-color-background-hover);
+    }
+  }
+
+  &:is(a) {
+    text-decoration: none;
+  }
+}
+
+@mixin iui-header-brand-icon {
+  &,
+  > * {
+    @include mixins.iui-icon-style('l');
+    fill: var(--iui-color-icon);
+  }
+  margin-inline: $iui-side-navigation-icon-margins;
+  will-change: transform;
+  transform: var(--_iui-header-icon-scale);
+  @media (prefers-reduced-motion: no-preference) {
+    transition: transform var(--iui-duration-1) ease-out;
+  }
+}
+
+@mixin iui-header-brand-label {
+  margin-inline-end: var(--iui-size-s);
+  font-size: var(--_iui-header-brand-label-font-size);
+  @media (prefers-reduced-motion: no-preference) {
+    transition: font-size var(--iui-duration-1) ease-out;
+  }
+  @media (max-width: 991px) {
+    display: none;
+  }
+}
+
+@mixin iui-header-breadcrumb-item {
+  max-inline-size: 25vw;
+  transition: background-color var(--iui-duration-1) ease-out;
+  block-size: 100%;
+  display: flex;
+  overflow: hidden;
+  position: relative;
+  color: var(--iui-color-text);
+  box-sizing: border-box;
+  @media (forced-colors: active) {
+    color: LinkText;
+    border: none;
+  }
+
+  // Hover state
+  &:hover {
+    background-color: var(--iui-color-background-hover);
+  }
+
+  // Active state
+  &[aria-current] {
+    background-color: var(--iui-color-background-accent-muted);
+    box-shadow: 0 2px 0 0 var(--iui-color-border-accent);
+    color: var(--iui-color-text-accent);
+    @media (forced-colors: active) {
+      color: LinkText;
+      border-block-end: 3px solid LinkText;
+    }
+  }
+
+  // Disabled state
+  &[aria-disabled='true'] {
+    cursor: not-allowed;
+    background-color: transparent;
+    color: var(--iui-color-text-disabled);
+
+    // Disabled active state
+    &[aria-current] {
+      box-shadow: none;
+      background-color: var(--iui-color-background-backdrop);
+
+      @media (forced-colors: active) {
+        border-block-end: 3px solid GrayText;
+      }
+    }
+  }
+}
+
+@mixin iui-header-breadcrumb-button-wrapper {
+  inline-size: 100%;
+  overflow: hidden;
+  display: flex;
+}
+
+@mixin iui-header-breadcrumb-button {
+  @include mixins.iui-reset;
+  @include mixins.iui-focus($thickness: 2px, $offset: -2px);
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+  justify-content: center;
+  block-size: 100%;
+  border-radius: 0;
+  max-inline-size: 25vw;
+  overflow: hidden;
+  padding-inline: var(--iui-size-s);
+  box-sizing: border-box;
+  font-family: inherit;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color var(--iui-duration-1) ease-out;
+  color: inherit;
+  gap: var(--iui-size-s);
+  cursor: pointer;
+  @media (forced-colors: active) {
+    border: 1px solid;
+    border-block-start-width: 0;
+    border-block-end-width: 0;
+
+    &:not(:last-child) {
+      border-inline-end-width: 0;
+    }
+  }
+
+  // Default & hover state
+  &,
+  &:hover {
+    background-color: transparent;
+  }
+
+  // Disabled state
+  &:disabled,
+  &[aria-disabled='true'] {
+    cursor: not-allowed;
+  }
+
+  svg {
+    fill: currentColor;
+
+    :disabled &,
+    [aria-disabled='true'] & {
+      @media (forced-colors: active) {
+        fill: GrayText;
+      }
+    }
+  }
+}
+
+@mixin iui-header-breadcrumb-button-split {
+  padding-inline: var(--iui-size-xs);
+  margin-inline-start: calc(0px - var(--iui-size-xs));
+  flex-shrink: 0;
+
+  &:hover {
+    background-color: hsl(var(--iui-color-foreground-hsl) / var(--iui-opacity-6));
+  }
+
+  [aria-current] &:hover {
+    background-color: hsl(var(--iui-color-accent-hsl) / var(--iui-opacity-6));
+  }
+
+  &:disabled,
+  &[aria-disabled='true'] {
+    cursor: not-allowed;
+
+    &:hover {
+      background-color: transparent;
+    }
+  }
+}
+
+@mixin iui-header-breadcrumb-button-dropdown-icon {
+  @include mixins.iui-icon-style('m');
+  flex-shrink: 0;
+  margin-inline-end: calc(0px - var(--iui-size-2xs));
+
+  .iui-header-breadcrumb-button-split & {
+    margin-inline-end: 0;
+  }
+}
+
+@mixin iui-header-breadcrumb-button-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: var(--iui-font-size-1);
+  text-align: start;
+  overflow: hidden;
+  transition: color var(--iui-duration-1) ease-out;
+
+  &-label,
+  &-sublabel {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  &-sublabel {
+    font-size: var(--iui-font-size-0);
+    color: var(--iui-color-text-muted);
+    @media (prefers-reduced-motion: no-preference) {
+      transition:
+        visibility 0s linear 0s,
+        width var(--iui-duration-1) ease-out,
+        height var(--iui-duration-1) ease-out,
+        opacity var(--iui-duration-1) ease-out;
+    }
+
+    .iui-active &,
+    [aria-current] &,
+    [aria-disabled='true'] & {
+      color: inherit;
+    }
+
+    [data-iui-size='slim'] & {
+      visibility: hidden;
+      opacity: 0;
+      block-size: 0;
+      inline-size: 0;
+    }
+  }
+}
+
+@mixin iui-header-breadcrumb-button-icon {
+  &,
+  > * {
+    @include mixins.iui-icon-style('l');
+    flex-shrink: 0;
+    border-radius: var(--iui-border-radius-1);
+  }
+  transform: var(--_iui-header-icon-scale);
+  will-change: transform;
+  @media (prefers-reduced-motion: no-preference) {
+    transition: transform var(--iui-duration-1) ease-out;
+  }
+
+  > svg {
+    padding: var(--iui-size-2xs);
+    background-color: var(--iui-color-background-backdrop);
+    fill: var(--iui-color-icon-muted);
+    @media (forced-colors: active) {
+      fill: LinkText;
+    }
+
+    :is(.iui-active, [aria-current]) & {
+      background-color: var(--iui-color-background);
+      fill: currentColor;
+    }
+
+    :is(:disabled, [aria-disabled='true']) & {
+      background-color: var(--iui-color-background-backdrop);
+      fill: currentColor;
+
+      @media (forced-colors: active) {
+        fill: GrayText;
+      }
+    }
+  }
+
+  :is(img, span) {
+    outline: 2px solid hsl(var(--iui-color-foreground-hsl) / var(--iui-opacity-6));
+    outline-offset: -2px;
+    transition: filter var(--iui-duration-1) ease-out;
+    @media (prefers-reduced-motion: no-preference) {
+      transition:
+        filter var(--iui-duration-1) ease-out,
+        transform var(--iui-duration-1) ease-out;
+    }
+  }
+
+  :is(img) {
+    object-fit: cover;
+  }
+
+  :is(span) {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  :is(img, span) {
+    :disabled &,
+    [aria-disabled='true'] & {
+      filter: grayscale(1) opacity(0.7);
+    }
+  }
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+}

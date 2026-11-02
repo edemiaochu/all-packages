@@ -1,0 +1,51 @@
+import { ElectronMainAuthorization } from "../../main/Client.js";
+import { app, BrowserWindow } from "electron";
+import { config } from "dotenv";
+
+config();
+
+const createWindow = () => {
+  const win = new BrowserWindow({
+    width: 800,
+    height: 600,
+    webPreferences: {
+      preload: require.resolve("../../renderer/ElectronPreload"),
+    },
+  });
+
+  void win.loadFile("./index.html");
+  // win.webContents.openDevTools();
+};
+
+void app.whenReady().then(async () => {
+  if (!process.env.IVJS_TEST_ELECTRON_CLIENT_ID)
+    throw new Error("Please provide a clientId in env");
+  if (!process.env.IVJS_TEST_ELECTRON_SCOPES)
+    throw new Error("Please provide scopes in env");
+
+  createWindow();
+
+  new ElectronMainAuthorization({
+    clientId: process.env.IVJS_TEST_ELECTRON_CLIENT_ID,
+    scopes: process.env.IVJS_TEST_ELECTRON_SCOPES,
+    redirectUris: ["http://localhost:3000/signin-callback"],
+  });
+
+  new ElectronMainAuthorization({
+    clientId: process.env.IVJS_TEST_ELECTRON_CLIENT_ID,
+    scopes: process.env.IVJS_TEST_ELECTRON_SCOPES,
+    // it's ok to use the same port since sign-ins are sequential, not concurrent
+    redirectUris: ["http://localhost:3000/signin-callback"],
+    channelClientPrefix: "prefixed",
+  });
+
+  app.on("activate", () => {
+    if (BrowserWindow.getAllWindows().length === 0)
+      createWindow();
+  });
+});
+
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin")
+    app.quit();
+});

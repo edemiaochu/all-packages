@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- ==================================================================================
+|  * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+|  * See LICENSE.md in the project root for license terms and full copyright notice.
+======================================================================================= -->
+<DMSchema schemaName="StructuralPhysical" alias="sp" version="01.00.01" xmlns="http://www.szewec.com/schemas/Szewec.DMXML.3.2">
+    <DMSchemaReference name="BisCore" version="01.00.14" alias="bis" />
+    <DMSchemaReference name="CoreCustomAttributes" version="01.00.03" alias="CoreCA"/>
+    <DMSchemaReference name="BisCustomAttributes" version="01.00.00" alias="bisCA"/>
+
+    <DMCustomAttributes>
+        <ProductionStatus xmlns="CoreCustomAttributes.01.00.03">
+            <SupportedUse>Production</SupportedUse>
+        </ProductionStatus>
+        <SchemaLayerInfo xmlns="BisCustomAttributes.01.00.00">
+            <Value>DisciplinePhysical</Value>
+        </SchemaLayerInfo>
+    </DMCustomAttributes>
+
+    <DMEntityClass typeName="StructuralPhysicalModel" displayLabel="Structural Physical Model">
+        <BaseClass>bis:PhysicalModel</BaseClass>
+        <DMCustomAttributes>
+            <Deprecated xmlns="CoreCustomAttributes.01.00.03">
+                <Description>PhysicalModel should be used in place of this class.</Description>
+            </Deprecated>
+        </DMCustomAttributes>
+    </DMEntityClass>
+    <DMEntityClass typeName="StructuralElement" displayLabel="Structural Element" modifier="Abstract">
+        <BaseClass>bis:PhysicalElement</BaseClass>
+    </DMEntityClass>
+    <DMEntityClass typeName="StructuralMember" displayLabel="Structural Member">
+        <BaseClass>StructuralElement</BaseClass>
+    </DMEntityClass>
+    <DMEntityClass typeName="Slab" displayLabel="Slab">
+        <BaseClass>StructuralMember</BaseClass>
+    </DMEntityClass>
+    <DMEntityClass typeName="Wall" displayLabel="Wall">
+        <BaseClass>StructuralMember</BaseClass>
+    </DMEntityClass>
+    <DMEntityClass typeName="Beam" displayLabel="Beam">
+        <BaseClass>StructuralMember</BaseClass>
+    </DMEntityClass>
+    <DMEntityClass typeName="Column" displayLabel="Column">
+        <BaseClass>StructuralMember</BaseClass>
+    </DMEntityClass>
+    <DMEntityClass typeName="Brace" displayLabel="Brace">
+        <BaseClass>StructuralMember</BaseClass>
+    </DMEntityClass>
+    <DMEntityClass typeName="FoundationMember" displayLabel="Foundation Member">
+        <BaseClass>StructuralMember</BaseClass>
+    </DMEntityClass>
+    <DMEntityClass typeName="StripFooting" displayLabel="Strip Footing">
+        <BaseClass>FoundationMember</BaseClass>
+    </DMEntityClass>
+    <DMEntityClass typeName="SpreadFooting" displayLabel="Spread Footing">
+        <BaseClass>FoundationMember</BaseClass>
+    </DMEntityClass>
+    <DMEntityClass typeName="PileCap" displayLabel="Pile Cap">
+        <BaseClass>FoundationMember</BaseClass>
+    </DMEntityClass>
+    <DMEntityClass typeName="Pile" displayLabel="Pile">
+        <BaseClass>FoundationMember</BaseClass>
+    </DMEntityClass>
+</DMSchema>

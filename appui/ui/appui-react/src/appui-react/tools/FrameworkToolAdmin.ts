@@ -1,0 +1,55 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+/** @packageDocumentation
+ * @module Tools
+ */
+
+import { Key } from "ts-key-enum";
+import { ToolAdmin } from "@szewtwin/core-frontend";
+import { UiFramework } from "../UiFramework.js";
+
+/** Subclass of `ToolAdmin` in `@szewtwin/core-frontend` to be used to initialize `IVaultApp`.
+ *
+ * Enable processing of shortcut keys registered to
+ * [[UiFramework.keyboardShortcuts]] when focus is set to Home.
+ *
+ * ```ts
+ * await IVaultApp.startup({
+ *   toolAdmin: new FrameworkToolAdmin()
+ * });
+ * ```
+ * @public
+ */
+export class FrameworkToolAdmin extends ToolAdmin {
+  public override async processShortcutKey(
+    e: KeyboardEvent,
+    wentDown: boolean
+  ): Promise<boolean> {
+    if (!wentDown) return false;
+    if (UiFramework.isContextMenuOpen) return false;
+    if (e.key === Key.Escape.valueOf()) return false;
+    if (isElement(e.target) && isEditable(e.target)) return false;
+
+    UiFramework.keyboardShortcuts.processKey(
+      e.key,
+      e.altKey,
+      e.ctrlKey,
+      e.shiftKey
+    );
+    return true;
+  }
+}
+
+function isElement(target: EventTarget | null): target is Element {
+  return target instanceof Element;
+}
+
+const editableTags = ["input", "textarea", "select"];
+function isEditable(element: Element) {
+  const tagName = element.tagName.toLowerCase();
+  if (editableTags.includes(tagName)) return true;
+  if (element instanceof HTMLElement && element.isContentEditable) return true;
+  return false;
+}

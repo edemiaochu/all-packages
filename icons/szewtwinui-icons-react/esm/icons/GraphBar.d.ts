@@ -1,0 +1,5 @@
+import React, { type SVGProps } from 'react';
+declare const SvgGraphBar: (props: SVGProps<SVGSVGElement>) => React.JSX.Element;
+export default SvgGraphBar;
+export { SvgGraphBar };
+//# sourceMappingURL=GraphBar.d.ts.map

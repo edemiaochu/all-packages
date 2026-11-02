@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DMSchema schemaName="PlantCustomAttributes" alias="PlantCA" version="01.00.01" description="Custom attributes for Plant" displayLabel="Plant Custom Attributes" xmlns="http://www.szewec.com/schemas/Szewec.DMXML.3.1">
+    <DMCustomAttributeClass typeName="BisCorePropertyMappingsCustomAttribute" description="Used to specify Product1 Schema property mappings that map to BIS Core properties.  Overriding BIS Core properties to add custom attributes causes the propert to be added as a shared column attribute" appliesTo="Any">
+        <DMProperty propertyName="BisCorePropertyMappings" typeName="string" description="List of BisCore property mappings, format &quot;BisCorePropName,OpenPlantPropertyName;BisCorePropName,OpenPlantPropertyName&quot;"/>
+    </DMCustomAttributeClass>
+    <DMCustomAttributeClass typeName="MappingOriginCustomAttribute" description="Used to specify Product1 Schema class and property origin for this schema" displayLabel="Mapping Origin Custom Attribute" appliesTo="Any">
+        <DMProperty propertyName="OriginName" typeName="string" description="Name of Product1 equivalent class or property" displayLabel="Origin Name"/>
+        <DMProperty propertyName="AdditionalNames" typeName="string" description="Additional Product1 class or property names, multiple entries separated by a semicolon" displayLabel="Additional Names"/>
+    </DMCustomAttributeClass>
+    <DMCustomAttributeClass typeName="ReleaseVersion" description="Tracking the version of release" displayLabel="Release Version" appliesTo="Any">
+        <DMProperty propertyName="Version" typeName="string" description="version like 10.05"/>
+        <DMProperty propertyName="VersionDisplayLabel" typeName="string" displayLabel="Version Display Label"/>
+    </DMCustomAttributeClass>
+</DMSchema>

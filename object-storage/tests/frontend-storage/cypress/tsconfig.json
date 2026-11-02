@@ -1,0 +1,22 @@
+{
+  "extends": "../node_modules/@szewtwin/object-storage-common-config/tsconfig.json",
+  "include": [
+    "./integration/**/*.ts",
+  ],
+  "compilerOptions": {
+    "module": "esnext",
+    "target": "es2023",
+    "lib": [
+      "es2023",
+      "dom"
+    ],
+    "types": [
+      "cypress"
+    ],
+    "moduleResolution": "node",
+    "sourceMap": false,
+    "inlineSources": false,
+    "skipLibCheck": true,
+    "declarationMap": false
+  }
+}

@@ -1,0 +1,177 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+$cube-outer-width: 96px;
+$button-width: 20px;
+$nav-cube-width: 64px;
+$nav-cube-side-width: 14px;
+
+$grad-start: var(--iui-color-background);
+$grad-end: var(--iui-color-background-zebra);
+
+$arrow-margin: -3px;
+
+.components-cube-container {
+  position: relative;
+  width: $cube-outer-width;
+  height: $cube-outer-width;
+
+  .cube-element-container {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: $cube-outer-width;
+    height: $cube-outer-width;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .nav-cube {
+      width: $nav-cube-width;
+      height: $nav-cube-width;
+
+      .nav-cube-face {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+        font-size: var(--iui-font-size-1);
+        font-weight: var(--iui-font-weight-semibold);
+        color: var(--iui-color-text);
+        box-shadow: inset 0px 0px 1px 0.2px var(--iui-color-border);
+
+        .face-row {
+          display: flex;
+          flex-direction: row;
+          height: $nav-cube-side-width;
+          width: 100%;
+
+          &.cube-center {
+            height: auto;
+            flex-grow: 1;
+          }
+
+          .face-cell {
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+            width: $nav-cube-side-width;
+
+            &.cube-center {
+              width: auto;
+              flex-grow: 1;
+            }
+
+            &.cube-hover {
+              height: auto;
+              background-color: var(--iui-color-background-accent-muted);
+            }
+
+            &.cube-active {
+              background-color: var(--iui-color-background-accent-muted);
+            }
+          }
+
+          &.cube-center .face-cell.cube-center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+        }
+      }
+
+      .cube-left,
+      .cube-right,
+      .cube-front,
+      .cube-back {
+        background: linear-gradient(#{$grad-start}, #{$grad-end});
+      }
+
+      .cube-top {
+        background: $grad-start;
+      }
+
+      .cube-bottom {
+        background: $grad-end;
+      }
+
+      &.cube-dragging {
+        .face-row .face-cell {
+          &.cube-hover,
+          &.cube-active {
+            background: transparent;
+          }
+        }
+
+        .cube-left,
+        .cube-right,
+        .cube-front,
+        .cube-back {
+          background: linear-gradient(
+            var(--iui-color-background),
+            var(--iui-color-background-backdrop)
+          );
+        }
+
+        .cube-top {
+          background: var(--iui-color-background);
+        }
+
+        .cube-bottom {
+          background: var(--iui-color-background-backdrop);
+        }
+      }
+    }
+  }
+
+  .cube-pointer {
+    position: absolute;
+    height: $button-width;
+    width: $button-width;
+    font-size: $button-width;
+    color: var(--iui-color-background);
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+    cursor: pointer;
+
+    &:not(.cube-visible) {
+      display: none;
+    }
+
+    &:hover {
+      color: var(--iui-color-background-hover);
+    }
+
+    &:focus {
+      outline: none;
+    }
+
+    &.cube-up {
+      margin: $arrow-margin auto;
+      left: 0px;
+      right: 0px;
+      top: 0px;
+    }
+
+    &.cube-down {
+      margin: $arrow-margin auto;
+      left: 0px;
+      right: 0px;
+      bottom: 0px;
+    }
+
+    &.cube-left {
+      margin: auto $arrow-margin;
+      top: 0px;
+      bottom: 0px;
+      left: 0px;
+    }
+
+    &.cube-right {
+      margin: auto $arrow-margin;
+      top: 0px;
+      bottom: 0px;
+      right: 0px;
+    }
+  }
+}

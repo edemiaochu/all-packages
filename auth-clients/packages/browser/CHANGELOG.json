@@ -1,0 +1,408 @@
+{
+  "name": "@szewtwin/browser-authorization",
+  "entries": [
+    {
+      "date": "Mon, 30 Mar 2026 16:53:21 GMT",
+      "version": "2.0.2",
+      "tag": "@szewtwin/browser-authorization_v2.0.2",
+      "comments": {
+        "patch": [
+          {
+            "author": "50554904+hl662@users.noreply.github.com",
+            "package": "@szewtwin/browser-authorization",
+            "commit": "517ef259cdf12176123433b63c56331cdb5db936",
+            "comment": "chore: upgrade all packages to @szewtwin/eslint-plugin@6 and eslint@9"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Tue, 17 Mar 2026 07:19:34 GMT",
+      "version": "2.0.1",
+      "tag": "@szewtwin/browser-authorization_v2.0.1",
+      "comments": {
+        "none": [
+          {
+            "author": "ben-polinsky@users.noreply.github.com",
+            "package": "@szewtwin/browser-authorization",
+            "commit": "871457b35458addbe18d62997a4a6305d1e331da",
+            "comment": "lint for silent renew docs fix"
+          }
+        ],
+        "patch": [
+          {
+            "author": "98940208+GytisCepk@users.noreply.github.com",
+            "package": "@szewtwin/browser-authorization",
+            "commit": "871457b35458addbe18d62997a4a6305d1e331da",
+            "comment": " "
+          }
+        ]
+      }
+    },
+    {
+      "date": "Mon, 12 Jan 2026 19:52:14 GMT",
+      "version": "2.0.0",
+      "tag": "@szewtwin/browser-authorization_v2.0.0",
+      "comments": {
+        "none": [
+          {
+            "author": "Gytis.Cepkauskas@szewec.com",
+            "package": "@szewtwin/browser-authorization",
+            "commit": "0f3d2ee177b6109bad952c045846ebd4819dfbed",
+            "comment": " "
+          }
+        ]
+      }
+    },
+    {
+      "date": "Mon, 27 Oct 2025 12:14:12 GMT",
+      "version": "2.0.0",
+      "tag": "@szewtwin/browser-authorization_v2.0.0",
+      "comments": {
+        "none": [
+          {
+            "author": "GytisCepk@users.noreply.github.com",
+            "package": "@szewtwin/browser-authorization",
+            "commit": "ca03d6d5b41fceee1a07639741327f59ffec3614",
+            "comment": " "
+          },
+          {
+            "author": "35135765+grigasp@users.noreply.github.com",
+            "package": "@szewtwin/browser-authorization",
+            "commit": "ca03d6d5b41fceee1a07639741327f59ffec3614",
+            "comment": "Bump `@playwright/test` dev dependency version to `~1.56.1`."
+          }
+        ]
+      }
+    },
+    {
+      "date": "Mon, 23 Jun 2025 14:20:52 GMT",
+      "version": "2.0.0",
+      "tag": "@szewtwin/browser-authorization_v2.0.0",
+      "comments": {
+        "none": [
+          {
+            "author": "66480813+paulius-valiunas@users.noreply.github.com",
+            "package": "@szewtwin/browser-authorization",
+            "commit": "2d522e180132be3d23818e570a1e7f6da9233560",
+            "comment": "update dependencies"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Wed, 04 Jun 2025 20:44:05 GMT",
+      "version": "2.0.0",
+      "tag": "@szewtwin/browser-authorization_v2.0.0",
+      "comments": {
+        "none": [
+          {
+            "author": "pankhur94@users.noreply.github.com",
+            "package": "@szewtwin/browser-authorization",
+            "commit": "ae310a6d34c939543963d3063c837370caafcdd9",
+            "comment": ""
+          }
+        ],
+        "major": [
+          {
+            "author": "pankhur94@users.noreply.github.com",
+            "package": "@szewtwin/browser-authorization",
+            "commit": "ae310a6d34c939543963d3063c837370caafcdd9",
+            "comment": "Drop support for core v3 and v4 and bump oidc-client-ts to latest major"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Mon, 17 Feb 2025 21:20:34 GMT",
+      "version": "1.1.4",
+      "tag": "@szewtwin/browser-authorization_v1.1.4",
+      "comments": {
+        "none": [
+          {
+            "author": "50554904+hl662@users.noreply.github.com",
+            "package": "@szewtwin/browser-authorization",
+            "commit": "88804ed4738935fe185313037de31be288c01f58",
+            "comment": ""
+          },
+          {
+            "author": "ben-polinsky@users.noreply.github.com",
+            "package": "@szewtwin/browser-authorization",
+            "commit": "88804ed4738935fe185313037de31be288c01f58",
+            "comment": "remove parcel from browser e2e tests"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Wed, 20 Nov 2024 18:34:06 GMT",
+      "version": "1.1.4",
+      "tag": "@szewtwin/browser-authorization_v1.1.4",
+      "comments": {
+        "patch": [
+          {
+            "author": "33036725+wgoehrig@users.noreply.github.com",
+            "package": "@szewtwin/browser-authorization",
+            "commit": "6aea6cc2225668d77e30e0902cdfca62e0ebb8d4",
+            "comment": "Update to @playwright/test 1.48.2"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Tue, 29 Oct 2024 21:49:00 GMT",
+      "version": "1.1.3",
+      "tag": "@szewtwin/browser-authorization_v1.1.3",
+      "comments": {
+        "patch": [
+          {
+            "author": "GytisCepk@users.noreply.github.com",
+            "package": "@szewtwin/browser-authorization",
+            "commit": "1934666d29263673fe8002d4f852d1f7a258f218",
+            "comment": "Fix method name in README.md"
+          }
+        ],
+        "none": [
+          {
+            "author": "ben-polinsky@users.noreply.github.com",
+            "package": "@szewtwin/browser-authorization",
+            "commit": "1934666d29263673fe8002d4f852d1f7a258f218",
+            "comment": ""
+          }
+        ]
+      }
+    },
+    {
+      "date": "Tue, 18 Jun 2024 19:11:49 GMT",
+      "version": "1.1.2",
+      "tag": "@szewtwin/browser-authorization_v1.1.2",
+      "comments": {
+        "patch": [
+          {
+            "author": "ben-polinsky@users.noreply.github.com",
+            "package": "@szewtwin/browser-authorization",
+            "commit": "f1465b0f0fc422baad21759d0aaff094d4391e84",
+            "comment": "fix latest sec vulnerabilities; run audit during ci"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Wed, 08 May 2024 21:11:26 GMT",
+      "version": "1.1.1",
+      "tag": "@szewtwin/browser-authorization_v1.1.1",
+      "comments": {
+        "patch": [
+          {
+            "author": "ben-polinsky@users.noreply.github.com",
+            "package": "@szewtwin/browser-authorization",
+            "commit": "26561d12deb510bc9d418faa285c2966f73fe5b3",
+            "comment": "clean up redundant types"
+          },
+          {
+            "author": "ben-polinsky@users.noreply.github.com",
+            "package": "@szewtwin/browser-authorization",
+            "commit": "26561d12deb510bc9d418faa285c2966f73fe5b3",
+            "comment": "deprecate getImsAuthority and usage of process.env on frontend"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Wed, 17 Jan 2024 15:40:23 GMT",
+      "version": "1.1.0",
+      "tag": "@szewtwin/browser-authorization_v1.1.0",
+      "comments": {
+        "none": [
+          {
+            "author": "GytisCepk@users.noreply.github.com",
+            "package": "@szewtwin/browser-authorization",
+            "commit": "cd0b4076fe458ad78015fadbfd14cc9285a774f3",
+            "comment": "Upgrade '@playwright/test' version to 1.41.0"
+          }
+        ]
+      }
+    },
+    {
+      "date": "Mon, 13 Nov 2023 15:21:13 GMT",
+      "version": "1.1.0",
+      "tag": "@szewtwin/browser-authorization_v1.1.0",
+      "comments": {
+        "patch": [
+          {
+            "author": "22119573+nick4598@users.noreply.github.com",
+            "package": "@szewtwin/browser-authorization",
+            "commit": "022b04c78e5370a607641603be9391c04d0b238f",
+            "comment": "Update oidc-client-ts to \"^2.4.0\" from \"^2.2.0\""
+          }
+        ],
+        "minor": [
+          {
+            "author": "Jake-Screen@users.noreply.github.com",
+            "package": "@szewtwin/browser-authorization",
+            "commit": "022b04c78e5370a607641603be9391c04d0b238f",
+            "comment": ""
+          }
+        ]
+      }
+    },
+    {
+      "version": "1.0.1",
+      "tag": "@szewtwin/browser-authorization_v1.0.1",
+      "date": "Tue, 25 Jul 2023 14:33:09 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Upgrade @playwright/test to 1.35.1"
+          },
+          {
+            "comment": "fix dependency version ranges"
+          }
+        ]
+      }
+    },
+    {
+      "version": "1.0.0",
+      "tag": "@szewtwin/browser-authorization_v1.0.0",
+      "date": "Fri, 05 May 2023 18:56:53 GMT",
+      "comments": {
+        "major": [
+          {
+            "comment": "add core-common as direct dep (types); 1.0 release"
+          }
+        ],
+        "patch": [
+          {
+            "comment": "Update peer deps to use >= for core-szewec"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.9.0",
+      "tag": "@szewtwin/browser-authorization_v0.9.0",
+      "date": "Fri, 14 Apr 2023 21:44:37 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Add static BrowserAuthorizationClient.handleSigninCallback method for configless callback"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.8.0",
+      "tag": "@szewtwin/browser-authorization_v0.8.0",
+      "date": "Wed, 22 Mar 2023 18:23:21 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Consolidate BrowserAuthCallbackHandler into BrowserAuthorizationClient"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.7.0",
+      "tag": "@szewtwin/browser-authorization_v0.7.0",
+      "date": "Tue, 14 Mar 2023 20:05:10 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Drop support for Node 12, Node 14 and Node 16."
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.6.2",
+      "tag": "@szewtwin/browser-authorization_v0.6.2",
+      "date": "Tue, 28 Feb 2023 18:25:46 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "fix the fix for passing browser auth redirect state"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.6.1",
+      "tag": "@szewtwin/browser-authorization_v0.6.1",
+      "date": "Tue, 28 Feb 2023 16:16:08 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "fix broken final redirect"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.6.0",
+      "tag": "@szewtwin/browser-authorization_v0.6.0",
+      "date": "Fri, 27 Jan 2023 18:50:06 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Update to oidc-client-ts\\nAdd new required properties to BrowserAuthorizationCallbackHandlerConfiguration"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.5.1",
+      "tag": "@szewtwin/browser-authorization_v0.5.1",
+      "date": "Tue, 25 Jan 2022 15:34:41 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Update core dependencies"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.5.0",
+      "tag": "@szewtwin/browser-authorization_v0.5.0",
+      "date": "Mon, 24 Jan 2022 19:35:01 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Update to use szewTwin.js 3.0 official release"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.4.0",
+      "tag": "@szewtwin/browser-authorization_v0.4.0",
+      "date": "Wed, 15 Dec 2021 20:20:04 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "pin deps to core rc"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.3.2",
+      "tag": "@szewtwin/browser-authorization_v0.3.2",
+      "date": "Mon, 29 Nov 2021 22:10:32 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Direct errors within browser callback handling to UnexpectedErrors"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.3.1",
+      "tag": "@szewtwin/browser-authorization_v0.3.1",
+      "date": "Mon, 29 Nov 2021 15:30:19 GMT",
+      "comments": {}
+    }
+  ]
+}

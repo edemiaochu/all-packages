@@ -1,0 +1,6379 @@
+{
+  "generatedAt": "2026-06-17T03:12:05.749Z",
+  "root": "d:\\01Work\\iTwin2026",
+  "stats": {
+    "totalPackages": 151,
+    "totalEdges": 943,
+    "topologicalLayers": 11,
+    "externalCount": 8,
+    "edgeExternalCount": 6
+  },
+  "packages": {
+    "@bentley/aec-units-schema": {
+      "name": "@bentley/aec-units-schema",
+      "version": "1.0.3",
+      "private": false,
+      "dir": "base/aec-units-schema",
+      "subproject": "base"
+    },
+    "@bentley/architectural-physical-schema": {
+      "name": "@bentley/architectural-physical-schema",
+      "version": "1.0.3",
+      "private": false,
+      "dir": "base/architectural-physical-schema",
+      "subproject": "base"
+    },
+    "@bentley/bis-core-schema": {
+      "name": "@bentley/bis-core-schema",
+      "version": "1.0.15",
+      "private": false,
+      "dir": "base/bis-core-schema",
+      "subproject": "base"
+    },
+    "@bentley/bis-custom-attributes-schema": {
+      "name": "@bentley/bis-custom-attributes-schema",
+      "version": "1.0.0",
+      "private": false,
+      "dir": "base/bis-custom-attributes-schema",
+      "subproject": "base"
+    },
+    "@bentley/cif-bridge-schema": {
+      "name": "@bentley/cif-bridge-schema",
+      "version": "1.0.5",
+      "private": false,
+      "dir": "base/cif-bridge-schema",
+      "subproject": "base"
+    },
+    "@bentley/cif-common-schema": {
+      "name": "@bentley/cif-common-schema",
+      "version": "1.0.3",
+      "private": false,
+      "dir": "base/cif-common-schema",
+      "subproject": "base"
+    },
+    "@bentley/cif-geometric-rules-schema": {
+      "name": "@bentley/cif-geometric-rules-schema",
+      "version": "1.0.1",
+      "private": false,
+      "dir": "base/cif-geometric-rules-schema",
+      "subproject": "base"
+    },
+    "@bentley/cif-hydraulic-analysis-schema": {
+      "name": "@bentley/cif-hydraulic-analysis-schema",
+      "version": "1.0.3",
+      "private": false,
+      "dir": "base/cif-hydraulic-analysis-schema",
+      "subproject": "base"
+    },
+    "@bentley/cif-hydraulic-results-schema": {
+      "name": "@bentley/cif-hydraulic-results-schema",
+      "version": "1.0.3",
+      "private": false,
+      "dir": "base/cif-hydraulic-results-schema",
+      "subproject": "base"
+    },
+    "@bentley/cif-quantity-takeoffs-schema": {
+      "name": "@bentley/cif-quantity-takeoffs-schema",
+      "version": "1.0.1",
+      "private": false,
+      "dir": "base/cif-quantity-takeoffs-schema",
+      "subproject": "base"
+    },
+    "@bentley/cif-rail-schema": {
+      "name": "@bentley/cif-rail-schema",
+      "version": "1.0.2",
+      "private": false,
+      "dir": "base/cif-rail-schema",
+      "subproject": "base"
+    },
+    "@bentley/cif-roads-schema": {
+      "name": "@bentley/cif-roads-schema",
+      "version": "1.0.1",
+      "private": false,
+      "dir": "base/cif-roads-schema",
+      "subproject": "base"
+    },
+    "@bentley/cif-subsurface-conflict-analysis-schema": {
+      "name": "@bentley/cif-subsurface-conflict-analysis-schema",
+      "version": "1.0.3",
+      "private": false,
+      "dir": "base/cif-subsurface-conflict-analysis-schema",
+      "subproject": "base"
+    },
+    "@bentley/cif-subsurface-schema": {
+      "name": "@bentley/cif-subsurface-schema",
+      "version": "1.0.3",
+      "private": false,
+      "dir": "base/cif-subsurface-schema",
+      "subproject": "base"
+    },
+    "@bentley/cif-units-schema": {
+      "name": "@bentley/cif-units-schema",
+      "version": "1.0.7",
+      "private": false,
+      "dir": "base/cif-units-schema",
+      "subproject": "base"
+    },
+    "@bentley/construction-schema": {
+      "name": "@bentley/construction-schema",
+      "version": "1.0.4",
+      "private": false,
+      "dir": "base/construction-schema",
+      "subproject": "base"
+    },
+    "@bentley/core-custom-attributes-schema": {
+      "name": "@bentley/core-custom-attributes-schema",
+      "version": "1.0.4",
+      "private": false,
+      "dir": "base/core-custom-attributes-schema",
+      "subproject": "base"
+    },
+    "@bentley/ecdb-map-schema": {
+      "name": "@bentley/ecdb-map-schema",
+      "version": "2.0.1",
+      "private": false,
+      "dir": "base/ecdb-map-schema",
+      "subproject": "base"
+    },
+    "@bentley/ecdb-schema-policies-schema": {
+      "name": "@bentley/ecdb-schema-policies-schema",
+      "version": "1.0.1",
+      "private": false,
+      "dir": "base/ecdb-schema-policies-schema",
+      "subproject": "base"
+    },
+    "@bentley/formats-schema": {
+      "name": "@bentley/formats-schema",
+      "version": "1.0.0",
+      "private": false,
+      "dir": "base/formats-schema",
+      "subproject": "base"
+    },
+    "@bentley/icons-generic": {
+      "name": "@bentley/icons-generic",
+      "version": "1.0.34",
+      "private": false,
+      "dir": "base/icons-generic",
+      "subproject": "base"
+    },
+    "@bentley/icons-generic-webfont": {
+      "name": "@bentley/icons-generic-webfont",
+      "version": "1.0.34",
+      "private": false,
+      "dir": "base/icons-generic-webfont",
+      "subproject": "base"
+    },
+    "@bentley/linear-referencing-schema": {
+      "name": "@bentley/linear-referencing-schema",
+      "version": "2.0.3",
+      "private": false,
+      "dir": "base/linear-referencing-schema",
+      "subproject": "base"
+    },
+    "@bentley/physical-material-schema": {
+      "name": "@bentley/physical-material-schema",
+      "version": "1.0.2",
+      "private": false,
+      "dir": "base/physical-material-schema",
+      "subproject": "base"
+    },
+    "@bentley/plant-custom-attributes-schema": {
+      "name": "@bentley/plant-custom-attributes-schema",
+      "version": "1.0.1",
+      "private": false,
+      "dir": "base/plant-custom-attributes-schema",
+      "subproject": "base"
+    },
+    "@bentley/process-functional-schema": {
+      "name": "@bentley/process-functional-schema",
+      "version": "1.0.1",
+      "private": false,
+      "dir": "base/process-functional-schema",
+      "subproject": "base"
+    },
+    "@bentley/process-physical-schema": {
+      "name": "@bentley/process-physical-schema",
+      "version": "1.0.2",
+      "private": false,
+      "dir": "base/process-physical-schema",
+      "subproject": "base"
+    },
+    "@bentley/quantity-takeoffs-aspects-schema": {
+      "name": "@bentley/quantity-takeoffs-aspects-schema",
+      "version": "1.0.1",
+      "private": false,
+      "dir": "base/quantity-takeoffs-aspects-schema",
+      "subproject": "base"
+    },
+    "@bentley/road-rail-units-schema": {
+      "name": "@bentley/road-rail-units-schema",
+      "version": "1.0.3",
+      "private": false,
+      "dir": "base/road-rail-units-schema",
+      "subproject": "base"
+    },
+    "@bentley/spatial-composition-schema": {
+      "name": "@bentley/spatial-composition-schema",
+      "version": "1.0.1",
+      "private": false,
+      "dir": "base/spatial-composition-schema",
+      "subproject": "base"
+    },
+    "@bentley/structural-physical-schema": {
+      "name": "@bentley/structural-physical-schema",
+      "version": "1.0.1",
+      "private": false,
+      "dir": "base/structural-physical-schema",
+      "subproject": "base"
+    },
+    "@bentley/units-schema": {
+      "name": "@bentley/units-schema",
+      "version": "1.0.10",
+      "private": false,
+      "dir": "base/units-schema",
+      "subproject": "base"
+    },
+    "@itwin/analytical-backend": {
+      "name": "@itwin/analytical-backend",
+      "version": "5.11.0-dev.7",
+      "private": false,
+      "dir": "itwinjs-core/domains/analytical/backend",
+      "subproject": "itwinjs-core"
+    },
+    "@itwin/appui-abstract": {
+      "name": "@itwin/appui-abstract",
+      "version": "5.11.0-dev.7",
+      "private": false,
+      "dir": "itwinjs-core/ui/appui-abstract",
+      "subproject": "itwinjs-core"
+    },
+    "@itwin/appui-react": {
+      "name": "@itwin/appui-react",
+      "version": "5.32.0",
+      "private": false,
+      "dir": "appui/ui/appui-react",
+      "subproject": "appui"
+    },
+    "@itwin/appui-test-providers": {
+      "name": "@itwin/appui-test-providers",
+      "version": "0.0.0",
+      "private": true,
+      "dir": "appui/apps/test-providers",
+      "subproject": "appui"
+    },
+    "@itwin/browser-authorization": {
+      "name": "@itwin/browser-authorization",
+      "version": "2.0.2",
+      "private": false,
+      "dir": "auth-clients/packages/browser",
+      "subproject": "auth-clients"
+    },
+    "@itwin/build-tools": {
+      "name": "@itwin/build-tools",
+      "version": "5.11.0-dev.7",
+      "private": false,
+      "dir": "itwinjs-core/tools/build",
+      "subproject": "itwinjs-core"
+    },
+    "@itwin/certa": {
+      "name": "@itwin/certa",
+      "version": "5.11.0-dev.7",
+      "private": false,
+      "dir": "itwinjs-core/tools/certa",
+      "subproject": "itwinjs-core"
+    },
+    "@itwin/cesium-renderer": {
+      "name": "@itwin/cesium-renderer",
+      "version": "5.2.0-dev.26",
+      "private": true,
+      "dir": "itwinjs-core/extensions/cesium-renderer",
+      "subproject": "itwinjs-core"
+    },
+    "@itwin/cloud-agnostic-core": {
+      "name": "@itwin/cloud-agnostic-core",
+      "version": "3.1.1",
+      "private": false,
+      "dir": "object-storage/cloud-agnostic/core",
+      "subproject": "object-storage"
+    },
+    "@itwin/components-react": {
+      "name": "@itwin/components-react",
+      "version": "5.32.0",
+      "private": false,
+      "dir": "appui/ui/components-react",
+      "subproject": "appui"
+    },
+    "@itwin/core-backend": {
+      "name": "@itwin/core-backend",
+      "version": "5.11.0-dev.7",
+      "private": false,
+      "dir": "itwinjs-core/core/backend",
+      "subproject": "itwinjs-core"
+    },
+    "@itwin/core-bentley": {
+      "name": "@itwin/core-bentley",
+      "version": "5.11.0-dev.7",
+      "private": false,
+      "dir": "itwinjs-core/core/bentley",
+      "subproject": "itwinjs-core"
+    },
+    "@itwin/core-common": {
+      "name": "@itwin/core-common",
+      "version": "5.11.0-dev.7",
+      "private": false,
+      "dir": "itwinjs-core/core/common",
+      "subproject": "itwinjs-core"
+    },
+    "@itwin/core-electron": {
+      "name": "@itwin/core-electron",
+      "version": "5.11.0-dev.7",
+      "private": false,
+      "dir": "itwinjs-core/core/electron",
+      "subproject": "itwinjs-core"
+    },
+    "@itwin/core-extension": {
+      "name": "@itwin/core-extension",
+      "version": "5.11.0-dev.7",
+      "private": false,
+      "dir": "itwinjs-core/core/extension",
+      "subproject": "itwinjs-core"
+    },
+    "@itwin/core-frontend": {
+      "name": "@itwin/core-frontend",
+      "version": "5.11.0-dev.7",
+      "private": false,
+      "dir": "itwinjs-core/core/frontend",
+      "subproject": "itwinjs-core"
+    },
+    "@itwin/core-geometry": {
+      "name": "@itwin/core-geometry",
+      "version": "5.11.0-dev.7",
+      "private": false,
+      "dir": "itwinjs-core/core/geometry",
+      "subproject": "itwinjs-core"
+    },
+    "@itwin/core-i18n": {
+      "name": "@itwin/core-i18n",
+      "version": "5.11.0-dev.7",
+      "private": false,
+      "dir": "itwinjs-core/core/i18n",
+      "subproject": "itwinjs-core"
+    },
+    "@itwin/core-markup": {
+      "name": "@itwin/core-markup",
+      "version": "5.11.0-dev.7",
+      "private": false,
+      "dir": "itwinjs-core/core/markup",
+      "subproject": "itwinjs-core"
+    },
+    "@itwin/core-mobile": {
+      "name": "@itwin/core-mobile",
+      "version": "5.11.0-dev.7",
+      "private": false,
+      "dir": "itwinjs-core/core/mobile",
+      "subproject": "itwinjs-core"
+    },
+    "@itwin/core-orbitgt": {
+      "name": "@itwin/core-orbitgt",
+      "version": "5.11.0-dev.7",
+      "private": false,
+      "dir": "itwinjs-core/core/orbitgt",
+      "subproject": "itwinjs-core"
+    },
+    "@itwin/core-quantity": {
+      "name": "@itwin/core-quantity",
+      "version": "5.11.0-dev.7",
+      "private": false,
+      "dir": "itwinjs-core/core/quantity",
+      "subproject": "itwinjs-core"
+    },
+    "@itwin/core-react": {
+      "name": "@itwin/core-react",
+      "version": "5.32.0",
+      "private": false,
+      "dir": "appui/ui/core-react",
+      "subproject": "appui"
+    },
+    "@itwin/create-imodel-react": {
+      "name": "@itwin/create-imodel-react",
+      "version": "2.2.1",
+      "private": false,
+      "dir": "admin-components-react/packages/modules/create-imodel",
+      "subproject": "admin-components-react"
+    },
+    "@itwin/delete-imodel-react": {
+      "name": "@itwin/delete-imodel-react",
+      "version": "2.1.0",
+      "private": false,
+      "dir": "admin-components-react/packages/modules/delete-imodel",
+      "subproject": "admin-components-react"
+    },
+    "@itwin/delete-itwin-react": {
+      "name": "@itwin/delete-itwin-react",
+      "version": "2.0.0",
+      "private": false,
+      "dir": "admin-components-react/packages/modules/delete-itwin",
+      "subproject": "admin-components-react"
+    },
+    "@itwin/desktop-viewer-react": {
+      "name": "@itwin/desktop-viewer-react",
+      "version": "5.1.0",
+      "private": false,
+      "dir": "viewer/packages/modules/desktop-viewer-react",
+      "subproject": "viewer"
+    },
+    "@itwin/ec3-widget-react": {
+      "name": "@itwin/ec3-widget-react",
+      "version": "0.10.2",
+      "private": false,
+      "dir": "viewer-components-react/packages/itwin/ec3-widget",
+      "subproject": "viewer-components-react"
+    },
+    "@itwin/ecschema-editing": {
+      "name": "@itwin/ecschema-editing",
+      "version": "5.11.0-dev.7",
+      "private": false,
+      "dir": "itwinjs-core/core/ecschema-editing",
+      "subproject": "itwinjs-core"
+    },
+    "@itwin/ecschema-locaters": {
+      "name": "@itwin/ecschema-locaters",
+      "version": "5.11.0-dev.7",
+      "private": false,
+      "dir": "itwinjs-core/core/ecschema-locaters",
+      "subproject": "itwinjs-core"
+    },
+    "@itwin/ecschema-metadata": {
+      "name": "@itwin/ecschema-metadata",
+      "version": "5.11.0-dev.7",
+      "private": false,
+      "dir": "itwinjs-core/core/ecschema-metadata",
+      "subproject": "itwinjs-core"
+    },
+    "@itwin/ecschema-rpcinterface-common": {
+      "name": "@itwin/ecschema-rpcinterface-common",
+      "version": "5.11.0-dev.7",
+      "private": false,
+      "dir": "itwinjs-core/core/ecschema-rpc/common",
+      "subproject": "itwinjs-core"
+    },
+    "@itwin/ecschema-rpcinterface-impl": {
+      "name": "@itwin/ecschema-rpcinterface-impl",
+      "version": "5.11.0-dev.7",
+      "private": false,
+      "dir": "itwinjs-core/core/ecschema-rpc/impl",
+      "subproject": "itwinjs-core"
+    },
+    "@itwin/ecschema-rpcinterface-tests": {
+      "name": "@itwin/ecschema-rpcinterface-tests",
+      "version": "5.11.0-dev.7",
+      "private": false,
+      "dir": "itwinjs-core/full-stack-tests/ecschema-rpc-interface",
+      "subproject": "itwinjs-core"
+    },
+    "@itwin/ecschema2ts": {
+      "name": "@itwin/ecschema2ts",
+      "version": "5.11.0-dev.7",
+      "private": false,
+      "dir": "itwinjs-core/tools/ecschema2ts",
+      "subproject": "itwinjs-core"
+    },
+    "@itwin/ecsql-common": {
+      "name": "@itwin/ecsql-common",
+      "version": "5.11.0-dev.7",
+      "private": false,
+      "dir": "itwinjs-core/core/ecsql/common",
+      "subproject": "itwinjs-core"
+    },
+    "@itwin/editor-backend": {
+      "name": "@itwin/editor-backend",
+      "version": "5.11.0-dev.7",
+      "private": false,
+      "dir": "itwinjs-core/editor/backend",
+      "subproject": "itwinjs-core"
+    },
+    "@itwin/editor-common": {
+      "name": "@itwin/editor-common",
+      "version": "5.11.0-dev.7",
+      "private": false,
+      "dir": "itwinjs-core/editor/common",
+      "subproject": "itwinjs-core"
+    },
+    "@itwin/editor-frontend": {
+      "name": "@itwin/editor-frontend",
+      "version": "5.11.0-dev.7",
+      "private": false,
+      "dir": "itwinjs-core/editor/frontend",
+      "subproject": "itwinjs-core"
+    },
+    "@itwin/electron-authorization": {
+      "name": "@itwin/electron-authorization",
+      "version": "0.22.3",
+      "private": false,
+      "dir": "auth-clients/packages/electron",
+      "subproject": "auth-clients"
+    },
+    "@itwin/eslint-plugin": {
+      "name": "@itwin/eslint-plugin",
+      "version": "6.1.0",
+      "private": false,
+      "dir": "eslint-plugin",
+      "subproject": "eslint-plugin"
+    },
+    "@itwin/express-server": {
+      "name": "@itwin/express-server",
+      "version": "5.11.0-dev.7",
+      "private": false,
+      "dir": "itwinjs-core/core/express-server",
+      "subproject": "itwinjs-core"
+    },
+    "@itwin/frontend-devtools": {
+      "name": "@itwin/frontend-devtools",
+      "version": "5.11.0-dev.7",
+      "private": false,
+      "dir": "itwinjs-core/core/frontend-devtools",
+      "subproject": "itwinjs-core"
+    },
+    "@itwin/frontend-tiles": {
+      "name": "@itwin/frontend-tiles",
+      "version": "5.11.0-dev.7",
+      "private": false,
+      "dir": "itwinjs-core/extensions/frontend-tiles",
+      "subproject": "itwinjs-core"
+    },
+    "@itwin/geo-tools-react": {
+      "name": "@itwin/geo-tools-react",
+      "version": "6.0.1",
+      "private": false,
+      "dir": "viewer-components-react/packages/itwin/geo-tools",
+      "subproject": "viewer-components-react"
+    },
+    "@itwin/grouping-mapping-widget": {
+      "name": "@itwin/grouping-mapping-widget",
+      "version": "0.37.0",
+      "private": false,
+      "dir": "viewer-components-react/packages/itwin/grouping-mapping-widget",
+      "subproject": "viewer-components-react"
+    },
+    "@itwin/hypermodeling-frontend": {
+      "name": "@itwin/hypermodeling-frontend",
+      "version": "5.11.0-dev.7",
+      "private": false,
+      "dir": "itwinjs-core/core/hypermodeling",
+      "subproject": "itwinjs-core"
+    },
+    "@itwin/imodel-browser-react": {
+      "name": "@itwin/imodel-browser-react",
+      "version": "4.2.0",
+      "private": false,
+      "dir": "admin-components-react/packages/modules/imodel-browser",
+      "subproject": "admin-components-react"
+    },
+    "@itwin/imodel-components-react": {
+      "name": "@itwin/imodel-components-react",
+      "version": "5.32.0",
+      "private": false,
+      "dir": "appui/ui/imodel-components-react",
+      "subproject": "appui"
+    },
+    "@itwin/imodel-transformer": {
+      "name": "@itwin/imodel-transformer",
+      "version": "1.2.1-dev.1",
+      "private": false,
+      "dir": "imodel-transformer/packages/transformer",
+      "subproject": "imodel-transformer"
+    },
+    "@itwin/imodels-access-backend": {
+      "name": "@itwin/imodels-access-backend",
+      "version": "6.1.1",
+      "private": false,
+      "dir": "imodels-clients/itwin-platform-access/imodels-access-backend",
+      "subproject": "imodels-clients"
+    },
+    "@itwin/imodels-access-backend-tests": {
+      "name": "@itwin/imodels-access-backend-tests",
+      "version": "0.0.0",
+      "private": false,
+      "dir": "imodels-clients/tests/imodels-access-backend-tests",
+      "subproject": "imodels-clients"
+    },
+    "@itwin/imodels-access-common": {
+      "name": "@itwin/imodels-access-common",
+      "version": "6.1.1",
+      "private": false,
+      "dir": "imodels-clients/itwin-platform-access/imodels-access-common",
+      "subproject": "imodels-clients"
+    },
+    "@itwin/imodels-access-common-tests": {
+      "name": "@itwin/imodels-access-common-tests",
+      "version": "0.0.0",
+      "private": false,
+      "dir": "imodels-clients/tests/imodels-access-common-tests",
+      "subproject": "imodels-clients"
+    },
+    "@itwin/imodels-access-frontend": {
+      "name": "@itwin/imodels-access-frontend",
+      "version": "6.1.1",
+      "private": false,
+      "dir": "imodels-clients/itwin-platform-access/imodels-access-frontend",
+      "subproject": "imodels-clients"
+    },
+    "@itwin/imodels-access-frontend-tests": {
+      "name": "@itwin/imodels-access-frontend-tests",
+      "version": "0.0.0",
+      "private": false,
+      "dir": "imodels-clients/tests/imodels-access-frontend-tests",
+      "subproject": "imodels-clients"
+    },
+    "@itwin/imodels-client-authoring": {
+      "name": "@itwin/imodels-client-authoring",
+      "version": "6.2.0",
+      "private": false,
+      "dir": "imodels-clients/clients/imodels-client-authoring",
+      "subproject": "imodels-clients"
+    },
+    "@itwin/imodels-client-common-config": {
+      "name": "@itwin/imodels-client-common-config",
+      "version": "0.0.0",
+      "private": false,
+      "dir": "imodels-clients/utils/imodels-client-common-config",
+      "subproject": "imodels-clients"
+    },
+    "@itwin/imodels-client-management": {
+      "name": "@itwin/imodels-client-management",
+      "version": "6.2.0",
+      "private": false,
+      "dir": "imodels-clients/clients/imodels-client-management",
+      "subproject": "imodels-clients"
+    },
+    "@itwin/imodels-client-test-utils": {
+      "name": "@itwin/imodels-client-test-utils",
+      "version": "0.0.0",
+      "private": false,
+      "dir": "imodels-clients/utils/imodels-client-test-utils",
+      "subproject": "imodels-clients"
+    },
+    "@itwin/imodels-clients-tests": {
+      "name": "@itwin/imodels-clients-tests",
+      "version": "0.0.0",
+      "private": false,
+      "dir": "imodels-clients/tests/imodels-clients-tests",
+      "subproject": "imodels-clients"
+    },
+    "@itwin/imodels-clients-tests-browser": {
+      "name": "@itwin/imodels-clients-tests-browser",
+      "version": "0.0.0",
+      "private": false,
+      "dir": "imodels-clients/tests/imodels-clients-tests-browser",
+      "subproject": "imodels-clients"
+    },
+    "@itwin/itwins-client": {
+      "name": "@itwin/itwins-client",
+      "version": "3.1.0",
+      "private": false,
+      "dir": "itwins-client",
+      "subproject": "itwins-client"
+    },
+    "@itwin/itwinui-css": {
+      "name": "@itwin/itwinui-css",
+      "version": "3.0.0-dev.1",
+      "private": true,
+      "dir": "iTwinUI/packages/itwinui-css",
+      "subproject": "iTwinUI"
+    },
+    "@itwin/itwinui-icons-react": {
+      "name": "@itwin/itwinui-icons-react",
+      "version": "2.11.1",
+      "private": false,
+      "dir": "icons/itwinui-icons-react",
+      "subproject": "icons"
+    },
+    "@itwin/itwinui-illustrations-react": {
+      "name": "@itwin/itwinui-illustrations-react",
+      "version": "2.1.4",
+      "private": false,
+      "dir": "icons/itwinui-illustrations-react",
+      "subproject": "icons"
+    },
+    "@itwin/itwinui-layouts-css": {
+      "name": "@itwin/itwinui-layouts-css",
+      "version": "0.4.0",
+      "private": false,
+      "dir": "iTwinUI-layouts/packages/layouts-css",
+      "subproject": "iTwinUI-layouts"
+    },
+    "@itwin/itwinui-layouts-react": {
+      "name": "@itwin/itwinui-layouts-react",
+      "version": "0.4.1",
+      "private": false,
+      "dir": "iTwinUI-layouts/packages/layouts-react",
+      "subproject": "iTwinUI-layouts"
+    },
+    "@itwin/itwinui-react": {
+      "name": "@itwin/itwinui-react",
+      "version": "3.21.2",
+      "private": false,
+      "dir": "iTwinUI/packages/itwinui-react",
+      "subproject": "iTwinUI"
+    },
+    "@itwin/itwinui-variables": {
+      "name": "@itwin/itwinui-variables",
+      "version": "3.3.1",
+      "private": false,
+      "dir": "iTwinUI/packages/itwinui-variables",
+      "subproject": "iTwinUI"
+    },
+    "@itwin/linear-referencing-backend": {
+      "name": "@itwin/linear-referencing-backend",
+      "version": "5.11.0-dev.7",
+      "private": false,
+      "dir": "itwinjs-core/domains/linear-referencing/backend",
+      "subproject": "itwinjs-core"
+    },
+    "@itwin/linear-referencing-common": {
+      "name": "@itwin/linear-referencing-common",
+      "version": "5.11.0-dev.7",
+      "private": false,
+      "dir": "itwinjs-core/domains/linear-referencing/common",
+      "subproject": "itwinjs-core"
+    },
+    "@itwin/manage-versions-react": {
+      "name": "@itwin/manage-versions-react",
+      "version": "2.2.4",
+      "private": false,
+      "dir": "admin-components-react/packages/modules/manage-versions",
+      "subproject": "admin-components-react"
+    },
+    "@itwin/map-layers": {
+      "name": "@itwin/map-layers",
+      "version": "7.0.1",
+      "private": false,
+      "dir": "viewer-components-react/packages/itwin/map-layers",
+      "subproject": "viewer-components-react"
+    },
+    "@itwin/map-layers-auth": {
+      "name": "@itwin/map-layers-auth",
+      "version": "5.11.0-dev.7",
+      "private": false,
+      "dir": "itwinjs-core/extensions/map-layers-auth",
+      "subproject": "itwinjs-core"
+    },
+    "@itwin/map-layers-formats": {
+      "name": "@itwin/map-layers-formats",
+      "version": "5.11.0-dev.7",
+      "private": false,
+      "dir": "itwinjs-core/extensions/map-layers-formats",
+      "subproject": "itwinjs-core"
+    },
+    "@itwin/measure-tools-react": {
+      "name": "@itwin/measure-tools-react",
+      "version": "0.33.0",
+      "private": false,
+      "dir": "viewer-components-react/packages/itwin/measure-tools",
+      "subproject": "viewer-components-react"
+    },
+    "@itwin/node-cli-authorization": {
+      "name": "@itwin/node-cli-authorization",
+      "version": "3.0.3",
+      "private": false,
+      "dir": "auth-clients/packages/node-cli",
+      "subproject": "auth-clients"
+    },
+    "@itwin/object-storage-azure": {
+      "name": "@itwin/object-storage-azure",
+      "version": "3.1.1",
+      "private": false,
+      "dir": "object-storage/storage/azure",
+      "subproject": "object-storage"
+    },
+    "@itwin/object-storage-common-config": {
+      "name": "@itwin/object-storage-common-config",
+      "version": "0.0.0",
+      "private": false,
+      "dir": "object-storage/utils/common-config",
+      "subproject": "object-storage"
+    },
+    "@itwin/object-storage-core": {
+      "name": "@itwin/object-storage-core",
+      "version": "3.1.1",
+      "private": false,
+      "dir": "object-storage/storage/core",
+      "subproject": "object-storage"
+    },
+    "@itwin/object-storage-google": {
+      "name": "@itwin/object-storage-google",
+      "version": "3.1.1",
+      "private": false,
+      "dir": "object-storage/storage/google",
+      "subproject": "object-storage"
+    },
+    "@itwin/object-storage-minio": {
+      "name": "@itwin/object-storage-minio",
+      "version": "3.1.1",
+      "private": false,
+      "dir": "object-storage/storage/minio",
+      "subproject": "object-storage"
+    },
+    "@itwin/object-storage-oss": {
+      "name": "@itwin/object-storage-oss",
+      "version": "3.1.1",
+      "private": false,
+      "dir": "object-storage/storage/oss",
+      "subproject": "object-storage"
+    },
+    "@itwin/object-storage-s3": {
+      "name": "@itwin/object-storage-s3",
+      "version": "3.1.1",
+      "private": false,
+      "dir": "object-storage/storage/s3",
+      "subproject": "object-storage"
+    },
+    "@itwin/object-storage-samples": {
+      "name": "@itwin/object-storage-samples",
+      "version": "0.0.0",
+      "private": false,
+      "dir": "object-storage/samples",
+      "subproject": "object-storage"
+    },
+    "@itwin/object-storage-tests-backend": {
+      "name": "@itwin/object-storage-tests-backend",
+      "version": "0.0.0",
+      "private": false,
+      "dir": "object-storage/tests/backend-storage",
+      "subproject": "object-storage"
+    },
+    "@itwin/object-storage-tests-backend-unit": {
+      "name": "@itwin/object-storage-tests-backend-unit",
+      "version": "0.0.0",
+      "private": false,
+      "dir": "object-storage/tests/backend-storage-unit",
+      "subproject": "object-storage"
+    },
+    "@itwin/object-storage-tests-frontend": {
+      "name": "@itwin/object-storage-tests-frontend",
+      "version": "0.0.0",
+      "private": false,
+      "dir": "object-storage/tests/frontend-storage",
+      "subproject": "object-storage"
+    },
+    "@itwin/oidc-signin-tool": {
+      "name": "@itwin/oidc-signin-tool",
+      "version": "5.1.3",
+      "private": false,
+      "dir": "auth-clients/packages/oidc-signin-tool",
+      "subproject": "auth-clients"
+    },
+    "@itwin/one-click-lca-react": {
+      "name": "@itwin/one-click-lca-react",
+      "version": "0.8.0",
+      "private": false,
+      "dir": "viewer-components-react/packages/itwin/one-click-lca-widget",
+      "subproject": "viewer-components-react"
+    },
+    "@itwin/perf-tools": {
+      "name": "@itwin/perf-tools",
+      "version": "5.11.0-dev.7",
+      "private": false,
+      "dir": "itwinjs-core/tools/perf-tools",
+      "subproject": "itwinjs-core"
+    },
+    "@itwin/physical-material-backend": {
+      "name": "@itwin/physical-material-backend",
+      "version": "5.11.0-dev.7",
+      "private": false,
+      "dir": "itwinjs-core/domains/physical-material/backend",
+      "subproject": "itwinjs-core"
+    },
+    "@itwin/presentation-backend": {
+      "name": "@itwin/presentation-backend",
+      "version": "5.11.0-dev.7",
+      "private": false,
+      "dir": "itwinjs-core/presentation/backend",
+      "subproject": "itwinjs-core"
+    },
+    "@itwin/presentation-common": {
+      "name": "@itwin/presentation-common",
+      "version": "5.11.0-dev.7",
+      "private": false,
+      "dir": "itwinjs-core/presentation/common",
+      "subproject": "itwinjs-core"
+    },
+    "@itwin/presentation-components": {
+      "name": "@itwin/presentation-components",
+      "version": "5.16.0",
+      "private": false,
+      "dir": "presentation/packages/components",
+      "subproject": "presentation"
+    },
+    "@itwin/presentation-core-interop": {
+      "name": "@itwin/presentation-core-interop",
+      "version": "1.3.13",
+      "private": false,
+      "dir": "presentation/packages/core-interop",
+      "subproject": "presentation"
+    },
+    "@itwin/presentation-frontend": {
+      "name": "@itwin/presentation-frontend",
+      "version": "5.11.0-dev.7",
+      "private": false,
+      "dir": "itwinjs-core/presentation/frontend",
+      "subproject": "itwinjs-core"
+    },
+    "@itwin/presentation-hierarchies": {
+      "name": "@itwin/presentation-hierarchies",
+      "version": "1.7.15",
+      "private": false,
+      "dir": "presentation/packages/hierarchies",
+      "subproject": "presentation"
+    },
+    "@itwin/presentation-hierarchies-react": {
+      "name": "@itwin/presentation-hierarchies-react",
+      "version": "1.11.0",
+      "private": false,
+      "dir": "presentation/packages/hierarchies-react",
+      "subproject": "presentation"
+    },
+    "@itwin/presentation-models-tree": {
+      "name": "@itwin/presentation-models-tree",
+      "version": "0.0.0",
+      "private": true,
+      "dir": "presentation/packages/models-tree",
+      "subproject": "presentation"
+    },
+    "@itwin/presentation-opentelemetry": {
+      "name": "@itwin/presentation-opentelemetry",
+      "version": "4.2.5",
+      "private": false,
+      "dir": "presentation/packages/opentelemetry",
+      "subproject": "presentation"
+    },
+    "@itwin/presentation-shared": {
+      "name": "@itwin/presentation-shared",
+      "version": "1.2.15",
+      "private": false,
+      "dir": "presentation/packages/shared",
+      "subproject": "presentation"
+    },
+    "@itwin/property-grid-react": {
+      "name": "@itwin/property-grid-react",
+      "version": "1.19.9",
+      "private": false,
+      "dir": "viewer-components-react/packages/itwin/property-grid",
+      "subproject": "viewer-components-react"
+    },
+    "@itwin/quantity-formatting-react": {
+      "name": "@itwin/quantity-formatting-react",
+      "version": "0.1.5",
+      "private": false,
+      "dir": "viewer-components-react/packages/itwin/quantity-formatting",
+      "subproject": "viewer-components-react"
+    },
+    "@itwin/reality-capture": {
+      "name": "@itwin/reality-capture",
+      "version": "1.5.0",
+      "private": false,
+      "dir": "reality-capture/typescript/packages/reality-capture",
+      "subproject": "reality-capture"
+    },
+    "@itwin/reality-data-client": {
+      "name": "@itwin/reality-data-client",
+      "version": "1.4.0",
+      "private": false,
+      "dir": "reality-capture/typescript/packages/reality-data-client",
+      "subproject": "reality-capture"
+    },
+    "@itwin/reports-config-widget-react": {
+      "name": "@itwin/reports-config-widget-react",
+      "version": "0.9.0",
+      "private": false,
+      "dir": "viewer-components-react/packages/itwin/reports-config-widget",
+      "subproject": "viewer-components-react"
+    },
+    "@itwin/rpcinterface-full-stack-tests": {
+      "name": "@itwin/rpcinterface-full-stack-tests",
+      "version": "5.11.0-dev.7",
+      "private": false,
+      "dir": "itwinjs-core/full-stack-tests/rpc-interface",
+      "subproject": "itwinjs-core"
+    },
+    "@itwin/service-authorization": {
+      "name": "@itwin/service-authorization",
+      "version": "2.1.1",
+      "private": false,
+      "dir": "auth-clients/packages/service",
+      "subproject": "auth-clients"
+    },
+    "@itwin/storybook-auth-addon": {
+      "name": "@itwin/storybook-auth-addon",
+      "version": "0.1.0",
+      "private": true,
+      "dir": "admin-components-react/packages/modules/storybook-auth-addon",
+      "subproject": "admin-components-react"
+    },
+    "@itwin/tree-widget-react": {
+      "name": "@itwin/tree-widget-react",
+      "version": "3.17.10",
+      "private": false,
+      "dir": "viewer-components-react/packages/itwin/tree-widget",
+      "subproject": "viewer-components-react"
+    },
+    "@itwin/unified-selection": {
+      "name": "@itwin/unified-selection",
+      "version": "1.7.5",
+      "private": false,
+      "dir": "presentation/packages/unified-selection",
+      "subproject": "presentation"
+    },
+    "@itwin/unified-selection-react": {
+      "name": "@itwin/unified-selection-react",
+      "version": "1.1.0",
+      "private": false,
+      "dir": "presentation/packages/unified-selection-react",
+      "subproject": "presentation"
+    },
+    "@itwin/viewer-react": {
+      "name": "@itwin/viewer-react",
+      "version": "5.0.1",
+      "private": false,
+      "dir": "viewer/packages/modules/viewer-react",
+      "subproject": "viewer"
+    },
+    "@itwin/web-viewer-react": {
+      "name": "@itwin/web-viewer-react",
+      "version": "5.0.1",
+      "private": false,
+      "dir": "viewer/packages/modules/web-viewer-react",
+      "subproject": "viewer"
+    },
+    "@itwin/webgl-compatibility": {
+      "name": "@itwin/webgl-compatibility",
+      "version": "5.11.0-dev.7",
+      "private": false,
+      "dir": "itwinjs-core/core/webgl-compatibility",
+      "subproject": "itwinjs-core"
+    },
+    "@itwin/workspace-editor": {
+      "name": "@itwin/workspace-editor",
+      "version": "5.11.0-dev.7",
+      "private": false,
+      "dir": "itwinjs-core/utils/workspace-editor",
+      "subproject": "itwinjs-core"
+    },
+    "internal-tools": {
+      "name": "internal-tools",
+      "version": "3.0.0-dev.69",
+      "private": false,
+      "dir": "itwinjs-core/tools/internal",
+      "subproject": "itwinjs-core"
+    }
+  },
+  "edges": [
+    {
+      "from": "@itwin/analytical-backend",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/analytical-backend",
+      "to": "@itwin/core-backend",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/analytical-backend",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/analytical-backend",
+      "to": "@itwin/core-common",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/analytical-backend",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/appui-abstract",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/appui-abstract",
+      "to": "@itwin/certa",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/appui-abstract",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/appui-abstract",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/appui-react",
+      "to": "@itwin/appui-abstract",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/appui-react",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/appui-react",
+      "to": "@itwin/components-react",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/appui-react",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/appui-react",
+      "to": "@itwin/core-common",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/appui-react",
+      "to": "@itwin/core-frontend",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/appui-react",
+      "to": "@itwin/core-geometry",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/appui-react",
+      "to": "@itwin/core-orbitgt",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/appui-react",
+      "to": "@itwin/core-quantity",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/appui-react",
+      "to": "@itwin/core-react",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/appui-react",
+      "to": "@itwin/ecschema-metadata",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/appui-react",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/appui-react",
+      "to": "@itwin/imodel-components-react",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/appui-react",
+      "to": "@itwin/itwinui-icons-react",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/appui-react",
+      "to": "@itwin/itwinui-illustrations-react",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/appui-react",
+      "to": "@itwin/itwinui-react",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/appui-react",
+      "to": "@itwin/webgl-compatibility",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/appui-test-providers",
+      "to": "@bentley/icons-generic",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/appui-test-providers",
+      "to": "@itwin/appui-abstract",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/appui-test-providers",
+      "to": "@itwin/appui-react",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/appui-test-providers",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/appui-test-providers",
+      "to": "@itwin/components-react",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/appui-test-providers",
+      "to": "@itwin/core-bentley",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/appui-test-providers",
+      "to": "@itwin/core-common",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/appui-test-providers",
+      "to": "@itwin/core-frontend",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/appui-test-providers",
+      "to": "@itwin/core-geometry",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/appui-test-providers",
+      "to": "@itwin/core-orbitgt",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/appui-test-providers",
+      "to": "@itwin/core-quantity",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/appui-test-providers",
+      "to": "@itwin/core-react",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/appui-test-providers",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/appui-test-providers",
+      "to": "@itwin/imodel-components-react",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/appui-test-providers",
+      "to": "@itwin/itwinui-icons-react",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/appui-test-providers",
+      "to": "@itwin/itwinui-react",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/appui-test-providers",
+      "to": "@itwin/webgl-compatibility",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/browser-authorization",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/browser-authorization",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/browser-authorization",
+      "to": "@itwin/core-common",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/browser-authorization",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/build-tools",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/certa",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/certa",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/cesium-renderer",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/cesium-renderer",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/cesium-renderer",
+      "to": "@itwin/core-common",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/cesium-renderer",
+      "to": "@itwin/core-frontend",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/cesium-renderer",
+      "to": "@itwin/core-geometry",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/cesium-renderer",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/cloud-agnostic-core",
+      "to": "@itwin/object-storage-common-config",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/components-react",
+      "to": "@itwin/appui-abstract",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/components-react",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/components-react",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/components-react",
+      "to": "@itwin/core-common",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/components-react",
+      "to": "@itwin/core-i18n",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/components-react",
+      "to": "@itwin/core-react",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/components-react",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/components-react",
+      "to": "@itwin/itwinui-icons-react",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/components-react",
+      "to": "@itwin/itwinui-react",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/core-backend",
+      "to": "@bentley/imodeljs-native",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/core-backend",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/core-backend",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/core-backend",
+      "to": "@itwin/core-common",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/core-backend",
+      "to": "@itwin/core-geometry",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/core-backend",
+      "to": "@itwin/ecschema-locaters",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/core-backend",
+      "to": "@itwin/ecschema-metadata",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/core-backend",
+      "to": "@itwin/ecsql-common",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/core-backend",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/core-backend",
+      "to": "@itwin/object-storage-azure",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/core-backend",
+      "to": "@itwin/object-storage-core",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/core-bentley",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/core-bentley",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/core-common",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/core-common",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/core-common",
+      "to": "@itwin/core-geometry",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/core-common",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/core-common",
+      "to": "@itwin/object-storage-core",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/core-electron",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/core-electron",
+      "to": "@itwin/certa",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/core-electron",
+      "to": "@itwin/core-backend",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/core-electron",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/core-electron",
+      "to": "@itwin/core-common",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/core-electron",
+      "to": "@itwin/core-frontend",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/core-electron",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/core-extension",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/core-extension",
+      "to": "@itwin/core-common",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/core-extension",
+      "to": "@itwin/core-frontend",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/core-extension",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/core-frontend",
+      "to": "@bentley/aec-units-schema",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/core-frontend",
+      "to": "@bentley/formats-schema",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/core-frontend",
+      "to": "@bentley/units-schema",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/core-frontend",
+      "to": "@itwin/appui-abstract",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/core-frontend",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/core-frontend",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/core-frontend",
+      "to": "@itwin/core-common",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/core-frontend",
+      "to": "@itwin/core-geometry",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/core-frontend",
+      "to": "@itwin/core-i18n",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/core-frontend",
+      "to": "@itwin/core-orbitgt",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/core-frontend",
+      "to": "@itwin/core-quantity",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/core-frontend",
+      "to": "@itwin/ecschema-metadata",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/core-frontend",
+      "to": "@itwin/ecschema-rpcinterface-common",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/core-frontend",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/core-frontend",
+      "to": "@itwin/object-storage-core",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/core-frontend",
+      "to": "@itwin/webgl-compatibility",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/core-geometry",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/core-geometry",
+      "to": "@itwin/core-bentley",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/core-geometry",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/core-i18n",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/core-i18n",
+      "to": "@itwin/certa",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/core-i18n",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/core-i18n",
+      "to": "@itwin/core-common",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/core-i18n",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/core-markup",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/core-markup",
+      "to": "@itwin/certa",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/core-markup",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/core-markup",
+      "to": "@itwin/core-common",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/core-markup",
+      "to": "@itwin/core-frontend",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/core-markup",
+      "to": "@itwin/core-geometry",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/core-markup",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/core-mobile",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/core-mobile",
+      "to": "@itwin/core-backend",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/core-mobile",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/core-mobile",
+      "to": "@itwin/core-common",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/core-mobile",
+      "to": "@itwin/core-frontend",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/core-mobile",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/core-orbitgt",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/core-orbitgt",
+      "to": "@itwin/core-bentley",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/core-orbitgt",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/core-quantity",
+      "to": "@bentley/units-schema",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/core-quantity",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/core-quantity",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/core-quantity",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/core-react",
+      "to": "@itwin/appui-abstract",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/core-react",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/core-react",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/core-react",
+      "to": "@itwin/core-common",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/core-react",
+      "to": "@itwin/core-geometry",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/core-react",
+      "to": "@itwin/core-i18n",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/core-react",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/core-react",
+      "to": "@itwin/itwinui-icons-react",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/core-react",
+      "to": "@itwin/itwinui-react",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/create-imodel-react",
+      "to": "@itwin/itwinui-react",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/delete-imodel-react",
+      "to": "@itwin/itwinui-icons-react",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/delete-imodel-react",
+      "to": "@itwin/itwinui-react",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/delete-itwin-react",
+      "to": "@itwin/itwinui-icons-react",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/delete-itwin-react",
+      "to": "@itwin/itwinui-react",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/desktop-viewer-react",
+      "to": "@itwin/appui-abstract",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/desktop-viewer-react",
+      "to": "@itwin/appui-react",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/desktop-viewer-react",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/desktop-viewer-react",
+      "to": "@itwin/components-react",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/desktop-viewer-react",
+      "to": "@itwin/core-backend",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/desktop-viewer-react",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/desktop-viewer-react",
+      "to": "@itwin/core-common",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/desktop-viewer-react",
+      "to": "@itwin/core-electron",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/desktop-viewer-react",
+      "to": "@itwin/core-frontend",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/desktop-viewer-react",
+      "to": "@itwin/core-geometry",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/desktop-viewer-react",
+      "to": "@itwin/core-markup",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/desktop-viewer-react",
+      "to": "@itwin/core-orbitgt",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/desktop-viewer-react",
+      "to": "@itwin/core-quantity",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/desktop-viewer-react",
+      "to": "@itwin/core-react",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/desktop-viewer-react",
+      "to": "@itwin/ecschema-metadata",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/desktop-viewer-react",
+      "to": "@itwin/ecschema-rpcinterface-common",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/desktop-viewer-react",
+      "to": "@itwin/electron-authorization",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/desktop-viewer-react",
+      "to": "@itwin/imodel-components-react",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/desktop-viewer-react",
+      "to": "@itwin/itwinui-react",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/desktop-viewer-react",
+      "to": "@itwin/presentation-common",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/desktop-viewer-react",
+      "to": "@itwin/presentation-components",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/desktop-viewer-react",
+      "to": "@itwin/presentation-frontend",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/desktop-viewer-react",
+      "to": "@itwin/unified-selection-react",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/desktop-viewer-react",
+      "to": "@itwin/viewer-react",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/desktop-viewer-react",
+      "to": "@itwin/webgl-compatibility",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ec3-widget-react",
+      "to": "@itwin/appui-abstract",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/ec3-widget-react",
+      "to": "@itwin/appui-layout-react",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ec3-widget-react",
+      "to": "@itwin/appui-react",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/ec3-widget-react",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ec3-widget-react",
+      "to": "@itwin/components-react",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ec3-widget-react",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/ec3-widget-react",
+      "to": "@itwin/core-common",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ec3-widget-react",
+      "to": "@itwin/core-frontend",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/ec3-widget-react",
+      "to": "@itwin/core-geometry",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ec3-widget-react",
+      "to": "@itwin/core-markup",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ec3-widget-react",
+      "to": "@itwin/core-orbitgt",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ec3-widget-react",
+      "to": "@itwin/core-quantity",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ec3-widget-react",
+      "to": "@itwin/core-react",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ec3-widget-react",
+      "to": "@itwin/core-telemetry",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ec3-widget-react",
+      "to": "@itwin/ecschema-metadata",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ec3-widget-react",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ec3-widget-react",
+      "to": "@itwin/imodel-components-react",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ec3-widget-react",
+      "to": "@itwin/insights-client",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/ec3-widget-react",
+      "to": "@itwin/itwinui-icons-react",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/ec3-widget-react",
+      "to": "@itwin/itwinui-react",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/ec3-widget-react",
+      "to": "@itwin/presentation-common",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ec3-widget-react",
+      "to": "@itwin/presentation-frontend",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ec3-widget-react",
+      "to": "@itwin/webgl-compatibility",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ecschema-editing",
+      "to": "@bentley/units-schema",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ecschema-editing",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ecschema-editing",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/ecschema-editing",
+      "to": "@itwin/core-common",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ecschema-editing",
+      "to": "@itwin/core-quantity",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/ecschema-editing",
+      "to": "@itwin/ecschema-metadata",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/ecschema-editing",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ecschema-locaters",
+      "to": "@bentley/aec-units-schema",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ecschema-locaters",
+      "to": "@bentley/architectural-physical-schema",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ecschema-locaters",
+      "to": "@bentley/bis-core-schema",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ecschema-locaters",
+      "to": "@bentley/bis-custom-attributes-schema",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ecschema-locaters",
+      "to": "@bentley/construction-schema",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ecschema-locaters",
+      "to": "@bentley/core-custom-attributes-schema",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ecschema-locaters",
+      "to": "@bentley/ecdb-map-schema",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ecschema-locaters",
+      "to": "@bentley/ecdb-schema-policies-schema",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ecschema-locaters",
+      "to": "@bentley/formats-schema",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ecschema-locaters",
+      "to": "@bentley/linear-referencing-schema",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ecschema-locaters",
+      "to": "@bentley/physical-material-schema",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ecschema-locaters",
+      "to": "@bentley/plant-custom-attributes-schema",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ecschema-locaters",
+      "to": "@bentley/quantity-takeoffs-aspects-schema",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ecschema-locaters",
+      "to": "@bentley/spatial-composition-schema",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ecschema-locaters",
+      "to": "@bentley/structural-physical-schema",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ecschema-locaters",
+      "to": "@bentley/units-schema",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ecschema-locaters",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ecschema-locaters",
+      "to": "@itwin/ecschema-metadata",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/ecschema-locaters",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ecschema-metadata",
+      "to": "@bentley/aec-units-schema",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ecschema-metadata",
+      "to": "@bentley/bis-custom-attributes-schema",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ecschema-metadata",
+      "to": "@bentley/cif-units-schema",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ecschema-metadata",
+      "to": "@bentley/core-custom-attributes-schema",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ecschema-metadata",
+      "to": "@bentley/formats-schema",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ecschema-metadata",
+      "to": "@bentley/road-rail-units-schema",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ecschema-metadata",
+      "to": "@bentley/units-schema",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ecschema-metadata",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ecschema-metadata",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/ecschema-metadata",
+      "to": "@itwin/core-quantity",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/ecschema-metadata",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ecschema-rpcinterface-common",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ecschema-rpcinterface-common",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/ecschema-rpcinterface-common",
+      "to": "@itwin/core-common",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/ecschema-rpcinterface-common",
+      "to": "@itwin/core-geometry",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/ecschema-rpcinterface-common",
+      "to": "@itwin/ecschema-metadata",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/ecschema-rpcinterface-common",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ecschema-rpcinterface-impl",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ecschema-rpcinterface-impl",
+      "to": "@itwin/core-backend",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/ecschema-rpcinterface-impl",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/ecschema-rpcinterface-impl",
+      "to": "@itwin/core-common",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/ecschema-rpcinterface-impl",
+      "to": "@itwin/core-geometry",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/ecschema-rpcinterface-impl",
+      "to": "@itwin/ecschema-metadata",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/ecschema-rpcinterface-impl",
+      "to": "@itwin/ecschema-rpcinterface-common",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/ecschema-rpcinterface-impl",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ecschema-rpcinterface-tests",
+      "to": "@itwin/build-tools",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/ecschema-rpcinterface-tests",
+      "to": "@itwin/certa",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/ecschema-rpcinterface-tests",
+      "to": "@itwin/core-backend",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ecschema-rpcinterface-tests",
+      "to": "@itwin/core-bentley",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/ecschema-rpcinterface-tests",
+      "to": "@itwin/core-common",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/ecschema-rpcinterface-tests",
+      "to": "@itwin/core-frontend",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/ecschema-rpcinterface-tests",
+      "to": "@itwin/core-geometry",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/ecschema-rpcinterface-tests",
+      "to": "@itwin/core-quantity",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/ecschema-rpcinterface-tests",
+      "to": "@itwin/ecschema-metadata",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/ecschema-rpcinterface-tests",
+      "to": "@itwin/ecschema-rpcinterface-common",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/ecschema-rpcinterface-tests",
+      "to": "@itwin/ecschema-rpcinterface-impl",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/ecschema-rpcinterface-tests",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ecschema-rpcinterface-tests",
+      "to": "@itwin/express-server",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ecschema-rpcinterface-tests",
+      "to": "@itwin/imodels-access-backend",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/ecschema-rpcinterface-tests",
+      "to": "@itwin/imodels-access-frontend",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/ecschema-rpcinterface-tests",
+      "to": "@itwin/imodels-client-authoring",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/ecschema-rpcinterface-tests",
+      "to": "@itwin/imodels-client-management",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/ecschema-rpcinterface-tests",
+      "to": "@itwin/itwins-client",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ecschema-rpcinterface-tests",
+      "to": "@itwin/object-storage-azure",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/ecschema-rpcinterface-tests",
+      "to": "@itwin/oidc-signin-tool",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/ecschema-rpcinterface-tests",
+      "to": "@itwin/presentation-common",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/ecschema-rpcinterface-tests",
+      "to": "@itwin/presentation-frontend",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/ecschema2ts",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ecschema2ts",
+      "to": "@itwin/core-backend",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/ecschema2ts",
+      "to": "@itwin/core-bentley",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/ecschema2ts",
+      "to": "@itwin/core-common",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/ecschema2ts",
+      "to": "@itwin/core-geometry",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/ecschema2ts",
+      "to": "@itwin/ecschema-locaters",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/ecschema2ts",
+      "to": "@itwin/ecschema-metadata",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/ecschema2ts",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ecsql-common",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/ecsql-common",
+      "to": "@itwin/core-bentley",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/ecsql-common",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/editor-backend",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/editor-backend",
+      "to": "@itwin/core-backend",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/editor-backend",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/editor-backend",
+      "to": "@itwin/core-common",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/editor-backend",
+      "to": "@itwin/core-geometry",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/editor-backend",
+      "to": "@itwin/editor-common",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/editor-backend",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/editor-common",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/editor-common",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/editor-common",
+      "to": "@itwin/core-common",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/editor-common",
+      "to": "@itwin/core-geometry",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/editor-common",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/editor-frontend",
+      "to": "@itwin/appui-abstract",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/editor-frontend",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/editor-frontend",
+      "to": "@itwin/certa",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/editor-frontend",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/editor-frontend",
+      "to": "@itwin/core-common",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/editor-frontend",
+      "to": "@itwin/core-frontend",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/editor-frontend",
+      "to": "@itwin/core-geometry",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/editor-frontend",
+      "to": "@itwin/editor-common",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/editor-frontend",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/electron-authorization",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/electron-authorization",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/electron-authorization",
+      "to": "@itwin/core-common",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/electron-authorization",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/express-server",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/express-server",
+      "to": "@itwin/core-backend",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/express-server",
+      "to": "@itwin/core-common",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/express-server",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/frontend-devtools",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/frontend-devtools",
+      "to": "@itwin/core-bentley",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/frontend-devtools",
+      "to": "@itwin/core-common",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/frontend-devtools",
+      "to": "@itwin/core-frontend",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/frontend-devtools",
+      "to": "@itwin/core-geometry",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/frontend-devtools",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/frontend-tiles",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/frontend-tiles",
+      "to": "@itwin/certa",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/frontend-tiles",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/frontend-tiles",
+      "to": "@itwin/core-common",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/frontend-tiles",
+      "to": "@itwin/core-frontend",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/frontend-tiles",
+      "to": "@itwin/core-geometry",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/frontend-tiles",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/geo-tools-react",
+      "to": "@itwin/appui-abstract",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/geo-tools-react",
+      "to": "@itwin/appui-react",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/geo-tools-react",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/geo-tools-react",
+      "to": "@itwin/components-react",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/geo-tools-react",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/geo-tools-react",
+      "to": "@itwin/core-common",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/geo-tools-react",
+      "to": "@itwin/core-frontend",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/geo-tools-react",
+      "to": "@itwin/core-geometry",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/geo-tools-react",
+      "to": "@itwin/core-i18n",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/geo-tools-react",
+      "to": "@itwin/core-markup",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/geo-tools-react",
+      "to": "@itwin/core-orbitgt",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/geo-tools-react",
+      "to": "@itwin/core-quantity",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/geo-tools-react",
+      "to": "@itwin/core-react",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/geo-tools-react",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/geo-tools-react",
+      "to": "@itwin/imodel-components-react",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/geo-tools-react",
+      "to": "@itwin/itwinui-icons-react",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/geo-tools-react",
+      "to": "@itwin/itwinui-react",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/geo-tools-react",
+      "to": "@itwin/webgl-compatibility",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/grouping-mapping-widget",
+      "to": "@itwin/appui-abstract",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/grouping-mapping-widget",
+      "to": "@itwin/appui-react",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/grouping-mapping-widget",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/grouping-mapping-widget",
+      "to": "@itwin/components-react",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/grouping-mapping-widget",
+      "to": "@itwin/core-bentley",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/grouping-mapping-widget",
+      "to": "@itwin/core-common",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/grouping-mapping-widget",
+      "to": "@itwin/core-frontend",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/grouping-mapping-widget",
+      "to": "@itwin/core-geometry",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/grouping-mapping-widget",
+      "to": "@itwin/core-i18n",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/grouping-mapping-widget",
+      "to": "@itwin/core-markup",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/grouping-mapping-widget",
+      "to": "@itwin/core-orbitgt",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/grouping-mapping-widget",
+      "to": "@itwin/core-quantity",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/grouping-mapping-widget",
+      "to": "@itwin/core-react",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/grouping-mapping-widget",
+      "to": "@itwin/ecschema-metadata",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/grouping-mapping-widget",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/grouping-mapping-widget",
+      "to": "@itwin/imodel-components-react",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/grouping-mapping-widget",
+      "to": "@itwin/imodels-access-common",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/grouping-mapping-widget",
+      "to": "@itwin/imodels-access-frontend",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/grouping-mapping-widget",
+      "to": "@itwin/imodels-client-management",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/grouping-mapping-widget",
+      "to": "@itwin/insights-client",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/grouping-mapping-widget",
+      "to": "@itwin/itwins-client",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/grouping-mapping-widget",
+      "to": "@itwin/itwinui-icons-color-react",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/grouping-mapping-widget",
+      "to": "@itwin/itwinui-icons-react",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/grouping-mapping-widget",
+      "to": "@itwin/itwinui-react",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/grouping-mapping-widget",
+      "to": "@itwin/presentation-common",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/grouping-mapping-widget",
+      "to": "@itwin/presentation-components",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/grouping-mapping-widget",
+      "to": "@itwin/presentation-frontend",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/grouping-mapping-widget",
+      "to": "@itwin/webgl-compatibility",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/hypermodeling-frontend",
+      "to": "@itwin/appui-abstract",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/hypermodeling-frontend",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/hypermodeling-frontend",
+      "to": "@itwin/certa",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/hypermodeling-frontend",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/hypermodeling-frontend",
+      "to": "@itwin/core-common",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/hypermodeling-frontend",
+      "to": "@itwin/core-frontend",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/hypermodeling-frontend",
+      "to": "@itwin/core-geometry",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/hypermodeling-frontend",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/imodel-browser-react",
+      "to": "@itwin/itwinui-icons-react",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodel-browser-react",
+      "to": "@itwin/itwinui-react",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/imodel-components-react",
+      "to": "@itwin/appui-abstract",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/imodel-components-react",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/imodel-components-react",
+      "to": "@itwin/components-react",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/imodel-components-react",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/imodel-components-react",
+      "to": "@itwin/core-common",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/imodel-components-react",
+      "to": "@itwin/core-frontend",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/imodel-components-react",
+      "to": "@itwin/core-geometry",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/imodel-components-react",
+      "to": "@itwin/core-orbitgt",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/imodel-components-react",
+      "to": "@itwin/core-quantity",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/imodel-components-react",
+      "to": "@itwin/core-react",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/imodel-components-react",
+      "to": "@itwin/ecschema-metadata",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/imodel-components-react",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/imodel-components-react",
+      "to": "@itwin/itwinui-icons-react",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodel-components-react",
+      "to": "@itwin/itwinui-react",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/imodel-components-react",
+      "to": "@itwin/webgl-compatibility",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/imodel-transformer",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/imodel-transformer",
+      "to": "@itwin/core-backend",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/imodel-transformer",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/imodel-transformer",
+      "to": "@itwin/core-common",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/imodel-transformer",
+      "to": "@itwin/core-geometry",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/imodel-transformer",
+      "to": "@itwin/core-quantity",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/imodel-transformer",
+      "to": "@itwin/ecschema-locaters",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/imodel-transformer",
+      "to": "@itwin/ecschema-metadata",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/imodel-transformer",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/imodels-access-backend",
+      "to": "@itwin/core-backend",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/imodels-access-backend",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/imodels-access-backend",
+      "to": "@itwin/core-common",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/imodels-access-backend",
+      "to": "@itwin/core-geometry",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/imodels-access-backend",
+      "to": "@itwin/ecschema-metadata",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/imodels-access-backend",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/imodels-access-backend",
+      "to": "@itwin/imodels-access-common",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodels-access-backend",
+      "to": "@itwin/imodels-client-authoring",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodels-access-backend",
+      "to": "@itwin/imodels-client-common-config",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/imodels-access-backend",
+      "to": "@itwin/imodels-client-management",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodels-access-backend",
+      "to": "@itwin/object-storage-azure",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodels-access-backend",
+      "to": "@itwin/object-storage-core",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodels-access-backend",
+      "to": "@itwin/object-storage-google",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodels-access-backend-tests",
+      "to": "@itwin/core-backend",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodels-access-backend-tests",
+      "to": "@itwin/core-bentley",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodels-access-backend-tests",
+      "to": "@itwin/core-common",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodels-access-backend-tests",
+      "to": "@itwin/core-geometry",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodels-access-backend-tests",
+      "to": "@itwin/core-quantity",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodels-access-backend-tests",
+      "to": "@itwin/ecschema-metadata",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodels-access-backend-tests",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/imodels-access-backend-tests",
+      "to": "@itwin/imodels-access-backend",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodels-access-backend-tests",
+      "to": "@itwin/imodels-client-authoring",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodels-access-backend-tests",
+      "to": "@itwin/imodels-client-common-config",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/imodels-access-backend-tests",
+      "to": "@itwin/imodels-client-management",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodels-access-backend-tests",
+      "to": "@itwin/imodels-client-test-utils",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodels-access-common",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/imodels-access-common",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/imodels-access-common",
+      "to": "@itwin/imodels-client-authoring",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/imodels-access-common",
+      "to": "@itwin/imodels-client-common-config",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/imodels-access-common",
+      "to": "@itwin/imodels-client-management",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/imodels-access-common-tests",
+      "to": "@itwin/core-bentley",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodels-access-common-tests",
+      "to": "@itwin/core-common",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodels-access-common-tests",
+      "to": "@itwin/core-geometry",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodels-access-common-tests",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/imodels-access-common-tests",
+      "to": "@itwin/imodels-access-common",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodels-access-common-tests",
+      "to": "@itwin/imodels-client-authoring",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodels-access-common-tests",
+      "to": "@itwin/imodels-client-common-config",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/imodels-access-common-tests",
+      "to": "@itwin/imodels-client-management",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodels-access-frontend",
+      "to": "@itwin/appui-abstract",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/imodels-access-frontend",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/imodels-access-frontend",
+      "to": "@itwin/core-common",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/imodels-access-frontend",
+      "to": "@itwin/core-frontend",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/imodels-access-frontend",
+      "to": "@itwin/core-geometry",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/imodels-access-frontend",
+      "to": "@itwin/core-orbitgt",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/imodels-access-frontend",
+      "to": "@itwin/core-quantity",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/imodels-access-frontend",
+      "to": "@itwin/ecschema-metadata",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/imodels-access-frontend",
+      "to": "@itwin/ecschema-rpcinterface-common",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/imodels-access-frontend",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/imodels-access-frontend",
+      "to": "@itwin/imodels-access-common",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodels-access-frontend",
+      "to": "@itwin/imodels-client-common-config",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/imodels-access-frontend",
+      "to": "@itwin/imodels-client-management",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodels-access-frontend",
+      "to": "@itwin/webgl-compatibility",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/imodels-access-frontend-tests",
+      "to": "@itwin/appui-abstract",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodels-access-frontend-tests",
+      "to": "@itwin/core-bentley",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodels-access-frontend-tests",
+      "to": "@itwin/core-common",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodels-access-frontend-tests",
+      "to": "@itwin/core-frontend",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodels-access-frontend-tests",
+      "to": "@itwin/core-geometry",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodels-access-frontend-tests",
+      "to": "@itwin/core-orbitgt",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodels-access-frontend-tests",
+      "to": "@itwin/core-quantity",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodels-access-frontend-tests",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/imodels-access-frontend-tests",
+      "to": "@itwin/imodels-access-frontend",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodels-access-frontend-tests",
+      "to": "@itwin/imodels-client-common-config",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/imodels-access-frontend-tests",
+      "to": "@itwin/imodels-client-management",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodels-access-frontend-tests",
+      "to": "@itwin/imodels-client-test-utils",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodels-access-frontend-tests",
+      "to": "@itwin/webgl-compatibility",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodels-client-authoring",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/imodels-client-authoring",
+      "to": "@itwin/imodels-client-common-config",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/imodels-client-authoring",
+      "to": "@itwin/imodels-client-management",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodels-client-authoring",
+      "to": "@itwin/object-storage-core",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodels-client-common-config",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/imodels-client-management",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/imodels-client-management",
+      "to": "@itwin/imodels-client-common-config",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/imodels-client-test-utils",
+      "to": "@itwin/imodels-client-authoring",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodels-client-test-utils",
+      "to": "@itwin/imodels-client-common-config",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/imodels-client-test-utils",
+      "to": "@itwin/imodels-client-management",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodels-client-test-utils",
+      "to": "@itwin/object-storage-azure",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodels-client-test-utils",
+      "to": "@itwin/object-storage-core",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodels-client-test-utils",
+      "to": "@itwin/object-storage-google",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodels-clients-tests",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/imodels-clients-tests",
+      "to": "@itwin/imodels-client-authoring",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodels-clients-tests",
+      "to": "@itwin/imodels-client-common-config",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/imodels-clients-tests",
+      "to": "@itwin/imodels-client-management",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodels-clients-tests",
+      "to": "@itwin/imodels-client-test-utils",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodels-clients-tests",
+      "to": "@itwin/object-storage-azure",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodels-clients-tests",
+      "to": "@itwin/object-storage-core",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodels-clients-tests",
+      "to": "@itwin/object-storage-google",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodels-clients-tests-browser",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/imodels-clients-tests-browser",
+      "to": "@itwin/imodels-client-common-config",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/imodels-clients-tests-browser",
+      "to": "@itwin/imodels-client-management",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/imodels-clients-tests-browser",
+      "to": "@itwin/imodels-client-test-utils",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/itwins-client",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/itwins-client",
+      "to": "@itwin/core-bentley",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/itwins-client",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/itwins-client",
+      "to": "@itwin/oidc-signin-tool",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/itwinui-layouts-react",
+      "to": "@itwin/itwinui-layouts-css",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/itwinui-react",
+      "to": "@itwin/itwinui-illustrations-react",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/linear-referencing-backend",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/linear-referencing-backend",
+      "to": "@itwin/core-backend",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/linear-referencing-backend",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/linear-referencing-backend",
+      "to": "@itwin/core-common",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/linear-referencing-backend",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/linear-referencing-backend",
+      "to": "@itwin/linear-referencing-common",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/linear-referencing-common",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/linear-referencing-common",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/linear-referencing-common",
+      "to": "@itwin/core-common",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/linear-referencing-common",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/manage-versions-react",
+      "to": "@itwin/itwinui-icons-react",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/manage-versions-react",
+      "to": "@itwin/itwinui-react",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/map-layers",
+      "to": "@itwin/appui-abstract",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/map-layers",
+      "to": "@itwin/appui-react",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/map-layers",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/map-layers",
+      "to": "@itwin/components-react",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/map-layers",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/map-layers",
+      "to": "@itwin/core-common",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/map-layers",
+      "to": "@itwin/core-frontend",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/map-layers",
+      "to": "@itwin/core-geometry",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/map-layers",
+      "to": "@itwin/core-orbitgt",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/map-layers",
+      "to": "@itwin/core-quantity",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/map-layers",
+      "to": "@itwin/core-react",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/map-layers",
+      "to": "@itwin/ecschema-metadata",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/map-layers",
+      "to": "@itwin/ecschema-rpcinterface-common",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/map-layers",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/map-layers",
+      "to": "@itwin/imodel-components-react",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/map-layers",
+      "to": "@itwin/itwinui-icons-color-react",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/map-layers",
+      "to": "@itwin/itwinui-icons-react",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/map-layers",
+      "to": "@itwin/itwinui-react",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/map-layers",
+      "to": "@itwin/map-layers-formats",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/map-layers",
+      "to": "@itwin/webgl-compatibility",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/map-layers-auth",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/map-layers-auth",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/map-layers-auth",
+      "to": "@itwin/core-common",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/map-layers-auth",
+      "to": "@itwin/core-frontend",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/map-layers-auth",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/map-layers-formats",
+      "to": "@itwin/appui-abstract",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/map-layers-formats",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/map-layers-formats",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/map-layers-formats",
+      "to": "@itwin/core-common",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/map-layers-formats",
+      "to": "@itwin/core-frontend",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/map-layers-formats",
+      "to": "@itwin/core-geometry",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/map-layers-formats",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/measure-tools-react",
+      "to": "@bentley/icons-generic-webfont",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/measure-tools-react",
+      "to": "@itwin/appui-abstract",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/measure-tools-react",
+      "to": "@itwin/appui-react",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/measure-tools-react",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/measure-tools-react",
+      "to": "@itwin/components-react",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/measure-tools-react",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/measure-tools-react",
+      "to": "@itwin/core-common",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/measure-tools-react",
+      "to": "@itwin/core-frontend",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/measure-tools-react",
+      "to": "@itwin/core-geometry",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/measure-tools-react",
+      "to": "@itwin/core-i18n",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/measure-tools-react",
+      "to": "@itwin/core-markup",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/measure-tools-react",
+      "to": "@itwin/core-orbitgt",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/measure-tools-react",
+      "to": "@itwin/core-quantity",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/measure-tools-react",
+      "to": "@itwin/core-react",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/measure-tools-react",
+      "to": "@itwin/ecschema-metadata",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/measure-tools-react",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/measure-tools-react",
+      "to": "@itwin/imodel-components-react",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/measure-tools-react",
+      "to": "@itwin/itwinui-icons-react",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/measure-tools-react",
+      "to": "@itwin/itwinui-react",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/measure-tools-react",
+      "to": "@itwin/presentation-common",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/measure-tools-react",
+      "to": "@itwin/presentation-components",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/measure-tools-react",
+      "to": "@itwin/presentation-frontend",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/measure-tools-react",
+      "to": "@itwin/webgl-compatibility",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/node-cli-authorization",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/node-cli-authorization",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/node-cli-authorization",
+      "to": "@itwin/core-common",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/node-cli-authorization",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/object-storage-azure",
+      "to": "@itwin/cloud-agnostic-core",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/object-storage-azure",
+      "to": "@itwin/object-storage-common-config",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/object-storage-azure",
+      "to": "@itwin/object-storage-core",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/object-storage-azure",
+      "to": "@itwin/object-storage-tests-backend",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/object-storage-azure",
+      "to": "@itwin/object-storage-tests-backend-unit",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/object-storage-azure",
+      "to": "@itwin/object-storage-tests-frontend",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/object-storage-core",
+      "to": "@itwin/cloud-agnostic-core",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/object-storage-core",
+      "to": "@itwin/object-storage-common-config",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/object-storage-google",
+      "to": "@itwin/cloud-agnostic-core",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/object-storage-google",
+      "to": "@itwin/object-storage-common-config",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/object-storage-google",
+      "to": "@itwin/object-storage-core",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/object-storage-google",
+      "to": "@itwin/object-storage-tests-backend",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/object-storage-google",
+      "to": "@itwin/object-storage-tests-backend-unit",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/object-storage-google",
+      "to": "@itwin/object-storage-tests-frontend",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/object-storage-minio",
+      "to": "@itwin/cloud-agnostic-core",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/object-storage-minio",
+      "to": "@itwin/object-storage-common-config",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/object-storage-minio",
+      "to": "@itwin/object-storage-core",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/object-storage-minio",
+      "to": "@itwin/object-storage-s3",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/object-storage-minio",
+      "to": "@itwin/object-storage-tests-backend",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/object-storage-minio",
+      "to": "@itwin/object-storage-tests-backend-unit",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/object-storage-minio",
+      "to": "@itwin/object-storage-tests-frontend",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/object-storage-oss",
+      "to": "@itwin/cloud-agnostic-core",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/object-storage-oss",
+      "to": "@itwin/object-storage-common-config",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/object-storage-oss",
+      "to": "@itwin/object-storage-core",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/object-storage-oss",
+      "to": "@itwin/object-storage-s3",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/object-storage-oss",
+      "to": "@itwin/object-storage-tests-backend",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/object-storage-oss",
+      "to": "@itwin/object-storage-tests-backend-unit",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/object-storage-oss",
+      "to": "@itwin/object-storage-tests-frontend",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/object-storage-s3",
+      "to": "@itwin/cloud-agnostic-core",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/object-storage-s3",
+      "to": "@itwin/object-storage-common-config",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/object-storage-s3",
+      "to": "@itwin/object-storage-core",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/object-storage-s3",
+      "to": "@itwin/object-storage-tests-backend-unit",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/object-storage-samples",
+      "to": "@itwin/cloud-agnostic-core",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/object-storage-samples",
+      "to": "@itwin/object-storage-azure",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/object-storage-samples",
+      "to": "@itwin/object-storage-common-config",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/object-storage-samples",
+      "to": "@itwin/object-storage-core",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/object-storage-tests-backend",
+      "to": "@itwin/cloud-agnostic-core",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/object-storage-tests-backend",
+      "to": "@itwin/object-storage-common-config",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/object-storage-tests-backend",
+      "to": "@itwin/object-storage-core",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/object-storage-tests-backend-unit",
+      "to": "@itwin/cloud-agnostic-core",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/object-storage-tests-backend-unit",
+      "to": "@itwin/object-storage-common-config",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/object-storage-tests-backend-unit",
+      "to": "@itwin/object-storage-core",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/object-storage-tests-frontend",
+      "to": "@itwin/cloud-agnostic-core",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/object-storage-tests-frontend",
+      "to": "@itwin/object-storage-common-config",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/object-storage-tests-frontend",
+      "to": "@itwin/object-storage-core",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/oidc-signin-tool",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/oidc-signin-tool",
+      "to": "@itwin/certa",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/oidc-signin-tool",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/oidc-signin-tool",
+      "to": "@itwin/core-common",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/oidc-signin-tool",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/oidc-signin-tool",
+      "to": "@itwin/service-authorization",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/one-click-lca-react",
+      "to": "@itwin/appui-abstract",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/one-click-lca-react",
+      "to": "@itwin/appui-react",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/one-click-lca-react",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/one-click-lca-react",
+      "to": "@itwin/certa",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/one-click-lca-react",
+      "to": "@itwin/components-react",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/one-click-lca-react",
+      "to": "@itwin/core-bentley",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/one-click-lca-react",
+      "to": "@itwin/core-common",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/one-click-lca-react",
+      "to": "@itwin/core-frontend",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/one-click-lca-react",
+      "to": "@itwin/core-geometry",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/one-click-lca-react",
+      "to": "@itwin/core-markup",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/one-click-lca-react",
+      "to": "@itwin/core-orbitgt",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/one-click-lca-react",
+      "to": "@itwin/core-quantity",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/one-click-lca-react",
+      "to": "@itwin/core-react",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/one-click-lca-react",
+      "to": "@itwin/ecschema-metadata",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/one-click-lca-react",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/one-click-lca-react",
+      "to": "@itwin/imodel-components-react",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/one-click-lca-react",
+      "to": "@itwin/insights-client",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/one-click-lca-react",
+      "to": "@itwin/itwinui-icons-react",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/one-click-lca-react",
+      "to": "@itwin/itwinui-react",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/one-click-lca-react",
+      "to": "@itwin/presentation-common",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/one-click-lca-react",
+      "to": "@itwin/presentation-frontend",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/one-click-lca-react",
+      "to": "@itwin/webgl-compatibility",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/perf-tools",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/perf-tools",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/physical-material-backend",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/physical-material-backend",
+      "to": "@itwin/core-backend",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/physical-material-backend",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/physical-material-backend",
+      "to": "@itwin/core-common",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/physical-material-backend",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/presentation-backend",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/presentation-backend",
+      "to": "@itwin/core-backend",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/presentation-backend",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/presentation-backend",
+      "to": "@itwin/core-common",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/presentation-backend",
+      "to": "@itwin/core-quantity",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/presentation-backend",
+      "to": "@itwin/ecschema-metadata",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/presentation-backend",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/presentation-backend",
+      "to": "@itwin/presentation-common",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/presentation-backend",
+      "to": "@itwin/presentation-shared",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/presentation-common",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/presentation-common",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/presentation-common",
+      "to": "@itwin/core-common",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/presentation-common",
+      "to": "@itwin/core-quantity",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/presentation-common",
+      "to": "@itwin/ecschema-metadata",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/presentation-common",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/presentation-common",
+      "to": "@itwin/presentation-shared",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/presentation-components",
+      "to": "@itwin/appui-abstract",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/presentation-components",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/presentation-components",
+      "to": "@itwin/components-react",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/presentation-components",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/presentation-components",
+      "to": "@itwin/core-common",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/presentation-components",
+      "to": "@itwin/core-frontend",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/presentation-components",
+      "to": "@itwin/core-orbitgt",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/presentation-components",
+      "to": "@itwin/core-quantity",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/presentation-components",
+      "to": "@itwin/core-react",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/presentation-components",
+      "to": "@itwin/ecschema-metadata",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/presentation-components",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/presentation-components",
+      "to": "@itwin/imodel-components-react",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/presentation-components",
+      "to": "@itwin/itwinui-icons-react",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/presentation-components",
+      "to": "@itwin/itwinui-illustrations-react",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/presentation-components",
+      "to": "@itwin/itwinui-react",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/presentation-components",
+      "to": "@itwin/presentation-common",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/presentation-components",
+      "to": "@itwin/presentation-core-interop",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/presentation-components",
+      "to": "@itwin/presentation-frontend",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/presentation-components",
+      "to": "@itwin/presentation-shared",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/presentation-components",
+      "to": "@itwin/unified-selection",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/presentation-components",
+      "to": "@itwin/unified-selection-react",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/presentation-core-interop",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/presentation-core-interop",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/presentation-core-interop",
+      "to": "@itwin/core-common",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/presentation-core-interop",
+      "to": "@itwin/core-geometry",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/presentation-core-interop",
+      "to": "@itwin/core-quantity",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/presentation-core-interop",
+      "to": "@itwin/ecschema-metadata",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/presentation-core-interop",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/presentation-core-interop",
+      "to": "@itwin/presentation-shared",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/presentation-frontend",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/presentation-frontend",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/presentation-frontend",
+      "to": "@itwin/core-common",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/presentation-frontend",
+      "to": "@itwin/core-frontend",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/presentation-frontend",
+      "to": "@itwin/core-i18n",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/presentation-frontend",
+      "to": "@itwin/core-quantity",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/presentation-frontend",
+      "to": "@itwin/ecschema-metadata",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/presentation-frontend",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/presentation-frontend",
+      "to": "@itwin/presentation-common",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/presentation-frontend",
+      "to": "@itwin/unified-selection",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/presentation-hierarchies",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/presentation-hierarchies",
+      "to": "@itwin/core-bentley",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/presentation-hierarchies",
+      "to": "@itwin/core-common",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/presentation-hierarchies",
+      "to": "@itwin/core-geometry",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/presentation-hierarchies",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/presentation-hierarchies",
+      "to": "@itwin/presentation-shared",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/presentation-hierarchies-react",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/presentation-hierarchies-react",
+      "to": "@itwin/core-bentley",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/presentation-hierarchies-react",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/presentation-hierarchies-react",
+      "to": "@itwin/itwinui-icons-react",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/presentation-hierarchies-react",
+      "to": "@itwin/itwinui-illustrations-react",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/presentation-hierarchies-react",
+      "to": "@itwin/itwinui-react",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/presentation-hierarchies-react",
+      "to": "@itwin/presentation-hierarchies",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/presentation-hierarchies-react",
+      "to": "@itwin/presentation-shared",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/presentation-hierarchies-react",
+      "to": "@itwin/unified-selection",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/presentation-models-tree",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/presentation-models-tree",
+      "to": "@itwin/core-bentley",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/presentation-models-tree",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/presentation-models-tree",
+      "to": "@itwin/presentation-hierarchies",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/presentation-models-tree",
+      "to": "@itwin/presentation-shared",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/presentation-opentelemetry",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/presentation-opentelemetry",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/presentation-opentelemetry",
+      "to": "@itwin/presentation-common",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/presentation-shared",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/presentation-shared",
+      "to": "@itwin/core-bentley",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/presentation-shared",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/property-grid-react",
+      "to": "@itwin/appui-abstract",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/property-grid-react",
+      "to": "@itwin/appui-react",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/property-grid-react",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/property-grid-react",
+      "to": "@itwin/components-react",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/property-grid-react",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/property-grid-react",
+      "to": "@itwin/core-common",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/property-grid-react",
+      "to": "@itwin/core-frontend",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/property-grid-react",
+      "to": "@itwin/core-geometry",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/property-grid-react",
+      "to": "@itwin/core-i18n",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/property-grid-react",
+      "to": "@itwin/core-markup",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/property-grid-react",
+      "to": "@itwin/core-orbitgt",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/property-grid-react",
+      "to": "@itwin/core-quantity",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/property-grid-react",
+      "to": "@itwin/core-react",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/property-grid-react",
+      "to": "@itwin/ecschema-metadata",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/property-grid-react",
+      "to": "@itwin/ecschema-rpcinterface-common",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/property-grid-react",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/property-grid-react",
+      "to": "@itwin/imodel-components-react",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/property-grid-react",
+      "to": "@itwin/itwinui-icons-react",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/property-grid-react",
+      "to": "@itwin/itwinui-illustrations-react",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/property-grid-react",
+      "to": "@itwin/itwinui-react",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/property-grid-react",
+      "to": "@itwin/oidc-signin-tool",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/property-grid-react",
+      "to": "@itwin/presentation-common",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/property-grid-react",
+      "to": "@itwin/presentation-components",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/property-grid-react",
+      "to": "@itwin/presentation-core-interop",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/property-grid-react",
+      "to": "@itwin/presentation-frontend",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/property-grid-react",
+      "to": "@itwin/presentation-shared",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/property-grid-react",
+      "to": "@itwin/unified-selection",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/property-grid-react",
+      "to": "@itwin/webgl-compatibility",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/quantity-formatting-react",
+      "to": "@itwin/appui-abstract",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/quantity-formatting-react",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/quantity-formatting-react",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/quantity-formatting-react",
+      "to": "@itwin/core-common",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/quantity-formatting-react",
+      "to": "@itwin/core-frontend",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/quantity-formatting-react",
+      "to": "@itwin/core-geometry",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/quantity-formatting-react",
+      "to": "@itwin/core-orbitgt",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/quantity-formatting-react",
+      "to": "@itwin/core-quantity",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/quantity-formatting-react",
+      "to": "@itwin/ecschema-metadata",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/quantity-formatting-react",
+      "to": "@itwin/ecschema-rpcinterface-common",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/quantity-formatting-react",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/quantity-formatting-react",
+      "to": "@itwin/itwinui-icons-react",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/quantity-formatting-react",
+      "to": "@itwin/itwinui-react",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/reality-capture",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/reality-capture",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/reality-capture",
+      "to": "@itwin/core-common",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/reality-capture",
+      "to": "@itwin/reality-data-client",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/reality-data-client",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/reality-data-client",
+      "to": "@itwin/certa",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/reality-data-client",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/reality-data-client",
+      "to": "@itwin/core-common",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/reality-data-client",
+      "to": "@itwin/core-geometry",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/reality-data-client",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/reality-data-client",
+      "to": "@itwin/oidc-signin-tool",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/reports-config-widget-react",
+      "to": "@itwin/appui-abstract",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/reports-config-widget-react",
+      "to": "@itwin/appui-react",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/reports-config-widget-react",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/reports-config-widget-react",
+      "to": "@itwin/components-react",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/reports-config-widget-react",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/reports-config-widget-react",
+      "to": "@itwin/core-common",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/reports-config-widget-react",
+      "to": "@itwin/core-frontend",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/reports-config-widget-react",
+      "to": "@itwin/core-geometry",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/reports-config-widget-react",
+      "to": "@itwin/core-markup",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/reports-config-widget-react",
+      "to": "@itwin/core-orbitgt",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/reports-config-widget-react",
+      "to": "@itwin/core-quantity",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/reports-config-widget-react",
+      "to": "@itwin/core-react",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/reports-config-widget-react",
+      "to": "@itwin/ecschema-metadata",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/reports-config-widget-react",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/reports-config-widget-react",
+      "to": "@itwin/imodel-components-react",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/reports-config-widget-react",
+      "to": "@itwin/imodels-access-common",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/reports-config-widget-react",
+      "to": "@itwin/imodels-access-frontend",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/reports-config-widget-react",
+      "to": "@itwin/imodels-client-management",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/reports-config-widget-react",
+      "to": "@itwin/insights-client",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/reports-config-widget-react",
+      "to": "@itwin/itwinui-icons-color-react",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/reports-config-widget-react",
+      "to": "@itwin/itwinui-icons-react",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/reports-config-widget-react",
+      "to": "@itwin/itwinui-react",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/reports-config-widget-react",
+      "to": "@itwin/presentation-common",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/reports-config-widget-react",
+      "to": "@itwin/presentation-frontend",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/reports-config-widget-react",
+      "to": "@itwin/webgl-compatibility",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/rpcinterface-full-stack-tests",
+      "to": "@itwin/build-tools",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/rpcinterface-full-stack-tests",
+      "to": "@itwin/certa",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/rpcinterface-full-stack-tests",
+      "to": "@itwin/core-backend",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/rpcinterface-full-stack-tests",
+      "to": "@itwin/core-bentley",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/rpcinterface-full-stack-tests",
+      "to": "@itwin/core-common",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/rpcinterface-full-stack-tests",
+      "to": "@itwin/core-frontend",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/rpcinterface-full-stack-tests",
+      "to": "@itwin/core-geometry",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/rpcinterface-full-stack-tests",
+      "to": "@itwin/core-quantity",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/rpcinterface-full-stack-tests",
+      "to": "@itwin/ecschema-metadata",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/rpcinterface-full-stack-tests",
+      "to": "@itwin/eslint-plugin",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/rpcinterface-full-stack-tests",
+      "to": "@itwin/express-server",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/rpcinterface-full-stack-tests",
+      "to": "@itwin/imodels-access-backend",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/rpcinterface-full-stack-tests",
+      "to": "@itwin/imodels-access-frontend",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/rpcinterface-full-stack-tests",
+      "to": "@itwin/imodels-client-authoring",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/rpcinterface-full-stack-tests",
+      "to": "@itwin/imodels-client-management",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/rpcinterface-full-stack-tests",
+      "to": "@itwin/itwins-client",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/rpcinterface-full-stack-tests",
+      "to": "@itwin/object-storage-azure",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/rpcinterface-full-stack-tests",
+      "to": "@itwin/oidc-signin-tool",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/rpcinterface-full-stack-tests",
+      "to": "@itwin/presentation-backend",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/rpcinterface-full-stack-tests",
+      "to": "@itwin/presentation-common",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/rpcinterface-full-stack-tests",
+      "to": "@itwin/presentation-frontend",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/rpcinterface-full-stack-tests",
+      "to": "@itwin/service-authorization",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/service-authorization",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/service-authorization",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/service-authorization",
+      "to": "@itwin/core-common",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/service-authorization",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/storybook-auth-addon",
+      "to": "@bentley/bentleyjs-core",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/storybook-auth-addon",
+      "to": "@bentley/frontend-authorization-client",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/storybook-auth-addon",
+      "to": "@bentley/itwin-client",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/tree-widget-react",
+      "to": "@itwin/appui-abstract",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/tree-widget-react",
+      "to": "@itwin/appui-react",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/tree-widget-react",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/tree-widget-react",
+      "to": "@itwin/components-react",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/tree-widget-react",
+      "to": "@itwin/core-backend",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/tree-widget-react",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/tree-widget-react",
+      "to": "@itwin/core-common",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/tree-widget-react",
+      "to": "@itwin/core-frontend",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/tree-widget-react",
+      "to": "@itwin/core-geometry",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/tree-widget-react",
+      "to": "@itwin/core-i18n",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/tree-widget-react",
+      "to": "@itwin/core-markup",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/tree-widget-react",
+      "to": "@itwin/core-orbitgt",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/tree-widget-react",
+      "to": "@itwin/core-quantity",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/tree-widget-react",
+      "to": "@itwin/core-react",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/tree-widget-react",
+      "to": "@itwin/ecschema-metadata",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/tree-widget-react",
+      "to": "@itwin/ecschema-rpcinterface-common",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/tree-widget-react",
+      "to": "@itwin/ecschema-rpcinterface-impl",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/tree-widget-react",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/tree-widget-react",
+      "to": "@itwin/imodel-components-react",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/tree-widget-react",
+      "to": "@itwin/itwinui-icons-react",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/tree-widget-react",
+      "to": "@itwin/itwinui-illustrations-react",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/tree-widget-react",
+      "to": "@itwin/itwinui-react",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/tree-widget-react",
+      "to": "@itwin/oidc-signin-tool",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/tree-widget-react",
+      "to": "@itwin/presentation-backend",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/tree-widget-react",
+      "to": "@itwin/presentation-common",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/tree-widget-react",
+      "to": "@itwin/presentation-components",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/tree-widget-react",
+      "to": "@itwin/presentation-core-interop",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/tree-widget-react",
+      "to": "@itwin/presentation-frontend",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/tree-widget-react",
+      "to": "@itwin/presentation-hierarchies",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/tree-widget-react",
+      "to": "@itwin/presentation-hierarchies-react",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/tree-widget-react",
+      "to": "@itwin/presentation-shared",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/tree-widget-react",
+      "to": "@itwin/unified-selection",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/tree-widget-react",
+      "to": "@itwin/webgl-compatibility",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/unified-selection",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/unified-selection",
+      "to": "@itwin/core-bentley",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/unified-selection",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/unified-selection",
+      "to": "@itwin/presentation-shared",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/unified-selection-react",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/unified-selection-react",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/unified-selection-react",
+      "to": "@itwin/unified-selection",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/viewer-react",
+      "to": "@bentley/icons-generic-webfont",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/viewer-react",
+      "to": "@itwin/appui-abstract",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/viewer-react",
+      "to": "@itwin/appui-react",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/viewer-react",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/viewer-react",
+      "to": "@itwin/components-react",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/viewer-react",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/viewer-react",
+      "to": "@itwin/core-common",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/viewer-react",
+      "to": "@itwin/core-frontend",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/viewer-react",
+      "to": "@itwin/core-geometry",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/viewer-react",
+      "to": "@itwin/core-i18n",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/viewer-react",
+      "to": "@itwin/core-markup",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/viewer-react",
+      "to": "@itwin/core-orbitgt",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/viewer-react",
+      "to": "@itwin/core-quantity",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/viewer-react",
+      "to": "@itwin/core-react",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/viewer-react",
+      "to": "@itwin/ecschema-metadata",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/viewer-react",
+      "to": "@itwin/ecschema-rpcinterface-common",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/viewer-react",
+      "to": "@itwin/imodel-components-react",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/viewer-react",
+      "to": "@itwin/imodels-access-frontend",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/viewer-react",
+      "to": "@itwin/itwinui-illustrations-react",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/viewer-react",
+      "to": "@itwin/itwinui-react",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/viewer-react",
+      "to": "@itwin/presentation-common",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/viewer-react",
+      "to": "@itwin/presentation-components",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/viewer-react",
+      "to": "@itwin/presentation-core-interop",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/viewer-react",
+      "to": "@itwin/presentation-frontend",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/viewer-react",
+      "to": "@itwin/presentation-shared",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/viewer-react",
+      "to": "@itwin/reality-data-client",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/viewer-react",
+      "to": "@itwin/unified-selection",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/viewer-react",
+      "to": "@itwin/unified-selection-react",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/viewer-react",
+      "to": "@itwin/webgl-compatibility",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/web-viewer-react",
+      "to": "@itwin/appui-abstract",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/web-viewer-react",
+      "to": "@itwin/appui-react",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/web-viewer-react",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/web-viewer-react",
+      "to": "@itwin/components-react",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/web-viewer-react",
+      "to": "@itwin/core-bentley",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/web-viewer-react",
+      "to": "@itwin/core-common",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/web-viewer-react",
+      "to": "@itwin/core-frontend",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/web-viewer-react",
+      "to": "@itwin/core-geometry",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/web-viewer-react",
+      "to": "@itwin/core-markup",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/web-viewer-react",
+      "to": "@itwin/core-orbitgt",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/web-viewer-react",
+      "to": "@itwin/core-quantity",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/web-viewer-react",
+      "to": "@itwin/core-react",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/web-viewer-react",
+      "to": "@itwin/ecschema-metadata",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/web-viewer-react",
+      "to": "@itwin/ecschema-rpcinterface-common",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/web-viewer-react",
+      "to": "@itwin/imodel-components-react",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/web-viewer-react",
+      "to": "@itwin/itwinui-react",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/web-viewer-react",
+      "to": "@itwin/presentation-common",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/web-viewer-react",
+      "to": "@itwin/presentation-components",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/web-viewer-react",
+      "to": "@itwin/presentation-frontend",
+      "type": "peerDep"
+    },
+    {
+      "from": "@itwin/web-viewer-react",
+      "to": "@itwin/unified-selection",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/web-viewer-react",
+      "to": "@itwin/unified-selection-react",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/web-viewer-react",
+      "to": "@itwin/viewer-react",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/web-viewer-react",
+      "to": "@itwin/webgl-compatibility",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/webgl-compatibility",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/webgl-compatibility",
+      "to": "@itwin/certa",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/webgl-compatibility",
+      "to": "@itwin/core-bentley",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/webgl-compatibility",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/workspace-editor",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    },
+    {
+      "from": "@itwin/workspace-editor",
+      "to": "@itwin/core-backend",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/workspace-editor",
+      "to": "@itwin/core-bentley",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/workspace-editor",
+      "to": "@itwin/core-common",
+      "type": "dep"
+    },
+    {
+      "from": "@itwin/workspace-editor",
+      "to": "@itwin/eslint-plugin",
+      "type": "devDep"
+    },
+    {
+      "from": "internal-tools",
+      "to": "@itwin/build-tools",
+      "type": "devDep"
+    }
+  ],
+  "topologicalOrder": [
+    "@bentley/cif-bridge-schema",
+    "@bentley/cif-common-schema",
+    "@bentley/cif-geometric-rules-schema",
+    "@bentley/cif-hydraulic-analysis-schema",
+    "@bentley/cif-hydraulic-results-schema",
+    "@bentley/cif-quantity-takeoffs-schema",
+    "@bentley/cif-rail-schema",
+    "@bentley/cif-roads-schema",
+    "@bentley/cif-subsurface-conflict-analysis-schema",
+    "@bentley/cif-subsurface-schema",
+    "@bentley/process-functional-schema",
+    "@bentley/process-physical-schema",
+    "@itwin/analytical-backend",
+    "@itwin/appui-test-providers",
+    "@bentley/icons-generic",
+    "@itwin/browser-authorization",
+    "@itwin/cesium-renderer",
+    "@itwin/core-extension",
+    "@itwin/core-mobile",
+    "@itwin/create-imodel-react",
+    "@itwin/delete-imodel-react",
+    "@itwin/delete-itwin-react",
+    "@itwin/desktop-viewer-react",
+    "@itwin/core-electron",
+    "@itwin/ec3-widget-react",
+    "@itwin/appui-layout-react",
+    "@itwin/core-telemetry",
+    "@itwin/ecschema-editing",
+    "@itwin/ecschema-rpcinterface-tests",
+    "@itwin/ecschema2ts",
+    "@itwin/editor-backend",
+    "@itwin/editor-frontend",
+    "@itwin/editor-common",
+    "@itwin/electron-authorization",
+    "@itwin/frontend-devtools",
+    "@itwin/frontend-tiles",
+    "@itwin/geo-tools-react",
+    "@itwin/grouping-mapping-widget",
+    "@itwin/hypermodeling-frontend",
+    "@itwin/imodel-browser-react",
+    "@itwin/imodel-transformer",
+    "@itwin/imodels-access-backend-tests",
+    "@itwin/imodels-access-common-tests",
+    "@itwin/imodels-access-frontend-tests",
+    "@itwin/imodels-clients-tests",
+    "@itwin/imodels-clients-tests-browser",
+    "@itwin/imodels-client-test-utils",
+    "@itwin/itwinui-css",
+    "@itwin/itwinui-layouts-react",
+    "@itwin/itwinui-layouts-css",
+    "@itwin/itwinui-variables",
+    "@itwin/linear-referencing-backend",
+    "@itwin/linear-referencing-common",
+    "@itwin/manage-versions-react",
+    "@itwin/map-layers",
+    "@itwin/map-layers-auth",
+    "@itwin/map-layers-formats",
+    "@itwin/measure-tools-react",
+    "@itwin/node-cli-authorization",
+    "@itwin/object-storage-minio",
+    "@itwin/object-storage-oss",
+    "@itwin/object-storage-s3",
+    "@itwin/object-storage-samples",
+    "@itwin/one-click-lca-react",
+    "@itwin/perf-tools",
+    "@itwin/physical-material-backend",
+    "@itwin/presentation-models-tree",
+    "@itwin/presentation-opentelemetry",
+    "@itwin/property-grid-react",
+    "@itwin/quantity-formatting-react",
+    "@itwin/reality-capture",
+    "@itwin/reports-config-widget-react",
+    "@itwin/insights-client",
+    "@itwin/itwinui-icons-color-react",
+    "@itwin/rpcinterface-full-stack-tests",
+    "@itwin/express-server",
+    "@itwin/imodels-access-backend",
+    "@itwin/itwins-client",
+    "@itwin/object-storage-google",
+    "@itwin/storybook-auth-addon",
+    "@bentley/bentleyjs-core",
+    "@bentley/frontend-authorization-client",
+    "@bentley/itwin-client",
+    "@itwin/tree-widget-react",
+    "@itwin/ecschema-rpcinterface-impl",
+    "@itwin/presentation-backend",
+    "@itwin/presentation-hierarchies-react",
+    "@itwin/presentation-hierarchies",
+    "@itwin/web-viewer-react",
+    "@itwin/viewer-react",
+    "@bentley/icons-generic-webfont",
+    "@itwin/appui-react",
+    "@itwin/core-markup",
+    "@itwin/imodels-access-frontend",
+    "@itwin/imodels-access-common",
+    "@itwin/imodels-client-authoring",
+    "@itwin/imodels-client-management",
+    "@itwin/imodels-client-common-config",
+    "@itwin/presentation-components",
+    "@itwin/imodel-components-react",
+    "@itwin/components-react",
+    "@itwin/core-react",
+    "@itwin/itwinui-icons-react",
+    "@itwin/itwinui-react",
+    "@itwin/itwinui-illustrations-react",
+    "@itwin/presentation-core-interop",
+    "@itwin/presentation-frontend",
+    "@itwin/core-frontend",
+    "@itwin/appui-abstract",
+    "@itwin/core-i18n",
+    "@itwin/core-orbitgt",
+    "@itwin/ecschema-rpcinterface-common",
+    "@itwin/presentation-common",
+    "@itwin/reality-data-client",
+    "@itwin/oidc-signin-tool",
+    "@itwin/service-authorization",
+    "@itwin/unified-selection-react",
+    "@itwin/unified-selection",
+    "@itwin/presentation-shared",
+    "@itwin/webgl-compatibility",
+    "@itwin/certa",
+    "@itwin/workspace-editor",
+    "@itwin/core-backend",
+    "@bentley/imodeljs-native",
+    "@itwin/core-common",
+    "@itwin/core-geometry",
+    "@itwin/ecschema-locaters",
+    "@bentley/architectural-physical-schema",
+    "@bentley/bis-core-schema",
+    "@bentley/construction-schema",
+    "@bentley/ecdb-map-schema",
+    "@bentley/ecdb-schema-policies-schema",
+    "@bentley/linear-referencing-schema",
+    "@bentley/physical-material-schema",
+    "@bentley/plant-custom-attributes-schema",
+    "@bentley/quantity-takeoffs-aspects-schema",
+    "@bentley/spatial-composition-schema",
+    "@bentley/structural-physical-schema",
+    "@itwin/ecschema-metadata",
+    "@bentley/aec-units-schema",
+    "@bentley/bis-custom-attributes-schema",
+    "@bentley/cif-units-schema",
+    "@bentley/core-custom-attributes-schema",
+    "@bentley/formats-schema",
+    "@bentley/road-rail-units-schema",
+    "@itwin/core-quantity",
+    "@bentley/units-schema",
+    "@itwin/ecsql-common",
+    "@itwin/core-bentley",
+    "@itwin/object-storage-azure",
+    "@itwin/object-storage-tests-backend",
+    "@itwin/object-storage-tests-backend-unit",
+    "@itwin/object-storage-tests-frontend",
+    "@itwin/object-storage-core",
+    "@itwin/cloud-agnostic-core",
+    "@itwin/object-storage-common-config",
+    "internal-tools",
+    "@itwin/build-tools",
+    "@itwin/eslint-plugin"
+  ],
+  "layers": {
+    "0": [
+      "@bentley/cif-bridge-schema",
+      "@bentley/cif-common-schema",
+      "@bentley/cif-geometric-rules-schema",
+      "@bentley/cif-hydraulic-analysis-schema",
+      "@bentley/cif-hydraulic-results-schema",
+      "@bentley/cif-quantity-takeoffs-schema",
+      "@bentley/cif-rail-schema",
+      "@bentley/cif-roads-schema",
+      "@bentley/cif-subsurface-conflict-analysis-schema",
+      "@bentley/cif-subsurface-schema",
+      "@bentley/process-functional-schema",
+      "@bentley/process-physical-schema",
+      "@itwin/eslint-plugin",
+      "@bentley/imodeljs-native",
+      "@itwin/object-storage-common-config",
+      "@bentley/aec-units-schema",
+      "@bentley/architectural-physical-schema",
+      "@bentley/bis-core-schema",
+      "@bentley/bis-custom-attributes-schema",
+      "@bentley/construction-schema",
+      "@bentley/core-custom-attributes-schema",
+      "@bentley/ecdb-map-schema",
+      "@bentley/ecdb-schema-policies-schema",
+      "@bentley/formats-schema",
+      "@bentley/linear-referencing-schema",
+      "@bentley/physical-material-schema",
+      "@bentley/plant-custom-attributes-schema",
+      "@bentley/quantity-takeoffs-aspects-schema",
+      "@bentley/spatial-composition-schema",
+      "@bentley/structural-physical-schema",
+      "@bentley/units-schema",
+      "@bentley/cif-units-schema",
+      "@bentley/road-rail-units-schema",
+      "@bentley/icons-generic",
+      "@itwin/itwinui-icons-react",
+      "@itwin/itwinui-illustrations-react",
+      "@bentley/icons-generic-webfont",
+      "@itwin/insights-client",
+      "@itwin/appui-layout-react",
+      "@itwin/core-telemetry",
+      "@itwin/itwinui-icons-color-react",
+      "@itwin/itwinui-css",
+      "@itwin/itwinui-layouts-css",
+      "@itwin/itwinui-variables",
+      "@bentley/bentleyjs-core",
+      "@bentley/frontend-authorization-client",
+      "@bentley/itwin-client"
+    ],
+    "1": [
+      "@itwin/build-tools",
+      "@itwin/cloud-agnostic-core",
+      "@itwin/itwinui-react",
+      "@itwin/imodels-client-common-config",
+      "@itwin/itwinui-layouts-react",
+      "@itwin/storybook-auth-addon"
+    ],
+    "2": [
+      "@itwin/object-storage-core",
+      "@itwin/core-bentley",
+      "@itwin/certa",
+      "@itwin/create-imodel-react",
+      "@itwin/delete-imodel-react",
+      "@itwin/delete-itwin-react",
+      "@itwin/imodels-client-management",
+      "@itwin/imodel-browser-react",
+      "@itwin/manage-versions-react",
+      "@itwin/perf-tools",
+      "internal-tools"
+    ],
+    "3": [
+      "@itwin/object-storage-tests-backend",
+      "@itwin/object-storage-tests-backend-unit",
+      "@itwin/object-storage-tests-frontend",
+      "@itwin/core-geometry",
+      "@itwin/core-quantity",
+      "@itwin/ecsql-common",
+      "@itwin/appui-abstract",
+      "@itwin/webgl-compatibility",
+      "@itwin/core-orbitgt",
+      "@itwin/presentation-shared",
+      "@itwin/imodels-client-authoring"
+    ],
+    "4": [
+      "@itwin/object-storage-azure",
+      "@itwin/core-common",
+      "@itwin/ecschema-metadata",
+      "@itwin/unified-selection",
+      "@itwin/imodels-access-common",
+      "@itwin/object-storage-google",
+      "@itwin/object-storage-s3"
+    ],
+    "5": [
+      "@itwin/ecschema-locaters",
+      "@itwin/core-i18n",
+      "@itwin/ecschema-rpcinterface-common",
+      "@itwin/browser-authorization",
+      "@itwin/presentation-core-interop",
+      "@itwin/service-authorization",
+      "@itwin/presentation-common",
+      "@itwin/unified-selection-react",
+      "@itwin/electron-authorization",
+      "@itwin/ecschema-editing",
+      "@itwin/editor-common",
+      "@itwin/imodels-client-test-utils",
+      "@itwin/imodels-access-common-tests",
+      "@itwin/linear-referencing-common",
+      "@itwin/node-cli-authorization",
+      "@itwin/object-storage-minio",
+      "@itwin/object-storage-oss",
+      "@itwin/object-storage-samples",
+      "@itwin/presentation-hierarchies"
+    ],
+    "6": [
+      "@itwin/core-backend",
+      "@itwin/core-react",
+      "@itwin/core-frontend",
+      "@itwin/oidc-signin-tool",
+      "@itwin/imodels-clients-tests",
+      "@itwin/imodels-clients-tests-browser",
+      "@itwin/presentation-models-tree",
+      "@itwin/presentation-opentelemetry",
+      "@itwin/presentation-hierarchies-react"
+    ],
+    "7": [
+      "@itwin/analytical-backend",
+      "@itwin/components-react",
+      "@itwin/cesium-renderer",
+      "@itwin/core-extension",
+      "@itwin/core-mobile",
+      "@itwin/reality-data-client",
+      "@itwin/core-markup",
+      "@itwin/imodels-access-frontend",
+      "@itwin/presentation-frontend",
+      "@itwin/core-electron",
+      "@itwin/ecschema-rpcinterface-impl",
+      "@itwin/imodels-access-backend",
+      "@itwin/express-server",
+      "@itwin/itwins-client",
+      "@itwin/ecschema2ts",
+      "@itwin/editor-backend",
+      "@itwin/editor-frontend",
+      "@itwin/frontend-devtools",
+      "@itwin/frontend-tiles",
+      "@itwin/hypermodeling-frontend",
+      "@itwin/imodel-transformer",
+      "@itwin/linear-referencing-backend",
+      "@itwin/map-layers-formats",
+      "@itwin/map-layers-auth",
+      "@itwin/physical-material-backend",
+      "@itwin/quantity-formatting-react",
+      "@itwin/presentation-backend",
+      "@itwin/workspace-editor"
+    ],
+    "8": [
+      "@itwin/imodel-components-react",
+      "@itwin/ecschema-rpcinterface-tests",
+      "@itwin/imodels-access-backend-tests",
+      "@itwin/imodels-access-frontend-tests",
+      "@itwin/reality-capture",
+      "@itwin/rpcinterface-full-stack-tests"
+    ],
+    "9": [
+      "@itwin/appui-react",
+      "@itwin/presentation-components"
+    ],
+    "10": [
+      "@itwin/appui-test-providers",
+      "@itwin/viewer-react",
+      "@itwin/ec3-widget-react",
+      "@itwin/geo-tools-react",
+      "@itwin/grouping-mapping-widget",
+      "@itwin/map-layers",
+      "@itwin/measure-tools-react",
+      "@itwin/one-click-lca-react",
+      "@itwin/property-grid-react",
+      "@itwin/reports-config-widget-react",
+      "@itwin/tree-widget-react"
+    ],
+    "11": [
+      "@itwin/desktop-viewer-react",
+      "@itwin/web-viewer-react"
+    ]
+  },
+  "subprojects": {
+    "base": {
+      "packages": [
+        "@bentley/aec-units-schema",
+        "@bentley/architectural-physical-schema",
+        "@bentley/bis-core-schema",
+        "@bentley/bis-custom-attributes-schema",
+        "@bentley/cif-bridge-schema",
+        "@bentley/cif-common-schema",
+        "@bentley/cif-geometric-rules-schema",
+        "@bentley/cif-hydraulic-analysis-schema",
+        "@bentley/cif-hydraulic-results-schema",
+        "@bentley/cif-quantity-takeoffs-schema",
+        "@bentley/cif-rail-schema",
+        "@bentley/cif-roads-schema",
+        "@bentley/cif-subsurface-conflict-analysis-schema",
+        "@bentley/cif-subsurface-schema",
+        "@bentley/cif-units-schema",
+        "@bentley/construction-schema",
+        "@bentley/core-custom-attributes-schema",
+        "@bentley/ecdb-map-schema",
+        "@bentley/ecdb-schema-policies-schema",
+        "@bentley/formats-schema",
+        "@bentley/icons-generic",
+        "@bentley/icons-generic-webfont",
+        "@bentley/linear-referencing-schema",
+        "@bentley/physical-material-schema",
+        "@bentley/plant-custom-attributes-schema",
+        "@bentley/process-functional-schema",
+        "@bentley/process-physical-schema",
+        "@bentley/quantity-takeoffs-aspects-schema",
+        "@bentley/road-rail-units-schema",
+        "@bentley/spatial-composition-schema",
+        "@bentley/structural-physical-schema",
+        "@bentley/units-schema"
+      ],
+      "order": 0
+    },
+    "itwinjs-core": {
+      "packages": [
+        "@itwin/core-backend",
+        "@itwin/core-bentley",
+        "@itwin/core-common",
+        "@itwin/ecschema-editing",
+        "@itwin/ecschema-locaters",
+        "@itwin/ecschema-metadata",
+        "@itwin/ecschema-rpcinterface-common",
+        "@itwin/ecschema-rpcinterface-impl",
+        "@itwin/ecsql-common",
+        "@itwin/core-electron",
+        "@itwin/express-server",
+        "@itwin/core-extension",
+        "@itwin/core-frontend",
+        "@itwin/frontend-devtools",
+        "@itwin/core-geometry",
+        "@itwin/hypermodeling-frontend",
+        "@itwin/core-i18n",
+        "@itwin/core-markup",
+        "@itwin/core-mobile",
+        "@itwin/core-orbitgt",
+        "@itwin/core-quantity",
+        "@itwin/webgl-compatibility",
+        "@itwin/analytical-backend",
+        "@itwin/linear-referencing-backend",
+        "@itwin/linear-referencing-common",
+        "@itwin/physical-material-backend",
+        "@itwin/editor-backend",
+        "@itwin/editor-common",
+        "@itwin/editor-frontend",
+        "@itwin/cesium-renderer",
+        "@itwin/frontend-tiles",
+        "@itwin/map-layers-auth",
+        "@itwin/map-layers-formats",
+        "@itwin/ecschema-rpcinterface-tests",
+        "@itwin/rpcinterface-full-stack-tests",
+        "@itwin/presentation-backend",
+        "@itwin/presentation-common",
+        "@itwin/presentation-frontend",
+        "@itwin/build-tools",
+        "@itwin/certa",
+        "@itwin/ecschema2ts",
+        "internal-tools",
+        "@itwin/perf-tools",
+        "@itwin/appui-abstract",
+        "@itwin/workspace-editor"
+      ],
+      "order": 12
+    },
+    "appui": {
+      "packages": [
+        "@itwin/appui-test-providers",
+        "@itwin/appui-react",
+        "@itwin/components-react",
+        "@itwin/core-react",
+        "@itwin/imodel-components-react"
+      ],
+      "order": 13
+    },
+    "auth-clients": {
+      "packages": [
+        "@itwin/browser-authorization",
+        "@itwin/electron-authorization",
+        "@itwin/node-cli-authorization",
+        "@itwin/oidc-signin-tool",
+        "@itwin/service-authorization"
+      ],
+      "order": 15
+    },
+    "admin-components-react": {
+      "packages": [
+        "@itwin/create-imodel-react",
+        "@itwin/delete-imodel-react",
+        "@itwin/delete-itwin-react",
+        "@itwin/imodel-browser-react",
+        "@itwin/manage-versions-react",
+        "@itwin/storybook-auth-addon"
+      ],
+      "order": 19
+    },
+    "viewer": {
+      "packages": [
+        "@itwin/desktop-viewer-react",
+        "@itwin/viewer-react",
+        "@itwin/web-viewer-react"
+      ],
+      "order": 22
+    },
+    "viewer-components-react": {
+      "packages": [
+        "@itwin/ec3-widget-react",
+        "@itwin/geo-tools-react",
+        "@itwin/grouping-mapping-widget",
+        "@itwin/map-layers",
+        "@itwin/measure-tools-react",
+        "@itwin/one-click-lca-react",
+        "@itwin/property-grid-react",
+        "@itwin/quantity-formatting-react",
+        "@itwin/reports-config-widget-react",
+        "@itwin/tree-widget-react"
+      ],
+      "order": 24
+    },
+    "imodel-transformer": {
+      "packages": [
+        "@itwin/imodel-transformer"
+      ],
+      "order": 40
+    },
+    "imodels-clients": {
+      "packages": [
+        "@itwin/imodels-client-authoring",
+        "@itwin/imodels-client-management",
+        "@itwin/imodels-access-backend",
+        "@itwin/imodels-access-common",
+        "@itwin/imodels-access-frontend",
+        "@itwin/imodels-access-backend-tests",
+        "@itwin/imodels-access-common-tests",
+        "@itwin/imodels-access-frontend-tests",
+        "@itwin/imodels-clients-tests",
+        "@itwin/imodels-clients-tests-browser",
+        "@itwin/imodels-client-common-config",
+        "@itwin/imodels-client-test-utils"
+      ],
+      "order": 41
+    },
+    "iTwinUI": {
+      "packages": [
+        "@itwin/itwinui-css",
+        "@itwin/itwinui-react",
+        "@itwin/itwinui-variables"
+      ],
+      "order": 47
+    },
+    "iTwinUI-layouts": {
+      "packages": [
+        "@itwin/itwinui-layouts-css",
+        "@itwin/itwinui-layouts-react"
+      ],
+      "order": 48
+    },
+    "object-storage": {
+      "packages": [
+        "@itwin/cloud-agnostic-core",
+        "@itwin/object-storage-samples",
+        "@itwin/object-storage-azure",
+        "@itwin/object-storage-core",
+        "@itwin/object-storage-google",
+        "@itwin/object-storage-minio",
+        "@itwin/object-storage-oss",
+        "@itwin/object-storage-s3",
+        "@itwin/object-storage-tests-backend",
+        "@itwin/object-storage-tests-backend-unit",
+        "@itwin/object-storage-tests-frontend",
+        "@itwin/object-storage-common-config"
+      ],
+      "order": 59
+    },
+    "presentation": {
+      "packages": [
+        "@itwin/presentation-components",
+        "@itwin/presentation-core-interop",
+        "@itwin/presentation-hierarchies",
+        "@itwin/presentation-hierarchies-react",
+        "@itwin/presentation-models-tree",
+        "@itwin/presentation-opentelemetry",
+        "@itwin/presentation-shared",
+        "@itwin/unified-selection",
+        "@itwin/unified-selection-react"
+      ],
+      "order": 66
+    },
+    "reality-capture": {
+      "packages": [
+        "@itwin/reality-capture",
+        "@itwin/reality-data-client"
+      ],
+      "order": 70
+    },
+    "itwins-client": {
+      "packages": [
+        "@itwin/itwins-client"
+      ],
+      "order": 77
+    },
+    "icons": {
+      "packages": [
+        "@itwin/itwinui-icons-react",
+        "@itwin/itwinui-illustrations-react"
+      ],
+      "order": 102
+    },
+    "eslint-plugin": {
+      "packages": [
+        "@itwin/eslint-plugin"
+      ],
+      "order": 158
+    }
+  },
+  "edgeExternal": [
+    "@bentley/bentleyjs-core",
+    "@bentley/frontend-authorization-client",
+    "@bentley/imodeljs-native",
+    "@bentley/itwin-client",
+    "@itwin/appui-layout-react",
+    "@itwin/core-telemetry"
+  ]
+}

@@ -1,0 +1,33 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+
+.iac-delete-title {
+  display: flex;
+  align-items: center;
+
+  .iac-warning-icon {
+    width: var(--iui-size-m);
+    height: var(--iui-size-m);
+    margin-right: var(--iui-size-xs);
+    fill: var(--iui-color-icon-warning);
+  }
+}
+
+.iac-overlay-container {
+  position: fixed;
+  z-index: 99999;
+  background-color: rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  left: 0;
+}
+
+.iac-delete-body-message {
+  word-break: break-word;
+}

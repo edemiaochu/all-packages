@@ -1,0 +1,16 @@
+{
+  "name": "@szewec/cif-common-schema",
+  "license": "MIT",
+  "version": "1.0.3",
+  "homepage": "https://www.ivaultjs.org/",
+  "keywords": [
+    "Szewec",
+    "BIS",
+    "iVault"
+  ],
+  "description": "CifCommon BIS Domains",
+  "author": {
+    "name": "Szewec Systems, Inc.",
+    "url": "http://www.szewec.com"
+  }
+}

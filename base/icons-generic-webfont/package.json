@@ -1,0 +1,11 @@
+{
+  "name": "@szewec/icons-generic-webfont",
+  "license": "CC-BY-3.0",
+  "author": {
+    "name": "Szewec Systems, Inc.",
+    "url": "http://www.szewec.com"
+  },
+  "version": "1.0.34",
+  "description": "Scalable generic icons packaged in a font+CSS",
+  "homepage": "http://www.ivaultjs.org"
+}

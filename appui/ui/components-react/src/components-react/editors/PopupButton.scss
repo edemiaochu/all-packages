@@ -1,0 +1,132 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@use "~@szewtwin/core-react/lib/core-react/inputs/variables" as *;
+@use "./variables" as *;
+
+.components-popup-button {
+  min-width: 100%;
+  min-height: 28px;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: var(--iui-color-background);
+  border: 1px solid var(--iui-color-border-foreground);
+  border-radius: var(--iui-border-radius-1);
+  box-shadow: var(--iui-focus-box-shadow) 0px 1px 1px inset;
+  box-sizing: border-box;
+  cursor: pointer;
+
+  display: flex;
+  flex-shrink: 1;
+  align-items: center;
+
+  font-weight: normal;
+
+  > .components-popup-button-value {
+    flex-grow: 1;
+    max-width: calc(100% - var(--iui-size-l));
+    overflow-x: hidden;
+    padding: 0 3px;
+
+    &.components-popup-button-placeholder {
+      color: var(--iui-color-text-disabled);
+    }
+  }
+
+  > .components-popup-button-arrow {
+    background-color: var(--iui-color-background);
+    width: var(--iui-size-l);
+    height: var(--iui-size-l);
+
+    > .components-popup-button-arrow-icon {
+      transition: transform 0.2s;
+      text-align: center;
+      font-size: var(--iui-font-size-0);
+      line-height: var(--iui-size-l);
+
+      &:hover {
+        color: var(--iui-color-text-accent);
+      }
+    }
+  }
+
+  &:focus,
+  &.components-popup-expanded {
+    border-color: var(--iui-color-text-accent-hover);
+    outline: 0px;
+    box-shadow: $uicore-inputs-focus-boxshadow;
+
+    > .components-popup-button-arrow {
+      border: none;
+      box-shadow: none;
+      outline: 0px;
+
+      > .components-popup-button-arrow-icon {
+        color: var(--iui-color-text-accent);
+      }
+    }
+  }
+
+  &.components-readonly {
+    cursor: default;
+  }
+
+  &.components-disabled {
+    cursor: not-allowed;
+    background-color: var(--iui-color-background-disabled);
+    border-color: var(--iui-color-border-foreground-disabled);
+    color: var(--iui-color-text-disabled);
+
+    > .components-popup-button-arrow {
+      background-color: var(--iui-color-background-disabled);
+      border-color: var(--iui-color-border-foreground-disabled);
+
+      > .components-popup-button-arrow-icon {
+        color: var(--iui-color-text-disabled);
+      }
+    }
+  }
+}
+
+.components-smallEditor-host {
+  .components-popup-button {
+    min-height: $editor-component-height-small !important;
+  }
+}
+
+.components-popup-button-popup {
+  background-color: var(--iui-color-background);
+}
+
+.components-editor-popup-content {
+  padding: 4px 8px;
+}
+
+.components-popup-bottom-buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 4px;
+
+  > .components-popup-large-button {
+    width: 70px;
+    font-size: 20px;
+    margin-left: 6px;
+  }
+
+  > .components-popup-cancel-button {
+    &,
+    &:active,
+    &:focus {
+      border: none;
+      background-color: var(--iui-color-background-negative);
+      color: var(--iui-color-white);
+    }
+
+    &:hover {
+      background-color: var(--iui-color-background-negative-hover);
+      color: var(--iui-color-white);
+    }
+  }
+}

@@ -1,0 +1,36 @@
+/*---------------------------------------------------------------------------------------------
+* Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
+
+.presentation-components-node {
+  .presentation-components-node-action-buttons {
+    visibility: hidden;
+    position: sticky;
+    background-color: var(--iui-color-background);
+    right: 0;
+    display: flex;
+
+    .presentation-components-node-action-button {
+      height: 24px;
+      width: 24px;
+    }
+  }
+
+  &:hover > .presentation-components-node-action-buttons {
+    visibility: visible;
+    background-color: inherit;
+  }
+
+  .presentation-components-node-action-buttons.filtered {
+    visibility: visible;
+  }
+
+  &.is-selected > .presentation-components-node-action-buttons.filtered {
+    background-color: inherit;
+  }
+}
+
+.info-tree-node-item {
+  font-style: italic;
+}

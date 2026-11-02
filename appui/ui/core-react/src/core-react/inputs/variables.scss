@@ -1,0 +1,39 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@forward "../style/baseline";
+@forward "../style/themecolors";
+
+$uicore-inputs-height: 22px;
+$uicore-inputs-height-large: 40px;
+$uicore-line-height: calc(var(--iui-size-s) * 1.4);
+
+$uicore-inputs-padding: calc(
+  (#{$uicore-inputs-height} - #{$uicore-line-height}) * 0.5
+);
+$uicore-inputs-padding-large: calc(
+  (#{$uicore-inputs-height-large} - #{$uicore-line-height}) * 0.5
+);
+$uicore-inputs-padding-bordered: calc(#{$uicore-inputs-padding} - 2px);
+$uicore-inputs-padding-bordered-large: calc(
+  #{$uicore-inputs-padding-large} - 2px
+);
+
+$uicore-inputs-margin: calc(
+  (#{$uicore-line-height} * 2 - #{$uicore-inputs-height}) * 0.5
+);
+$uicore-inputs-margin-large: calc(
+  (#{$uicore-line-height} * 3 - #{$uicore-inputs-height-large}) * 0.5
+);
+
+$uicore-inputs-border-color: hsl(
+  var(--iui-color-foreground-hsl) / var(--iui-opacity-4)
+);
+
+$uicore-inputs-focus-boxshadow: hsl(
+    var(--iui-color-accent-hsl) / var(--iui-opacity-4)
+  )
+  0px 0px 0px 2px;
+
+$uicore-iui-input-padding: var(--iui-size-3xs) var(--iui-size-xs);

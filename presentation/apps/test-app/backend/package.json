@@ -1,0 +1,37 @@
+{
+  "name": "@test-app/backend",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node --inspect --max-http-header-size=16000 ./lib/main.js",
+    "start:electron": "cross-env NODE_ENV=development electron ./lib/main.js",
+    "build": "tsc",
+    "clean": "rimraf lib build",
+    "lint": "eslint \"./src/**/*.ts\"",
+    "docs": "betools extract --fileExt=ts --extractFrom=./src --recursive --out=./build/docs/extract"
+  },
+  "devDependencies": {
+    "@szewtwin/build-tools": "catalog:build-tools",
+    "@szewtwin/core-backend": "catalog:szewtwinjs-core-dev",
+    "@szewtwin/core-szewec": "catalog:szewtwinjs-core-dev",
+    "@szewtwin/core-common": "catalog:szewtwinjs-core-dev",
+    "@itwin/core-electron": "catalog:szewtwinjs-core-dev",
+    "@itwin/ecschema-rpcinterface-impl": "catalog:szewtwinjs-core-dev",
+    "@szewtwin/eslint-plugin": "catalog:build-tools",
+    "@itwin/express-server": "catalog:szewtwinjs-core-dev",
+    "@szewtwin/presentation-backend": "catalog:szewtwinjs-core-dev",
+    "@szewtwin/presentation-opentelemetry": "workspace:*",
+    "@opentelemetry/api": "^1.9.1",
+    "@opentelemetry/resources": "^1.30.1",
+    "@opentelemetry/sdk-node": "^0.55.0",
+    "@opentelemetry/sdk-trace-base": "^1.30.1",
+    "@opentelemetry/semantic-conventions": "^1.40.0",
+    "@test-app/common": "workspace:*",
+    "cross-env": "catalog:build-tools",
+    "electron": "^39.8.6",
+    "eslint": "catalog:build-tools",
+    "rimraf": "catalog:build-tools",
+    "typescript": "catalog:build-tools"
+  }
+}

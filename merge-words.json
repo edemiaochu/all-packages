@@ -1,0 +1,112 @@
+{
+  "savedAt": "2026-09-02T08:31:20.681Z",
+  "words": [
+    {
+      "searchWord": "EC",
+      "baseReplacement": "DM"
+    },
+    {
+      "searchWord": "itwin",
+      "baseReplacement": "szewtwin"
+    },
+    {
+      "searchWord": "imodel",
+      "baseReplacement": "ivault"
+    },
+    {
+      "searchWord": "dgn",
+      "baseReplacement": "bld"
+    },
+    {
+      "searchWord": "OpenPlant",
+      "baseReplacement": "Product1"
+    },
+    {
+      "searchWord": "OpenBridge",
+      "baseReplacement": "Product2"
+    },
+    {
+      "searchWord": "MicroStation",
+      "baseReplacement": "Product3"
+    },
+    {
+      "searchWord": "OpenRoads",
+      "baseReplacement": "Product4"
+    },
+    {
+      "searchWord": "OpenBuildings",
+      "baseReplacement": "Product5"
+    },
+    {
+      "searchWord": "AutoPLANT",
+      "baseReplacement": "Product6"
+    },
+    {
+      "searchWord": "ProStructures",
+      "baseReplacement": "Product7"
+    },
+    {
+      "searchWord": "ProjectWise",
+      "baseReplacement": "Product8"
+    },
+    {
+      "searchWord": "AECOsim",
+      "baseReplacement": "Product9"
+    },
+    {
+      "searchWord": "Speedikon",
+      "baseReplacement": "Product10"
+    },
+    {
+      "searchWord": "AutoPIPE",
+      "baseReplacement": "Product11"
+    },
+    {
+      "searchWord": "STAAD",
+      "baseReplacement": "Product13"
+    },
+    {
+      "searchWord": "SPPM",
+      "baseReplacement": "Product14"
+    },
+    {
+      "searchWord": "Structural Synchronizer",
+      "baseReplacement": "Product15"
+    },
+    {
+      "searchWord": "bentley",
+      "baseReplacement": "szewec"
+    }
+  ],
+  "idFiles": [],
+  "overrides": {
+    "EC": {
+      "Ec": "Dm"
+    },
+    "itwin": {
+      "iTwin": "szewTwin",
+      "ITwin": "SZEWTwin",
+      "itWin": "szewtWin",
+      "ItWin": "szewtWin",
+      "iTWin": "szewTWin",
+      "Itwin": "SZEWtwin"
+    },
+    "imodel": {
+      "IModel": "IVault",
+      "imodel": "ivault",
+      "iModel": "iVault",
+      "Imodel": "Ivault",
+      "iModeL": "iVaulT"
+    },
+    "dgn": {
+      "dGn": "bLd",
+      "dGN": "bLD",
+      "DGN": "BLD",
+      "dgN": "blD",
+      "DGn": "BLd"
+    },
+    "bentley": {
+      "beNTlEY": "szEWeC"
+    }
+  }
+}

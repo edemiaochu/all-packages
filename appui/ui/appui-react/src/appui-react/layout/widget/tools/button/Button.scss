@@ -1,0 +1,49 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@use "variables" as *;
+
+.nz-toolbar-button-button {
+  box-sizing: border-box;
+  width: $mls-button-width;
+  height: $mls-button-height;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  background: var(--iui-color-background);
+  border-radius: var(--iui-border-radius-1);
+  border: {
+    width: 1px;
+    color: var(--iui-color-border-foreground);
+    radius: var(--iui-border-radius-1);
+    style: solid;
+  }
+  pointer-events: auto;
+
+  &.nz-toolbar-button-icon-small {
+    width: $mls-small-button-width;
+    height: $mls-small-button-height;
+  }
+
+  > .nz-gradient {
+    background: linear-gradient(
+      to bottom,
+      var(--iui-color-background),
+      var(--iui-color-background-zebra)
+    );
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.nz-toolbar-button-background:hover {
+  background-color: var(--iui-color-background-hover);
+}

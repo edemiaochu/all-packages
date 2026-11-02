@@ -1,0 +1,83 @@
+// Copyright (c) Szewec Systems, Incorporated. All rights reserved.
+// See LICENSE.md in the project root for license terms and full copyright notice.
+@use 'base';
+@use 'column-filter';
+@use 'paginator';
+@use 'sizes';
+
+.iui-table {
+  @include base.iui-table;
+  @include sizes.iui-table-sizes;
+}
+
+.iui-table-header-wrapper {
+  @include base.iui-table-header-wrapper;
+}
+
+.iui-table-header {
+  @include base.iui-table-header;
+}
+
+.iui-table-column-manager {
+  @include base.iui-table-column-manager;
+}
+
+.iui-table-row {
+  @include base.iui-table-row;
+}
+
+.iui-table-header-actions-container {
+  @include base.iui-table-header-actions-container;
+}
+
+.iui-table-body {
+  @include base.iui-table-body;
+}
+
+.iui-table-empty {
+  @include base.iui-table-empty;
+}
+
+.iui-table-body-extra {
+  @include base.iui-table-body-extra;
+}
+
+.iui-table-cell {
+  @include base.iui-table-cell;
+}
+
+.iui-table-cell-default-content {
+  @include base.iui-table-cell-default-content;
+}
+
+.iui-table-cell-shadow-left {
+  @include base.iui-table-cell-shadow(left);
+}
+
+.iui-table-cell-shadow-right {
+  @include base.iui-table-cell-shadow(right);
+}
+
+.iui-table-paginator {
+  @include paginator.iui-table-paginator;
+}
+
+.iui-table-paginator-page-size-label {
+  @include paginator.iui-table-paginator-page-size-label;
+}
+
+.iui-table-paginator-ellipsis {
+  @include paginator.iui-table-paginator-ellipsis;
+}
+
+.iui-table-paginator-pages-group {
+  @include paginator.iui-table-paginator-pages-group;
+}
+
+.iui-table-paginator-page-button {
+  @include paginator.iui-table-paginator-page-button;
+}
+
+.iui-table-column-filter {
+  @include column-filter.iui-table-column-filter;
+}
