@@ -97,13 +97,15 @@ node name-replacer/apply-replace.mjs --target packages/appui
 
 ```json
 {
-  "dirs":  ["node_modules", ".git", "**/common/temp", ".claude*"],
-  "exts":  [".png", ".woff2", "*.zip"],
-  "files": ["pnpm-lock.yaml", "*-mapping.json"]
+  "dirs":        ["node_modules", ".git", "**/common/temp", ".claude*"],
+  "includeDirs": ["base/icons-generic-webfont/dist"],
+  "exts":        [".png", ".woff2", "*.zip"],
+  "files":       ["pnpm-lock.yaml", "*-mapping.json"]
 }
 ```
 
 - `dirs` / `files` 不含 `/` 时按名称匹配，含 `/` 时按相对扫描根的路径匹配；支持 `*` / `**` / `?`
+- `includeDirs` 是目录**白名单**：命中后无视 `dirs` 规则强制进入（适用于名字命中 `dist`/`lib` 但仍需替换的真实产物目录），优先级最高；`dirs` 里的显式路径规则（如 `**/common/temp`）也优先于"含 package.json 的真实包目录"例外
 - `exts` 写法支持 `"png"` / `".png"` / `"*.PNG"`，统一按小写 `.png` 匹配
 - 配置文件缺失时：**不排除任何内容**
 - 兜底保护（不受配置影响）：文件 > 5MB 或前 4KB 含 `\0` 字节自动跳过，防止误读真二进制文件

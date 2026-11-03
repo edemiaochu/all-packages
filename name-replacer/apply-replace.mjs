@@ -12,17 +12,15 @@ const EXCLUDE_BASE = __dirname;  // exclude patterns are relative to exclude-lis
 // ── 扫描排除配置（name-replacer/scan-exclude.json）─────────────────
 // 默认扫描目标目录下的所有文件夹和所有扩展名；只有配置里列出的
 // 目录 / 扩展名 / 文件名会被排除。配置文件缺失时不排除任何内容。
-// 例外：含 package.json 的真实包目录即使名字命中排除规则也继续处理。
+// 例外：
+//   - includeDirs 白名单里的目录无视排除规则，强制处理；
+//   - 含 package.json 的真实包目录即使名字命中排除规则也继续处理
+//     （但 dirs 里的显式路径规则如 "**/common/temp" 优先）。
 let _scanFilter = null;
 function scanFilter() {
   if (!_scanFilter) _scanFilter = loadScanFilter();
   return _scanFilter;
 }
-
-// 即使命中目录排除规则也仍要处理的路径（相对 ROOT）。
-const SKIP_DIR_OVERRIDES = new Set([
-  'base/icons-generic-webfont/dist',
-]);
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
@@ -47,13 +45,17 @@ function isRealPackageDir(fullPath) {
   return existsSync(join(fullPath, 'package.json'));
 }
 
-/** 目录是否跳过（配置排除 + 真实包目录 / 显式覆盖例外）。 */
+/** 目录是否跳过（配置排除 + includeDirs 白名单 + 真实包目录例外）。 */
 function shouldSkipDir(fullPath) {
   const name = basename(fullPath);
   const relPath = relative(ROOT, fullPath).replace(/\\/g, '/');
-  if (!scanFilter().shouldSkipDir(name, relPath)) return false;
+  const filter = scanFilter();
+  // includeDirs 白名单在 shouldSkipDir 内部已优先处理（命中则返回 false）
+  if (!filter.shouldSkipDir(name, relPath)) return false;
+  // 显式路径规则（dirs 里含 "/" 的条目，如 "**/common/temp"）优先：
+  // 用户明确写了路径，就不该因为目录里有 package.json 被"真实包目录例外"放行。
+  if (filter.shouldSkipDirByPath(relPath)) return true;
   if (isRealPackageDir(fullPath)) return false;
-  if (SKIP_DIR_OVERRIDES.has(relPath)) return false;
   return true;
 }
 

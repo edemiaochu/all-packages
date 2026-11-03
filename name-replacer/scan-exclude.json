@@ -21,6 +21,9 @@
     ".cache",
     ".nyc_output"
   ],
+  "includeDirs": [
+    "base/icons-generic-webfont/dist"
+  ],
   "exts": [
     ".png", ".jpg", ".jpeg", ".gif", ".bmp", ".webp", ".ico",
     ".woff", ".woff2", ".ttf", ".eot", ".otf",

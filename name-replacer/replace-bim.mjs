@@ -26,10 +26,15 @@
 //   node name-replacer/replace-bim.mjs --dry-run --targets name-replacer/targets.json
 //   node name-replacer/replace-bim.mjs --dry-run --dir test/src
 //   node name-replacer/replace-bim.mjs --targets name-replacer/targets.json --dir other/pkg
+//
+// 排除规则: 与 search-ec / search-sensitive / apply-replace 一致，统一读
+//   name-replacer/scan-exclude.json 的 dirs / exts / files；
+//   配置文件缺失时不排除任何目录或扩展名（二进制仍由内容探测兜底跳过）。
 
 import { readFileSync, writeFileSync, readdirSync, renameSync, statSync } from 'fs';
 import { join, dirname, relative, basename, extname, resolve } from 'path';
 import { fileURLToPath } from 'url';
+import { loadScanFilter } from './scan-config.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
@@ -74,35 +79,15 @@ for (const t of targets) {
   }
 }
 
-// ── Skip lists (与 apply-replace.mjs 保持一致) ──────────────────────
-const SKIP_DIRS = new Set([
-  'node_modules', '.git', 'dist', 'build', 'lib', 'out',
-  'coverage', '.nyc_output', '__pycache__', '.cache',
-  'name-replacer',
-]);
-
-const SKIP_FILE_NAMES = new Set([
-  'name-mapping.json', 'name-mapping1.json', 'brand-words.json',
-  'package-lock.json', 'pnpm-lock.yaml', 'yarn.lock',
-  'dep-graph.json', 'dep-graph.html',
-  'targets.json', 'targets-replaced.json', 'exclude-list.json',
-]);
-
-const BINARY_EXTENSIONS = new Set([
-  '.png', '.jpg', '.jpeg', '.gif', '.ico', '.svg', '.bmp', '.webp',
-  '.woff', '.woff2', '.ttf', '.eot', '.otf',
-  '.pdf', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx',
-  '.zip', '.tar', '.gz', '.7z', '.rar', '.bz2',
-  '.exe', '.dll', '.so', '.dylib', '.bin', '.dat', '.db', '.sqlite',
-  '.mp3', '.mp4', '.avi', '.mov', '.webm', '.wav', '.ogg',
-  '.wasm', '.node',
-]);
+// ── 扫描排除配置（与 search-ec / search-sensitive / apply-replace 共用）──
+// 默认扫描目标目录下的所有文件夹和所有扩展名；需要排除的目录 / 扩展名 /
+// 文件名统一写在 name-replacer/scan-exclude.json，配置文件缺失时不排除任何内容。
+const scanFilter = loadScanFilter();
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
 function isBinary(filePath) {
-  const ext = extname(filePath).toLowerCase();
-  if (BINARY_EXTENSIONS.has(ext)) return true;
+  if (scanFilter.shouldSkipExt(extname(filePath).toLowerCase())) return true;
   try {
     const buf = readFileSync(filePath);
     if (buf.length > MAX_FILE_SIZE) return true;
@@ -176,12 +161,15 @@ function walk(dir, stats) {
 
   for (const entry of entries) {
     const fullPath = join(dir, entry.name);
+    const relPath = relative(ROOT, fullPath).replace(/\\/g, '/');
 
     if (entry.isDirectory()) {
-      if (SKIP_DIRS.has(entry.name)) continue;
+      // 目录排除：scan-exclude.json 的 dirs
+      if (scanFilter.shouldSkipDir(entry.name, relPath)) continue;
       walk(fullPath, stats);
     } else if (entry.isFile()) {
-      if (SKIP_FILE_NAMES.has(entry.name)) continue;
+      // 文件名排除：scan-exclude.json 的 files；扩展名排除见 isBinary
+      if (scanFilter.shouldSkipName(entry.name, relPath)) continue;
       if (isBinary(fullPath)) continue;
       stats.scanned++;
 
@@ -209,6 +197,11 @@ function walk(dir, stats) {
 // ── 主流程 ───────────────────────────────────────────────────────────
 console.log('模式: ' + (DRY_RUN ? '预览 (--dry-run)' : '执行'));
 console.log('规则: A=.bim/.ibim后缀  B=扩展名数组  D=ibim/bims字面量  (路径/建筑语义/标识符不动)');
+console.log('排除配置: ' + (scanFilter.source
+  ? scanFilter.source + ' — ' + scanFilter.config.dirs.length + ' 目录 / ' +
+    scanFilter.config.exts.length + ' 扩展名 / ' + scanFilter.config.files.length + ' 文件名 / ' +
+    scanFilter.config.includeDirs.length + ' 目录白名单'
+  : '未找到 scan-exclude.json（不排除任何目录/扩展名）'));
 if (TARGETS_FILE) console.log('targets: ' + TARGETS_FILE);
 const stats = { scanned: 0, files: 0, renames: 0 };
 const start = Date.now();

@@ -6,9 +6,10 @@
  *
  * 配置文件 name-replacer/scan-exclude.json：
  *   {
- *     "dirs":  ["node_modules", ".git", "**\/common/temp", ".claude*"],
- *     "exts":  [".png", "woff2", "*.zip"],
- *     "files": ["pnpm-lock.yaml", "name-mapping.json", "*.min.js"]
+ *     "dirs":        ["node_modules", ".git", "**\/common/temp", ".claude*"],
+ *     "includeDirs": ["base/icons-generic-webfont/dist"],
+ *     "exts":        [".png", "woff2", "*.zip"],
+ *     "files":       ["pnpm-lock.yaml", "name-mapping.json", "*.min.js"]
  *   }
  *
  * 匹配规则：
@@ -16,6 +17,8 @@
  *   - 不含 "/" 的条目 → 目录名 / 文件名（basename）匹配
  *   - 支持 * 和 ? 通配符；名称匹配大小写不敏感
  *   - exts 写法兼容 "png" / ".png" / "*.PNG"，统一按小写 ".png" 匹配
+ *   - includeDirs 是目录白名单：命中后无视 dirs 规则强制进入（如包里的 dist
+ *     目录仍要替换），优先级最高，路径条目优先于包目录启发式
  *
  * scan-exclude.json 不存在时 → 不排除任何目录 / 扩展名（扫描全部）。
  */
@@ -68,23 +71,24 @@ function globToRegExp(pattern) {
   return new RegExp(re, 'i');
 }
 
-/** 把配置文件原始 JSON 归一化为 { dirs, exts, files } */
+/** 把配置文件原始 JSON 归一化为 { dirs, includeDirs, exts, files } */
 export function normalizeScanExclude(raw) {
   if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
-    return { dirs: [], exts: [], files: [] };
+    return { dirs: [], includeDirs: [], exts: [], files: [] };
   }
   const dirs = toStrArray(raw.dirs ?? raw.directories ?? raw.excludeDirs);
+  const includeDirs = toStrArray(raw.includeDirs ?? raw.forceDirs ?? raw.dirOverrides);
   const exts = toStrArray(raw.exts ?? raw.extensions ?? raw.excludeExts)
     .map(normalizeExt)
     .filter(Boolean);
   const files = toStrArray(raw.files ?? raw.fileNames ?? raw.excludeFiles);
-  return { dirs, exts, files };
+  return { dirs, includeDirs, exts, files };
 }
 
 /**
  * 读取排除配置。
  * @param {string|null} configPath 显式配置路径；null = 默认 scan-exclude.json
- * @returns {{ config: {dirs:string[],exts:string[],files:string[]}, source: string|null }}
+ * @returns {{ config: {dirs:string[],includeDirs:string[],exts:string[],files:string[]}, source: string|null }}
  */
 export function loadScanExclude(configPath = null) {
   const path = configPath || SCAN_EXCLUDE_PATH;
@@ -95,7 +99,7 @@ export function loadScanExclude(configPath = null) {
     if (e.code !== 'ENOENT') {
       process.stderr.write(`⚠️  排除配置解析失败，已忽略: ${path} (${e.message})\n`);
     }
-    return { config: { dirs: [], exts: [], files: [] }, source: null };
+    return { config: { dirs: [], includeDirs: [], exts: [], files: [] }, source: null };
   }
 }
 
@@ -121,6 +125,7 @@ export function createScanFilter(config) {
   }
 
   const dirs = build(config.dirs);
+  const includeDirs = build(config.includeDirs);
   const files = build(config.files);
 
   function match(entry, name, relPath) {
@@ -143,15 +148,35 @@ export function createScanFilter(config) {
     return match(files, name, relPath);
   }
 
+  /** 目录是否在 includeDirs 白名单里（优先于所有排除规则） */
+  function isDirIncluded(name, relPath) {
+    return match(includeDirs, name, relPath);
+  }
+
   return {
     config,
     exts,
     shouldSkipExt,
     shouldSkipName,
+    isDirIncluded,
 
-    /** 目录是否排除（name = basename，relPath = 相对扫描根的路径） */
+    /** 目录是否排除（name = basename，relPath = 相对扫描根的路径；includeDirs 白名单优先） */
     shouldSkipDir(name, relPath) {
+      if (isDirIncluded(name, relPath)) return false;
       return match(dirs, name, relPath);
+    },
+
+    /**
+     * 目录是否被「显式路径规则」（dirs 里含 "/" 的条目，如 "**\/common/temp"）排除。
+     * 调用方可据此判断：路径规则是用户明确指定的，应优先于 basename 启发式规则
+     * （如 apply-replace 的"真实包目录例外"）。
+     */
+    shouldSkipDirByPath(relPath) {
+      if (relPath == null) return false;
+      const rp = String(relPath).replace(/\\/g, '/');
+      if (isDirIncluded(rp.split('/').pop(), rp)) return false;
+      for (const re of dirs.pathRes) if (re.test(rp)) return true;
+      return false;
     },
 
     /** 文件是否排除（扩展名 + 文件名规则；目录规则由遍历逻辑单独处理） */
