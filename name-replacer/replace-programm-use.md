@@ -29,7 +29,19 @@ name-replacer/merge-ids.mjs ec-result.json result.json -o all-ids.json
 node name-replacer/replace-server.mjs --input all-ids.json 
 ```
 
-#### 5.补充：上下文感知的 bim 词族替换
+#### 5. 合并基础映射
+```bash
+# 默认合并 base-mapping.json + all-ids-mapping.json → all-mapping.json
+node name-replacer/merge-mapping.mjs
+
+# 或按顺序合并任意多个映射表（后面的文件优先）
+node name-replacer/merge-mapping.mjs base.json extra.json -o all-mapping.json
+
+# 把一个或多个文件合并进已有 all-mapping.json（保留目标独有条目，来源覆盖同名词条）
+node name-replacer/merge-mapping.mjs --into all-mapping.json base.json extra.json
+```
+
+#### 6.补充：上下文感知的 bim 词族替换
 ```bash
 # 只替换文件后缀/扩展名/格式字面量相关的 bim/ibim/bims
 # 路径段、目录名、建筑语义的 bim 一律不动
@@ -40,7 +52,9 @@ node name-replacer/replace-bim.mjs --dry-run --dir test/src
 ```
 
 
-#### 6.分阶段替换
+#### 7.分阶段替换
+> 完整说明见 [`replace-staged.md`](replace-staged.md)。
+
 ```bash
 # 用 targets.json 指定分批替换顺序
 node name-replacer/replace-staged.mjs --targets name-replacer/targets.json
@@ -50,6 +64,10 @@ node name-replacer/replace-staged.mjs --targets name-replacer/targets.json --dry
 
 # 跳过 Rush 清空（重新运行时保留 rush.json）
 node name-replacer/replace-staged.mjs --targets name-replacer/targets.json --no-clear-rush
+
+# 指定发包 registry（默认 http://localhost:4873/）
+node name-replacer/replace-staged.mjs --targets name-replacer/targets.json \
+  --registry http://192.168.1.10:4873/
 
 # 快速替换单个目录
 node name-replacer/replace-staged.mjs --dir itwinjs-core/core/bentley --dir appui/ui/core-react

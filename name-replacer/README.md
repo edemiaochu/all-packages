@@ -1,179 +1,209 @@
-# name-replacer 操作流程
+# name-replacer — 品牌词替换工具链
 
-品牌词替换工具链：提取 → 配置映射 → 预览 → 执行。
+扫描源码中的品牌词 → 合并词表 → Web 配置替换映射 → 分阶段替换 / 发包 / 测试。
+
+## 工具链
+
+```text
+search-ec.mjs / search-sensitive.mjs
+        │  --concise -o *.json
+        ▼
+  ec-result.json / result.json
+        │  merge-ids.mjs
+        ▼
+     all-ids.json
+        │  replace-server.mjs（Web UI）
+        ▼
+  name-replacer/all-ids-mapping.json
+        │  merge-mapping.mjs（可选）
+        ▼
+   all-mapping.json / name-mapping.json
+        │  replace-staged.mjs
+        ▼
+  内容替换 → 目录改名 → 构建 → 发布 → 安装测试
+```
 
 ## 命令速查
 
-| 步骤 | 命令 | 说明 |
-|------|------|------|
-| 1. 提取 | `node name-replacer/extract-brand-words.mjs` | 扫描全仓库，提取含 iTwin/iModel/Bentley 的标识符，输出 `brand-words.json` |
-| 2. 配置 | `node name-replacer/server.mjs` | 启动 Web 配置界面 `http://localhost:3456`，调整替换映射后保存 |
-| 3. 预览 | `node name-replacer/apply-replace.mjs --dry-run [--target <dir>]` | 预览哪些文件会被修改，不实际写入 |
-| 4. 执行 | `node name-replacer/apply-replace.mjs [--target <dir>]` | 正式执行全文替换 |
+| 步骤 | 工具 | 说明 | 详细文档 |
+|------|------|------|---------|
+| 1. 搜索 | `search-sensitive.mjs` / `search-ec.mjs` | 扫描标识符，输出 `result.json` / `ec-result.json` | [search-sensitive.md](search-sensitive.md) / [search-ec.md](search-ec.md) |
+| 2. 合并词表 | `merge-ids.mjs` | 多个搜索结果合并成 `all-ids.json` | [merge-ids.md](merge-ids.md) |
+| 3. 配置映射 | `replace-server.mjs` | Web UI 配置替换词，生成 `*-mapping.json` | [replace-server.md](replace-server.md) |
+| 4. 合并映射 | `merge-mapping.mjs` | 把多份映射合并成一份总表（可选） | [merge-mapping.md](merge-mapping.md) |
+| 5. 分阶段替换 | `replace-staged.mjs` | 替换 + 构建 + 发包 + 安装测试（推荐） | [replace-staged.md](replace-staged.md) |
+| 6. 直接替换 | `apply-replace.mjs` | 只做内容替换和目录改名 | 本文 |
+| 7. bim 词族 | `replace-bim.mjs` | 只处理 `.bim` / `ibim` / `bims` 等文件格式词 | 本文 |
+
+完整执行顺序见 [replace-programm-use.md](replace-programm-use.md)。
 
 ---
 
-## 详细说明
-
-### 1. 提取品牌词
+## 1. 搜索标识符
 
 ```bash
-node name-replacer/extract-brand-words.mjs
+# 敏感词：iTwin / iModel / Bentley / DGN / 产品名等
+node name-replacer/search-sensitive.mjs \
+  -d . --words-file base-words.json --concise -o result.json
+
+# EC / ECSchema 等前缀词
+node name-replacer/search-ec.mjs \
+  -d . --concise -o ec-result.json
 ```
 
-- 递归扫描仓库中所有源码文件（`.ts/.tsx/.js/.jsx/.md/.json/.html/.css/.scss/.py/.sh` 等）
-- 跳过 `node_modules`、`.git`、`dist`、`build`、`lib` 等目录
-- 用正则匹配 iTwin（5 种大小写变体）、iModel（5 种）、Bentley（3 种）
-- 输出 `name-replacer/brand-words.json`，包含：
-  - `identifiers`：按品牌分组的唯一标识符列表（2090 个）
-  - `mentions`：每次出现的文件、上下文、品牌标签
-  - `summary`：扫描文件数、命中数等统计
+- 默认扫描 `-d` 下**所有目录、所有扩展名**，排除项由 `scan-exclude.json` 控制
+- `--concise` 只输出标识符和统计，不生成替换后文件
+- `--include-dirs` / `--include-ext` 可临时放行被排除的目录 / 扩展名
 
-可选参数：
-- `--repo-root=<path>` 指定仓库根目录
-- `--output=<path>` 指定输出路径
-
-### 2. 配置替换映射
+## 2. 合并词表
 
 ```bash
-node name-replacer/server.mjs
+node name-replacer/merge-ids.mjs ec-result.json result.json -o all-ids.json
 ```
 
-- 启动本地 HTTP 服务，浏览器打开 `http://localhost:3456`
-- 三个品牌卡片（iTwin / iModel / Bentley），每个可设置基准替换词
-- 自动推导大小写变体（如 Twin → TWIN / Twin / twin / TWin …），每个变体可单独覆盖
-- 「预览变更」按钮弹窗展示全部 2090 条映射，支持品牌筛选和搜索
-- 保存后自动更新 `name-replacer/name-mapping.json`
+- 支持合并任意多个搜索结果
+- `identifiers` 无论是数组还是按词分组的对象都能识别
+- 合并结果供 `replace-server` 使用
 
-### 3. 预览替换
+## 3. 配置替换映射
 
 ```bash
-# 全项目预览
-node name-replacer/apply-replace.mjs --dry-run
-
-# 仅预览指定文件夹
-node name-replacer/apply-replace.mjs --dry-run --target packages/appui
+node name-replacer/replace-server.mjs --input all-ids.json
+# 浏览器打开 http://localhost:3457
 ```
 
-- 读取 `name-mapping.json`，构建组合正则（`\b` 单词边界 + 最长优先排序）
-- 遍历目标目录文件，打印会被修改的文件路径
-- **不写入任何文件**
-- `--target` 为项目根目录下的相对路径，不传则遍历全项目
+- **单词模式**：输入文件只有一个词，或使用 `--word` 指定
+- **多词模式**：一次配置全部词，保存时生成逐词链式替换的合并映射
+- 输出：
+  - 映射表：`name-replacer/all-ids-mapping.json`
+  - 配置：`name-replacer/replace-server-config.json`
+- 保存是**整体覆盖**，不是追加；确认/忽略结果保存在配置文件的 `_manual` / `_manualTokens` / `_manualSkip`
 
-输出示例：
-```
-映射规则: 2090 条
-目标目录: D:\01Work\iTwin2026
-模式: 仅预览 (--dry-run)
-
-  packages/appui/src/SomeFile.ts
-  packages/viewer/src/AnotherFile.tsx
-  ...
-
-扫描文件: 8521 | 替换文件: 342 | 耗时: 12.3s
-(预览模式，未实际修改文件。去掉 --dry-run 参数以执行替换)
-```
-
-### 4. 执行替换
+## 4. 合并映射（可选）
 
 ```bash
-# 全项目替换
-node name-replacer/apply-replace.mjs
+# 默认：base-mapping.json + all-ids-mapping.json → 根目录 all-mapping.json
+node name-replacer/merge-mapping.mjs
 
-# 仅替换指定文件夹
-node name-replacer/apply-replace.mjs --target packages/appui
+# 合并任意多个文件，后面的文件优先
+node name-replacer/merge-mapping.mjs base.json extra.json -o all-mapping.json
+
+# 合并进已有总表，保留目标独有条目
+node name-replacer/merge-mapping.mjs --into all-mapping.json base.json extra.json
 ```
 
-- 与预览逻辑完全相同，但会实际写入文件
-- `--target` 用法同上
-- 默认扫描目标目录下所有文件夹 + 所有扩展名；排除项统一由 `scan-exclude.json` 控制（目录 / 扩展名 / 文件名），真二进制（含 `\0`）和超 5MB 文件自动跳过
-- 建议执行前先 `git stash` 或提交当前更改，以便回滚
-
-### 5. 扫描排除配置（scan-exclude.json）
-
-**默认行为：扫描指定目录下的所有文件夹 + 所有扩展名**。只有写进
-`name-replacer/scan-exclude.json` 的目录 / 扩展名 / 文件名才会被排除。
-`search-sensitive`、`search-ec`、`apply-replace`、`replace-staged` 共用这一份配置。
-
-```json
-{
-  "dirs":        ["node_modules", ".git", "**/common/temp", ".claude*"],
-  "includeDirs": ["base/icons-generic-webfont/dist"],
-  "exts":        [".png", ".woff2", "*.zip"],
-  "files":       ["pnpm-lock.yaml", "*-mapping.json"]
-}
-```
-
-- `dirs` / `files` 不含 `/` 时按名称匹配，含 `/` 时按相对扫描根的路径匹配；支持 `*` / `**` / `?`
-- `includeDirs` 是目录**白名单**：命中后无视 `dirs` 规则强制进入（适用于名字命中 `dist`/`lib` 但仍需替换的真实产物目录），优先级最高；`dirs` 里的显式路径规则（如 `**/common/temp`）也优先于"含 package.json 的真实包目录"例外
-- `exts` 写法支持 `"png"` / `".png"` / `"*.PNG"`，统一按小写 `.png` 匹配
-- 配置文件缺失时：**不排除任何内容**
-- 兜底保护（不受配置影响）：文件 > 5MB 或前 4KB 含 `\0` 字节自动跳过，防止误读真二进制文件
-- 搜索脚本可用 `--include-dirs dist` / `--include-ext svg` 强制放行被排除的目录 / 扩展名
-
-需要恢复旧行为（常见二进制扩展名全跳过）可填入：
-
-```json
-[".png", ".jpg", ".jpeg", ".gif", ".ico", ".svg", ".bmp", ".webp", ".woff", ".woff2", ".ttf", ".eot", ".otf", ".pdf", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", ".zip", ".tar", ".gz", ".7z", ".rar", ".bz2", ".exe", ".dll", ".so", ".dylib", ".bin", ".dat", ".db", ".sqlite", ".mp3", ".mp4", ".avi", ".mov", ".webm", ".wav", ".ogg", ".wasm", ".node"]
-```
-
----
-
-## 附：分阶段替换
-
-全量替换风险大，推荐按依赖关系分批次执行。用户自行规划替换顺序，每批验证通过后再继续。
-
-`replace-staged` 的内容替换与目录改名同样默认覆盖目标下的**所有文件夹和所有扩展名**，
-排除项只来自 `scan-exclude.json`（与两个搜索脚本共用）。
-
-### 用法
+## 5. 分阶段替换、发包与测试
 
 ```bash
-# 用 targets.json 指定分批替换顺序
-node name-replacer/replace-staged.mjs --targets name-replacer/targets.json
+# 复制示例后按依赖顺序修改
+cp name-replacer/targets.example.json name-replacer/targets.json
 
-# 预览模式
-node name-replacer/replace-staged.mjs --targets name-replacer/targets.json --dry-run
+# 预览
+node name-replacer/replace-staged.mjs \
+  --targets name-replacer/targets.json --dry-run
 
-# 跳过 Rush 清空（重新运行时保留 rush.json）
-node name-replacer/replace-staged.mjs --targets name-replacer/targets.json --no-clear-rush
+# 正式执行（替换 + 构建 + 发布 + 安装测试）
+node name-replacer/replace-staged.mjs \
+  --targets name-replacer/targets.json
 
-# 快速替换单个目录
-node name-replacer/replace-staged.mjs --dir itwinjs-core/core/bentley --dir appui/ui/core-react
+# 指定 registry（默认 http://localhost:4873/）
+node name-replacer/replace-staged.mjs \
+  --targets name-replacer/targets.json \
+  --registry http://192.168.1.10:4873/
 ```
 
-### targets.json 格式
+`targets.json` 支持两种格式：
 
 ```json
 [
-  { "dirs": ["itwinjs-core/core/bentley"], "note": "基础层 — 无内部依赖" },
-  { "dirs": ["itwinjs-core/core/frontend", "appui/ui/core-react"], "note": "依赖基础层" }
+  { "dirs": ["base/units-schema"], "note": "第 1 批" }
 ]
 ```
 
-每批（数组元素）内的 `dirs` 会被一起替换，替换完后建议 build + test 验证，然后继续下一批。
-
-### 建议流程
-
-1. 用 `extract-dep-graph.mjs` + `dep-graph.html` 分析依赖关系
-2. 按依赖层（无依赖 → 深层依赖）规划 targets.json
-3. `--dry-run` 预览 → 执行 → build/test → 下一批
-
----
-
-## 附：语义级重命名（generate-name-map.mjs）
-
-```bash
-node generate-name-map.mjs
+```json
+{
+  "registry": "http://localhost:4873/",
+  "stages": [
+    { "dirs": ["appui/ui/core-react"], "replaceOnly": ["appui/ui/appui-react"], "note": "第 2 批" }
+  ]
+}
 ```
 
-这是一个**独立工具**，比品牌词替换范围更大——它重命名所有语义化标识符（不只是品牌词）：
+- `dirs`：替换内容并发布
+- `replaceOnly`：只替换内容，不发布
+- `note`：批次说明
+- registry 优先级：`--registry` > targets 顶层 `registry` > `REPLACE_STAGED_REGISTRY` > 默认 localhost
+- 常用开关：`--no-build`、`--no-publish`、`--no-test`、`--no-clear-rush`
+- 目标目录不存在会明确提示并跳过；所有目标都不存在时不会执行后续全局改名
+- 批次划分可参考 [dep-layers.md](dep-layers.md)
 
-- 剥离注释和字符串字面量后提取 class / interface / enum / type / function / variable
-- 基于内置语义映射表替换通用词（如 `backend→server`、`render→draw`、`manager→coordinator`）
-- 每种标识符类型追加后缀（class→Object, interface→Contract, enum→Choices…）
-- 文件名也参与重命名
-- 冲突检测 + 自动变体名（Amber/Beryl/Cobalt… 轮转）
-- 输出 `name-map.json`
+## 6. 直接内容替换（apply-replace）
 
-⚠️ 此工具与品牌词替换**独立运行**，互不影响。产出的 `name-map.json` 需人工审查后再用。
+只做替换、不构建/发布时使用：
+
+```bash
+# apply-replace 固定读取 name-mapping.json
+cp name-replacer/all-ids-mapping.json name-replacer/name-mapping.json
+
+# 预览
+node name-replacer/apply-replace.mjs --target appui --dry-run
+
+# 执行
+node name-replacer/apply-replace.mjs --target appui
+```
+
+- 不传 `--target` 时扫描整个仓库
+- `replace-staged.mjs` 内部调用的就是它
+- 扫描范围与排除项同样来自 `scan-exclude.json`
+
+## 7. 上下文感知的 bim 词族（replace-bim）
+
+只替换文件后缀 / 扩展名 / 格式字面量相关的 `bim`、`ibim`、`bims`，
+不会替换普通标识符、路径段或中文语境里的 `bim`：
+
+```bash
+node name-replacer/replace-bim.mjs --dry-run --targets name-replacer/targets.json
+node name-replacer/replace-bim.mjs --targets name-replacer/targets.json
+```
+
+建议在主替换流程之后运行。
+
+## 8. 扫描排除配置（scan-exclude.json）
+
+`search-sensitive`、`search-ec`、`apply-replace`、`replace-staged`、`replace-bim`
+共用这一份配置。
+
+```json
+{
+  "dirs": ["node_modules", ".git", "**/common/temp", "name-replacer", "dist", "build", "lib"],
+  "includeDirs": ["base/icons-generic-webfont/dist"],
+  "exts": [".png", ".woff2", ".zip", ".map"],
+  "files": ["pnpm-lock.yaml", "*-mapping.json", "targets.json"]
+}
+```
+
+- `dirs` / `files` 不含 `/` 时按名称匹配，含 `/` 时按相对路径匹配；支持 `*` / `**` / `?`
+- `includeDirs` 是目录白名单，命中后无视 `dirs` 规则强制进入
+- `exts` 支持 `"png"`、`".png"`、`"*.PNG"`，统一按小写匹配
+- 配置文件缺失时**不排除任何内容**
+- 兜底保护：文件 > 5MB 或前 4KB 含 `\0` 时自动跳过
+- 搜索脚本可用 `--include-dirs` / `--include-ext` 临时放行
+
+## 注意事项
+
+1. 替换前先提交或 `git stash`，确保可以回滚
+2. 正式执行前先跑 `--dry-run`
+3. `replace-server` 保存映射表是整体覆盖；需要保留旧条目时用 `merge-mapping.mjs --into`
+4. `apply-replace` 固定读取 `name-replacer/name-mapping.json`
+5. `replace-staged` 的 targets 路径必须是当前磁盘上真实存在的目录
+6. `scan-exclude.json` 已排除常见的搜索结果、映射表和 `targets.json` 等生成文件；新增的生成文件记得补进 `files`
+
+## 文档索引
+
+- [replace-programm-use.md](replace-programm-use.md) — 完整执行顺序
+- [search-sensitive.md](search-sensitive.md) / [search-ec.md](search-ec.md) — 搜索参数
+- [merge-ids.md](merge-ids.md) — 合并词表
+- [replace-server.md](replace-server.md) — Web 配置界面
+- [merge-mapping.md](merge-mapping.md) — 映射表合并
+- [replace-staged.md](replace-staged.md) — 分阶段替换、发包、测试
+- [dep-layers.md](dep-layers.md) — 依赖分层参考

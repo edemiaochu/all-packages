@@ -2,8 +2,14 @@
 // Staged replacement → publish to Verdaccio → install → test.
 //
 // Usage:
-//   node replace-staged.mjs [--dry-run] [--no-test] [--no-publish] [--no-build] [--no-clear-rush] [--no-fix-dgndb] --targets targets.json
-//   node replace-staged.mjs [--dry-run] [--no-test] [--no-publish] [--no-build] [--no-clear-rush] [--no-fix-dgndb] --dir <d1> --dir <d2> ...
+//   node replace-staged.mjs [--dry-run] [--no-test] [--no-publish] [--no-build] [--no-clear-rush] [--registry <url>] --targets targets.json
+//   node replace-staged.mjs [--dry-run] [--no-test] [--no-publish] [--no-build] [--no-clear-rush] [--registry <url>] --dir <d1> --dir <d2> ...
+//
+// Registry (publish target), first match wins:
+//   --registry <url> / --publish-url <url>
+//   targets.json: { "registry": "http://host:4873/", "stages": [...] }
+//   env REPLACE_STAGED_REGISTRY
+//   default http://localhost:4873/
 //
 // Directory renaming principle:
 //   Each stage's applyReplacements renames leaf target dirs (bottom-up within the target).
@@ -21,7 +27,7 @@ import { loadScanFilter } from './scan-config.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, '..');
-const REGISTRY = 'http://localhost:4873/';
+const DEFAULT_REGISTRY = 'http://localhost:4873/';
 
 // ── Parse CLI ───────────────────────────────────────────────────────
 const DRY_RUN = process.argv.includes('--dry-run');
@@ -29,6 +35,42 @@ const NO_TEST = process.argv.includes('--no-test');
 const NO_PUBLISH = process.argv.includes('--no-publish');
 const NO_BUILD = process.argv.includes('--no-build');
 const NO_CLEAR_RUSH = process.argv.includes('--no-clear-rush');
+
+// 规范化 registry：补协议、校验 http/https、统一末尾斜杠
+function normalizeRegistry(input) {
+  let raw = String(input || '').trim();
+  if (!raw) throw new Error('registry 不能为空');
+  if (!/^[a-z][a-z0-9+.-]*:\/\//i.test(raw)) raw = 'http://' + raw;
+  let url;
+  try {
+    url = new URL(raw);
+  } catch {
+    throw new Error('无效的 registry URL: ' + input);
+  }
+  if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+    throw new Error('registry 只支持 http/https: ' + input);
+  }
+  return url.toString().replace(/\/+$/, '') + '/';
+}
+
+// 支持 `--name <value>` 和 `--name=<value>`
+function getCliOptionValue(names) {
+  for (let i = 2; i < process.argv.length; i++) {
+    for (const name of names) {
+      if (process.argv[i] === name) {
+        const value = process.argv[i + 1];
+        if (!value || value.startsWith('--')) throw new Error(name + ' 缺少 URL 参数');
+        return value;
+      }
+      if (process.argv[i].startsWith(name + '=')) {
+        const value = process.argv[i].slice(name.length + 1);
+        if (!value) throw new Error(name + ' 缺少 URL 参数');
+        return value;
+      }
+    }
+  }
+  return null;
+}
 
 const targetIdx = process.argv.indexOf('--targets');
 const TARGETS_FILE = targetIdx !== -1 ? process.argv[targetIdx + 1] : null;
@@ -38,10 +80,64 @@ for (let i = 0; i < process.argv.length; i++) {
   if (process.argv[i] === '--dir') dirIndices.push(i);
 }
 
-const stages = [];
+// targets.json 兼容两种写法：
+//   [ { dirs, replaceOnly, note }, ... ]
+//   { "registry": "http://...", "stages": [ ... ] }
+let targetsConfig = null;
 if (TARGETS_FILE) {
-  const config = JSON.parse(readFileSync(TARGETS_FILE, 'utf-8'));
-  for (const entry of config) {
+  try {
+    targetsConfig = JSON.parse(readFileSync(TARGETS_FILE, 'utf-8'));
+  } catch (e) {
+    console.error('❌ 读取 targets 文件失败: ' + TARGETS_FILE + ' (' + e.message + ')');
+    process.exit(1);
+  }
+}
+const targetsIsObject = targetsConfig !== null && !Array.isArray(targetsConfig) && typeof targetsConfig === 'object';
+
+// registry 优先级：命令行 > targets.json 顶层 registry > 环境变量 > 默认 localhost:4873
+let REGISTRY;
+let REGISTRY_SOURCE = 'default';
+try {
+  const cliRegistry = getCliOptionValue(['--registry', '--publish-url', '--publish-registry']);
+  const configRegistry = targetsIsObject ? targetsConfig.registry : null;
+  const envRegistry = process.env.REPLACE_STAGED_REGISTRY;
+  const chosen = cliRegistry || configRegistry || envRegistry || DEFAULT_REGISTRY;
+  REGISTRY_SOURCE = cliRegistry ? 'cli' : configRegistry ? 'config' : envRegistry ? 'env' : 'default';
+  REGISTRY = normalizeRegistry(chosen);
+} catch (e) {
+  console.error('❌ ' + e.message);
+  process.exit(1);
+}
+const CUSTOM_REGISTRY = REGISTRY_SOURCE !== 'default';
+
+const REGISTRY_URL = new URL(REGISTRY);
+const REGISTRY_PORT = REGISTRY_URL.port || (REGISTRY_URL.protocol === 'https:' ? '443' : '80');
+const IS_LOCAL_REGISTRY = ['localhost', '127.0.0.1', '::1', '[::1]'].includes(REGISTRY_URL.hostname);
+// pnpm 元数据缓存目录名：host+port（默认端口时只有 host）
+const REGISTRY_CACHE_KEY = REGISTRY_URL.port
+  ? REGISTRY_URL.hostname + '+' + REGISTRY_URL.port
+  : REGISTRY_URL.hostname;
+
+const stages = [];
+if (targetsConfig) {
+  const entries = Array.isArray(targetsConfig) ? targetsConfig : (targetsConfig.stages || []);
+  if (!Array.isArray(entries)) {
+    console.error('❌ targets.json 的 stages 必须是数组');
+    process.exit(1);
+  }
+  for (const entry of entries) {
+    if (!entry || typeof entry !== 'object') {
+      console.error('❌ targets.json 的每个批次必须是对象');
+      process.exit(1);
+    }
+    if (entry.dirs != null && !Array.isArray(entry.dirs)) {
+      console.error('❌ 批次的 dirs 必须是数组');
+      process.exit(1);
+    }
+    if (entry.replaceOnly != null && !Array.isArray(entry.replaceOnly)) {
+      console.error('❌ 批次的 replaceOnly 必须是数组');
+      process.exit(1);
+    }
     stages.push({
       dirs: (entry.dirs || []).map(d => resolve(ROOT, d)),
       replaceOnly: (entry.replaceOnly || []).map(d => resolve(ROOT, d)),
@@ -60,7 +156,25 @@ if (TARGETS_FILE) {
   console.log('  node replace-staged.mjs --targets targets.json --no-build');
   console.log('  node replace-staged.mjs --targets targets.json --no-clear-rush');
   console.log('  node replace-staged.mjs --dir <path> --dir <path> ...');
+  console.log('');
+  console.log('选项:');
+  console.log('  --registry <url>        发布目标 registry（默认 ' + DEFAULT_REGISTRY + '）');
+  console.log('                          也可在 targets.json 顶层写 "registry": "..."');
+  console.log('                          或设置环境变量 REPLACE_STAGED_REGISTRY');
+  console.log('  别名: --publish-url / --publish-registry');
   process.exit(0);
+}
+
+// 空批次会让后面的“全局目录改名”在没有任何目标的情况下扫描整个仓库，必须拦掉
+if (stages.length === 0) {
+  console.error('❌ targets 中没有批次（stages 为空）');
+  process.exit(1);
+}
+for (let i = 0; i < stages.length; i++) {
+  if (stages[i].dirs.length === 0 && stages[i].replaceOnly.length === 0) {
+    console.error('❌ 第 ' + (i + 1) + ' 批没有 dirs/replaceOnly');
+    process.exit(1);
+  }
 }
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -135,7 +249,7 @@ function clearPnpmMetadataCache(pkgDirs) {
       ? join(process.env.XDG_CACHE_HOME, 'pnpm')
       : join(homedir(), process.platform === 'darwin' ? 'Library/Caches/pnpm' : '.cache/pnpm');
 
-  const metadataDirs = ['metadata', 'metadata-v1.3'].map(d => join(cacheBase, d, 'localhost+4873'));
+  const metadataDirs = ['metadata', 'metadata-v1.3'].map(d => join(cacheBase, d, REGISTRY_CACHE_KEY));
 
   for (const d of pkgDirs) {
     try {
@@ -154,18 +268,25 @@ function clearPnpmMetadataCache(pkgDirs) {
 function verdaccioRunning() {
   try {
     const result = execSync('curl -s -o NUL -w "%{http_code}" ' + REGISTRY, { encoding: 'utf-8', timeout: 5000, shell: true });
-    return result.trim() === '200';
+    const code = parseInt(result.trim(), 10);
+    // 200 = 正常；401/403 = 需要认证但 registry 本身可访问；3xx = 重定向
+    return (code >= 200 && code < 400) || code === 401 || code === 403;
   } catch { return false; }
 }
 
 function ensureVerdaccio() {
   if (verdaccioRunning()) {
-    console.log('  Verdaccio: ' + REGISTRY + ' ✓');
+    console.log('  Registry: ' + REGISTRY + ' ✓');
     return true;
   }
-  console.log('  Verdaccio 未运行，请手动启动:');
-  console.log('    verdaccio --listen 0.0.0.0:4873');
-  console.log('  然后重新运行本脚本');
+  console.log('  Registry 不可访问: ' + REGISTRY);
+  if (IS_LOCAL_REGISTRY) {
+    console.log('  请先启动 Verdaccio:');
+    console.log('    verdaccio --listen 0.0.0.0:' + REGISTRY_PORT);
+    console.log('  然后重新运行本脚本');
+  } else {
+    console.log('  请检查该地址是否可访问，并确认目标 registry 已启动');
+  }
   return false;
 }
 
@@ -394,7 +515,7 @@ function publishPackages(dirs, compiled) {
   const pkgs = findPackageDirs(dirs);
   if (pkgs.length === 0) return;
   console.log('');
-  console.log('  ── 发布到 Verdaccio ──');
+  console.log('  ── 发布到 registry: ' + REGISTRY + ' ──');
 
   // Resolve workspace/catalog protocol versions before publish
   const backups = [];
@@ -429,6 +550,32 @@ function publishPackages(dirs, compiled) {
   }
 }
 
+// 更新 .npmrc 里的 registry / @scope:registry 行。
+// 只在显式配置了自定义 registry 时改写，默认 localhost 保持原有行为不变。
+function updateNpmrcRegistry(content) {
+  if (!CUSTOM_REGISTRY) return { content, changed: false };
+
+  let replacedGlobal = false;
+  const lines = content.split(/\r?\n/).map(line => {
+    if (/^\s*registry\s*=/.test(line)) {
+      replacedGlobal = true;
+      return 'registry=' + REGISTRY;
+    }
+    if (/^\s*@[^:\s]+:registry\s*=/.test(line)) {
+      return line.replace(/:registry\s*=.*$/, ':registry=' + REGISTRY);
+    }
+    return line;
+  });
+  let out = lines.join('\n').trimEnd();
+  if (!replacedGlobal) out = (out ? out + '\n' : '') + 'registry=' + REGISTRY;
+  out += '\n';
+  return { content: out, changed: out !== content };
+}
+
+function escapeRegExp(s) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 function ensureNpmrc(proj) {
   if (proj.mgr === 'rush') {
     const npmrcPath = join(proj.root, 'common/config/rush/.npmrc');
@@ -437,11 +584,17 @@ function ensureNpmrc(proj) {
     try { content = readFileSync(npmrcPath, 'utf-8'); } catch {}
 
     let changed = false;
+    const registryUpdate = updateNpmrcRegistry(content);
+    content = registryUpdate.content;
+    changed = registryUpdate.changed;
+
     for (const scope of scopes) {
       const line = scope + ':registry=' + REGISTRY;
-      if (content.includes(scope + ':registry=')) {
-        content = content.replace(new RegExp('^' + scope.replace('/', '\\/') + ':registry=.*$', 'gm'), line);
-      } else if (!content.includes(line)) {
+      const scopeLineRe = new RegExp('^' + escapeRegExp(scope) + ':registry=', 'm');
+      if (scopeLineRe.test(content)) {
+        const next = content.replace(new RegExp('^' + escapeRegExp(scope) + ':registry=.*$', 'gm'), line);
+        if (next !== content) { content = next; changed = true; }
+      } else {
         content = content.trimEnd() + '\n' + line + '\n';
         changed = true;
       }
@@ -456,19 +609,26 @@ function ensureNpmrc(proj) {
       console.log('  .npmrc 已更新: ' + scopes.join(', ') + ' → ' + REGISTRY + ' + minimumReleaseAge=0');
     }
   } else {
-    // pnpm-managed projects: write .npmrc to project root
+    // pnpm/yarn/npm 项目：写入项目根目录 .npmrc
     const npmrcPath = join(proj.root, '.npmrc');
     let content = '';
     try { content = readFileSync(npmrcPath, 'utf-8'); } catch {}
 
-    let changed = false;
-    if (!content.includes('minimumReleaseAge=')) {
+    const registryUpdate = updateNpmrcRegistry(content);
+    content = registryUpdate.content;
+    let changed = registryUpdate.changed;
+
+    const mrChanged = !content.includes('minimumReleaseAge=');
+    if (mrChanged) {
       content = content.trimEnd() + '\nminimumReleaseAge=0\n';
       changed = true;
     }
     if (changed) {
       writeFileSync(npmrcPath, content);
-      console.log('  .npmrc 已追加: minimumReleaseAge=0');
+      const parts = [];
+      if (registryUpdate.changed) parts.push('registry=' + REGISTRY);
+      if (mrChanged) parts.push('minimumReleaseAge=0');
+      console.log('  .npmrc 已更新: ' + parts.join(' + '));
     }
   }
 }
@@ -972,10 +1132,12 @@ const modeLabel = DRY_RUN ? '预览 (--dry-run)' : '执行'
   + (NO_TEST ? ' (跳过测试)' : ' + 测试');
 console.log('模式: ' + modeLabel);
 console.log('批次: ' + stages.length);
+console.log('Registry: ' + REGISTRY);
 console.log('');
 
 const allResults = [];
 let anyFailed = false;
+let anyExistingTarget = false;  // 是否至少有一个目标目录真实存在
 const allRushProjects = new Map();
 const allPublishProjects = new Map();
 const allPnpmProjects = new Map();   // pnpm: collect across stages, process after loop
@@ -1022,6 +1184,10 @@ for (let i = 0; i < stages.length; i++) {
     console.log('  [仅替换]');
     stage.replaceOnly.forEach(d => console.log('    ' + relative(ROOT, d)));
   }
+  const existingPublishDirs = publishDirs.filter(d => existsSync(d));
+  if (publishDirs.length > 0 && existingPublishDirs.length === 0) {
+    console.log('  ⚠ 本批发布目录都不存在，不会发包（请检查 targets.json 路径）');
+  }
   console.log('');
 
   // 1. Replace content + rename leaf dirs
@@ -1034,6 +1200,11 @@ for (let i = 0; i < stages.length; i++) {
     const logPrefix = '  [' + (i + 1) + ']';
     const isReplaceOnly = stage.replaceOnly && stage.replaceOnly.includes(dir);
     const tag = isReplaceOnly ? ' [仅替换]' : '';
+    if (!existsSync(dir)) {
+      console.log(logPrefix + tag + ' ' + relative(ROOT, dir) + '  ⚠ 不存在，跳过');
+      continue;
+    }
+    anyExistingTarget = true;
     console.log(logPrefix + tag + ' ' + relative(ROOT, dir));
     const result = applyReplacements(dir, DRY_RUN, logPrefix);
     stageScanned += result.scanned;
@@ -1090,6 +1261,15 @@ for (let i = 0; i < stages.length; i++) {
   }
   for (const [, proj] of stageRushProjects) {
     ensureNpmrc(proj);
+  }
+  // 非 Rush 项目：只有显式配置了自定义 registry 时才提前改 .npmrc，
+  // 默认 localhost 流程保持和以前一致（仍然在批次结束后处理 .npmrc）
+  if (CUSTOM_REGISTRY) {
+    for (const dir of publishDirs) {
+      const actualDir = renamedDirs.get(resolve(ROOT, dir)) || resolve(ROOT, dir);
+      const proj = findProjectRoot(actualDir);
+      if (proj && proj.mgr !== 'rush') ensureNpmrc(proj);
+    }
   }
 
   // 4. Rush: install + build (now resolves cross-stage deps from Verdaccio)
@@ -1257,7 +1437,7 @@ for (let i = 0; i < stages.length; i++) {
 // Post-stage: finalize directories + Verdaccio verification
 // ═══════════════════════════════════════════════════════════════════════
 
-if (!DRY_RUN) {
+if (!DRY_RUN && anyExistingTarget) {
   // 1. Rename ALL remaining brand-word directories (recursive, bottom-up)
   const brandDirs = renameAllBrandDirs(compiled);
 
@@ -1285,14 +1465,18 @@ if (!DRY_RUN) {
     }
   }
 
-  // 3. Generate targets-replaced.json
+  // 3. Generate targets-replaced.json（兼容数组和 { registry, stages } 两种格式）
   if (TARGETS_FILE) {
     const origTargets = JSON.parse(readFileSync(TARGETS_FILE, 'utf-8'));
-    const replacedTargets = origTargets.map(entry => ({
+    const origEntries = Array.isArray(origTargets) ? origTargets : (origTargets.stages || []);
+    const replacedEntries = origEntries.map(entry => ({
       dirs: (entry.dirs || []).map(d => replaceBrand(d, compiled)),
       replaceOnly: (entry.replaceOnly || []).map(d => replaceBrand(d, compiled)),
       note: entry.note || '',
     }));
+    const replacedTargets = Array.isArray(origTargets)
+      ? replacedEntries
+      : { ...origTargets, stages: replacedEntries };
     writeFileSync(join(__dirname, 'targets-replaced.json'), JSON.stringify(replacedTargets, null, 2) + '\n');
     console.log('');
     console.log('  targets-replaced.json 已更新');
@@ -1359,6 +1543,12 @@ if (!DRY_RUN) {
 // ═══════════════════════════════════════════════════════════════════════
 // Summary
 // ═══════════════════════════════════════════════════════════════════════
+
+if (!DRY_RUN && !anyExistingTarget) {
+  console.log('');
+  console.log('\x1b[33m⚠ 没有处理任何目标目录：dirs / replaceOnly 都不存在，');
+  console.log('  已跳过目录改名、发布、安装和测试，请检查 targets.json 路径。\x1b[0m');
+}
 
 console.log('');
 console.log('═══════════════════════════════════════════════════════════');

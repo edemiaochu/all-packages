@@ -1,0 +1,24 @@
+﻿== VC++ runtime report ==
+Generated : 2026-11-04 14:46:56
+Computer  : LUOKUN
+
+-- DLL files --
+C:\Windows\System32\msvcp140.dll              14.50.35719.0
+C:\Windows\System32\msvcp140_1.dll            14.50.35719.0
+C:\Windows\System32\msvcp140_2.dll            14.50.35719.0
+C:\Windows\System32\vcruntime140.dll          14.50.35719.0
+C:\Windows\System32\vcruntime140_1.dll        14.50.35719.0
+C:\Windows\SysWOW64\msvcp140.dll              14.50.35719.0
+C:\Windows\SysWOW64\vcruntime140.dll          14.50.35719.0
+
+-- Installed redistributables --
+Microsoft Visual C++ 2013 x64 Minimum Runtime - 12.0.21005  [12.0.21005]
+Microsoft Visual C++ 2022 X64 Additional Runtime - 14.50.35719  [14.50.35719]
+Microsoft Visual C++ 2022 X64 Minimum Runtime - 14.50.35719  [14.50.35719]
+Microsoft Visual C++ 2022 X86 Additional Runtime - 14.50.35719  [14.50.35719]
+Microsoft Visual C++ 2022 X86 Minimum Runtime - 14.50.35719  [14.50.35719]
+Microsoft Visual C++ v14 Redistributable (x64) - 14.50.35719  [14.50.35719.0]
+Microsoft Visual C++ v14 Redistributable (x86) - 14.50.35719  [14.50.35719.0]
+
+-- Resolved by PATH (where.exe) --
+C:\Windows\System32\msvcp140.dll

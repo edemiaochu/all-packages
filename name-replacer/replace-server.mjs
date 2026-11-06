@@ -829,16 +829,16 @@ function inferCompoundPrefix(word, wordConfigs) {
  *     （echo/ecosystem 对 ec——用 english-words.txt 判定）
  *   - 随机哈希串（isLikelyRandomString，混合大小写天然受保护）
  *   - token 已被链上规则消化（ecschema 文件名已被 ecschema 长词替换）
- *   - 已忽略的 token（_manualSkip）和已确认替换的 token（_manualTokens，
- *     应用后最终结果不再残留，自然离开清单）
+ *   - 已确认替换的 token（_manualTokens，应用后最终结果不再残留，自然离开清单）
  *   - 长词（≥5 字符）始终区间替换，含即被替，没有盲区
+ *
+ * 已忽略的 token（_manualSkip）仍然返回给前端，由前端按 skipState 隐藏；
+ * 这样点"撤销忽略"时才有原始 token 信息可以重新显示。
  * @param {Record<string,string>} finalMapping - 全链规则（含 token 规则）的映射结果
- * @param {string[]} skipList - 已忽略的 token（_manualSkip）
  * @returns {Record<string, Array<{token:string, count:number, suggestion:string, samples:{id:string,auto:string}[]}>>}
  */
-function computePendingReview(wordConfigs, identifiers, excludeList, finalMapping, skipList) {
+function computePendingReview(wordConfigs, identifiers, excludeList, finalMapping) {
   const excludeSet = new Set(excludeList || []);
-  const skipSet = new Set(skipList || []);
   const byWord = {};
   // token 只归最长前缀词的组：ecdbf 归 ecdb 组（建议 dmdbf），不再重复出现在 EC 组（建议 dbdbf 是错的）
   const wordEntries = Object.entries(wordConfigs)
@@ -871,7 +871,6 @@ function computePendingReview(wordConfigs, identifiers, excludeList, finalMappin
     // 复合约定优先（EC→db 独立 / ecschema→dmschema 反推复合里 ec→dm），反推不出再用基准词
     const compound = inferCompoundPrefix(word, wordConfigs) || baseWord;
     for (const [token, idSet] of groups) {
-      if (skipSet.has(token)) continue;
       const ids = [...idSet].sort();
       // 建议替换词：token 内的词换成复合约定（大小写形态跟随）
       const suggestion = /^[A-Z]+$/.test(token)
@@ -1082,6 +1081,9 @@ body.no-modify input:not(#noModifyCheck) { pointer-events: none; background: #f5
 .skip-chip .del:hover { background: #adb5bd; }
 .pending-row .samples { font-size: 11px; color: #adb5bd; word-break: break-all; flex-basis: 100%; padding-left: 23px; }
 .pending-group .pending-more { margin-left: 8px; }
+.pending-actions { margin: 2px 0 10px; }
+.batch-skip { padding: 5px 14px; border: 1px solid #ffc9c9; border-radius: 14px; background: #fff5f5; color: #e03131; font-size: 12px; cursor: pointer; }
+.batch-skip:hover { background: #ffe3e3; border-color: #ff8787; }
 .btn-skip { padding: 2px 10px; border: 1px solid #dee2e6; border-radius: 12px; background: #fff; color: #868e96; font-size: 11px; cursor: pointer; white-space: nowrap; }
 .btn-skip:hover { border-color: #fa5252; color: #fa5252; }
 .modal-body { flex: 1; overflow-y: auto; padding: 6px 0; }
@@ -1196,6 +1198,8 @@ const PENDING_KEY_TO_TOKEN = {};
 let manualState = { ...(PAGE_DATA.manual || {}) };
 let manualTokenState = { ...(PAGE_DATA.manualTokens || {}) };
 let skipState = new Set(PAGE_DATA.manualSkip || []);
+// 忽略优先：配置里同一 token 若同时存在确认规则和忽略记录，以忽略为准
+for (const tok of skipState) delete manualTokenState[tok];
 let pendingExpanded = {};   // 词 → 是否已展开全部（默认每组只显示前 50 个 token）
 for (const items of Object.values(PENDING)) {
   for (const it of items) {
@@ -1330,9 +1334,15 @@ function render() {
   }
 
   // ── 待人工确认（融合 token，批量决策）──
-  const pendingWords = Object.keys(PENDING);
+  // 忽略的 token 立即从列表隐藏（和服务端刷新后的过滤规则保持一致）
+  const visiblePending = {};
+  for (const [w, items] of Object.entries(PENDING)) {
+    const visible = items.filter(it => !skipState.has(it.token));
+    if (visible.length > 0) visiblePending[w] = visible;
+  }
+  const pendingWords = Object.keys(visiblePending);
   let tokenTotal = 0;
-  for (const w of pendingWords) tokenTotal += PENDING[w].length;
+  for (const w of pendingWords) tokenTotal += visiblePending[w].length;
   const savedTokenEntries = Object.entries(manualTokenState);
   const skipArr = [...skipState].sort();
   const manualEntries = Object.entries(manualState);
@@ -1341,6 +1351,9 @@ function render() {
     html += '<div class="word-header"><h2>待人工确认（融合缩写）</h2><span class="badge">' + tokenTotal + ' 个 token</span></div>';
     html += '<div class="word-body">';
     html += '<div class="pending-hint">规则替换后仍残留的融合缩写 token（纯大写/纯小写、以短词开头，如 ECXML、ecclassid——程序无法自行判断是否为品牌缩写）。<b>按 token 批量确认</b>：一行 = 一条替换规则，长 token（≥5 字符）按子串生效、短 token 只匹配独立分词单元（不误伤 specs/ECCENTRIC 这类含同子串的英文词）；建议替换词已预填，可直接编辑。不需要替换的 token 点"忽略"。英文单词和随机哈希已自动排除。</div>';
+    if (tokenTotal > 0) {
+      html += '<div class="pending-actions"><button class="batch-skip" title="忽略当前全部待确认 token，之后可在「已忽略」区域逐个或全部撤销" onclick="skipAllPending()">全部忽略（' + tokenTotal + ' 个 token）</button></div>';
+    }
     if (manualEntries.length > 0) {
       html += '<div class="pending-group">已确认的人工替换（按标识符，' + manualEntries.length + ' 条）</div>';
       for (const [id, val] of manualEntries) {
@@ -1354,7 +1367,8 @@ function render() {
       }
     }
     if (skipArr.length > 0) {
-      html += '<div class="pending-group">已忽略的 token（' + skipArr.length + ' 个，点 × 撤销）</div>';
+      html += '<div class="pending-group">已忽略的 token（' + skipArr.length + ' 个，点 × 撤销）' +
+        '<button class="pending-more" onclick="unskipAllTokens()">全部撤销</button></div>';
       for (const tok of skipArr) {
         html += '<span class="skip-chip">' + esc(tok) + '<button class="del" title="撤销忽略，回到待确认列表" onclick="unskipToken(\\'' + encodeKey(tok) + '\\')">×</button></span>';
       }
@@ -1362,11 +1376,12 @@ function render() {
     if (pendingWords.length > 0) {
       html += '<input class="pending-search" placeholder="搜索 token / 样本标识符..." oninput="onPendingSearch(this.value)">';
       for (const word of pendingWords) {
-        const items = PENDING[word];
+        const items = visiblePending[word];
         const checkedCount = items.filter(it => Object.prototype.hasOwnProperty.call(manualTokenState, it.token)).length;
         html += '<div class="pending-group">含 ' + esc(word) + '（' + items.length + ' 个 token' + (checkedCount > 0 ? '，已选 ' + checkedCount : '') + '）' +
           '<button class="pending-more" onclick="checkAllTokens(\\'' + encodeKey(word) + '\\')">全选</button>' +
-          '<button class="pending-more" onclick="uncheckAllTokens(\\'' + encodeKey(word) + '\\')">清空</button></div>';
+          '<button class="pending-more" onclick="uncheckAllTokens(\\'' + encodeKey(word) + '\\')">清空</button>' +
+          '<button class="pending-more" onclick="skipAllTokens(\\'' + encodeKey(word) + '\\')">全部忽略</button></div>';
         const shown = pendingExpanded[word] ? items : items.slice(0, 50);
         for (const it of shown) {
           const checked = Object.prototype.hasOwnProperty.call(manualTokenState, it.token);
@@ -1559,11 +1574,52 @@ function unskipToken(tk) {
   render();
 }
 
+// 忽略一个组里的全部待确认 token（已忽略的跳过，可整组撤销后恢复）
+function skipAllTokens(wk) {
+  let n = 0;
+  for (const [word, items] of Object.entries(PENDING)) {
+    if (encodeKey(word) !== wk) continue;
+    for (const it of items) {
+      if (skipState.has(it.token)) continue;
+      delete manualTokenState[it.token];
+      skipState.add(it.token);
+      n++;
+    }
+  }
+  render();
+  if (n > 0) showToast('已忽略 ' + n + ' 个 token', 'success');
+}
+
+// 忽略全部待确认 token（不影响已确认的替换）
+function skipAllPending() {
+  let n = 0;
+  for (const items of Object.values(PENDING)) {
+    for (const it of items) {
+      if (skipState.has(it.token)) continue;
+      delete manualTokenState[it.token];
+      skipState.add(it.token);
+      n++;
+    }
+  }
+  render();
+  if (n > 0) showToast('已忽略全部 ' + n + ' 个 token', 'success');
+}
+
+// 撤销全部忽略，回到待确认列表
+function unskipAllTokens() {
+  if (skipState.size === 0) return;
+  const n = skipState.size;
+  skipState.clear();
+  render();
+  showToast('已撤销 ' + n + ' 个忽略', 'success');
+}
+
 // 整组全选（预填建议，已编辑过的保留）/ 清空
 function checkAllTokens(wk) {
   for (const [word, items] of Object.entries(PENDING)) {
     if (encodeKey(word) !== wk) continue;
     for (const it of items) {
+      if (skipState.has(it.token)) continue;
       if (!Object.prototype.hasOwnProperty.call(manualTokenState, it.token)) manualTokenState[it.token] = it.suggestion;
     }
   }
@@ -1968,7 +2024,7 @@ function createApp(session, paths) {
       }
       const exclude = readExclude();
       const { mapping } = generateMultiMapping(wordConfigs, identifiers, exclude, manual, manualTokens);
-      const pendingReview = computePendingReview(wordConfigs, identifiers, exclude, mapping, manualSkip);
+      const pendingReview = computePendingReview(wordConfigs, identifiers, exclude, mapping);
       return buildHtml({ ...session, words, pendingReview, manual, manualTokens, manualSkip });
     }
     return buildHtml({ ...session, saved: loadSavedConfig(paths, searchWord) });

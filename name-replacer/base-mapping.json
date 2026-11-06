@@ -1,0 +1,7 @@
+{
+  "$MY_ITWINJS_VERSION": "$MY_SZEWTWINJS_VERSION",
+  "$bentley": "$szewec",
+  "$ecschema": "$dmschema",
+  "$iModelId": "$iVaultId",
+  "$iTwinId": "$szewTwinId"
+}

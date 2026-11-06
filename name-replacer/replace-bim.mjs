@@ -57,8 +57,18 @@ if (TARGETS_FILE) {
     console.error('读取 targets 文件失败: ' + TARGETS_FILE + ' (' + e.message + ')');
     process.exit(1);
   }
-  // 与 replace-staged.mjs 一致: dirs + replaceOnly 都处理，路径相对 ROOT
-  for (const entry of config) {
+  // 与 replace-staged.mjs 一致：兼容数组和 { registry, stages } 对象格式，
+  // dirs + replaceOnly 都处理，路径相对 ROOT
+  const entries = Array.isArray(config) ? config : (config.stages || []);
+  if (!Array.isArray(entries)) {
+    console.error('targets 文件的 stages 必须是数组');
+    process.exit(1);
+  }
+  for (const entry of entries) {
+    if (!entry || typeof entry !== 'object') {
+      console.error('targets 文件的每个批次必须是对象');
+      process.exit(1);
+    }
     for (const d of [...(entry.dirs || []), ...(entry.replaceOnly || [])]) dirArgs.push(d);
   }
 }

@@ -1,9 +1,12 @@
-[
-  {
-    "dirs": [
-      "szewtwinjs-core/core/frontend"
-    ],
-    "replaceOnly": [],
-    "note": "Layer 2"
-  }
-]
+{
+  "registry": "http://localhost:4873/",
+  "stages": [
+    {
+      "dirs": [
+        "szewtwinjs-core/core/backend"
+      ],
+      "replaceOnly": [],
+      "note": "第 1 批：无内部依赖的基础 schema 包"
+    }
+  ]
+}

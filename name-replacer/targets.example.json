@@ -1,0 +1,29 @@
+{
+  "registry": "http://localhost:4873/",
+  "stages": [
+    {
+      "dirs": [
+        "base/bis-core-schema",
+        "base/formats-schema",
+        "base/units-schema"
+      ],
+      "note": "第 1 批：无内部依赖的基础 schema 包"
+    },
+    {
+      "dirs": [
+        "appui/ui/core-react",
+        "appui/ui/components-react"
+      ],
+      "replaceOnly": [
+        "appui/ui/appui-react"
+      ],
+      "note": "第 2 批：UI 基础包；replaceOnly 只替换内容、不发布"
+    },
+    {
+      "dirs": [
+        "viewer-components-react/packages/szewtwin"
+      ],
+      "note": "第 3 批：依赖前两层的 viewer 组件包"
+    }
+  ]
+}

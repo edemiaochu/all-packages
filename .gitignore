@@ -70,3 +70,5 @@ Desktop.ini
 *.swp
 *.swo
 
+**/common/temp
+
