@@ -60,12 +60,19 @@
  *   需要排除的目录 / 扩展名 / 文件名写在 name-replacer/scan-exclude.json：
  *     { "dirs": [...], "exts": [...], "files": [...] }
  *   配置文件缺失时不排除任何内容。
+ *
+ * 基础替换词保护:
+ *   已经定稿的新词（base-mapping.json 的值、replace-server-config.json 的
+ *   baseName、exclude-list.json 的条目）不参与提取。例如 szewec 里的 "ec"
+ *   是替换结果的一部分，szewEC / SzewECSchema 不会被当成 EC 提取。
+ *   额外的手工保护词写在 name-replacer/protected-words.json（可选）。
  */
 
 import { readFileSync, readdirSync, statSync, writeFileSync, mkdirSync } from 'fs';
 import { join, extname, relative, resolve, dirname, normalize } from 'path';
 import { fileURLToPath } from 'url';
 import { loadScanFilter, readTextFileSafely, normalizeExt } from './scan-config.mjs';
+import { loadProtector } from './protected-words.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -384,7 +391,7 @@ function pathNameContainsToken(name, targetWord, caseSensitive, fused) {
 
 // ── 文件收集 ──────────────────────────────────────────────────────────
 
-function collectFiles(rootDir, extensions, { collectPaths, targetWord, caseSensitive, fused, forceExts = new Set(), forceDirs = new Set(), extExplicit = false, filter = loadScanFilter() } = {}) {
+function collectFiles(rootDir, extensions, { collectPaths, targetWord, caseSensitive, fused, forceExts = new Set(), forceDirs = new Set(), extExplicit = false, filter = loadScanFilter(), protector = null } = {}) {
   const extSet = new Set(extensions.map(e => e.startsWith('.') ? e.toLowerCase() : '.' + e.toLowerCase()));
   const files = [];
   const pathMatches = [];
@@ -405,10 +412,10 @@ function collectFiles(rootDir, extensions, { collectPaths, targetWord, caseSensi
         // 配置排除的目录：整个子树不扫描、也不报告路径命中
         if (filter.shouldSkipDir(entry.name, relPath) && !forceDirs.has(entry.name)) continue;
 
-        // 检查目录名是否匹配
+        // 检查目录名是否匹配（基础替换词内部不报告）
         if (collectPaths) {
           const { matched, matchedToken } = pathNameContainsToken(entry.name, targetWord, caseSensitive, fused);
-          if (matched) {
+          if (matched && !(protector && protector.isMatchProtected(entry.name, matchedToken))) {
             pathMatches.push({
               relPath,
               type: 'directory',
@@ -429,10 +436,10 @@ function collectFiles(rootDir, extensions, { collectPaths, targetWord, caseSensi
         if (!extExplicit && !forced && filter.shouldSkipExt(ext)) continue;
         if (extExplicit && !extSet.has(ext) && !forced) continue;
 
-        // 检查文件名是否匹配
+        // 检查文件名是否匹配（基础替换词内部不报告）
         if (collectPaths) {
           const { matched, matchedToken } = pathNameContainsToken(entry.name, targetWord, caseSensitive, fused);
-          if (matched) {
+          if (matched && !(protector && protector.isMatchProtected(entry.name, matchedToken))) {
             pathMatches.push({
               relPath,
               type: 'file-name',
@@ -460,9 +467,11 @@ const IDENTIFIER_RE = /[A-Za-z_$][\w$]*/g;
 /**
  * 搜索一个文件，找出所有包含"EC 作为语义 token"的标识符。
  * @param {boolean} fused - 启用融合词匹配（纯大写/纯小写段子串，见 containsFusedSegment）
+ * @param {object|null} protector - 基础替换词保护器；命中落在受保护串内时跳过
+ * @param {{protectedSkipped?:number}|null} stats - 可选统计
  * @returns {null | { relPath: string, matches: Array<{line, col, identifier, matchedToken}> }}
  */
-function searchFile(filePath, word, caseSensitive, baseDir, ctxLen, fused) {
+function searchFile(filePath, word, caseSensitive, baseDir, ctxLen, fused, protector = null, stats = null) {
   // 兜底：超大文件 / 二进制（前 4KB 含 NUL）直接跳过
   const text = readTextFileSafely(filePath);
   if (text == null) return null;
@@ -476,6 +485,13 @@ function searchFile(filePath, word, caseSensitive, baseDir, ctxLen, fused) {
     if (isLikelyRandomString(id)) continue;
     const { matched, matchedToken } = idContainsToken(id, word, caseSensitive, fused);
     if (!matched) continue;
+
+    // 基础替换词保护：szewEC 里的 EC 是替换结果 szewec 的一部分，不提取。
+    // 同一标识符若还有不受保护的命中（如 szewEC_ECClass），仍会保留。
+    if (protector && protector.isMatchProtected(id, matchedToken)) {
+      if (stats) stats.protectedSkipped = (stats.protectedSkipped || 0) + 1;
+      continue;
+    }
 
     const col = m.index + 1;
     const before = text.substring(0, m.index);
@@ -728,6 +744,12 @@ function main() {
     { "dirs": ["dist", "node_modules"], "exts": [".png"], "files": ["pnpm-lock.yaml"] }
   配置文件缺失时不排除任何内容。
 
+基础替换词保护（自动生效）:
+  已定稿的新词不参与提取：base-mapping.json 的值、replace-server-config.json
+  的 baseName、exclude-list.json 的条目。szewEC / SzewECSchema 里的 "EC"
+  属于替换结果 szewec，不会作为 EC 提取。
+  额外补充写在 name-replacer/protected-words.json（数组或 { "words": [...] }）。
+
 两维度搜索:
   1. 文件内容 — 代码标识符中 "EC" 作为独立 token
   2. 路径名称 — 目录名/文件名中 "EC" 作为独立 token（默认启用）
@@ -768,6 +790,10 @@ function main() {
   const baseDir = normalize(args.dir);
   const collectPaths = !args.noPaths;
 
+  // 基础替换词保护：已定稿的新词（szewec 等）里的 ec 不算 EC
+  const protector = loadProtector();
+  const protectStats = { protectedSkipped: 0 };
+
   // 排除配置：默认扫描全部，只有配置里列出的目录/扩展名/文件名会跳过
   const filter = loadScanFilter();
   const filterStats = filter.source
@@ -778,6 +804,8 @@ function main() {
   process.stderr.write(`📂 目录: ${baseDir}\n`);
   process.stderr.write(`📁 路径名称搜索: ${collectPaths ? '✅ 启用' : '❌ 禁用 (--no-paths)'}\n`);
   process.stderr.write(`📋 排除配置: ${filterStats}\n`);
+  process.stderr.write(`🛡️  基础替换词保护: ${protector.terms.length} 个`
+    + (protector.terms.length ? `（${protector.terms.slice(0, 10).join(', ')}${protector.terms.length > 10 ? ', …' : ''}）` : '') + '\n');
   process.stderr.write(`📄 扩展名范围: ${args.extExplicit ? args.extensions.join(', ') : '全部（按排除配置过滤）'}\n`);
   if (args.forceExts.size > 0 || args.forceDirs.size > 0) {
     const parts = [];
@@ -802,6 +830,7 @@ function main() {
     forceDirs: args.forceDirs,
     extExplicit: args.extExplicit,
     filter,
+    protector,
   });
   if (args.output) {
     const outputRel = relative(baseDir, args.output).replace(/\\/g, '/');
@@ -821,7 +850,7 @@ function main() {
   // 搜索文件内容
   const results = [];
   for (let i = 0; i < files.length; i++) {
-    const r = searchFile(files[i], WORD, args.caseSensitive, baseDir, args.context, args.fused);
+    const r = searchFile(files[i], WORD, args.caseSensitive, baseDir, args.context, args.fused, protector, protectStats);
     if (r) results.push(r);
 
     // 每 500 个文件输出进度
@@ -840,6 +869,8 @@ function main() {
     caseSensitive: args.caseSensitive,
     extensions: args.extExplicit ? args.extensions : '*',
     excludeConfig: filter.source || null,
+    protectedTerms: protector.terms,
+    protectedMatchesSkipped: protectStats.protectedSkipped,
     filesScanned: files.length,
     filesWithMatches: results.length,
     totalMatches: results.reduce((s, r) => s + r.matches.length, 0),
@@ -850,7 +881,11 @@ function main() {
     } : null,
   };
 
-  process.stderr.write(`🔎 内容匹配: ${summary.filesWithMatches} 文件, ${summary.totalMatches} 处\n`);
+  process.stderr.write(`🔎 内容匹配: ${summary.filesWithMatches} 文件, ${summary.totalMatches} 处`);
+  if (protectStats.protectedSkipped) {
+    process.stderr.write(`（另有 ${protectStats.protectedSkipped} 处落在基础替换词内部，已跳过）`);
+  }
+  process.stderr.write('\n');
   if (collectPaths) {
     process.stderr.write(`📁 路径匹配: ${summary.pathMatches.total} 个\n\n`);
   } else {

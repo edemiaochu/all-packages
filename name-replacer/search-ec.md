@@ -214,6 +214,28 @@ TOTAL                                   │      861
 > 默认扫描所有文件夹和所有扩展名；配置文件缺失时不排除任何内容（兜底仍会跳过
 > >5MB 或前 4KB 含 `\0` 的二进制文件）。
 
+## 基础替换词保护（自动生效）
+
+已经定稿的新词内部不再报告命中。保护词来源：`base-mapping.json` 的值、
+`replace-server-config.json` 各词的 `baseName`、`exclude-list.json` 的条目。
+
+| 标识符 | 结果 | 原因 |
+|--------|------|------|
+| `ECDb` | ✅ 提取 | EC 是独立语义 token |
+| `szewEC` | ❌ 不提取 | 属于替换结果 `szewec`，ec 不是品牌词 |
+| `SzewECSchema` | ❌ 不提取 | 同上 |
+| `szewEC_ECClass` | ✅ 提取 | 仍有一个不受保护的 EC token |
+| `szewec`（`--fused`） | ❌ 不提取 | 整段落在 `szewec` 内部 |
+
+补充手工保护词写在 `name-replacer/protected-words.json`（可选）：
+
+```json
+["szewec", "szewTwin"]
+```
+
+`replace-server.mjs` 生成映射时使用同一份保护词：已替换的部分不会被后续
+词规则二次改写（`szewEC_ECClass → szewEC_DMClass`，而不是 `szewDM_DMClass`）。
+
 ## 常用场景
 
 ### EC 相关标识符全貌

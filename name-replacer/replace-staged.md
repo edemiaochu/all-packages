@@ -256,4 +256,4 @@ node name-replacer/replace-staged.mjs \
 | `name-mapping.json` | 品牌词映射来源，必须存在 |
 | `scan-exclude.json` | 扫描排除配置，与搜索脚本共用 |
 | `merge-mapping.mjs` | 可把多份映射合并成 `all-mapping.json` 后再复用 |
-| `replace-bim.mjs` | 独立处理 bim 词族，可在分阶段替换前后单独运行 |
+| `replace-bim.mjs` | 处理 bim 文件格式词；应在 `replace-staged` **之前**运行，确保发包时已是 `.dtw` / `.idtw` |

@@ -22,7 +22,7 @@
 //   的目录均保持原样，代码引用与磁盘目录一致。
 //   标识符(bimFileName/getBimFiles/ibimFile)、大写 BIM/IBIM/BIMS、bim-scratch 一律不动。
 //
-// 用法 (建议在主流程 replace-staged 跑完之后运行，两者幂等、先后皆可):
+// 用法 (应在 replace-staged 之前运行，先把文件格式词换掉，再构建/发包):
 //   node name-replacer/replace-bim.mjs --dry-run --targets name-replacer/targets.json
 //   node name-replacer/replace-bim.mjs --dry-run --dir test/src
 //   node name-replacer/replace-bim.mjs --targets name-replacer/targets.json --dir other/pkg

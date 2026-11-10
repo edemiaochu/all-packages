@@ -1,0 +1,9 @@
+{
+  "_comment": "基础替换词保护 —— 手工补充表。自动来源已覆盖：base-mapping.json 的值、replace-server-config.json 的 baseName、exclude-list.json 的全局条目。这里只补充自动来源覆盖不到的、已经定稿的新词。复制为 protected-words.json 后生效：cp name-replacer/protected-words.example.json name-replacer/protected-words.json",
+  "_format": "words 数组里的条目可以是字符串，也可以是 { \"word\": \"...\" } 对象；大小写不敏感；按完整子串匹配；长度 < 3 的词会被忽略（如 dm）。也支持纯数组格式：[\"词1\", \"词2\"]。_comment / _format 等下划线开头的键会被忽略。",
+  "words": [
+    "szewCloud",
+    "szewConnect",
+    { "word": "myNewBrand" }
+  ]
+}

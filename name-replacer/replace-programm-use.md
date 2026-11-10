@@ -3,6 +3,9 @@
 > 扫描范围：`search-sensitive` / `search-ec` / `replace-staged` 默认都覆盖 `-d` 指定目录下的
 > **所有文件夹 + 所有扩展名**。需要排除的文件夹 / 扩展名 / 文件名统一写在
 > `name-replacer/scan-exclude.json`（`dirs` / `exts` / `files` 三段）。
+>
+> 一键执行第 1-4 步并自动打开网页：`node name-replacer/start-ui.mjs`
+> 它只到 Replace-server 配置界面，保存映射后仍需继续第 5-7 步（合并映射、bim、分阶段替换）。
 #### 1. 
 ```bash 
 node name-replacer/search-sensitive.mjs -d /Users/luokun/Desktop/npm修改 --concise -o result.json --words-file base-words.json

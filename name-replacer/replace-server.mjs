@@ -38,6 +38,7 @@ import { readFileSync, writeFileSync } from 'fs';
 import { createServer } from 'http';
 import { join, dirname, basename, extname } from 'path';
 import { fileURLToPath } from 'url';
+import { loadProtectedTerms, createProtector } from './protected-words.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -630,12 +631,32 @@ function buildPatternMap(word, config, ids) {
 }
 
 /**
+ * 基础替换词保护器：静态配置（base-mapping / exclude-list / protected-words，
+ * 见 protected-words.mjs）+ 本次配置里各词的 baseName。
+ *
+ * 目的：已经定稿的新词不能被后续词再改写，例如 bentley 产出的 szewec 里的
+ * "ec" 若再走 EC 规则会变成 szewdm。生成映射时把受保护串藏进占位符，
+ * 所有规则跑完再还原。
+ */
+function buildProtector(wordConfigs) {
+  const terms = loadProtectedTerms();
+  if (wordConfigs && typeof wordConfigs === 'object') {
+    for (const [word, cfg] of Object.entries(wordConfigs)) {
+      if (word.startsWith('_') || !cfg || typeof cfg !== 'object') continue;
+      if (typeof cfg.baseName === 'string') terms.push(cfg.baseName);
+    }
+  }
+  return createProtector(terms);
+}
+
+/**
  * 根据配置生成完整的标识符→替换映射表。
  * @returns {{ mapping: Record<string,string>, stats: { changed, unchanged, total } }}
  */
 function generateMapping(config, identifiers, searchWord, excludeList) {
   const baseWord = config.baseName || searchWord;
   const excludeSet = new Set(excludeList || []);
+  const protector = buildProtector({ [searchWord]: config });
 
   // 构建 patternMap：{ "EC": "EntityClass", "ec": "entityclass", ... }
   const { patternMap } = buildPatternMap(searchWord, config, identifiers);
@@ -654,7 +675,13 @@ function generateMapping(config, identifiers, searchWord, excludeList) {
       continue;
     }
 
-    const result = smartReplaceIdentifier(id, searchWord, patternMap, baseWord, { fused: !!config.fused });
+    // 基础替换词保护：szewec 里的 ec 不能被 EC 规则二次替换
+    let seq = 0;
+    const masked = protector.maskText(id, () => '\u0001Pz' + (seq++) + 'Pz\u0001');
+    const result = protector.restoreText(
+      smartReplaceIdentifier(masked.text, searchWord, patternMap, baseWord, { fused: !!config.fused }),
+      masked.hidden
+    );
 
     if (result !== id) {
       mapping[id] = result;
@@ -715,6 +742,25 @@ function generateMultiMapping(wordConfigs, identifiers, excludeList, manual, man
     }
     return out;
   };
+
+  // ── 基础替换词保护 ───────────────────────────────────────────────
+  // hideProduced 只保护"本次运行产出的替换串"；源码里本来就存在的
+  // szewec / szewTwin 等（上一批已经替换过的包）不在 produced 里，
+  // 后面的词规则仍会把其中的 ec/twin 再改一次。这里把基础替换词也
+  // 一起藏起来，最后随 restoreHidden 统一还原。
+  const protector = buildProtector(wordConfigs);
+  const hideProtected = (s) => {
+    if (protector.terms.length === 0) return s;
+    const { text, hidden } = protector.maskText(
+      s,
+      () => '\u0001Qz' + (hiddenSeq++) + 'Qz\u0001'
+    );
+    for (const [ph, orig] of hidden) hiddenText.set(ph, orig);
+    return text;
+  };
+
+  // 源文本里已有的基础替换词先藏起来；exclude 的标识符原样保留（后续检查依赖原值）
+  current = current.map(id => excludeSet.has(id) ? id : hideProtected(id));
 
   const produced = [];  // 前面词已经产生过的替换串（不能被后续词再改写）
   // 长词先执行：避免 EC 先吃掉 ECSchema、dgn 先吃掉 dgnplatform 这类子串冲突
@@ -839,6 +885,7 @@ function inferCompoundPrefix(word, wordConfigs) {
  */
 function computePendingReview(wordConfigs, identifiers, excludeList, finalMapping) {
   const excludeSet = new Set(excludeList || []);
+  const protector = buildProtector(wordConfigs);
   const byWord = {};
   // token 只归最长前缀词的组：ecdbf 归 ecdb 组（建议 dmdbf），不再重复出现在 EC 组（建议 dbdbf 是错的）
   const wordEntries = Object.entries(wordConfigs)
@@ -854,7 +901,11 @@ function computePendingReview(wordConfigs, identifiers, excludeList, finalMappin
       if (excludeSet.has(id) || isLikelyRandomString(id)) continue;
       if (!id.toLowerCase().includes(lower)) continue;
       const final = (finalMapping && finalMapping[id]) || id;
-      for (const seg of id.replace(/^[$_]+/, '').split(/[^a-zA-Z0-9]+/)) {
+      // 基础替换词内部不进入待确认清单（szewECXML 里的 ECXML 不算融合候选）
+      const scanId = protector.terms.length
+        ? protector.maskText(id, () => '_').text
+        : id;
+      for (const seg of scanId.replace(/^[$_]+/, '').split(/[^a-zA-Z0-9]+/)) {
         for (const t of splitCamelCase(seg)) {
           if (t.length <= word.length) continue;
           const isUpperSeg = /^[A-Z]+$/.test(t);

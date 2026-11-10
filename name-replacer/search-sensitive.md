@@ -154,6 +154,16 @@ DgnCore
 | `--context <n>` | 上下文字符数 | `40` |
 | `--limit-files <n>` | 终端详情最多显示文件数 | `200` |
 
+## 基础替换词保护（自动生效）
+
+已经定稿的新词内部不再命中搜索词，避免把替换结果再当成品牌词提取：
+`base-mapping.json` 的值、`replace-server-config.json` 的 `baseName`、
+`exclude-list.json` 的条目自动加入保护；额外的手工保护词写在
+`name-replacer/protected-words.json`（可选，数组或 `{ "words": [...] }`）。
+
+例如搜索 `ec` 时，`szewec`、`szewEC` 不再命中；但 `szewecBentley` 里的
+`Bentley` 仍会正常命中（只跳过受保护片段内部的命中）。
+
 ## 排除配置与覆盖
 
 默认扫描指定目录下的**所有文件夹 + 所有扩展名**。排除项只来自
