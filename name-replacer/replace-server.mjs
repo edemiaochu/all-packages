@@ -342,8 +342,10 @@ function parseInputFile(filePath, targetWord) {
 function extractPatterns(identifiers, searchWord) {
   const lower = searchWord.toLowerCase();
   const patterns = new Map();
+  // 正则在循环外编译一次：多词模式下这个函数对每个词都会跑遍全部标识符
+  const regex = new RegExp(lower, 'gi');
   for (const id of identifiers) {
-    const regex = new RegExp(lower, 'gi');
+    regex.lastIndex = 0;
     let m;
     while ((m = regex.exec(id)) !== null) {
       const found = m[0];

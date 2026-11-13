@@ -73,6 +73,7 @@ import { join, extname, relative, resolve, dirname, normalize } from 'path';
 import { fileURLToPath } from 'url';
 import { loadScanFilter, readTextFileSafely, normalizeExt } from './scan-config.mjs';
 import { loadProtector } from './protected-words.mjs';
+import { isLiteralFragment } from './identifier-utils.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -481,6 +482,9 @@ function searchFile(filePath, word, caseSensitive, baseDir, ctxLen, fused, prote
 
   for (const m of text.matchAll(IDENTIFIER_RE)) {
     const id = m[0];
+    // 数字/十六进制字面量片段（0x56EC000 → x56EC000）不是标识符：
+    // 正则在 x 处才匹配，前导 0 丢失，里面的 EC 也不能当缩写替换
+    if (isLiteralFragment(text, m.index)) continue;
     // 过滤随机字符串（hash/token）：超长无下划线很可能是 base64 hash
     if (isLikelyRandomString(id)) continue;
     const { matched, matchedToken } = idContainsToken(id, word, caseSensitive, fused);

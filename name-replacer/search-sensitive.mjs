@@ -52,6 +52,7 @@ import { join, extname, relative, resolve, dirname, normalize } from 'path';
 import { fileURLToPath } from 'url';
 import { loadScanFilter, readTextFileSafely } from './scan-config.mjs';
 import { loadProtector } from './protected-words.mjs';
+import { extractIdentifiers } from './identifier-utils.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -718,8 +719,8 @@ function buildConciseOutput(results, words, summary, baseDir, pathMatches, inclu
     fileCounts[r.relPath] = (fileCounts[r.relPath] ?? 0) + 1;
     for (const [w, matches] of r.byWord) {
       for (const m of matches) {
-        // 从匹配行提取包含该词的完整标识符
-        for (const id of m.text.match(/[A-Za-z_$][\w$]*/g) || []) {
+        // 从匹配行提取包含该词的完整标识符（跳过 0x56EC000 这类字面量片段）
+        for (const id of extractIdentifiers(m.text)) {
           if (id.toLowerCase().includes(w.toLowerCase())) {
             identifiers[w].add(id);
           }
@@ -771,8 +772,8 @@ function buildJsonOutput(results, words, summary, baseDir, pathMatches, includeP
           matched: m.matched,
           context: m.context,
         });
-        // 提取包含该词的完整标识符
-        const idMatch = m.text.match(/([A-Za-z_$][\w$]*)/g);
+        // 提取包含该词的完整标识符（跳过 0x56EC000 这类字面量片段）
+        const idMatch = extractIdentifiers(m.text);
         if (idMatch) {
           for (const id of idMatch) {
             if (id.toLowerCase().includes(w.toLowerCase())) {

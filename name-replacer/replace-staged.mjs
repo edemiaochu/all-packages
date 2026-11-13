@@ -2,8 +2,8 @@
 // Staged replacement → publish to Verdaccio → install → test.
 //
 // Usage:
-//   node replace-staged.mjs [--dry-run] [--no-test] [--no-publish] [--no-build] [--no-clear-rush] [--registry <url>] --targets targets.json
-//   node replace-staged.mjs [--dry-run] [--no-test] [--no-publish] [--no-build] [--no-clear-rush] [--registry <url>] --dir <d1> --dir <d2> ...
+//   node replace-staged.mjs [--dry-run] [--replace-only] [--no-install] [--no-test] [--no-publish] [--no-build] [--no-clear-rush] [--registry <url>] --targets targets.json
+//   node replace-staged.mjs [--dry-run] [--replace-only] [--no-install] [--no-test] [--no-publish] [--no-build] [--no-clear-rush] [--registry <url>] --dir <d1> --dir <d2> ...
 //
 // Registry (publish target), first match wins:
 //   --registry <url> / --publish-url <url>
@@ -30,11 +30,18 @@ const ROOT = resolve(__dirname, '..');
 const DEFAULT_REGISTRY = 'http://localhost:4873/';
 
 // ── Parse CLI ───────────────────────────────────────────────────────
+// --replace-only：只做内容替换（含目录改名/rush.json 同步），
+// 不安装依赖、不构建、不发布、不测试，也不会启动 Verdaccio。
+const REPLACE_ONLY = process.argv.includes('--replace-only');
 const DRY_RUN = process.argv.includes('--dry-run');
-const NO_TEST = process.argv.includes('--no-test');
-const NO_PUBLISH = process.argv.includes('--no-publish');
-const NO_BUILD = process.argv.includes('--no-build');
-const NO_CLEAR_RUSH = process.argv.includes('--no-clear-rush');
+const NO_INSTALL = REPLACE_ONLY || process.argv.includes('--no-install');
+const NO_TEST = REPLACE_ONLY || process.argv.includes('--no-test');
+const NO_PUBLISH = REPLACE_ONLY || process.argv.includes('--no-publish');
+const NO_BUILD = REPLACE_ONLY || process.argv.includes('--no-build');
+// 清空 rush.json 是为了让 rush update 重新解析依赖；不安装时没有这个必要，
+// 而且中途中断会留下被清空的 rush.json，所以 --no-install / --replace-only 一律不清空
+// （rush.json 仍会按磁盘实际路径同步，见 syncRushJson）。
+const NO_CLEAR_RUSH = NO_INSTALL || process.argv.includes('--no-clear-rush');
 
 // 规范化 registry：补协议、校验 http/https、统一末尾斜杠
 function normalizeRegistry(input) {
@@ -154,10 +161,14 @@ if (targetsConfig) {
   console.log('  node replace-staged.mjs --targets targets.json --no-test');
   console.log('  node replace-staged.mjs --targets targets.json --no-publish');
   console.log('  node replace-staged.mjs --targets targets.json --no-build');
+  console.log('  node replace-staged.mjs --targets targets.json --no-install');
+  console.log('  node replace-staged.mjs --targets targets.json --replace-only');
   console.log('  node replace-staged.mjs --targets targets.json --no-clear-rush');
   console.log('  node replace-staged.mjs --dir <path> --dir <path> ...');
   console.log('');
   console.log('选项:');
+  console.log('  --replace-only          只替换：不安装/构建/发布/测试（不清空 rush.json、不改 .npmrc、不启动 Verdaccio）');
+  console.log('  --no-install            跳过所有 install（rush update / pnpm install / yarn install），不清空 rush.json');
   console.log('  --registry <url>        发布目标 registry（默认 ' + DEFAULT_REGISTRY + '）');
   console.log('                          也可在 targets.json 顶层写 "registry": "..."');
   console.log('                          或设置环境变量 REPLACE_STAGED_REGISTRY');
@@ -638,7 +649,9 @@ function installAndTest(proj) {
   console.log('');
   console.log('  ── ' + name + ' ──');
 
-  if (proj.mgr === 'rush') {
+  if (NO_INSTALL) {
+    console.log('  ⏭  跳过安装 (--no-install)');
+  } else if (proj.mgr === 'rush') {
     if (!runRetry('rush update --full', proj.root, 'install')) return false;
   } else {
     if (!runRetry('pnpm install --no-frozen-lockfile', proj.root, 'install')) return false;
@@ -1126,10 +1139,11 @@ function renameAllBrandDirs(compiled) {
 // Execute
 // ═══════════════════════════════════════════════════════════════════════
 
-const modeLabel = DRY_RUN ? '预览 (--dry-run)' : '执行'
+const modeLabel = DRY_RUN ? '预览 (--dry-run)' : (REPLACE_ONLY ? '仅替换 (--replace-only)' : '执行'
+  + (NO_INSTALL ? ' (跳过安装)' : '')
   + (NO_BUILD ? ' (跳过构建)' : '')
   + (NO_PUBLISH ? ' (跳过发布)' : ' + 发布')
-  + (NO_TEST ? ' (跳过测试)' : ' + 测试');
+  + (NO_TEST ? ' (跳过测试)' : ' + 测试'));
 console.log('模式: ' + modeLabel);
 console.log('批次: ' + stages.length);
 console.log('Registry: ' + REGISTRY);
@@ -1178,7 +1192,7 @@ for (let i = 0; i < stages.length; i++) {
   console.log('═══════════════════════════════════════════════════════════');
   console.log('  [' + (i + 1) + '/' + stages.length + '] ' + (stage.note || '第 ' + (i + 1) + ' 批'));
   console.log('═══════════════════════════════════════════════════════════');
-  if (publishDirs.length > 0) console.log('  [发布]');
+  if (publishDirs.length > 0) console.log((REPLACE_ONLY || NO_PUBLISH) ? '  [替换]' : '  [发布]');
   publishDirs.forEach(d => console.log('    ' + relative(ROOT, d)));
   if (stage.replaceOnly && stage.replaceOnly.length > 0) {
     console.log('  [仅替换]');
@@ -1245,26 +1259,34 @@ for (let i = 0; i < stages.length; i++) {
   // 2. Rush: add processed packages to rush.json (accumulate)
   // Include both stage.dirs and stage.replaceOnly — replaceOnly packages still need
   // to be in rush.json as workspace members (other packages may reference them via workspace:*).
-  for (const [, proj] of stageRushProjects) {
-    const allStageDirs = [...stage.dirs, ...(stage.replaceOnly || [])];
-    const projDirs = allStageDirs
-      .map(d => renamedDirs.get(resolve(ROOT, d)) || resolve(ROOT, d))
-      .filter(d => !relative(proj.root, d).startsWith('..'));
-    addToRushJson(proj, projDirs, compiled, renamedDirs);
+  // 只有"先清空再按阶段加回"时才需要 addToRushJson；不清空时原条目都在，
+  // 后面的 syncRushJson 会按磁盘实际路径更新，避免重复追加。
+  if (!NO_CLEAR_RUSH) {
+    for (const [, proj] of stageRushProjects) {
+      const allStageDirs = [...stage.dirs, ...(stage.replaceOnly || [])];
+      const projDirs = allStageDirs
+        .map(d => renamedDirs.get(resolve(ROOT, d)) || resolve(ROOT, d))
+        .filter(d => !relative(proj.root, d).startsWith('..'));
+      addToRushJson(proj, projDirs, compiled, renamedDirs);
+    }
   }
 
   // 3. Set up Verdaccio + .npmrc before install (cross-stage deps need it)
+  // --no-install / --replace-only 时不需要装依赖，也就不启动 Verdaccio、不改 .npmrc；
+  // 但如果仍要发布，Verdaccio 还是必须的。
   const hasRushThisStage = stageRushProjects.size > 0;
   const hasPublishThisStage = publishDirs.length > 0 && !NO_PUBLISH;
-  if (hasRushThisStage || hasPublishThisStage) {
+  if (hasPublishThisStage || (hasRushThisStage && !NO_INSTALL)) {
     if (!ensureVerdaccio()) process.exit(1);
   }
-  for (const [, proj] of stageRushProjects) {
-    ensureNpmrc(proj);
+  if (!NO_INSTALL || hasPublishThisStage) {
+    for (const [, proj] of stageRushProjects) {
+      ensureNpmrc(proj);
+    }
   }
   // 非 Rush 项目：只有显式配置了自定义 registry 时才提前改 .npmrc，
   // 默认 localhost 流程保持和以前一致（仍然在批次结束后处理 .npmrc）
-  if (CUSTOM_REGISTRY) {
+  if (CUSTOM_REGISTRY && (!NO_INSTALL || hasPublishThisStage)) {
     for (const dir of publishDirs) {
       const actualDir = renamedDirs.get(resolve(ROOT, dir)) || resolve(ROOT, dir);
       const proj = findProjectRoot(actualDir);
@@ -1277,21 +1299,23 @@ for (let i = 0; i < stages.length; i++) {
   // so the lockfile is always stale. Incremental update triggers "overrides settings
   // doesn't match the current shrinkwrap" → pnpm exit null on Node 22 + pnpm 7.x.
   for (const [, proj] of stageRushProjects) {
-    // A previous run may have renamed this repo root, leaving absolute paths
-    // cached in common/temp/last-install.flag → rush refuses to install.
-    cleanStaleRushInstallFlag(proj.root);
-    const lockPath = join(proj.root, 'common', 'config', 'rush', 'pnpm-lock.yaml');
-    try { unlinkSync(lockPath); } catch {}
-    // Sync rush.json paths to what's actually on disk BEFORE rush update.
+    // Sync rush.json paths to what's actually on disk.
     // Intermediate dirs (e.g. core/ecsql → core/dmsql) may have been renamed by
     // an earlier stage or by a previous run's final rename pass, and with
     // --no-clear-rush the old entries are still in rush.json. rush update would
     // then abort with "Could not find package.json for ..." — and since that
     // failure exits before the post-stage sync, rush.json would stay broken forever.
     syncRushJson(proj, compiled);
-    if (!runRetry('rush update --full', proj.root, 'install ' + getProjectName(proj))) {
-      syncRushJson(proj, compiled);  // never leave rush.json inconsistent on abort
-      process.exit(1);
+    if (!NO_INSTALL) {
+      // A previous run may have renamed this repo root, leaving absolute paths
+      // cached in common/temp/last-install.flag → rush refuses to install.
+      cleanStaleRushInstallFlag(proj.root);
+      const lockPath = join(proj.root, 'common', 'config', 'rush', 'pnpm-lock.yaml');
+      try { unlinkSync(lockPath); } catch {}
+      if (!runRetry('rush update --full', proj.root, 'install ' + getProjectName(proj))) {
+        syncRushJson(proj, compiled);  // never leave rush.json inconsistent on abort
+        process.exit(1);
+      }
     }
     if (!NO_BUILD) {
       if (!run('rush build', proj.root, 'build ' + getProjectName(proj))) {
@@ -1321,7 +1345,7 @@ for (let i = 0; i < stages.length; i++) {
         const soloPm = detectPkgManager(d);
         const soloInstallCmd = soloPm === 'yarn' ? 'yarn install' : soloPm === 'pnpm' ? 'pnpm install --no-frozen-lockfile' : 'npm install';
         const soloBuildCmd = soloPm === 'yarn' ? 'yarn run build' : soloPm === 'pnpm' ? 'pnpm run build' : 'npm run build';
-        if (!runRetry(soloInstallCmd, d, 'install ' + pkg.name)) process.exit(1);
+        if (!NO_INSTALL && !runRetry(soloInstallCmd, d, 'install ' + pkg.name)) process.exit(1);
         if (!NO_BUILD && pkg.scripts && pkg.scripts.build) {
           if (!run(soloBuildCmd, d, 'build ' + pkg.name)) process.exit(1);
         }
@@ -1408,7 +1432,7 @@ for (let i = 0; i < stages.length; i++) {
           const filterBuild = pm === 'yarn'
             ? `yarn workspace ${pkg.name} run build`
             : `pnpm run build`;
-          if (!runRetry(filterInstall, wsRoot, 'install ' + pkg.name)) process.exit(1);
+          if (!NO_INSTALL && !runRetry(filterInstall, wsRoot, 'install ' + pkg.name)) process.exit(1);
           if (!NO_BUILD && pkg.scripts && pkg.scripts.build) {
             // Run build in the package directory itself, not via workspace --filter
             // (--filter silently exits 0 when workspace config is missing in NameReplaceTest)
@@ -1460,7 +1484,7 @@ if (!DRY_RUN && anyExistingTarget) {
   if (allRushProjects.size > 0) {
     for (const [, proj] of allRushProjects) {
       const actualRoot = replaceBrand(proj.root, compiled);
-      cleanStaleRushInstallFlag(actualRoot);
+      if (!NO_INSTALL) cleanStaleRushInstallFlag(actualRoot);
       syncRushJson({ ...proj, root: actualRoot }, compiled);
     }
   }
@@ -1504,7 +1528,7 @@ if (!DRY_RUN && anyExistingTarget) {
       const installCmd = pm === 'yarn' ? 'yarn install --no-immutable' : 'pnpm install --no-frozen-lockfile';
       const buildCmd = pm === 'yarn' ? 'yarn workspaces run build' : 'pnpm -r build';
       const label = relative(ROOT, actualRoot);
-      if (!runRetry(installCmd, actualRoot, 'install ' + label)) process.exit(1);
+      if (!NO_INSTALL && !runRetry(installCmd, actualRoot, 'install ' + label)) process.exit(1);
       if (!NO_BUILD) {
         if (!run(buildCmd, actualRoot, 'build ' + label)) process.exit(1);
       }

@@ -1,7 +1,8 @@
 import { readFileSync, writeFileSync, readdirSync, statSync, renameSync, existsSync } from 'fs';
-import { join, extname, dirname, relative, basename } from 'path';
+import { join, extname, dirname, relative, basename, resolve } from 'path';
 import { fileURLToPath } from 'url';
 import { loadScanFilter } from './scan-config.mjs';
+import { readTargetDirs, uniqueDirs } from './targets-utils.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
@@ -319,23 +320,72 @@ const isDirectRun = process.argv[1] && (
 
 if (isDirectRun) {
   const DRY_RUN = process.argv.includes('--dry-run');
-  const targetIdx = process.argv.indexOf('--target');
-  const TARGET_DIR = targetIdx !== -1 ? process.argv[targetIdx + 1] : null;
 
-  const walkRoot = TARGET_DIR ? join(ROOT, TARGET_DIR) : ROOT;
-
-  if (TARGET_DIR && !statSync(walkRoot, { throwIfNoEntry: false })?.isDirectory()) {
-    console.error('目标文件夹不存在: ' + walkRoot);
-    process.exit(1);
+  // --target <dir> 可重复；--targets [file] 从 targets.json 读取目录（dirs + replaceOnly）
+  const targetArgs = [];
+  for (let i = 0; i < process.argv.length; i++) {
+    if (process.argv[i] !== '--target') continue;
+    const next = process.argv[i + 1];
+    if (!next || next.startsWith('-')) {
+      console.error('--target 缺少目录参数');
+      process.exit(1);
+    }
+    targetArgs.push(next);
   }
 
-  console.log('目标目录: ' + walkRoot);
+  const targetsIdx = process.argv.indexOf('--targets');
+  let targetsFile = null;
+  if (targetsIdx !== -1) {
+    const next = process.argv[targetsIdx + 1];
+    targetsFile = next && !next.startsWith('-')
+      ? resolve(process.cwd(), next)
+      : join(__dirname, 'targets.json');
+  }
+
+  let walkRoots;
+  if (targetsFile) {
+    if (!existsSync(targetsFile)) {
+      console.error('找不到 targets 文件: ' + targetsFile);
+      process.exit(1);
+    }
+    let dirs;
+    try {
+      dirs = readTargetDirs(targetsFile, ROOT);
+    } catch (e) {
+      console.error('❌ ' + e.message);
+      process.exit(1);
+    }
+    console.log('🎯 从 targets 读取 ' + dirs.length + ' 个目录: ' + targetsFile);
+    for (const d of dirs) console.log('   • ' + relative(ROOT, d).replace(/\\/g, '/'));
+    walkRoots = uniqueDirs([...targetArgs.map(d => join(ROOT, d)), ...dirs]);
+  } else if (targetArgs.length > 0) {
+    walkRoots = [...new Set(targetArgs.map(d => join(ROOT, d)))];
+  } else {
+    walkRoots = [ROOT];
+  }
+
+  for (const root of walkRoots) {
+    if (!statSync(root, { throwIfNoEntry: false })?.isDirectory()) {
+      console.error('目标文件夹不存在: ' + root);
+      process.exit(1);
+    }
+  }
+
   if (DRY_RUN) console.log('模式: 仅预览 (--dry-run)\n');
-  else console.log('');
 
-  const result = applyReplacements(walkRoot, DRY_RUN);
+  let totalScanned = 0, totalReplaced = 0, totalRenames = 0;
+  for (const root of walkRoots) {
+    console.log((walkRoots.length > 1 ? '\n' : '') + '目标目录: ' + root);
+    const result = applyReplacements(root, DRY_RUN);
+    totalScanned += result.scanned;
+    totalReplaced += result.replaced;
+    totalRenames += result.renames.length;
+  }
 
-  if (DRY_RUN && result.replaced > 0) {
+  if (walkRoots.length > 1) {
+    console.log('\n合计: scanned: ' + totalScanned + ' | replaced: ' + totalReplaced + ' | renamed: ' + totalRenames);
+  }
+  if (DRY_RUN && totalReplaced > 0) {
     console.log('(预览模式，未实际修改文件。去掉 --dry-run 参数以执行替换)');
   }
 }

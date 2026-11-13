@@ -68,8 +68,12 @@ node name-replacer/start-ui.mjs
 常用参数：
 
 ```bash
-# 指定搜索目录
+# 指定搜索目录（可重复）
 node name-replacer/start-ui.mjs -d ./itwinjs-core
+
+# 按 targets.json 的目录提取（stages[].dirs + replaceOnly）
+# 省略路径时用 name-replacer/targets.json；可与 -d 叠加
+node name-replacer/start-ui.mjs --targets
 
 # 指定敏感词文件和端口
 node name-replacer/start-ui.mjs --words-file base-words.json -p 3458
@@ -84,7 +88,7 @@ node name-replacer/start-ui.mjs --input all-ids.json --no-open
 node name-replacer/start-ui.mjs --fused
 ```
 
-默认搜索整个仓库根目录；生成文件写在仓库根目录。
+默认搜索整个仓库根目录；`--targets` 时只扫描 targets 里列出的目录（多个目录会逐个扫描后合并）。生成文件写在仓库根目录。
 
 > 一键方式使用默认目录、输出文件和端口。需要自定义每一步、复用已有结果或只执行部分步骤时，使用下面的完整流程。
 
@@ -194,6 +198,10 @@ node name-replacer/replace-staged.mjs \
 node name-replacer/replace-staged.mjs \
   --targets name-replacer/targets.json \
   --registry http://192.168.1.10:4873/
+
+# 只替换，不安装 / 构建 / 发布 / 测试
+node name-replacer/replace-staged.mjs \
+  --targets name-replacer/targets.json --replace-only
 ```
 
 `targets.json` 支持两种格式：
@@ -218,6 +226,8 @@ node name-replacer/replace-staged.mjs \
 - `note`：批次说明
 - registry 优先级：`--registry` > targets 顶层 `registry` > `REPLACE_STAGED_REGISTRY` > 默认 localhost
 - 常用开关：`--no-build`、`--no-publish`、`--no-test`、`--no-clear-rush`
+- 只替换：`--replace-only`（不安装、不构建、不发布、不测试，不清空 `rush.json`、
+  不改 `.npmrc`、不启动 Verdaccio）；只跳过安装用 `--no-install`
 - 目标目录不存在会明确提示并跳过；所有目标都不存在时不会执行后续全局改名
 - 批次划分可参考 [dep-layers.md](dep-layers.md)
 
@@ -234,9 +244,16 @@ node name-replacer/apply-replace.mjs --target appui --dry-run
 
 # 执行
 node name-replacer/apply-replace.mjs --target appui
+
+# 按 targets.json 的目录替换（stages[].dirs + replaceOnly）
+node name-replacer/apply-replace.mjs --targets --dry-run
+node name-replacer/apply-replace.mjs --targets
 ```
 
-- 不传 `--target` 时扫描整个仓库
+- `--target` 可重复；`--targets [file]` 从 targets.json 读取目录（省略路径时用
+  `name-replacer/targets.json`），可与 `--target` 叠加，嵌套目录自动去重
+- 两者都不传时扫描整个仓库
+- 映射表固定读取 `name-replacer/name-mapping.json`
 - `replace-staged.mjs` 内部调用的就是它
 - 扫描范围与排除项同样来自 `scan-exclude.json`
 

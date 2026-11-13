@@ -11,15 +11,18 @@
  * 用法:
  *   node name-replacer/start-ui.mjs
  *   node name-replacer/start-ui.mjs -d ./itwinjs-core --words-file base-words.json
+ *   node name-replacer/start-ui.mjs --targets          # 按 targets.json 的目录提取
  *   node name-replacer/start-ui.mjs --skip-search       # 复用已有的 all-ids.json
  *   node name-replacer/start-ui.mjs --input all-ids.json --port 3458
  */
 
 import { spawn, spawnSync } from 'child_process';
-import { existsSync } from 'fs';
-import { dirname, join, resolve } from 'path';
+import { existsSync, mkdtempSync, rmSync } from 'fs';
+import { dirname, join, resolve, relative } from 'path';
+import { tmpdir } from 'os';
 import { fileURLToPath } from 'url';
 import http from 'http';
+import { readTargetDirs, uniqueDirs } from './targets-utils.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, '..');
@@ -32,7 +35,9 @@ function printHelp() {
   node name-replacer/start-ui.mjs [选项]
 
 选项:
-  -d, --dir <path>        搜索目录（默认整个仓库根目录）
+  -d, --dir <path>        搜索目录，可重复（默认整个仓库根目录）
+  --targets [path]        从 targets.json 读取搜索目录（stages[].dirs + replaceOnly），
+                          省略路径时用 name-replacer/targets.json；可与 -d 叠加
   --words-file <path>     敏感词文件（默认 base-words.json）
   --fused                 search-ec 启用融合词匹配
   --input <path>          直接使用已有的合并词表，跳过搜索和合并
@@ -110,7 +115,8 @@ function waitForServer(port, timeoutMs = 30000) {
 // ── 参数 ────────────────────────────────────────────────────────────
 
 const args = process.argv.slice(2);
-let searchDir = ROOT;
+let searchDirs = [];
+let targetsFile = null;
 let wordsFile = 'base-words.json';
 let mergedFile = 'all-ids.json';
 let port = 3457;
@@ -123,7 +129,13 @@ for (let i = 0; i < args.length; i++) {
   const arg = args[i];
   if (arg === '-d' || arg === '--dir') {
     if (!args[i + 1]) fail(arg + ' 缺少目录参数');
-    searchDir = resolve(process.cwd(), args[++i]);
+    searchDirs.push(resolve(process.cwd(), args[++i]));
+  } else if (arg === '--targets') {
+    // 路径可选：跟一个非选项参数就用它，否则默认 name-replacer/targets.json
+    const next = args[i + 1];
+    targetsFile = next && !next.startsWith('-')
+      ? resolve(process.cwd(), args[++i])
+      : join(__dirname, 'targets.json');
   } else if (arg === '--words-file') {
     if (!args[i + 1]) fail('--words-file 缺少文件参数');
     wordsFile = args[++i];
@@ -154,7 +166,26 @@ const ecFile = resolve(ROOT, 'ec-result.json');
 const allIdsFile = resolve(ROOT, mergedFile);
 let inputPath = allIdsFile;
 
-if (!existsSync(searchDir)) fail('搜索目录不存在: ' + searchDir);
+// --targets 的目录与 -d 合并；两者都没给时扫描整个仓库
+if (targetsFile && skipSearch) {
+  console.log('⏭ 跳过搜索，忽略 --targets');
+} else if (targetsFile) {
+  if (!existsSync(targetsFile)) fail('找不到 targets 文件: ' + targetsFile);
+  let targetDirs;
+  try {
+    targetDirs = readTargetDirs(targetsFile, ROOT);
+  } catch (e) {
+    fail(e.message);
+  }
+  console.log('🎯 从 targets 读取 ' + targetDirs.length + ' 个目录: ' + targetsFile);
+  for (const d of targetDirs) console.log('   • ' + relative(ROOT, d).replace(/\\/g, '/'));
+  searchDirs = uniqueDirs([...searchDirs, ...targetDirs]);
+}
+if (searchDirs.length === 0) searchDirs = [ROOT];
+
+for (const d of searchDirs) {
+  if (!existsSync(d)) fail('搜索目录不存在: ' + d);
+}
 
 // ── 搜索 / 合并 ─────────────────────────────────────────────────────
 
@@ -166,25 +197,63 @@ if (skipSearch) {
   const wordsPath = resolveExisting(wordsFile, ROOT);
   if (!existsSync(wordsPath)) fail('找不到敏感词文件: ' + wordsPath);
 
-  runStep('搜索敏感词', 'search-sensitive.mjs', [
-    '-d', searchDir,
-    '--words-file', wordsPath,
-    '--concise',
-    '-o', resultFile,
-  ]);
+  if (searchDirs.length === 1) {
+    // 单目录：直接把搜索输出写到仓库根目录的 result.json / ec-result.json
+    const searchDir = searchDirs[0];
+    runStep('搜索敏感词', 'search-sensitive.mjs', [
+      '-d', searchDir,
+      '--words-file', wordsPath,
+      '--concise',
+      '-o', resultFile,
+    ]);
 
-  runStep('搜索 EC', 'search-ec.mjs', [
-    '-d', searchDir,
-    '--concise',
-    '-o', ecFile,
-    ...(fused ? ['--fused'] : []),
-  ]);
+    runStep('搜索 EC', 'search-ec.mjs', [
+      '-d', searchDir,
+      '--concise',
+      '-o', ecFile,
+      ...(fused ? ['--fused'] : []),
+    ]);
 
-  runStep('合并词表', 'merge-ids.mjs', [
-    ecFile,
-    resultFile,
-    '-o', allIdsFile,
-  ]);
+    runStep('合并词表', 'merge-ids.mjs', [
+      ecFile,
+      resultFile,
+      '-o', allIdsFile,
+    ]);
+  } else {
+    // 多目录：逐个扫描到临时目录，再合并成 result.json / ec-result.json / all-ids.json
+    const workDir = mkdtempSync(join(tmpdir(), 'name-replacer-'));
+    try {
+      const resultFiles = [];
+      const ecFiles = [];
+      searchDirs.forEach((dir, idx) => {
+        const tag = `[${idx + 1}/${searchDirs.length}] ${relative(ROOT, dir).replace(/\\/g, '/') || dir}`;
+        const rf = join(workDir, `result-${idx}.json`);
+        const ef = join(workDir, `ec-${idx}.json`);
+
+        runStep('搜索敏感词 ' + tag, 'search-sensitive.mjs', [
+          '-d', dir,
+          '--words-file', wordsPath,
+          '--concise',
+          '-o', rf,
+        ]);
+        resultFiles.push(rf);
+
+        runStep('搜索 EC ' + tag, 'search-ec.mjs', [
+          '-d', dir,
+          '--concise',
+          '-o', ef,
+          ...(fused ? ['--fused'] : []),
+        ]);
+        ecFiles.push(ef);
+      });
+
+      runStep('合并敏感词结果', 'merge-ids.mjs', [...resultFiles, '-o', resultFile]);
+      runStep('合并 EC 结果', 'merge-ids.mjs', [...ecFiles, '-o', ecFile]);
+      runStep('合并词表', 'merge-ids.mjs', [ecFile, resultFile, '-o', allIdsFile]);
+    } finally {
+      rmSync(workDir, { recursive: true, force: true });
+    }
+  }
   inputPath = allIdsFile;
 }
 

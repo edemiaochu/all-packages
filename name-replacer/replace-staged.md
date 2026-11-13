@@ -58,6 +58,10 @@ node name-replacer/replace-staged.mjs \
 # 5. 快速替换单个目录（单批，不带 --targets）
 node name-replacer/replace-staged.mjs \
   --dir appui/ui/core-react --dir appui/ui/components-react --dry-run
+
+# 6. 只替换、不安装/构建/发布/测试
+node name-replacer/replace-staged.mjs \
+  --targets name-replacer/targets.json --replace-only
 ```
 
 ---
@@ -72,6 +76,8 @@ node name-replacer/replace-staged.mjs \
 | `--publish-url <url>` | `--registry` 的别名 |
 | `--publish-registry <url>` | `--registry` 的别名 |
 | `--dry-run` | 只预览替换结果，不写文件、不发布、不安装、不测试 |
+| `--replace-only` | **只替换**：不安装、不构建、不发布、不测试；不清空 `rush.json`、不改 `.npmrc`、不启动 Verdaccio |
+| `--no-install` | 跳过所有 install（`rush update` / `pnpm install` / `yarn install`），且不清空 `rush.json`；其余步骤按参数执行 |
 | `--no-build` | 跳过构建（仍安装、发布） |
 | `--no-publish` | 跳过发布（替换、安装、构建、测试仍执行） |
 | `--no-test` | 跳过最后的重新安装 + 测试 |

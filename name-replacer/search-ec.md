@@ -210,6 +210,7 @@ TOTAL                                   │      861
 | 2. 文件级 | `pnpm-lock.yaml`, `.snap`, `.map`, 图片/字体 | `scan-exclude.json` 的 `files` + `exts` 段 |
 | 3. 标识符级 | git SHA（≥32 字符纯十六进制） | `isLikelyRandomString` 规则 1 |
 | 4. 标识符级 | base64 随机串（>40 字符无下划线 + 大写 >25%） | `isLikelyRandomString` 规则 2 |
+| 5. 标识符级 | 数字/十六进制字面量片段：`0x56EC000`、`123EC`、`#EC0000`、`\xEC` 等 | `identifier-utils.mjs` 的 `isLiteralFragment` |
 
 > 默认扫描所有文件夹和所有扩展名；配置文件缺失时不排除任何内容（兜底仍会跳过
 > >5MB 或前 4KB 含 `\0` 的二进制文件）。
