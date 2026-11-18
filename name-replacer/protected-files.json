@@ -1,0 +1,8 @@
+{
+  "_comment": "保护区域配置 —— files 里的文件整份不参与提取；snippets 里的代码片段只排除「本来会被提取出来的标识符」。被排除的标识符在其他文件里也不再提取。没有要保护的内容时保持为空。示例与写法见 protected-files.example.json / protected-files.md。",
+  "_format": "files：每条是一个路径（字符串，或 { \"path\", \"note\" }）。snippets：每条是一段代码原文（字符串，或 { \"text\", \"note\" }）；不用逐字符和源码一致，系统先收集候选标识符，再按当前搜索词筛选（只排除本来会被提取的词）。_comment / _format / _example_* 等下划线开头的键会被忽略。",
+  "files": [],
+  "snippets": [
+    "sdfsEc54sdgsdf\"http://10.0.19.202:9000\"}/${from.accountName}`, accessToken:from.sasToken, storageType:process.env.OBJECT_STORAGE_TYPE === \"minio\" ? \"minio\" : \"azure\" }"
+  ]
+}

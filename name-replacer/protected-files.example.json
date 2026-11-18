@@ -1,0 +1,14 @@
+{
+  "_comment": "保护区域 —— files 里的文件整份不参与提取；snippets 里的代码片段只排除「本来会被提取出来的标识符」。被排除的标识符在其他文件里也不再提取（避免同名代码被连坐改名）。复制为 protected-files.json 后生效：cp name-replacer/protected-files.example.json name-replacer/protected-files.json",
+  "_format": "files：每条是一个路径，直接写路径字符串（如 \"a/b.ts\"），或 { \"path\": \"a/b.ts\", \"note\": \"备注\" }。路径相对仓库根目录（name-replacer 的上一级），也可用绝对路径；不含 / 时按文件名匹配；支持 * / ** / ? 通配符；目录条目 = 保护整个目录。snippets：每条是一段代码原文（直接粘贴），或 { \"text\": \"...\", \"note\": \"...\" }；不需要和源码逐字符一致，系统先收集片段里的候选标识符，再按当前搜索规则筛选（search-ec 按 EC 分词、search-sensitive 按搜索词），只排除本来会被提取的词。_comment / _format / _example_* 等下划线开头的键会被忽略。",
+  "_example_string": "文件条目：\"itwinjs-core/core/backend/src/PasswordProtection.ts\"；片段条目：\"return {...from, accessToken: from.sasToken }\"",
+  "files": [
+    "itwinjs-core/core/backend/src/PasswordProtection.ts",
+    "**/PasswordProtection.ts",
+    { "path": "base/units-schema/src/license/", "note": "密码 / 授权校验代码，整目录保护" }
+  ],
+  "snippets": [
+    "return {...from, baseUri: `${process.env.OBJECT_STORAGE_URL ?? \"http://10.0.19.202:9000\"}/${from.accountName}`, accessToken:from.sasToken, storageType:process.env.OBJECT_STORAGE_TYPE === \"minio\" ? \"minio\" : \"azure\" }",
+    { "text": "const KEY = decrypt(ECLicense);", "note": "授权校验片段" }
+  ]
+}

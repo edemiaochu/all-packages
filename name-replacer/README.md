@@ -310,6 +310,55 @@ node name-replacer/protected-words.mjs --out protected-words.generated.json  # �
 
 配置方式、验证命令和常见问题见 [protected-words.md](protected-words.md)。
 
+### 10. 保护区域（protected-files）
+
+密码保护、授权校验这类代码不能改名。`protected-files.json` 支持两种保护区域：
+
+- `files`：整份文件
+- `snippets`：文件里的一段代码（直接贴原文）
+
+两种区域都是：**本来会被提取出来的标识符**不报告（`search-ec` / `search-sensitive`）；
+这些被排除的标识符在其他文件里也不再提取——否则同名代码在别处被提取、替换后，
+保护区域里的代码照样会改掉。
+
+```bash
+cp name-replacer/protected-files.example.json name-replacer/protected-files.json
+```
+
+```json
+{
+  "files": [
+    "itwinjs-core/core/backend/src/PasswordProtection.ts",
+    { "path": "base/units-schema/src/license/", "note": "整目录保护" }
+  ],
+  "snippets": [
+    "return {...from, baseUri: `${process.env.OBJECT_STORAGE_URL ?? \"http://10.0.19.202:9000\"}/${from.accountName}`, accessToken: from.sasToken }",
+    { "text": "const KEY = decrypt(ECLicense);", "note": "授权校验片段" }
+  ]
+}
+```
+
+- `files` 每条是一个路径：直接写路径字符串，需要备注时写 `{ "path", "note" }`
+- 路径相对仓库根目录，也支持绝对路径；不含 `/` 时按文件名匹配；支持 `*` / `**` / `?`；
+  目录条目保护整个目录；精确路径与 `-d` 无关，多目录分段扫描时依然全局生效
+- `snippets` 每条是一段代码原文（不需要和源码逐字符一致）：先收集片段里的候选标识符，
+  再用当前搜索规则筛（`search-ec` 按 EC 分词、`search-sensitive` 按搜索词），
+  **只有本来会被提取的词**才排除——片段里的 `minio`、`azure`、`from` 不会进保护名单
+- 标识符按「完整标识符、大小写不敏感」匹配：`ECSecretKey` 会排除 `ecsecretkey`，
+  但不影响 `ECSecretKeyExtra`
+- 临时关闭：`--no-protected-files`；换配置：`--protected-files <path>`
+- ⚠️ 只管提取阶段：`base-mapping.json` 里已有的映射或子串替换仍可能改到它；
+  需要连替换一起跳过时用 `exclude-list.json` 的 `{ "text": "...", "paths": ["..."] }`
+
+验证当前生效的保护区域：
+
+```bash
+node name-replacer/protected-files.mjs          # 表格：保护区域概况
+node name-replacer/protected-files.mjs --json   # 机器可读
+```
+
+详细说明见 [protected-files.md](protected-files.md)。
+
 ## 注意事项
 
 1. 替换前先提交或 `git stash`，确保可以回滚
@@ -328,4 +377,6 @@ node name-replacer/protected-words.mjs --out protected-words.generated.json  # �
 - [merge-mapping.md](merge-mapping.md) — 映射表合并
 - [replace-staged.md](replace-staged.md) — 分阶段替换、发包、测试
 - [protected-words.md](protected-words.md) — 基础替换词保护（使用说明、配置、验证）
+- [protected-files.md](protected-files.md) — 保护区域（保护文件 / 代码片段，不参与提取）
+- [replace-flow-training.html](replace-flow-training.html) — 流程培训演示网页（浏览器打开，含命令与参数说明）
 - [dep-layers.md](dep-layers.md) — 依赖分层参考

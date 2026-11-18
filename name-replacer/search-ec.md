@@ -237,6 +237,29 @@ TOTAL                                   │      861
 `replace-server.mjs` 生成映射时使用同一份保护词：已替换的部分不会被后续
 词规则二次改写（`szewEC_ECClass → szewEC_DMClass`，而不是 `szewDM_DMClass`）。
 
+## 保护区域（自动生效）
+
+`name-replacer/protected-files.json` 支持两种保护区域，命中的标识符不参与提取：
+
+- `files`：整份文件（密码保护模块等）
+- `snippets`：文件里的一段代码（直接贴原文）
+
+`files` 整份不提取；`snippets` 只排除片段里**会被 EC 提取命中**的标识符
+（`ECLicense` 这类，`minio`/`from` 这类不会被提取的词不受影响）。
+被排除的标识符在其他文件里也不再提取——否则同名代码在别处被替换后，
+保护区域里的代码会跟着改掉。
+
+```bash
+# 查看当前生效的保护区域
+node name-replacer/protected-files.mjs
+
+# 临时关闭 / 指定其他配置
+node name-replacer/search-ec.mjs -d . --no-protected-files
+node name-replacer/search-ec.mjs -d . --protected-files my.json
+```
+
+写法与匹配规则见 [protected-files.md](protected-files.md)。
+
 ## 常用场景
 
 ### EC 相关标识符全貌

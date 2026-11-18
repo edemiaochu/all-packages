@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>品牌词替换流程培训 · name-replacer</title>
+<style>
+  :root {
+    --bg: #f4f6fb;
+    --panel: #ffffff;
+    --ink: #1b2330;
+    --ink-2: #4b5768;
+    --ink-3: #7b8797;
+    --line: #e3e8f0;
+    --brand: #2453d4;
+    --brand-soft: #edf2ff;
+    --brand-deep: #173a9b;
+    --ok: #127a52;
+    --ok-soft: #e9f7f0;
+    --warn: #9a5b00;
+    --warn-soft: #fff6e5;
+    --danger: #b42318;
+    --danger-soft: #fff0ee;
+    --code-bg: #101828;
+    --code-ink: #e6edf7;
+    --radius: 14px;
+    --shadow: 0 6px 24px rgba(21, 38, 78, .07);
+    --mono: ui-monospace, SFMono-Regular, "Cascadia Code", Consolas, "Liberation Mono", monospace;
+    --sans: system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", "PingFang SC", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+  a { color: var(--brand); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  code, pre { font-family: var(--mono); }
+  code {
+    background: #eef1f7;
+    border: 1px solid #e2e7f0;
+    border-radius: 6px;
+    padding: 1px 6px;
+    font-size: .92em;
+    color: #16365f;
+    white-space: nowrap;
+  }
+  pre code { background: none; border: 0; padding: 0; color: inherit; white-space: inherit; }
+  h2, h3, h4 { line-height: 1.35; }
+  h2 { font-size: 24px; margin: 0 0 6px; }
+  h3 { font-size: 17px; margin: 24px 0 10px; }
+  h4 { font-size: 15px; margin: 18px 0 8px; color: var(--ink-2); }
+  p { margin: 8px 0; }
+
+  /* ── 顶部 ── */
+  .hero {
+    background:
+      radial-gradient(1200px 500px at 85% -10%, rgba(84, 128, 255, .35), transparent 60%),
+      linear-gradient(120deg, #12295f 0%, #1d47b8 55%, #2c6ae0 100%);
+    color: #eef4ff;
+    padding: 48px 24px 40px;
+  }
+  .hero-inner { max-width: 1200px; margin: 0 auto; }
+  .eyebrow {
+    display: inline-block;
+    font-size: 12px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    background: rgba(255,255,255,.14);
+    border: 1px solid rgba(255,255,255,.25);
+    border-radius: 999px;
+    padding: 4px 12px;
+    margin-bottom: 14px;
+  }
+  .hero h1 { margin: 0 0 10px; font-size: clamp(26px, 4vw, 40px); letter-spacing: .01em; }
+  .hero p { margin: 0; max-width: 820px; color: #cfe0ff; font-size: 16px; }
+  .hero-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+  .hero-tags span {
+    font-size: 12.5px;
+    background: rgba(255,255,255,.12);
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 8px;
+    padding: 4px 10px;
+  }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+  .btn {
+    appearance: none;
+    border: 1px solid transparent;
+    border-radius: 9px;
+    padding: 8px 16px;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .15s;
+  }
+  .btn-primary { background: #fff; color: #173a9b; }
+  .btn-primary:hover { background: #dfe9ff; }
+  .btn-ghost { background: rgba(255,255,255,.1); color: #fff; border-color: rgba(255,255,255,.3); }
+  .btn-ghost:hover { background: rgba(255,255,255,.2); }
+
+  /* ── 布局 ── */
+  .layout {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 28px 24px 80px;
+    display: grid;
+    grid-template-columns: 250px minmax(0, 1fr);
+    gap: 28px;
+    align-items: start;
+  }
+  .sidebar {
+    position: sticky;
+    top: 20px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 16px;
+    box-shadow: var(--shadow);
+    font-size: 13.5px;
+    max-height: calc(100vh - 40px);
+    overflow: auto;
+  }
+  .progress-wrap { margin-bottom: 14px; }
+  .progress-top { display: flex; justify-content: space-between; font-size: 12px; color: var(--ink-3); margin-bottom: 6px; }
+  .progress-bar { height: 7px; background: #e8edf6; border-radius: 99px; overflow: hidden; }
+  .progress-bar > i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #2c6ae0, #4f9cff); transition: width .3s; }
+  .nav-group { margin-top: 14px; }
+  .nav-title { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 4px 8px; }
+  .nav a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--ink-2);
+    padding: 6px 8px;
+    border-radius: 8px;
+    border-left: 2px solid transparent;
+  }
+  .nav a:hover { background: #f2f5fb; text-decoration: none; }
+  .nav a.active { background: var(--brand-soft); color: var(--brand-deep); font-weight: 600; border-left-color: var(--brand); }
+  .nav .tick { width: 16px; text-align: center; color: var(--ok); font-size: 12px; }
+  .nav .num { font-family: var(--mono); font-size: 11px; color: var(--ink-3); width: 18px; }
+
+  main { min-width: 0; }
+  section { scroll-margin-top: 20px; margin-bottom: 28px; }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 26px 28px;
+    box-shadow: var(--shadow);
+  }
+  .section-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 8px; }
+  .step-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 12px; font-weight: 700; letter-spacing: .04em;
+    color: var(--brand-deep); background: var(--brand-soft);
+    border: 1px solid #d7e2ff; border-radius: 999px; padding: 3px 12px;
+    margin-bottom: 10px;
+  }
+  .step-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--brand); }
+  .lead { color: var(--ink-2); margin: 4px 0 18px; }
+
+  /* ── 完成勾选 ── */
+  .done-toggle {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 13px; color: var(--ink-2); cursor: pointer;
+    background: #f7f9fd; border: 1px solid var(--line); border-radius: 9px;
+    padding: 6px 12px; user-select: none; white-space: nowrap;
+  }
+  .done-toggle input { width: 15px; height: 15px; accent-color: var(--ok); cursor: pointer; }
+  .done-toggle.is-done { background: var(--ok-soft); border-color: #bfe7d5; color: var(--ok); font-weight: 600; }
+
+  /* ── 命令块 ── */
+  .cmd { margin: 12px 0 18px; border-radius: 12px; overflow: hidden; background: var(--code-bg); }
+  .cmd-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 14px; background: #18243a; color: #93a4bf;
+    font-size: 12px; letter-spacing: .04em;
+  }
+  .cmd-head .lang { font-family: var(--mono); }
+  .copy-btn {
+    appearance: none; border: 1px solid #33445f; background: #223149; color: #d7e3f5;
+    font: inherit; font-size: 12px; border-radius: 7px; padding: 3px 10px; cursor: pointer;
+  }
+  .copy-btn:hover { background: #2c3e5c; }
+  .copy-btn.copied { border-color: #2e8f68; color: #9be3c3; }
+  .cmd pre { margin: 0; padding: 14px 18px; overflow-x: auto; color: var(--code-ink); font-size: 13.2px; line-height: 1.75; }
+  .cmd .comment { color: #7f93b3; }
+
+  /* ── 参数表 ── */
+  .table-wrap { overflow-x: auto; margin: 10px 0 16px; border: 1px solid var(--line); border-radius: 12px; }
+  table { border-collapse: collapse; width: 100%; font-size: 13.5px; background: #fff; }
+  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { background: #f7f9fd; color: var(--ink-2); font-weight: 600; white-space: nowrap; }
+  tr:last-child td { border-bottom: 0; }
+  td code { white-space: normal; }
+  .req, .opt, .rec {
+    display: inline-block; font-size: 11px; font-weight: 700; border-radius: 6px;
+    padding: 1px 7px; white-space: nowrap; line-height: 1.6;
+  }
+  .req { color: #b42318; background: var(--danger-soft); border: 1px solid #ffd2cc; }
+  .opt { color: #667085; background: #f2f4f7; border: 1px solid #e4e7ec; }
+  .rec { color: #9a5b00; background: var(--warn-soft); border: 1px solid #ffe2b0; }
+
+  /* ── 卡片/提示 ── */
+  .callout { border-radius: 12px; padding: 14px 16px; margin: 14px 0; font-size: 13.8px; border: 1px solid; }
+  .callout b { display: block; margin-bottom: 2px; }
+  .callout.info { background: var(--brand-soft); border-color: #d7e2ff; color: #22448f; }
+  .callout.warn { background: var(--warn-soft); border-color: #ffe2b0; color: #7c4a00; }
+  .callout.ok { background: var(--ok-soft); border-color: #bfe7d5; color: #0c5c3d; }
+  .callout.danger { background: var(--danger-soft); border-color: #ffd2cc; color: #8f1d14; }
+
+  .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  .mini {
+    border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; background: #fbfcff;
+  }
+  .mini h4 { margin: 0 0 6px; color: var(--ink); }
+  .mini p { margin: 0; font-size: 13.5px; color: var(--ink-2); }
+  .muted { color: var(--ink-3); font-size: 13px; }
+  .kbd {
+    font-family: var(--mono); font-size: 12px; background: #eef1f7;
+    border: 1px solid #dde3ee; border-bottom-width: 2px; border-radius: 6px; padding: 1px 6px;
+  }
+
+  /* ── 流程总览 ── */
+  .pipe { display: flex; flex-wrap: wrap; gap: 10px; margin: 18px 0 6px; }
+  .pipe-step {
+    flex: 1 1 130px;
+    min-width: 120px;
+    position: relative;
+    background: #fbfcff;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 12px 14px;
+    cursor: pointer;
+    transition: .2s;
+  }
+  .pipe-step:hover { border-color: #b9caf3; transform: translateY(-1px); }
+  .pipe-step.active {
+    border-color: var(--brand); background: var(--brand-soft);
+    box-shadow: 0 0 0 3px rgba(36,83,212,.12);
+  }
+  .pipe-step .idx {
+    font-family: var(--mono); font-size: 11px; color: var(--brand);
+    background: #fff; border: 1px solid #d7e2ff; border-radius: 6px;
+    display: inline-block; padding: 0 6px; margin-bottom: 6px;
+  }
+  .pipe-step strong { display: block; font-size: 13.5px; }
+  .pipe-step small { color: var(--ink-3); font-size: 11.5px; display: block; line-height: 1.5; }
+  .pipe-caption {
+    margin-top: 12px; min-height: 24px; font-size: 13.5px; color: var(--ink-2);
+    background: #f7f9fd; border: 1px dashed #d8e1f0; border-radius: 9px; padding: 6px 12px;
+  }
+
+  .two-col { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  .mode-card { border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; background: #fbfcff; }
+  .mode-card h4 { margin: 0 0 6px; }
+  .mode-card ul { margin: 8px 0 0; padding-left: 18px; color: var(--ink-2); font-size: 13.5px; }
+  .mode-card li { margin: 4px 0; }
+
+  /* ── 文件清单 ── */
+  .file-list { display: grid; gap: 8px; margin: 10px 0; }
+  .file-row {
+    display: grid; grid-template-columns: minmax(180px, 260px) 1fr;
+    gap: 12px; align-items: baseline;
+    padding: 9px 12px; border: 1px solid var(--line); border-radius: 10px; background: #fbfcff;
+    font-size: 13.5px;
+  }
+  .file-row code { white-space: normal; }
+  .file-row span { color: var(--ink-2); }
+
+  footer { max-width: 1200px; margin: 0 auto; padding: 0 24px 50px; color: var(--ink-3); font-size: 12.5px; }
+
+  @media (max-width: 980px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar { position: relative; top: 0; max-height: none; }
+    .nav { display: flex; flex-wrap: wrap; gap: 2px 8px; }
+    .nav-group { margin-top: 8px; }
+    .nav a { padding: 4px 8px; }
+    .grid-2, .two-col { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    .card { padding: 20px 18px; }
+    .hero { padding: 34px 18px 30px; }
+    .layout { padding: 18px 14px 60px; }
+    .file-row { grid-template-columns: 1fr; gap: 2px; }
+  }
+  @media print {
+    body { background: #fff; font-size: 12px; }
+    .hero { background: #fff; color: #000; border-bottom: 2px solid #000; padding: 12px 0; }
+    .hero p, .hero-tags span { color: #333; }
+    .hero-actions, .sidebar, .done-toggle, .copy-btn, .pipe-caption { display: none !important; }
+    .layout { display: block; padding: 0; max-width: none; }
+    .card { box-shadow: none; border-color: #bbb; page-break-inside: avoid; margin-bottom: 12px; }
+    .cmd { background: #f5f5f5; color: #000; }
+    .cmd pre { color: #000; }
+    .cmd-head { background: #e8e8e8; color: #333; }
+    section { margin-bottom: 14px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <span class="eyebrow">name-replacer · 内部培训</span>
+    <h1>品牌词替换流程演示</h1>
+    <p>从扫描提取、合并词表、配置映射，到分阶段替换、构建发包与验证。
+       每一步都给出可直接执行的命令和必要参数说明，先预览再执行，随时可回滚。</p>
+    <div class="hero-tags">
+      <span>7 个阶段</span>
+      <span>单文件 / 离线可用</span>
+      <span>可勾选学习进度</span>
+      <span>支持打印</span>
+    </div>
+    <div class="hero-actions">
+      <button class="btn btn-primary" id="playDemo">▶ 播放流程演示</button>
+      <a class="btn btn-ghost" href="#quickstart">快速方式</a>
+      <a class="btn btn-ghost" href="#fullflow">完整流程</a>
+      <button class="btn btn-ghost" id="printBtn">打印讲义</button>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <!-- ── 侧栏 ── -->
+  <aside class="sidebar">
+    <div class="progress-wrap">
+      <div class="progress-top"><span>培训进度</span><span id="progressText">0 / 9</span></div>
+      <div class="progress-bar"><i id="progressBar"></i></div>
+    </div>
+    <nav class="nav" id="nav">
+      <div class="nav-group">
+        <p class="nav-title">开始</p>
+        <a href="#overview"><span class="num">00</span>流程总览</a>
+        <a href="#quickstart"><span class="num">01</span>快速方式</a>
+      </div>
+      <div class="nav-group">
+        <p class="nav-title">完整流程</p>
+        <a href="#prep" data-step="prep"><span class="tick"></span>准备与目标</a>
+        <a href="#search-sensitive" data-step="search-sensitive"><span class="tick"></span>提取敏感词</a>
+        <a href="#search-ec" data-step="search-ec"><span class="tick"></span>提取 EC</a>
+        <a href="#merge-ids" data-step="merge-ids"><span class="tick"></span>合并词表</a>
+        <a href="#replace-server" data-step="replace-server"><span class="tick"></span>配置映射</a>
+        <a href="#merge-mapping" data-step="merge-mapping"><span class="tick"></span>合并映射</a>
+        <a href="#replace-bim" data-step="replace-bim"><span class="tick"></span>bim 词族</a>
+        <a href="#replace-exec" data-step="replace-exec"><span class="tick"></span>执行替换</a>
+        <a href="#verify" data-step="verify"><span class="tick"></span>验证与回滚</a>
+      </div>
+      <div class="nav-group">
+        <p class="nav-title">附录</p>
+        <a href="#protections">保护机制</a>
+        <a href="#configs">配置文件</a>
+        <a href="#faq">常见问题</a>
+      </div>
+    </nav>
+  </aside>
+
+  <main>
+    <!-- ── 流程总览 ── -->
+    <section id="overview" class="card">
+      <div class="step-badge"><span class="dot"></span>00 · 整体认识</div>
+      <h2>替换流程总览</h2>
+      <p class="lead">工具链只做一件事：把源码里的品牌词 / EC 词换成新词。
+        <strong>提取 → 合并 → 配置映射 → 替换</strong>，前三步只产生 JSON，真正的源码修改发生在最后。</p>
+
+      <div class="pipe" id="pipe">
+        <div class="pipe-step" data-id="search-sensitive" data-caption="① 提取敏感词：扫描源码，找出品牌词相关标识符，输出 result.json。">
+          <span class="idx">01</span><strong>提取敏感词</strong><small>search-sensitive</small>
+        </div>
+        <div class="pipe-step" data-id="search-ec" data-caption="② 提取 EC：按语义分词找出 EC 标识符，输出 ec-result.json。">
+          <span class="idx">02</span><strong>提取 EC</strong><small>search-ec</small>
+        </div>
+        <div class="pipe-step" data-id="merge-ids" data-caption="③ 合并词表：把多份搜索结果合并成 all-ids.json。">
+          <span class="idx">03</span><strong>合并词表</strong><small>merge-ids</small>
+        </div>
+        <div class="pipe-step" data-id="replace-server" data-caption="④ 配置映射：在网页里为每个词填替换词，保存生成 all-ids-mapping.json。">
+          <span class="idx">04</span><strong>配置映射</strong><small>replace-server</small>
+        </div>
+        <div class="pipe-step" data-id="merge-mapping" data-caption="⑤（可选）合并映射：把新映射并入已有的总表。">
+          <span class="idx">05</span><strong>合并映射</strong><small>merge-mapping</small>
+        </div>
+        <div class="pipe-step" data-id="replace-bim" data-caption="⑥ bim 词族：先替换 .bim / ibim 等文件格式词，避免发包后漏改。">
+          <span class="idx">06</span><strong>bim 词族</strong><small>replace-bim</small>
+        </div>
+        <div class="pipe-step" data-id="replace-exec" data-caption="⑦ 执行替换：内容替换 → 目录改名 → 构建 → 发布 → 安装测试。">
+          <span class="idx">07</span><strong>执行替换</strong><small>replace-staged</small>
+        </div>
+      </div>
+      <div class="pipe-caption" id="pipeCaption">点任意阶段可跳转到对应说明；点「播放流程演示」按顺序浏览。</div>
+
+      <div class="callout warn">
+        <b>安全底线（务必先讲给学员）</b>
+        执行替换前先 <code>git commit</code> 或 <code>git stash</code>；每次正式执行前先跑
+        <code>--dry-run</code> 预览。没有版本控制兜底时不要执行最后一阶段。
+      </div>
+
+      <h3>两套用法</h3>
+      <div class="two-col">
+        <div class="mode-card">
+          <h4>快速方式（一键启动）</h4>
+          <p class="muted">适合第一次上手 / 演示。</p>
+          <ul>
+            <li>自动执行搜索、合并，并打开配置网页</li>
+            <li>停在「配置映射」，不替你保存、不执行替换</li>
+            <li>生成结果固定写在仓库根目录</li>
+          </ul>
+        </div>
+        <div class="mode-card">
+          <h4>完整流程（分步执行）</h4>
+          <p class="muted">适合正式替换 / 需要自定义参数。</p>
+          <ul>
+            <li>每一步都能单独运行、复用已有结果</li>
+            <li>可指定目录、词表、输出文件、批次</li>
+            <li>可分阶段替换、构建、发包、测试</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 快速方式 ── -->
+    <section id="quickstart" class="card">
+      <div class="step-badge"><span class="dot"></span>01 · 快速方式</div>
+      <h2>一键启动：搜索 → 合并 → 打开配置界面</h2>
+      <p class="lead">默认扫描整个仓库，敏感词表用 <code>base-words.json</code>，
+        生成 <code>result.json</code>、<code>ec-result.json</code>、<code>all-ids.json</code>，
+        然后启动配置网页并自动打开浏览器。</p>
+
+      <div class="cmd">
+        <div class="cmd-head"><span class="lang">bash</span><button class="copy-btn" data-copy>复制</button></div>
+        <pre><code>node name-replacer/start-ui.mjs</code></pre>
+      </div>
+
+      <h3>参数说明</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>参数</th><th>必填</th><th>说明</th><th>默认</th></tr></thead>
+        <tbody>
+          <tr><td><code>-d, --dir &lt;path&gt;</code></td><td><span class="opt">可选</span></td><td>搜索目录，可重复指定；多个目录会逐个扫描后合并</td><td>整个仓库根目录</td></tr>
+          <tr><td><code>--targets [path]</code></td><td><span class="opt">可选</span></td><td>按 <code>targets.json</code> 的 <code>stages[].dirs + replaceOnly</code> 提取；省略路径时用 <code>name-replacer/targets.json</code>；可与 <code>-d</code> 叠加</td><td>关闭</td></tr>
+          <tr><td><code>--words-file &lt;path&gt;</code></td><td><span class="opt">可选</span></td><td>敏感词文件（JSON 数组或纯文本）</td><td><code>base-words.json</code></td></tr>
+          <tr><td><code>--fused</code></td><td><span class="opt">可选</span></td><td>search-ec 启用融合词匹配（<code>ECXML</code>、<code>ECSQLREADER</code>）</td><td>关闭</td></tr>
+          <tr><td><code>--input &lt;path&gt;</code></td><td><span class="opt">可选</span></td><td>直接使用已有的合并词表，跳过搜索和合并</td><td>无</td></tr>
+          <tr><td><code>--skip-search</code></td><td><span class="opt">可选</span></td><td>跳过搜索，直接使用 <code>all-ids.json</code></td><td>关闭</td></tr>
+          <tr><td><code>-p, --port &lt;n&gt;</code></td><td><span class="opt">可选</span></td><td>配置网页端口</td><td><code>3457</code></td></tr>
+          <tr><td><code>--no-open</code></td><td><span class="opt">可选</span></td><td>启动后不自动打开浏览器</td><td>自动打开</td></tr>
+        </tbody>
+      </table></div>
+
+      <div class="cmd">
+        <div class="cmd-head"><span class="lang">bash · 常用组合</span><button class="copy-btn" data-copy>复制</button></div>
+        <pre><code><span class="comment"># 按 targets.json 的目录提取（多批次时推荐）</span>
+node name-replacer/start-ui.mjs --targets
+
+<span class="comment"># 只扫描指定目录</span>
+node name-replacer/start-ui.mjs -d ./szewtwinjs-core
+
+<span class="comment"># 复用已有 all-ids.json，不重新搜索</span>
+node name-replacer/start-ui.mjs --skip-search
+
+<span class="comment"># 换端口，且不自动开浏览器</span>
+node name-replacer/start-ui.mjs -p 3458 --no-open</code></pre>
+      </div>
+
+      <div class="callout info">
+        <b>一键启动只做到「配置映射」</b>
+        保存映射、bim 替换、内容替换、构建发包都需要手动继续（见下面的完整流程）。
+        这样设计是为了让你在配置完映射后先检查、再动手。
+      </div>
+      <div class="callout info">
+        <b>所有脚本都支持 --help</b>
+        例如 <code>node name-replacer/search-ec.mjs --help</code>。本页只列常用参数，
+        完整的默认值、边界行为以脚本 <code>--help</code> 和 <code>README.md</code> 为准。
+      </div>
+    </section>
+
+    <!-- ── 完整流程标题 ── -->
+    <section id="fullflow" class="card">
+      <div class="step-badge"><span class="dot"></span>02 · 完整流程</div>
+      <h2>分步执行：每一步都能单独运行</h2>
+      <p class="lead">正式替换建议按这个顺序走。下面每个阶段都包含：目的、命令、必要参数、输出文件和注意事项。</p>
+      <div class="file-list">
+        <div class="file-row"><code>result.json</code><span>敏感词提取结果（标识符按搜索词分组）</span></div>
+        <div class="file-row"><code>ec-result.json</code><span>EC 提取结果（标识符列表 + 命中详情）</span></div>
+        <div class="file-row"><code>all-ids.json</code><span>合并后的待配置词表，配置网页的输入</span></div>
+        <div class="file-row"><code>all-ids-mapping.json</code><span>配置网页保存的替换映射（在 <code>name-replacer/</code> 下）</span></div>
+        <div class="file-row"><code>name-mapping.json</code><span><code>apply-replace</code> 固定读取的映射表</span></div>
+      </div>
+    </section>
+
+    <!-- ── 准备 ── -->
+    <section id="prep" class="card">
+      <div class="section-head">
+        <div>
+          <div class="step-badge"><span class="dot"></span>第 1 步 · 准备</div>
+          <h2>提交基线，准备 targets.json</h2>
+          <p class="lead">替换会直接改磁盘上的源码。先保证有一个可回滚的基线。</p>
+        </div>
+        <label class="done-toggle"><input type="checkbox" data-done="prep">标记完成</label>
+      </div>
+
+      <div class="cmd">
+        <div class="cmd-head"><span class="lang">bash</span><button class="copy-btn" data-copy>复制</button></div>
+        <pre><code><span class="comment"># 1) 确认工作区干净，提交或暂存当前改动</span>
+git status
+git add -A
+git commit -m "chore: 替换前基线"
+
+<span class="comment"># 2) 没有 targets.json 时，从示例复制一份</span>
+cp name-replacer/targets.example.json name-replacer/targets.json
+
+<span class="comment"># 3) targets.json 里按批次填写真实目录（见下）</span></code></pre>
+      </div>
+
+      <h3>targets.json 两种格式</h3>
+      <div class="cmd">
+        <div class="cmd-head"><span class="lang">json · 顶层数组</span><button class="copy-btn" data-copy>复制</button></div>
+        <pre><code>[
+  { "dirs": ["base/units-schema"], "note": "第 1 批" },
+  { "dirs": ["appui/ui/core-react"], "replaceOnly": ["appui/ui/appui-react"], "note": "第 2 批" }
+]</code></pre>
+      </div>
+      <div class="cmd">
+        <div class="cmd-head"><span class="lang">json · 对象（可带 registry）</span><button class="copy-btn" data-copy>复制</button></div>
+        <pre><code>{
+  "registry": "http://localhost:4873/",
+  "stages": [
+    { "dirs": ["base/units-schema"], "note": "第 1 批" }
+  ]
+}</code></pre>
+      </div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>字段</th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td><code>dirs</code></td><td>替换内容并发布的目标目录（相对仓库根目录）</td></tr>
+          <tr><td><code>replaceOnly</code></td><td>只替换内容、不发布；内容照样会提取 / 替换</td></tr>
+          <tr><td><code>registry</code></td><td>发布目标；优先级：<code>--registry</code> &gt; 这里 &gt; 环境变量 &gt; 默认 localhost</td></tr>
+          <tr><td><code>note</code></td><td>批次说明，仅用于阅读</td></tr>
+        </tbody>
+      </table></div>
+      <div class="callout warn">
+        <b>目录必须真实存在</b>
+        不存在的目录会被明确提示并跳过；所有目标都不存在时，后续全局改名也不会执行。
+      </div>
+    </section>
+
+    <!-- ── 敏感词 ── -->
+    <section id="search-sensitive" class="card">
+      <div class="section-head">
+        <div>
+          <div class="step-badge"><span class="dot"></span>第 2 步 · 提取</div>
+          <h2>提取敏感词：search-sensitive</h2>
+          <p class="lead">扫描源码，找出包含品牌词 / 产品词的标识符，输出 <code>result.json</code>。
+            默认扫描所有目录、所有扩展名，排除项由 <code>scan-exclude.json</code> 控制。</p>
+        </div>
+        <label class="done-toggle"><input type="checkbox" data-done="search-sensitive">标记完成</label>
+      </div>
+
+      <div class="cmd">
+        <div class="cmd-head"><span class="lang">bash</span><button class="copy-btn" data-copy>复制</button></div>
+        <pre><code>node name-replacer/search-sensitive.mjs \
+  -d . \
+  --words-file base-words.json \
+  --concise \
+  -o result.json</code></pre>
+      </div>
+
+      <h3>必要参数</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>参数</th><th>必填</th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td><code>-d, --dir &lt;path&gt;</code></td><td><span class="req">必填（推荐）</span></td><td>搜索根目录；默认当前目录。正式流程一般显式写 <code>-d .</code> 或 targets 目录</td></tr>
+          <tr><td><code>--words-file &lt;path&gt;</code></td><td><span class="req">二选一</span></td><td>从文件读取搜索词；JSON 数组 / <code>{"words":[...]}</code> / 纯文本均可，<code>!</code> 前缀 = 精确匹配</td></tr>
+          <tr><td><code>-w, --words &lt;list&gt;</code></td><td><span class="req">二选一</span></td><td>逗号分隔的搜索词；词多时用文件更好维护</td></tr>
+          <tr><td><code>-o, --output &lt;path&gt;</code></td><td><span class="req">流程必填</span></td><td>JSON 输出路径；正式流程必须写文件，供下一步合并</td></tr>
+          <tr><td><code>--concise</code></td><td><span class="rec">建议</span></td><td>只输出标识符和统计，不生成替换后文件</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>常用可选参数</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>参数</th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td><code>--whole-word</code></td><td>只在标识符边界匹配（默认子串匹配）</td></tr>
+          <tr><td><code>--no-paths</code></td><td>只搜文件内容，跳过目录名 / 文件名匹配</td></tr>
+          <tr><td><code>--ext &lt;exts&gt;</code> / <code>--ext-file &lt;path&gt;</code></td><td>只扫描这些扩展名（白名单）</td></tr>
+          <tr><td><code>--include-ext</code> / <code>--include-dirs</code></td><td>临时强制放行被 <code>scan-exclude.json</code> 排除的扩展名 / 目录</td></tr>
+          <tr><td><code>--protected-files &lt;path&gt;</code> / <code>--no-protected-files</code></td><td>指定保护配置 / 临时关闭保护（见「保护机制」）</td></tr>
+          <tr><td><code>--context &lt;n&gt;</code> / <code>--limit-files &lt;n&gt;</code></td><td>终端上下文长度 / 详情最多显示文件数</td></tr>
+          <tr><td><code>--json</code></td><td>终端输出 JSON，不打印表格</td></tr>
+        </tbody>
+      </table></div>
+
+      <div class="callout ok">
+        <b>怎么确认结果正常？</b>
+        终端会出现「词 × 文件」交叉表；stderr 会打印扫描文件数、匹配数、保护跳过数。
+        生成后打开 <code>result.json</code> 看 <code>identifiers</code> 是否只包含预期词。
+      </div>
+    </section>
+
+    <!-- ── EC ── -->
+    <section id="search-ec" class="card">
+      <div class="section-head">
+        <div>
+          <div class="step-badge"><span class="dot"></span>第 3 步 · 提取</div>
+          <h2>提取 EC：search-ec</h2>
+          <p class="lead">把标识符按 camelCase / snake_case 分词，只提取 <strong>EC 作为独立语义 token</strong> 的标识符，
+            输出 <code>ec-result.json</code>。</p>
+        </div>
+        <label class="done-toggle"><input type="checkbox" data-done="search-ec">标记完成</label>
+      </div>
+
+      <div class="cmd">
+        <div class="cmd-head"><span class="lang">bash</span><button class="copy-btn" data-copy>复制</button></div>
+        <pre><code>node name-replacer/search-ec.mjs \
+  -d . \
+  --concise \
+  -o ec-result.json</code></pre>
+      </div>
+
+      <div class="table-wrap"><table>
+        <thead><tr><th>参数</th><th>必填</th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td><code>-d, --dir &lt;path&gt;</code></td><td><span class="req">必填（推荐）</span></td><td>搜索根目录</td></tr>
+          <tr><td><code>-o, --output &lt;path&gt;</code></td><td><span class="req">流程必填</span></td><td>输出 <code>ec-result.json</code></td></tr>
+          <tr><td><code>--concise</code></td><td><span class="rec">建议</span></td><td>只输出标识符列表 + 计数</td></tr>
+          <tr><td><code>--fused</code></td><td><span class="opt">可选</span></td><td>融合词匹配：<code>ECXML</code>、<code>ECSQLREADER</code>、<code>ecsqlreader</code> 也会提取；<code>DECLARE</code> 这类英文单词也会混进来，提取 ≠ 替换</td></tr>
+          <tr><td><code>--case-sensitive</code></td><td><span class="opt">可选</span></td><td>大小写敏感（默认 Ec / ec / EC 都算）</td></tr>
+          <tr><td><code>--no-paths</code></td><td><span class="opt">可选</span></td><td>只搜内容，不报告目录名 / 文件名匹配</td></tr>
+          <tr><td><code>--ext</code> / <code>--include-ext</code> / <code>--include-dirs</code></td><td><span class="opt">可选</span></td><td>扩展名白名单 / 强制放行</td></tr>
+          <tr><td><code>--protected-files</code> / <code>--no-protected-files</code></td><td><span class="opt">可选</span></td><td>保护配置覆盖 / 临时关闭</td></tr>
+        </tbody>
+      </table></div>
+
+      <div class="callout info">
+        <b>匹配示例</b>
+        <code>ECEntityClass</code> ✓、<code>ECDb</code> ✓、<code>myEcSchema</code> ✓、<code>EC</code> ✓；
+        <code>select</code> ✗、<code>AEC</code> ✗、<code>project</code> ✗。
+      </div>
+    </section>
+
+    <!-- ── 合并词表 ── -->
+    <section id="merge-ids" class="card">
+      <div class="section-head">
+        <div>
+          <div class="step-badge"><span class="dot"></span>第 4 步 · 合并</div>
+          <h2>合并词表：merge-ids</h2>
+          <p class="lead">把多份搜索结果合并成一份 <code>all-ids.json</code>，作为配置网页的输入。</p>
+        </div>
+        <label class="done-toggle"><input type="checkbox" data-done="merge-ids">标记完成</label>
+      </div>
+
+      <div class="cmd">
+        <div class="cmd-head"><span class="lang">bash</span><button class="copy-btn" data-copy>复制</button></div>
+        <pre><code>node name-replacer/merge-ids.mjs ec-result.json result.json -o all-ids.json</code></pre>
+      </div>
+
+      <div class="table-wrap"><table>
+        <thead><tr><th>参数</th><th>必填</th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td><code>&lt;file1.json&gt; &lt;file2.json&gt; ...</code></td><td><span class="req">必填</span></td><td>输入文件，可传任意多个；支持 <code>identifiers</code> 为数组或按词分组的对象</td></tr>
+          <tr><td><code>-o, --output &lt;path&gt;</code></td><td><span class="req">流程必填</span></td><td>合并结果，默认 <code>all-ids.json</code></td></tr>
+        </tbody>
+      </table></div>
+
+      <div class="callout ok">
+        <b>输出检查</b>
+        <code>all-ids.json</code> 里的 <code>identifiers</code> 应该是所有需要配置替换词的标识符全集；
+        <code>sources</code> 会记录每份输入的标识符数和路径匹配数。
+      </div>
+    </section>
+
+    <!-- ── 配置映射 ── -->
+    <section id="replace-server" class="card">
+      <div class="section-head">
+        <div>
+          <div class="step-badge"><span class="dot"></span>第 5 步 · 配置</div>
+          <h2>配置映射：replace-server</h2>
+          <p class="lead">在网页里为每个搜索词填写替换方案，保存后生成
+            <code>name-replacer/all-ids-mapping.json</code>，同时更新
+            <code>replace-server-config.json</code>。</p>
+        </div>
+        <label class="done-toggle"><input type="checkbox" data-done="replace-server">标记完成</label>
+      </div>
+
+      <div class="cmd">
+        <div class="cmd-head"><span class="lang">bash</span><button class="copy-btn" data-copy>复制</button></div>
+        <pre><code>node name-replacer/replace-server.mjs --input all-ids.json
+<span class="comment"># 浏览器打开 http://localhost:3457</span></code></pre>
+      </div>
+
+      <div class="table-wrap"><table>
+        <thead><tr><th>参数</th><th>必填</th><th>说明</th><th>默认</th></tr></thead>
+        <tbody>
+          <tr><td><code>--input &lt;path&gt;</code></td><td><span class="req">必填</span></td><td>合并词表，通常是 <code>all-ids.json</code></td><td>无</td></tr>
+          <tr><td><code>-p, --port &lt;n&gt;</code></td><td><span class="opt">可选</span></td><td>网页端口</td><td><code>3457</code></td></tr>
+          <tr><td><code>-w, --word &lt;word&gt;</code></td><td><span class="opt">可选</span></td><td>单词模式：只配置某个词</td><td>多词模式</td></tr>
+          <tr><td><code>-o, --output &lt;path&gt;</code></td><td><span class="opt">可选</span></td><td>自定义映射表输出路径</td><td>&lt;input&gt;-mapping.json</td></tr>
+          <tr><td><code>--config &lt;path&gt;</code></td><td><span class="opt">可选</span></td><td>自定义配置文件路径</td><td><code>replace-server-config.json</code></td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>网页里的操作顺序</h3>
+      <div class="grid-2">
+        <div class="mini"><h4>1. 填替换词</h4><p>逐词填写「基准替换词 / baseName」；按需开启融合词替换（<code>ECXML</code> 这类）。</p></div>
+        <div class="mini"><h4>2. 处理排除项</h4><p>确认不能改的标识符加入排除列表；保存到 <code>exclude-list.json</code>。</p></div>
+        <div class="mini"><h4>3. 保存并更新映射</h4><p>点击「保存并更新映射表」，整体生成 <code>all-ids-mapping.json</code>。</p></div>
+        <div class="mini"><h4>4. 检查产物</h4><p>用「基础替换词保护」确认新词不会被二次改写，例如 <code>szewEC_ECClass → szewEC_DMClass</code>。</p></div>
+      </div>
+
+      <div class="callout warn">
+        <b>保存是整体覆盖，不是追加</b>
+        需要保留旧映射时，先备份，或用 <code>merge-mapping.mjs --into</code> 合并。
+        手动确认 / 忽略结果保存在配置文件的 <code>_manual</code> / <code>_manualTokens</code> / <code>_manualSkip</code>。
+      </div>
+    </section>
+
+    <!-- ── 合并映射 ── -->
+    <section id="merge-mapping" class="card">
+      <div class="section-head">
+        <div>
+          <div class="step-badge"><span class="dot"></span>第 6 步 · 可选</div>
+          <h2>合并映射：merge-mapping</h2>
+          <p class="lead">把新生成的映射并入已有的总表。默认合并
+            <code>base-mapping.json</code> + <code>all-ids-mapping.json</code> →
+            仓库根目录 <code>all-mapping.json</code>，后面的文件优先。</p>
+        </div>
+        <label class="done-toggle"><input type="checkbox" data-done="merge-mapping">标记完成</label>
+      </div>
+
+      <div class="cmd">
+        <div class="cmd-head"><span class="lang">bash</span><button class="copy-btn" data-copy>复制</button></div>
+        <pre><code><span class="comment"># 默认：base-mapping.json + all-ids-mapping.json → all-mapping.json</span>
+node name-replacer/merge-mapping.mjs
+
+<span class="comment"># 任意多个文件，后面的优先</span>
+node name-replacer/merge-mapping.mjs base.json extra.json -o all-mapping.json
+
+<span class="comment"># 合并进已有总表，保留目标独有条目</span>
+node name-replacer/merge-mapping.mjs --into all-mapping.json base.json extra.json</code></pre>
+      </div>
+
+      <div class="table-wrap"><table>
+        <thead><tr><th>参数</th><th>必填</th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td><code>&lt;file.json&gt; ...</code></td><td><span class="opt">可选</span></td><td>输入映射；省略时用默认两份</td></tr>
+          <tr><td><code>-o, --output &lt;path&gt;</code></td><td><span class="opt">可选</span></td><td>输出路径，默认 <code>all-mapping.json</code></td></tr>
+          <tr><td><code>--into &lt;path&gt;</code></td><td><span class="opt">可选</span></td><td>合并进已有文件，保留目标独有条目</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <!-- ── bim ── -->
+    <section id="replace-bim" class="card">
+      <div class="section-head">
+        <div>
+          <div class="step-badge"><span class="dot"></span>第 7 步 · 替换前</div>
+          <h2>bim 词族：replace-bim</h2>
+          <p class="lead">只替换文件后缀 / 扩展名 / 格式字面量相关的 <code>bim</code>、<code>ibim</code>、<code>bims</code>，
+            不会动普通标识符和中文语境。必须在 <code>replace-staged</code> 之前运行，
+            否则构建发布的包里还是旧格式名。</p>
+        </div>
+        <label class="done-toggle"><input type="checkbox" data-done="replace-bim">标记完成</label>
+      </div>
+
+      <div class="cmd">
+        <div class="cmd-head"><span class="lang">bash</span><button class="copy-btn" data-copy>复制</button></div>
+        <pre><code><span class="comment"># 先预览</span>
+node name-replacer/replace-bim.mjs --dry-run --targets name-replacer/targets.json
+
+<span class="comment"># 确认后执行</span>
+node name-replacer/replace-bim.mjs --targets name-replacer/targets.json</code></pre>
+      </div>
+
+      <div class="table-wrap"><table>
+        <thead><tr><th>参数</th><th>必填</th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td><code>--dry-run</code></td><td><span class="rec">强烈建议</span></td><td>只预览改动，不写磁盘</td></tr>
+          <tr><td><code>--targets &lt;file&gt;</code></td><td><span class="req">二选一</span></td><td>按 targets.json 的目录处理</td></tr>
+          <tr><td><code>--dir &lt;dir&gt;</code></td><td><span class="req">二选一</span></td><td>直接指定目录，可重复</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <!-- ── 执行替换 ── -->
+    <section id="replace-exec" class="card">
+      <div class="section-head">
+        <div>
+          <div class="step-badge"><span class="dot"></span>第 8 步 · 执行</div>
+          <h2>执行替换：replace-staged / apply-replace</h2>
+          <p class="lead"><code>replace-staged</code> 是完整流程：内容替换 → 目录改名 → 构建 → 发布 → 安装测试；
+            <code>apply-replace</code> 只做内容替换和目录改名，不构建 / 不发布。</p>
+        </div>
+        <label class="done-toggle"><input type="checkbox" data-done="replace-exec">标记完成</label>
+      </div>
+
+      <h3>选择 A：分阶段替换（推荐，含发包与测试）</h3>
+      <div class="cmd">
+        <div class="cmd-head"><span class="lang">bash</span><button class="copy-btn" data-copy>复制</button></div>
+        <pre><code><span class="comment"># 1) 预览，不改磁盘、不构建</span>
+node name-replacer/replace-staged.mjs --targets name-replacer/targets.json --dry-run
+
+<span class="comment"># 2) 正式执行（替换 + 构建 + 发布 + 安装测试）</span>
+node name-replacer/replace-staged.mjs --targets name-replacer/targets.json
+
+<span class="comment"># 只替换，不安装 / 构建 / 发布 / 测试</span>
+node name-replacer/replace-staged.mjs --targets name-replacer/targets.json --replace-only
+
+<span class="comment"># 指定 registry（默认 http://localhost:4873/）</span>
+node name-replacer/replace-staged.mjs --targets name-replacer/targets.json \
+  --registry http://192.168.1.10:4873/</code></pre>
+      </div>
+
+      <div class="table-wrap"><table>
+        <thead><tr><th>参数</th><th>必填</th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td><code>--targets &lt;file&gt;</code></td><td><span class="req">二选一</span></td><td>按 targets.json 的批次执行</td></tr>
+          <tr><td><code>--dir &lt;dir&gt;</code></td><td><span class="req">二选一</span></td><td>直接指定目录，可重复</td></tr>
+          <tr><td><code>--dry-run</code></td><td><span class="rec">强烈建议</span></td><td>预览，不修改、不构建、不发布</td></tr>
+          <tr><td><code>--replace-only</code></td><td><span class="opt">可选</span></td><td>只替换：不安装、不构建、不发布、不测试；不清空 rush.json、不改 .npmrc、不启动 Verdaccio</td></tr>
+          <tr><td><code>--no-install</code> / <code>--no-build</code></td><td><span class="opt">可选</span></td><td>跳过安装 / 构建</td></tr>
+          <tr><td><code>--no-publish</code> / <code>--no-test</code></td><td><span class="opt">可选</span></td><td>跳过发布 / 测试</td></tr>
+          <tr><td><code>--no-clear-rush</code></td><td><span class="opt">可选</span></td><td>不清空 rush.json（保留旧条目）</td></tr>
+          <tr><td><code>--registry &lt;url&gt;</code></td><td><span class="opt">可选</span></td><td>发布目标；优先级：参数 &gt; targets.registry &gt; 环境变量 &gt; localhost</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>选择 B：只做内容替换（apply-replace）</h3>
+      <div class="cmd">
+        <div class="cmd-head"><span class="lang">bash</span><button class="copy-btn" data-copy>复制</button></div>
+        <pre><code><span class="comment"># apply-replace 固定读取 name-mapping.json</span>
+cp name-replacer/all-ids-mapping.json name-replacer/name-mapping.json
+
+<span class="comment"># 先预览</span>
+node name-replacer/apply-replace.mjs --targets --dry-run
+
+<span class="comment"># 执行（--targets 省略路径时用 name-replacer/targets.json）</span>
+node name-replacer/apply-replace.mjs --targets
+
+<span class="comment"># 也可以直接指定目录（可重复），不传时扫描整个仓库</span>
+node name-replacer/apply-replace.mjs --target appui --target base</code></pre>
+      </div>
+
+      <div class="table-wrap"><table>
+        <thead><tr><th>参数</th><th>必填</th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td><code>--target &lt;dir&gt;</code></td><td><span class="opt">可选</span></td><td>目标目录，可重复；与 <code>--targets</code> 叠加</td></tr>
+          <tr><td><code>--targets [file]</code></td><td><span class="opt">可选</span></td><td>从 targets.json 读取目录（dirs + replaceOnly）；省略路径用默认文件</td></tr>
+          <tr><td><code>--dry-run</code></td><td><span class="rec">强烈建议</span></td><td>预览，不改文件、不改目录名</td></tr>
+        </tbody>
+      </table></div>
+
+      <div class="callout danger">
+        <b>这一步会真正改源码</b>
+        确认前面的映射、保护配置、targets 批次都正确；确认已经 commit / stash。
+        中途失败先用 <code>git diff</code> 看清改动，再决定修复还是回滚。
+      </div>
+    </section>
+
+    <!-- ── 验证 ── -->
+    <section id="verify" class="card">
+      <div class="section-head">
+        <div>
+          <div class="step-badge"><span class="dot"></span>第 9 步 · 收尾</div>
+          <h2>验证与回滚</h2>
+          <p class="lead">替换后重新提取一遍，对比标识符；检查构建产物、发包结果和测试。</p>
+        </div>
+        <label class="done-toggle"><input type="checkbox" data-done="verify">标记完成</label>
+      </div>
+
+      <div class="cmd">
+        <div class="cmd-head"><span class="lang">bash</span><button class="copy-btn" data-copy>复制</button></div>
+        <pre><code><span class="comment"># 重新提取，确认品牌词已消失</span>
+node name-replacer/search-sensitive.mjs -d . --words-file base-words.json --concise -o result-after.json
+node name-replacer/search-ec.mjs -d . --concise -o ec-after.json
+
+<span class="comment"># 看改了哪些文件 / 目录</span>
+git diff --stat
+git status
+
+<span class="comment"># 需要回滚时</span>
+git checkout -- .
+git clean -fd</code></pre>
+      </div>
+
+      <div class="grid-2">
+        <div class="mini"><h4>检查提取结果</h4><p>替换后 <code>result-after.json</code> 里不应再出现原品牌词；<code>ec-after.json</code> 中 EC 相关标识符应换成新词。</p></div>
+        <div class="mini"><h4>检查保护区域</h4><p>保护文件 / 片段里原本的标识符应保持原样；保护只作用于提取阶段，替换保护用 <code>exclude-list.json</code>。</p></div>
+        <div class="mini"><h4>检查构建 / 发包</h4><p>包名、依赖名、目录名、<code>.bim → .dtw</code> 等格式词都要核对；registry 上的版本是否正确。</p></div>
+        <div class="mini"><h4>检查测试</h4><p><code>replace-staged</code> 会跑安装测试；失败时看是源码替换问题还是依赖解析问题。</p></div>
+      </div>
+    </section>
+
+    <!-- ── 保护机制 ── -->
+    <section id="protections" class="card">
+      <div class="step-badge"><span class="dot"></span>附录 A</div>
+      <h2>保护机制：哪些词不能动</h2>
+      <p class="lead">四套机制解决不同问题，别混用。</p>
+
+      <div class="table-wrap"><table>
+        <thead><tr><th>机制</th><th>作用阶段</th><th>粒度</th><th>解决什么</th></tr></thead>
+        <tbody>
+          <tr><td><code>scan-exclude.json</code></td><td>扫描</td><td>目录 / 扩展名 / 文件名</td><td>根本不扫描：node_modules、dist、二进制、生成物</td></tr>
+          <tr><td><code>protected-words.json</code></td><td>提取 + 生成映射</td><td>标识符内部的一段区间</td><td>已定稿的新词不被二次提取 / 改写（<code>szewec</code> 里的 <code>ec</code>）</td></tr>
+          <tr><td><code>protected-files.json</code></td><td>提取</td><td>整个文件 / 代码片段</td><td>密码保护这类代码不能改名</td></tr>
+          <tr><td><code>exclude-list.json</code></td><td>替换</td><td>整个标识符 / 任意文本（可按路径）</td><td>替换阶段跳过指定文本</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>基础替换词保护（自动生效）</h3>
+      <p>自动来源：<code>base-mapping.json</code> 的所有值、<code>replace-server-config.json</code> 的
+        <code>baseName</code>、<code>exclude-list.json</code> 的全局条目；
+        需要补充时写 <code>protected-words.json</code>。提取时命中落在保护词内部就跳过；
+        生成映射时保护词先藏起来，避免被下一个词二次改写。</p>
+
+      <h3 id="protected-files-detail">保护文件 / 保护片段（protected-files.json）</h3>
+      <div class="cmd">
+        <div class="cmd-head"><span class="lang">json · name-replacer/protected-files.json</span><button class="copy-btn" data-copy>复制</button></div>
+        <pre><code>{
+  "files": [
+    "szewtwinjs-core/core/backend/src/PasswordProtection.ts",
+    { "path": "base/units-schema/src/license/", "note": "整目录保护" }
+  ],
+  "snippets": [
+    "return {...from, baseUri: `${process.env.OBJECT_STORAGE_URL ?? \"http://10.0.19.202:9000\"}/${from.accountName}`, accessToken: from.sasToken, storageType: process.env.OBJECT_STORAGE_TYPE === \"minio\" ? \"minio\" : \"azure\" }"
+  ]
+}</code></pre>
+      </div>
+
+      <div class="grid-2">
+        <div class="mini"><h4><code>files</code>：整份文件</h4><p>文件内容不参与提取；文件里的标识符在其他文件里也不再提取。</p></div>
+        <div class="mini"><h4><code>snippets</code>：代码片段</h4><p>直接贴代码原文，不需要逐字符一致。先收集片段里的候选标识符，<strong>再按当前搜索规则筛选</strong>：只有本来会被提取的词才排除。</p></div>
+      </div>
+
+      <div class="callout info">
+        <b>片段保护的关键语义（培训重点）</b>
+        <code>search-ec</code> 只排除片段里带 EC 分词单元的标识符（如 <code>sdfsEc54sdgsdf</code>）；
+        <code>search-sensitive</code> 只排除片段里命中当前搜索词的标识符。
+        片段里的 <code>minio</code>、<code>azure</code>、<code>from</code>、<code>process</code>
+        这类本来就不会被提取的词，<strong>不会</strong>进入保护名单。
+        被排除的标识符仍然全局生效（其他文件里的同名代码也不提取）。
+      </div>
+
+      <div class="cmd">
+        <div class="cmd-head"><span class="lang">bash · 查看保护区域</span><button class="copy-btn" data-copy>复制</button></div>
+        <pre><code><span class="comment"># 查看当前保护文件 / 片段概况</span>
+node name-replacer/protected-files.mjs
+
+<span class="comment"># 查看某个搜索词下，片段里实际会被排除的标识符（子串粗筛）</span>
+node name-replacer/protected-files.mjs --word EC
+
+<span class="comment"># 临时关闭保护</span>
+node name-replacer/search-ec.mjs -d . --no-protected-files</code></pre>
+      </div>
+
+      <h3>替换排除：exclude-list.json</h3>
+      <div class="cmd">
+        <div class="cmd-head"><span class="lang">json · name-replacer/exclude-list.json</span><button class="copy-btn" data-copy>复制</button></div>
+        <pre><code>[
+  "CorEcA",
+  { "text": "ECSecretKey", "paths": ["**/PasswordProtection.ts"] }
+]</code></pre>
+      </div>
+      <p class="muted">直接写字符串 = 全局生效；<code>{ text, paths }</code> = 只在匹配路径生效。
+        <code>paths</code> 相对 <code>name-replacer/</code> 目录，支持 <code>*</code> / <code>**</code>。
+        该表在替换（apply-replace）阶段把文本藏成占位符，替换完再还原。</p>
+    </section>
+
+    <!-- ── 配置文件 ── -->
+    <section id="configs" class="card">
+      <div class="step-badge"><span class="dot"></span>附录 B</div>
+      <h2>配置文件速查</h2>
+      <div class="file-list">
+        <div class="file-row"><code>scan-exclude.json</code><span>扫描排除：<code>dirs</code> / <code>includeDirs</code> / <code>exts</code> / <code>files</code>；搜索、替换共用</span></div>
+        <div class="file-row"><code>targets.json</code><span>批次目录：<code>stages[].dirs</code>（替换+发布）、<code>replaceOnly</code>（只替换）</span></div>
+        <div class="file-row"><code>protected-words.json</code><span>手工补充的基础替换词（自动来源之外）</span></div>
+        <div class="file-row"><code>protected-files.json</code><span>保护文件 <code>files</code> + 保护片段 <code>snippets</code>（仅提取阶段）</span></div>
+        <div class="file-row"><code>exclude-list.json</code><span>替换阶段排除文本；字符串全局，对象可按路径</span></div>
+        <div class="file-row"><code>base-mapping.json</code><span>基础替换映射；其值会自动纳入基础替换词保护</span></div>
+        <div class="file-row"><code>replace-server-config.json</code><span>配置网页的保存结果；<code>baseName</code> 自动纳入保护</span></div>
+      </div>
+
+      <h3>scan-exclude.json 示例</h3>
+      <div class="cmd">
+        <div class="cmd-head"><span class="lang">json</span><button class="copy-btn" data-copy>复制</button></div>
+        <pre><code>{
+  "dirs": ["node_modules", ".git", "**/common/temp", "name-replacer", "dist", "lib"],
+  "includeDirs": ["base/icons-generic-webfont/dist"],
+  "exts": [".png", ".woff2", ".zip", ".map"],
+  "files": ["pnpm-lock.yaml", "*-mapping.json", "targets.json"]
+}</code></pre>
+      </div>
+      <p class="muted">不含 <code>/</code> 的条目按名称匹配，含 <code>/</code> 的按相对路径匹配；
+        支持 <code>*</code> / <code>**</code> / <code>?</code>。<code>includeDirs</code> 白名单优先于排除规则。
+        配置文件缺失时不排除任何内容；5MB 以上或含 NUL 字节的文件始终跳过。</p>
+    </section>
+
+    <!-- ── FAQ ── -->
+    <section id="faq" class="card">
+      <div class="step-badge"><span class="dot"></span>附录 C</div>
+      <h2>常见问题</h2>
+
+      <h3>1. 提取结果为空 / 文件太少？</h3>
+      <p>先看 stderr 的「目录 / 排除配置 / 扫描文件数」。常见原因：<code>-d</code> 指错目录；
+        <code>scan-exclude.json</code> 排掉了目标目录；扩展名被白名单限制；词表文件路径不对。</p>
+
+      <h3>2. 保护片段里明明有 minio / azure，为什么没进保护名单？</h3>
+      <p>这是设计行为：保护片段只影响<strong>本来会被提取出来的词</strong>。
+        EC 提取不会命中 <code>minio</code>，敏感词搜索也不会（除非你的搜索词就是它），
+        所以它们不需要保护。实际排除项会在搜索时打印在 stderr。</p>
+
+      <h3>3. 保护配置生效了，为什么替换还是改了保护区域？</h3>
+      <p><code>protected-files</code> 只管提取阶段。已经存在于 <code>base-mapping.json</code>
+        的映射、或子串形式的替换仍可能改到它。需要替换也跳过时，用
+        <code>exclude-list.json</code> 的 <code>{ "text": "...", "paths": ["..."] }</code>。</p>
+
+      <h3>4. replace-server 保存后旧映射丢了？</h3>
+      <p>保存是整体覆盖。保留旧条目的方式：先备份 <code>all-ids-mapping.json</code>，
+        或用 <code>node name-replacer/merge-mapping.mjs --into</code> 合并。</p>
+
+      <h3>5. 多批次目录怎么安排？</h3>
+      <p>按依赖顺序拆到 <code>targets.json</code> 的多个 <code>stages</code>；
+        只替换不发布的包放进 <code>replaceOnly</code>。批次划分可参考
+        <code>name-replacer/dep-layers.md</code>。</p>
+
+      <h3>6. 发包目标怎么改？</h3>
+      <p>优先级：<code>--registry</code> 参数 &gt; targets 顶层 <code>registry</code> &gt;
+        环境变量 <code>REPLACE_STAGED_REGISTRY</code> &gt; 默认 <code>http://localhost:4873/</code>。</p>
+
+      <div class="callout ok">
+        <b>培训建议</b>
+        第一次演示只走到 <code>replace-server</code>，让学员亲手保存一份映射；
+        第二次再用一个无关的小目录跑 <code>apply-replace --dry-run</code> 看替换预览；
+        最后才在真实批次上执行。
+      </div>
+    </section>
+
+    <footer>
+      name-replacer 培训讲义 · 单文件离线版。参数以脚本 <code>--help</code> 与
+      <code>README.md</code> 为准；代码更新后如与本页不一致，以仓库为准。
+    </footer>
+  </main>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  // ── 复制命令 ──────────────────────────────────────────────
+  document.querySelectorAll('.copy-btn[data-copy]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var block = btn.closest('.cmd');
+      var code = block ? block.querySelector('pre code') : null;
+      if (!code) return;
+      var text = code.innerText;
+      var done = function () {
+        btn.textContent = '已复制';
+        btn.classList.add('copied');
+        setTimeout(function () {
+          btn.textContent = '复制';
+          btn.classList.remove('copied');
+        }, 1600);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, function () { fallback(text); done(); });
+      } else {
+        fallback(text);
+        done();
+      }
+      function fallback(t) {
+        var ta = document.createElement('textarea');
+        ta.value = t;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch (e) {}
+        document.body.removeChild(ta);
+      }
+    });
+  });
+
+  // ── 学习进度 ──────────────────────────────────────────────
+  var KEY = 'name-replacer-training-progress-v1';
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('input[data-done]'));
+  var saved = {};
+  try { saved = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { saved = {}; }
+
+  function refreshProgress() {
+    var done = 0;
+    boxes.forEach(function (box) {
+      var id = box.getAttribute('data-done');
+      var isDone = !!box.checked;
+      if (isDone) done++;
+      var label = box.closest('.done-toggle');
+      if (label) label.classList.toggle('is-done', isDone);
+      var navLink = document.querySelector('#nav a[data-step="' + id + '"] .tick');
+      if (navLink) navLink.textContent = isDone ? '✓' : '';
+    });
+    var total = boxes.length || 1;
+    var pct = Math.round(done / total * 100);
+    var bar = document.getElementById('progressBar');
+    var text = document.getElementById('progressText');
+    if (bar) bar.style.width = pct + '%';
+    if (text) text.textContent = done + ' / ' + boxes.length;
+  }
+
+  boxes.forEach(function (box) {
+    var id = box.getAttribute('data-done');
+    box.checked = !!saved[id];
+    box.addEventListener('change', function () {
+      saved[id] = box.checked;
+      try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch (e) {}
+      refreshProgress();
+    });
+  });
+  refreshProgress();
+
+  // ── 侧栏当前章节高亮 ──────────────────────────────────────
+  var navLinks = Array.prototype.slice.call(document.querySelectorAll('#nav a'));
+  var targets = navLinks
+    .map(function (a) {
+      var id = a.getAttribute('href');
+      var el = id && id.charAt(0) === '#' ? document.querySelector(id) : null;
+      return el ? { link: a, el: el } : null;
+    })
+    .filter(Boolean);
+
+  if ('IntersectionObserver' in window) {
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        var found = targets.find(function (t) { return t.el === entry.target; });
+        if (!found) return;
+        navLinks.forEach(function (a) { a.classList.remove('active'); });
+        found.link.classList.add('active');
+      });
+    }, { rootMargin: '-15% 0px -70% 0px', threshold: 0 });
+    targets.forEach(function (t) { observer.observe(t.el); });
+  }
+
+  // ── 流程演示 ──────────────────────────────────────────────
+  var pipeSteps = Array.prototype.slice.call(document.querySelectorAll('.pipe-step'));
+  var caption = document.getElementById('pipeCaption');
+  var playBtn = document.getElementById('playDemo');
+  var timer = null;
+  var current = -1;
+
+  function clearActive() {
+    pipeSteps.forEach(function (el) { el.classList.remove('active'); });
+  }
+
+  function showStep(i) {
+    clearActive();
+    if (i < 0 || i >= pipeSteps.length) {
+      if (caption) caption.textContent = '演示结束：真实执行请按左侧完整流程逐步操作，先预览再执行。';
+      return;
+    }
+    var el = pipeSteps[i];
+    el.classList.add('active');
+    if (caption) caption.textContent = el.getAttribute('data-caption') || '';
+  }
+
+  if (playBtn && pipeSteps.length) {
+    playBtn.addEventListener('click', function () {
+      if (timer) {
+        clearInterval(timer);
+        timer = null;
+        playBtn.textContent = '▶ 播放流程演示';
+        clearActive();
+        if (caption) caption.textContent = '演示已停止。点任意阶段可跳转查看说明。';
+        return;
+      }
+      playBtn.textContent = '⏸ 停止演示';
+      current = 0;
+      showStep(current);
+      timer = setInterval(function () {
+        current++;
+        if (current >= pipeSteps.length) {
+          clearInterval(timer);
+          timer = null;
+          playBtn.textContent = '▶ 播放流程演示';
+          showStep(-1);
+          clearActive();
+          return;
+        }
+        showStep(current);
+      }, 1400);
+    });
+  }
+
+  pipeSteps.forEach(function (el) {
+    el.addEventListener('click', function () {
+      var id = el.getAttribute('data-id');
+      var section = id ? document.getElementById(id) : null;
+      if (section) {
+        if (timer) { clearInterval(timer); timer = null; if (playBtn) playBtn.textContent = '▶ 播放流程演示'; }
+        clearActive();
+        el.classList.add('active');
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+  var printBtn = document.getElementById('printBtn');
+  if (printBtn) printBtn.addEventListener('click', function () { window.print(); });
+})();
+</script>
+</body>
+</html>

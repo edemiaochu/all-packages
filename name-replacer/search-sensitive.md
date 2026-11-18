@@ -164,6 +164,29 @@ DgnCore
 例如搜索 `ec` 时，`szewec`、`szewEC` 不再命中；但 `szewecBentley` 里的
 `Bentley` 仍会正常命中（只跳过受保护片段内部的命中）。
 
+## 保护区域（自动生效）
+
+`name-replacer/protected-files.json` 支持两种保护区域，命中的标识符不参与提取：
+
+- `files`：整份文件（密码保护模块等）
+- `snippets`：文件里的一段代码（直接贴原文）
+
+`files` 整份不提取；`snippets` 只排除片段里**会被当前搜索词命中**的标识符
+（搜 `Bentley` 时只排除片段里的 Bentley 相关词，其它词不受影响）。
+被排除的标识符在其他文件里也不再提取——否则同名代码在别处被替换后，
+保护区域里的代码会跟着改掉。
+
+```bash
+# 查看当前生效的保护区域
+node name-replacer/protected-files.mjs
+
+# 临时关闭 / 指定其他配置
+node name-replacer/search-sensitive.mjs -d . -w "EC" --no-protected-files
+node name-replacer/search-sensitive.mjs -d . -w "EC" --protected-files my.json
+```
+
+写法与匹配规则见 [protected-files.md](protected-files.md)。
+
 ## 排除配置与覆盖
 
 默认扫描指定目录下的**所有文件夹 + 所有扩展名**。排除项只来自

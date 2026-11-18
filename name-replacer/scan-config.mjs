@@ -47,8 +47,8 @@ function toStrArray(v) {
   return v.filter(x => typeof x === 'string' && x.trim()).map(x => x.trim());
 }
 
-/** glob → 正则：* 不跨 /，** 跨层级，同时支持 ? */
-function globToRegExp(pattern) {
+/** glob → 正则：* 不跨 /，** 跨层级，同时支持 ?（protected-files.mjs 也用） */
+export function globToRegExp(pattern) {
   const p = String(pattern).replace(/\\/g, '/');
   let re = '^';
   for (let i = 0; i < p.length; i++) {

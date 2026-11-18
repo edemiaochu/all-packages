@@ -66,6 +66,11 @@
  *   baseName、exclude-list.json 的条目）不参与提取。例如 szewec 里的 "ec"
  *   是替换结果的一部分，szewEC / SzewECSchema 不会被当成 EC 提取。
  *   额外的手工保护词写在 name-replacer/protected-words.json（可选）。
+ *
+ * 保护区域:
+ *   name-replacer/protected-files.json 的 files / snippets（密码保护文件、代码片段）。
+ *   files 整份不提取；snippets 只排除片段里会被 EC 提取命中的标识符。
+ *   被排除的标识符在其他文件里也不再提取（见 protected-files.md）。
  */
 
 import { readFileSync, readdirSync, statSync, writeFileSync, mkdirSync } from 'fs';
@@ -73,10 +78,12 @@ import { join, extname, relative, resolve, dirname, normalize } from 'path';
 import { fileURLToPath } from 'url';
 import { loadScanFilter, readTextFileSafely, normalizeExt } from './scan-config.mjs';
 import { loadProtector } from './protected-words.mjs';
+import { loadProtectedFiles, describeProtectedFiles } from './protected-files.mjs';
 import { isLiteralFragment } from './identifier-utils.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+const ROOT = resolve(__dirname, '..');
 
 // ── CLI 参数解析 ──────────────────────────────────────────────────────
 
@@ -96,6 +103,8 @@ function parseArgs(argv) {
     forceDirs: new Set(),   // --include-dirs：强制进入被配置排除的目录
     context: 40,
     limitFiles: 200,
+    protectedFiles: null,    // --protected-files：自定义保护文件配置
+    noProtectedFiles: false, // --no-protected-files：临时关闭保护文件
     help: false,
   };
 
@@ -142,6 +151,12 @@ function parseArgs(argv) {
         break;
       case '--fused':
         args.fused = true;
+        break;
+      case '--protected-files':
+        args.protectedFiles = resolve(argv[++i]);
+        break;
+      case '--no-protected-files':
+        args.noProtectedFiles = true;
         break;
       case '--help': case '-h':
         args.help = true;
@@ -470,9 +485,11 @@ const IDENTIFIER_RE = /[A-Za-z_$][\w$]*/g;
  * @param {boolean} fused - 启用融合词匹配（纯大写/纯小写段子串，见 containsFusedSegment）
  * @param {object|null} protector - 基础替换词保护器；命中落在受保护串内时跳过
  * @param {{protectedSkipped?:number}|null} stats - 可选统计
+ * @param {Set<string>|null} excludedIdentifiers - 保护文件里的标识符（小写）；
+ *        其他文件里的同名标识符同样不提取
  * @returns {null | { relPath: string, matches: Array<{line, col, identifier, matchedToken}> }}
  */
-function searchFile(filePath, word, caseSensitive, baseDir, ctxLen, fused, protector = null, stats = null) {
+function searchFile(filePath, word, caseSensitive, baseDir, ctxLen, fused, protector = null, stats = null, excludedIdentifiers = null) {
   // 兜底：超大文件 / 二进制（前 4KB 含 NUL）直接跳过
   const text = readTextFileSafely(filePath);
   if (text == null) return null;
@@ -489,6 +506,12 @@ function searchFile(filePath, word, caseSensitive, baseDir, ctxLen, fused, prote
     if (isLikelyRandomString(id)) continue;
     const { matched, matchedToken } = idContainsToken(id, word, caseSensitive, fused);
     if (!matched) continue;
+
+    // 保护文件：其中的标识符在别的文件里也不提取（否则保护文件会被连坐改名）
+    if (excludedIdentifiers && excludedIdentifiers.has(id.toLowerCase())) {
+      if (stats) stats.protectedFileIdentifiersSkipped = (stats.protectedFileIdentifiersSkipped || 0) + 1;
+      continue;
+    }
 
     // 基础替换词保护：szewEC 里的 EC 是替换结果 szewec 的一部分，不提取。
     // 同一标识符若还有不受保护的命中（如 szewEC_ECClass），仍会保留。
@@ -739,6 +762,8 @@ function main() {
   --ext <exts>             只扫描这些扩展名，逗号分隔（默认：所有扩展名）
   --include-ext <exts>     强制包含被配置排除的扩展名
   --include-dirs <names>   强制进入被配置排除的目录
+  --protected-files <path> 保护文件配置（默认 name-replacer/protected-files.json）
+  --no-protected-files     关闭保护文件（临时调试）
   --context <n>            上下文长度（默认 40 字符）
   --limit-files <n>        详情最多显示的文件数（默认 200）
 
@@ -753,6 +778,11 @@ function main() {
   的 baseName、exclude-list.json 的条目。szewEC / SzewECSchema 里的 "EC"
   属于替换结果 szewec，不会作为 EC 提取。
   额外补充写在 name-replacer/protected-words.json（数组或 { "words": [...] }）。
+
+保护区域（自动生效）:
+  name-replacer/protected-files.json 的 files / snippets（密码保护文件、代码片段）。
+  files 整份不提取；snippets 只排除片段里会被 EC 提取命中的标识符（如 ECLicense）。
+  被排除的标识符在其他文件里也不再提取（见 protected-files.md）。
 
 两维度搜索:
   1. 文件内容 — 代码标识符中 "EC" 作为独立 token
@@ -796,7 +826,23 @@ function main() {
 
   // 基础替换词保护：已定稿的新词（szewec 等）里的 ec 不算 EC
   const protector = loadProtector();
-  const protectStats = { protectedSkipped: 0 };
+  const protectStats = { protectedSkipped: 0, protectedFileIdentifiersSkipped: 0 };
+
+  // 保护区域：文件整份不提取；片段里只排除「真正会被 EC 提取命中」的标识符，
+  // 避免 minio/azure/from 这类无关词也进入排除名单
+  const protectFiles = args.noProtectedFiles
+    ? null
+    : loadProtectedFiles({ configPath: args.protectedFiles || undefined, repoRoot: ROOT, scanRoots: [baseDir] });
+  const excludedIdentifiers = new Set(protectFiles ? protectFiles.identifiers : []);
+  const protectedSnippetIdentifiers = [];
+  if (protectFiles) {
+    for (const id of protectFiles.snippetIdentifiers) {
+      if (idContainsToken(id, WORD, args.caseSensitive, args.fused).matched) {
+        excludedIdentifiers.add(id.toLowerCase());
+        protectedSnippetIdentifiers.push(id);
+      }
+    }
+  }
 
   // 排除配置：默认扫描全部，只有配置里列出的目录/扩展名/文件名会跳过
   const filter = loadScanFilter();
@@ -810,6 +856,12 @@ function main() {
   process.stderr.write(`📋 排除配置: ${filterStats}\n`);
   process.stderr.write(`🛡️  基础替换词保护: ${protector.terms.length} 个`
     + (protector.terms.length ? `（${protector.terms.slice(0, 10).join(', ')}${protector.terms.length > 10 ? ', …' : ''}）` : '') + '\n');
+  if (protectFiles) {
+    process.stderr.write(`🔒 保护区域: ${describeProtectedFiles(protectFiles, ROOT)}\n`);
+    if (protectedSnippetIdentifiers.length > 0) {
+      process.stderr.write(`   片段中命中 ${WORD} 的标识符: ${protectedSnippetIdentifiers.sort().join(', ')}\n`);
+    }
+  }
   process.stderr.write(`📄 扩展名范围: ${args.extExplicit ? args.extensions.join(', ') : '全部（按排除配置过滤）'}\n`);
   if (args.forceExts.size > 0 || args.forceDirs.size > 0) {
     const parts = [];
@@ -844,7 +896,19 @@ function main() {
       process.stderr.write(`⚠️  已排除输出文件: ${outputRel}\n`);
     }
   }
-  process.stderr.write(`📊 扫描文件数: ${files.length}\n`);
+
+  // 保护文件整体跳过（内容不提取）
+  let protectFilesExcluded = 0;
+  let scanFiles = files;
+  if (protectFiles) {
+    scanFiles = [];
+    for (const f of files) {
+      if (protectFiles.matcher.isProtectedFile(f)) protectFilesExcluded++;
+      else scanFiles.push(f);
+    }
+  }
+  process.stderr.write(`📊 扫描文件数: ${scanFiles.length}`
+    + (protectFilesExcluded ? `（另有 ${protectFilesExcluded} 个保护文件跳过）` : '') + '\n');
   if (collectPaths) {
     const dirCount = pathMatches.filter(p => p.type === 'directory').length;
     const fileCount = pathMatches.filter(p => p.type === 'file-name').length;
@@ -852,14 +916,15 @@ function main() {
   }
 
   // 搜索文件内容
+  const excluded = excludedIdentifiers.size > 0 ? excludedIdentifiers : null;
   const results = [];
-  for (let i = 0; i < files.length; i++) {
-    const r = searchFile(files[i], WORD, args.caseSensitive, baseDir, args.context, args.fused, protector, protectStats);
+  for (let i = 0; i < scanFiles.length; i++) {
+    const r = searchFile(scanFiles[i], WORD, args.caseSensitive, baseDir, args.context, args.fused, protector, protectStats, excluded);
     if (r) results.push(r);
 
     // 每 500 个文件输出进度
     if ((i + 1) % 500 === 0) {
-      process.stderr.write(`  ⏳ 进度: ${i + 1}/${files.length}\n`);
+      process.stderr.write(`  ⏳ 进度: ${i + 1}/${scanFiles.length}\n`);
     }
   }
 
@@ -875,7 +940,14 @@ function main() {
     excludeConfig: filter.source || null,
     protectedTerms: protector.terms,
     protectedMatchesSkipped: protectStats.protectedSkipped,
-    filesScanned: files.length,
+    protectedFiles: protectFiles
+      ? protectFiles.files.map(f => relative(baseDir, f).replace(/\\/g, '/'))
+      : [],
+    protectedFileIdentifiers: protectFiles ? protectFiles.identifiers.size : 0,
+    protectedSnippetIdentifiers: protectedSnippetIdentifiers.sort(),
+    protectedFileMatchesSkipped: protectStats.protectedFileIdentifiersSkipped,
+    protectedFilesExcluded: protectFilesExcluded,
+    filesScanned: scanFiles.length,
     filesWithMatches: results.length,
     totalMatches: results.reduce((s, r) => s + r.matches.length, 0),
     pathMatches: collectPaths ? {
@@ -888,6 +960,9 @@ function main() {
   process.stderr.write(`🔎 内容匹配: ${summary.filesWithMatches} 文件, ${summary.totalMatches} 处`);
   if (protectStats.protectedSkipped) {
     process.stderr.write(`（另有 ${protectStats.protectedSkipped} 处落在基础替换词内部，已跳过）`);
+  }
+  if (protectStats.protectedFileIdentifiersSkipped) {
+    process.stderr.write(`（另有 ${protectStats.protectedFileIdentifiersSkipped} 处属于保护区域中的标识符，已跳过）`);
   }
   process.stderr.write('\n');
   if (collectPaths) {
