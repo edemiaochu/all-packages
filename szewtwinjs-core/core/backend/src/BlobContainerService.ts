@@ -21,7 +21,7 @@ export namespace BlobContainer {
   export let service: BlobContainer.ContainerService | undefined;
 
   /** name of cloud provider for a container. */
-  export type Provider = "azure" | "google";
+  export type Provider = "azure" | "google" | "minio";
 
   /** the name of the container within its `Scope` */
   export type ContainerId = string;

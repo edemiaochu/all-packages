@@ -140,7 +140,7 @@ export namespace CloudSqlite {
   }
   export interface ContainerProps {
     /** The type of storage provider. */
-    readonly storageType: "azure" | "google";
+    readonly storageType: "azure" | "google" | "minio";
     /** The base URI for the container. */
     readonly baseUri: string;
     /** The name of the container. */

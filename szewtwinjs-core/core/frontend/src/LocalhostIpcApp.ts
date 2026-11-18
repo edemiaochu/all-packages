@@ -86,7 +86,7 @@ export class LocalhostIpcApp {
 
   public static buildUrlForSocket(base: URL, path = "ipc"): URL {
     const url = new URL(base);
-    url.protocol = "ws";
+    url.protocol = url.protocol=="https:" ? "wss" : "ws";
     url.pathname = [...url.pathname.split("/"), path].filter((v) => v).join("/");
     return url;
   }

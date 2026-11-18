@@ -177,7 +177,7 @@ export class V2CheckpointManager {
 
   /** Member names differ slightly between the V2Checkpoint api and the CloudSqlite api. Add aliases `accessName` for `accountName` and `accessToken` for `sasToken` */
   private static toCloudContainerProps(from: V2CheckpointAccessProps): CloudSqlite.ContainerAccessProps {
-    return { ...from, baseUri: `https://${from.accountName}.blob.core.windows.net`, accessToken: from.sasToken, storageType: "azure" };
+    return { ...from, baseUri: `${process.env.OBJECT_STORAGE_URL ?? "http://10.0.19.202:9000"}/${from.accountName}`, accessToken:from.sasToken, storageType:process.env.OBJECT_STORAGE_TYPE === "minio" ? "minio" : "azure" };
   }
 
   private static getContainer(v2Props: V2CheckpointAccessProps, checkpoint: CheckpointProps) {

@@ -577,7 +577,7 @@ class EditorContainerImpl extends WorkspaceContainerImpl implements EditableWork
     return {
       baseUri: cloudContainer.baseUri,
       containerId: cloudContainer.containerId,
-      storageType: cloudContainer.storageType as "azure" | "google",
+      storageType: cloudContainer.storageType as "azure" | "google" | "minio",
       isPublic: cloudContainer.isPublic,
     };
   }
