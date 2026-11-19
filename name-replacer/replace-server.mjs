@@ -877,12 +877,14 @@ function inferCompoundPrefix(word, wordConfigs) {
  *     （echo/ecosystem 对 ec——用 english-words.txt 判定）
  *   - 随机哈希串（isLikelyRandomString，混合大小写天然受保护）
  *   - token 已被链上规则消化（ecschema 文件名已被 ecschema 长词替换）
- *   - 已确认替换的 token（_manualTokens，应用后最终结果不再残留，自然离开清单）
  *   - 长词（≥5 字符）始终区间替换，含即被替，没有盲区
  *
- * 已忽略的 token（_manualSkip）仍然返回给前端，由前端按 skipState 隐藏；
+ * 已确认替换的 token（_manualTokens）不在这里过滤：调用方传入的 finalMapping
+ * 不含 token 规则，所以确认过的 token 仍会作为候选返回。前端按 confirmedState
+ * 隐藏已确认项；点 × 取消确认后即可重新出现在选择列表。
+ * 已忽略的 token（_manualSkip）同样返回给前端，由前端按 skipState 隐藏；
  * 这样点"撤销忽略"时才有原始 token 信息可以重新显示。
- * @param {Record<string,string>} finalMapping - 全链规则（含 token 规则）的映射结果
+ * @param {Record<string,string>} finalMapping - 不含 token 规则的映射结果（已确认的 token 要留在候选中，供前端撤销确认后重新选择）
  * @returns {Record<string, Array<{token:string, count:number, suggestion:string, samples:{id:string,auto:string}[]}>>}
  */
 function computePendingReview(wordConfigs, identifiers, excludeList, finalMapping) {
@@ -1030,7 +1032,7 @@ function buildHtml(session) {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>替换配置: ${searchWord}</title>
+<title>${mode === 'multi' ? '替换配置（多词）' : `替换配置: ${searchWord}`}</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: #f5f5f5; color: #333; }
@@ -1134,11 +1136,15 @@ body.no-modify input:not(#noModifyCheck) { pointer-events: none; background: #f5
 .skip-chip .del:hover { background: #adb5bd; }
 .pending-row .samples { font-size: 11px; color: #adb5bd; word-break: break-all; flex-basis: 100%; padding-left: 23px; }
 .pending-group .pending-more { margin-left: 8px; }
-.pending-actions { margin: 2px 0 10px; }
+.pending-actions { margin: 2px 0 10px; display: flex; gap: 8px; flex-wrap: wrap; }
 .batch-skip { padding: 5px 14px; border: 1px solid #ffc9c9; border-radius: 14px; background: #fff5f5; color: #e03131; font-size: 12px; cursor: pointer; }
 .batch-skip:hover { background: #ffe3e3; border-color: #ff8787; }
+.batch-confirm { padding: 5px 14px; border: 1px solid #b2f2bb; border-radius: 14px; background: #f4fff7; color: #2b8a3e; font-size: 12px; cursor: pointer; }
+.batch-confirm:hover { background: #ebfbee; border-color: #40c057; }
 .btn-skip { padding: 2px 10px; border: 1px solid #dee2e6; border-radius: 12px; background: #fff; color: #868e96; font-size: 11px; cursor: pointer; white-space: nowrap; }
 .btn-skip:hover { border-color: #fa5252; color: #fa5252; }
+.btn-confirm { padding: 2px 10px; border: 1px solid #b2f2bb; border-radius: 12px; background: #fff; color: #2b8a3e; font-size: 11px; cursor: pointer; white-space: nowrap; }
+.btn-confirm:hover { border-color: #40c057; background: #ebfbee; }
 .modal-body { flex: 1; overflow-y: auto; padding: 6px 0; }
 .transform-table { width: 100%; border-collapse: collapse; font-size: 13px; }
 .transform-table th { position: sticky; top: 0; background: #fafafa; padding: 10px 16px; text-align: left; font-weight: 600; color: #666; border-bottom: 2px solid #eee; z-index: 1; }
@@ -1199,9 +1205,9 @@ body.no-modify input:not(#noModifyCheck) { pointer-events: none; background: #f5
   </div>
 </div>
 <div class="actions">
-  <button class="btn-reset" onclick="resetAll()">恢复初始值</button>
-  <button class="btn-preview" onclick="showPreview()">预览变更</button>
-  <button class="btn-save" id="saveBtn" onclick="save()">保存并更新映射表</button>
+  <button class="btn-reset" title="只重置当前界面：基准替换词改回原始搜索词、清空未保存的自定义 override；不写配置文件，不保存就不会修改已保存内容" onclick="resetAll()">恢复初始值</button>
+  <button class="btn-preview" title="用当前配置在服务端执行一次替换，弹窗展示全部标识符的转换前后对比（不会写文件）" onclick="showPreview()">预览变更</button>
+  <button class="btn-save" id="saveBtn" title="按当前输入和配置重新生成映射表并整体覆盖写入，同时保存 UI 配置；已有映射不会追加保留" onclick="save()">保存并更新映射表</button>
 </div>
 
 <script>
@@ -1253,6 +1259,10 @@ let manualTokenState = { ...(PAGE_DATA.manualTokens || {}) };
 let skipState = new Set(PAGE_DATA.manualSkip || []);
 // 忽略优先：配置里同一 token 若同时存在确认规则和忽略记录，以忽略为准
 for (const tok of skipState) delete manualTokenState[tok];
+// 已确认（移出待确认列表）的 token。勾选但未点「确认」的 token 仍留在列表里可编辑。
+// 服务端用不含 token 规则的映射计算候选，因此已确认项仍在 PENDING 中；
+// 点已确认区域的 × 取消确认后，它会重新出现在待确认选择列表。
+let confirmedState = new Set(Object.keys(manualTokenState));
 let pendingExpanded = {};   // 词 → 是否已展开全部（默认每组只显示前 50 个 token）
 for (const items of Object.values(PENDING)) {
   for (const it of items) {
@@ -1387,25 +1397,28 @@ function render() {
   }
 
   // ── 待人工确认（融合 token，批量决策）──
-  // 忽略的 token 立即从列表隐藏（和服务端刷新后的过滤规则保持一致）
+  // 忽略/已确认的 token 立即从列表隐藏（和服务端刷新后的过滤规则保持一致）
   const visiblePending = {};
   for (const [w, items] of Object.entries(PENDING)) {
-    const visible = items.filter(it => !skipState.has(it.token));
+    const visible = items.filter(it => !skipState.has(it.token) && !confirmedState.has(it.token));
     if (visible.length > 0) visiblePending[w] = visible;
   }
   const pendingWords = Object.keys(visiblePending);
   let tokenTotal = 0;
   for (const w of pendingWords) tokenTotal += visiblePending[w].length;
-  const savedTokenEntries = Object.entries(manualTokenState);
+  const savedTokenEntries = Object.entries(manualTokenState).filter(([tok]) => confirmedState.has(tok));
   const skipArr = [...skipState].sort();
   const manualEntries = Object.entries(manualState);
   if (pendingWords.length > 0 || manualEntries.length > 0 || savedTokenEntries.length > 0 || skipArr.length > 0) {
     html += '<div class="word-card" id="pendingCard">';
     html += '<div class="word-header"><h2>待人工确认（融合缩写）</h2><span class="badge">' + tokenTotal + ' 个 token</span></div>';
     html += '<div class="word-body">';
-    html += '<div class="pending-hint">规则替换后仍残留的融合缩写 token（纯大写/纯小写、以短词开头，如 ECXML、ecclassid——程序无法自行判断是否为品牌缩写）。<b>按 token 批量确认</b>：一行 = 一条替换规则，长 token（≥5 字符）按子串生效、短 token 只匹配独立分词单元（不误伤 specs/ECCENTRIC 这类含同子串的英文词）；建议替换词已预填，可直接编辑。不需要替换的 token 点"忽略"。英文单词和随机哈希已自动排除。</div>';
+    html += '<div class="pending-hint">规则替换后仍残留的融合缩写 token（纯大写/纯小写、以短词开头，如 ECXML、ecclassid——程序无法自行判断是否为品牌缩写）。<b>按 token 批量确认</b>：一行 = 一条替换规则，长 token（≥5 字符）按子串生效、短 token 只匹配独立分词单元（不误伤 specs/ECCENTRIC 这类含同子串的英文词）；建议替换词已预填，可直接编辑。点"确认"后该 token 移出列表（进入上方"已确认"区域，点 × 可撤销重新选择）；不需要替换的 token 点"忽略"。英文单词和随机哈希已自动排除。</div>';
     if (tokenTotal > 0) {
-      html += '<div class="pending-actions"><button class="batch-skip" title="忽略当前全部待确认 token，之后可在「已忽略」区域逐个或全部撤销" onclick="skipAllPending()">全部忽略（' + tokenTotal + ' 个 token）</button></div>';
+      html += '<div class="pending-actions">' +
+        '<button class="batch-confirm" title="确认当前全部待确认 token（' + tokenTotal + ' 个）：采用建议替换词，已编辑过的保留当前值；确认后移出列表，可在上方「已确认的 token 替换」点 × 撤销" onclick="confirmAllPending()">全部确认（' + tokenTotal + ' 个 token）</button>' +
+        '<button class="batch-skip" title="忽略当前全部待确认 token（' + tokenTotal + ' 个）：不生成替换规则并移出列表，之后可在「已忽略」区域逐个或全部撤销" onclick="skipAllPending()">全部忽略（' + tokenTotal + ' 个 token）</button>' +
+        '</div>';
     }
     if (manualEntries.length > 0) {
       html += '<div class="pending-group">已确认的人工替换（按标识符，' + manualEntries.length + ' 条）</div>';
@@ -1414,14 +1427,14 @@ function render() {
       }
     }
     if (savedTokenEntries.length > 0) {
-      html += '<div class="pending-group">已确认的 token 替换（' + savedTokenEntries.length + ' 条）<button class="pending-more" onclick="clearAllTokens()">全部取消</button></div>';
+      html += '<div class="pending-group">已确认的 token 替换（' + savedTokenEntries.length + ' 条）<button class="pending-more" title="取消全部已确认 token 的替换规则，全部回到下方待确认选择列表" onclick="clearAllTokens()">全部取消</button></div>';
       for (const [tok, repl] of savedTokenEntries) {
-        html += '<div class="manual-entry"><span class="old">' + esc(tok) + '</span><span class="arrow">→</span><span class="auto">' + esc(repl) + '</span><button class="del-word" title="删除该 token 规则" onclick="removeToken(\\'' + encodeKey(tok) + '\\')">×</button></div>';
+        html += '<div class="manual-entry"><span class="old">' + esc(tok) + '</span><span class="arrow">→</span><span class="auto">' + esc(repl) + '</span><button class="del-word" title="取消确认，回到待确认选择列表" onclick="removeToken(\\'' + encodeKey(tok) + '\\')">×</button></div>';
       }
     }
     if (skipArr.length > 0) {
       html += '<div class="pending-group">已忽略的 token（' + skipArr.length + ' 个，点 × 撤销）' +
-        '<button class="pending-more" onclick="unskipAllTokens()">全部撤销</button></div>';
+        '<button class="pending-more" title="撤销全部忽略，所有 token 回到待确认选择列表" onclick="unskipAllTokens()">全部撤销</button></div>';
       for (const tok of skipArr) {
         html += '<span class="skip-chip">' + esc(tok) + '<button class="del" title="撤销忽略，回到待确认列表" onclick="unskipToken(\\'' + encodeKey(tok) + '\\')">×</button></span>';
       }
@@ -1432,14 +1445,15 @@ function render() {
         const items = visiblePending[word];
         const checkedCount = items.filter(it => Object.prototype.hasOwnProperty.call(manualTokenState, it.token)).length;
         html += '<div class="pending-group">含 ' + esc(word) + '（' + items.length + ' 个 token' + (checkedCount > 0 ? '，已选 ' + checkedCount : '') + '）' +
-          '<button class="pending-more" onclick="checkAllTokens(\\'' + encodeKey(word) + '\\')">全选</button>' +
-          '<button class="pending-more" onclick="uncheckAllTokens(\\'' + encodeKey(word) + '\\')">清空</button>' +
-          '<button class="pending-more" onclick="skipAllTokens(\\'' + encodeKey(word) + '\\')">全部忽略</button></div>';
+          '<button class="pending-more" title="勾选本组全部待确认 token：预填建议替换词，可编辑；勾选即纳入保存" onclick="checkAllTokens(\\'' + encodeKey(word) + '\\')">全选</button>' +
+          '<button class="pending-more" title="取消本组全部未确认 token 的勾选（已确认项不受影响）" onclick="uncheckAllTokens(\\'' + encodeKey(word) + '\\')">清空</button>' +
+          '<button class="pending-more" title="确认本组全部待确认 token：采用建议值（已编辑的保留），移出列表并进入上方已确认区域" onclick="confirmAllTokens(\\'' + encodeKey(word) + '\\')">全部确认</button>' +
+          '<button class="pending-more" title="忽略本组全部待确认 token（不影响已确认项），之后可在已忽略区域逐个或全部撤销" onclick="skipAllTokens(\\'' + encodeKey(word) + '\\')">全部忽略</button></div>';
         const shown = pendingExpanded[word] ? items : items.slice(0, 50);
         for (const it of shown) {
           const checked = Object.prototype.hasOwnProperty.call(manualTokenState, it.token);
           html += '<div class="pending-row' + (checked ? ' checked' : '') + '">';
-          html += '<input type="checkbox"' + (checked ? ' checked' : '') + ' onchange="onTokenToggle(\\'' + encodeKey(it.token) + '\\')">';
+          html += '<input type="checkbox"' + (checked ? ' checked' : '') + ' title="勾选后预填建议替换词，可编辑；勾选即视为确认，会纳入预览和保存" onchange="onTokenToggle(\\'' + encodeKey(it.token) + '\\')">';
           html += '<span class="old">' + esc(it.token) + '</span>';
           html += '<span class="tag">' + it.count + ' 处</span>';
           html += '<span class="arrow">→</span>';
@@ -1448,6 +1462,7 @@ function render() {
           } else {
             html += '<span class="auto">' + esc(it.suggestion) + '</span>';
           }
+          html += '<button class="btn-confirm" title="确认该 token 的替换，移出待确认列表" onclick="confirmToken(\\'' + encodeKey(it.token) + '\\')">确认</button>';
           html += '<button class="btn-skip" title="忽略该 token，不再出现在待确认列表" onclick="skipToken(\\'' + encodeKey(it.token) + '\\')">忽略</button>';
           const sampleText = it.samples.map(s => esc(s.id) + (s.auto && s.auto !== s.id ? ' → ' + esc(s.auto) : '')).join('；');
           html += '<span class="samples">' + sampleText + '</span>';
@@ -1604,11 +1619,50 @@ function onTokenInput(tk, val) {
   manualTokenState[tok] = val;
 }
 
+// 取消确认：删除 token 规则，同时回到待确认选择列表（不删除候选信息）
 function removeToken(tk) {
   const tok = PENDING_KEY_TO_TOKEN[tk];
   if (!tok) return;
   delete manualTokenState[tok];
+  confirmedState.delete(tok);
   render();
+}
+
+// 确认：采用当前编辑值，未编辑则预填建议替换词；确认后移出待确认列表
+function confirmToken(tk) {
+  const tok = PENDING_KEY_TO_TOKEN[tk];
+  if (!tok) return;
+  if (!Object.prototype.hasOwnProperty.call(manualTokenState, tok) || manualTokenState[tok] === '')
+    manualTokenState[tok] = TOKEN_INFO[tok] ? TOKEN_INFO[tok].suggestion : tok;
+  confirmedState.add(tok);
+  render();
+  showToast('已确认 ' + tok, 'success');
+}
+
+// 批量确认：采用已编辑值，未编辑则用建议值；确认后全部移出待确认列表
+// wordKey 为空时确认全部组，否则只确认指定词的分组
+function confirmTokens(wordKey) {
+  let n = 0;
+  for (const [word, items] of Object.entries(PENDING)) {
+    if (wordKey !== undefined && encodeKey(word) !== wordKey) continue;
+    for (const it of items) {
+      if (skipState.has(it.token) || confirmedState.has(it.token)) continue;
+      if (!Object.prototype.hasOwnProperty.call(manualTokenState, it.token) || manualTokenState[it.token] === '')
+        manualTokenState[it.token] = it.suggestion;
+      confirmedState.add(it.token);
+      n++;
+    }
+  }
+  render();
+  if (n > 0) showToast('已确认 ' + n + ' 个 token', 'success');
+}
+
+function confirmAllPending() {
+  confirmTokens();
+}
+
+function confirmAllTokens(wk) {
+  confirmTokens(wk);
 }
 
 // 忽略：从待确认列表移除并持久化（_manualSkip），撤销后回到列表
@@ -1616,6 +1670,7 @@ function skipToken(tk) {
   const tok = PENDING_KEY_TO_TOKEN[tk];
   if (!tok) return;
   delete manualTokenState[tok];
+  confirmedState.delete(tok);
   skipState.add(tok);
   render();
 }
@@ -1633,7 +1688,7 @@ function skipAllTokens(wk) {
   for (const [word, items] of Object.entries(PENDING)) {
     if (encodeKey(word) !== wk) continue;
     for (const it of items) {
-      if (skipState.has(it.token)) continue;
+      if (skipState.has(it.token) || confirmedState.has(it.token)) continue;
       delete manualTokenState[it.token];
       skipState.add(it.token);
       n++;
@@ -1648,7 +1703,7 @@ function skipAllPending() {
   let n = 0;
   for (const items of Object.values(PENDING)) {
     for (const it of items) {
-      if (skipState.has(it.token)) continue;
+      if (skipState.has(it.token) || confirmedState.has(it.token)) continue;
       delete manualTokenState[it.token];
       skipState.add(it.token);
       n++;
@@ -1672,7 +1727,7 @@ function checkAllTokens(wk) {
   for (const [word, items] of Object.entries(PENDING)) {
     if (encodeKey(word) !== wk) continue;
     for (const it of items) {
-      if (skipState.has(it.token)) continue;
+      if (skipState.has(it.token) || confirmedState.has(it.token)) continue;
       if (!Object.prototype.hasOwnProperty.call(manualTokenState, it.token)) manualTokenState[it.token] = it.suggestion;
     }
   }
@@ -1682,13 +1737,18 @@ function checkAllTokens(wk) {
 function uncheckAllTokens(wk) {
   for (const [word, items] of Object.entries(PENDING)) {
     if (encodeKey(word) !== wk) continue;
-    for (const it of items) delete manualTokenState[it.token];
+    for (const it of items) {
+      if (confirmedState.has(it.token)) continue;
+      delete manualTokenState[it.token];
+    }
   }
   render();
 }
 
+// 全部取消：清除已确认规则，全部回到待确认选择列表
 function clearAllTokens() {
   manualTokenState = {};
+  confirmedState.clear();
   render();
 }
 
@@ -2076,8 +2136,10 @@ function createApp(session, paths) {
         if (w.saved && !w.saved.noModify) wordConfigs[w.word] = w.saved;
       }
       const exclude = readExclude();
-      const { mapping } = generateMultiMapping(wordConfigs, identifiers, exclude, manual, manualTokens);
-      const pendingReview = computePendingReview(wordConfigs, identifiers, exclude, mapping);
+      // 待确认候选用「不含 token 规则」的映射计算：已确认的 token 仍会出现在清单里，
+      // 前端按 confirmedState 隐藏；这样点 × 取消确认后能重新选择。
+      const { mapping: autoMapping } = generateMultiMapping(wordConfigs, identifiers, exclude, manual, {});
+      const pendingReview = computePendingReview(wordConfigs, identifiers, exclude, autoMapping);
       return buildHtml({ ...session, words, pendingReview, manual, manualTokens, manualSkip });
     }
     return buildHtml({ ...session, saved: loadSavedConfig(paths, searchWord) });

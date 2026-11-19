@@ -2,10 +2,12 @@
   "registry": "http://localhost:4873/",
   "stages": [
     {
-      "replaceOnly": [
-       "szewtwinjs-core/core/backend"
+      "dirs": [
+       "szewtwinjs-core/core/common",
+       "szewtwinjs-core/core/backend",
+       "szewtwinjs-core/core/frontend"
       ],
-      "note": "第 1 批：无内部依赖的基础 schema 包"
+      "note": "第 1 批"
     }
   ]
 }
