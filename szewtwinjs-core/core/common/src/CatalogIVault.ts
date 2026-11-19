@@ -95,7 +95,7 @@ export namespace CatalogIVault {
     /** the uri of the BlobContainer service where the new container resides. */
     readonly baseUri: string;
     /** name of the blob storage provider. */
-    readonly provider: "azure" | "google";
+    readonly provider: "azure" | "google" | "minio";
   }
 
   /** Properties to identify a specific CatalogIVault within a container. */

@@ -20,7 +20,7 @@ export interface DbCloudContainerInfo {
    */
   readonly baseUri: string;
   /** The type of cloud storage provider. */
-  readonly storageType: "azure" | "google";
+  readonly storageType: "azure" | "google" | "minio";
   /** The name of the database within the container. */
   readonly dbName?: string;
   /** The range of acceptable versions of the database (semver range, e.g., ">=1.2.0 <2.0.0"). */
